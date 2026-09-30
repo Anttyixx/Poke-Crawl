@@ -1,6 +1,6 @@
 ---
 title: Held Items — Data Pass
-status: draft content pass — adapts 12 classic held items to Crawler's mechanics
+status: draft content pass — adapts 12 classic held items to Poke-Crawl's mechanics
 ---
 
 # Held Items
@@ -11,7 +11,7 @@ Status: 🟡 draft content, unblocks prototyping — see [00-index.md](00-index.
 
 One Pokémon holds one item for the whole battle; items don't run out mid-fight unless their own effect says so (Focus Sash).
 
-| Item | Classic effect (for reference) | Effect in Crawler |
+| Item | Classic effect (for reference) | Effect in Poke-Crawl |
 |---|---|---|
 | **Choice Band** | +50% Attack, locks the holder into its first move | **+50% Attack for the whole battle.** After its first action, this Pokémon's next marble draw is skipped — it just keeps using that same move for the rest of the fight instead of drawing again. |
 | **Choice Specs** | +50% Sp. Atk, same lock-in | There's no Sp. Atk split here, so Specs is re-aimed at the other half of the kit: **+50% effect on this Pokémon's Support moves** (heals heal for more, buffs are bigger), with the same first-move lock-in as Choice Band. |

@@ -1,8 +1,8 @@
 ---
-title: Pokemon Crawler — Feature Index
+title: Poke-Crawl — Feature Index
 ---
 
-# Pokemon Crawler — Feature Index
+# Poke-Crawl — Feature Index
 
 This is the tracker for the game's design docs. Each feature has its own file. Status reflects how much is actually decided, not just whether a file has words in it.
 
@@ -23,7 +23,7 @@ This is the tracker for the game's design docs. Each feature has its own file. S
 | Moves — design, learning & Move Tutor | [11-moves.md](11-moves.md) | 🟡 star ratings, move pools and Move Tutor drafted; move data in [13-pokemon-roster-data.md](13-pokemon-roster-data.md) |
 | UI Components | [12-ui-components.md](12-ui-components.md) | 🟡 unit tile, battle variant + empty slot locked; health indicator still A/B (ring vs. bar) |
 | Pokémon Roster Data (levels, stats, abilities, signatures, master move list, move pools, PP) | [13-pokemon-roster-data.md](13-pokemon-roster-data.md) | 🟡 draft content pass 7: all of Gen 1 plus family members (78 lines, 183 species), ready to rebalance |
-| Held Items — Data Pass | [14-items-data.md](14-items-data.md) | 🟡 draft content pass, 12 items adapted to Crawler's mechanics |
+| Held Items — Data Pass | [14-items-data.md](14-items-data.md) | 🟡 draft content pass, 12 items adapted to Poke-Crawl's mechanics |
 
 **[open-questions.md](open-questions.md)** is the running list of everything still undecided, tagged by urgency. Visual reference for the roster: the **Pokédex** artifact.
 

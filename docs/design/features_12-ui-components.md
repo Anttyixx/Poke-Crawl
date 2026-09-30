@@ -5,7 +5,7 @@ status: unit tile + battle variant + empty slot locked; alt health-bar badge in 
 
 # UI Components
 
-Reusable interface elements and the rules they follow. Live reference: [Crawler Unit Tile](https://claude.ai/artifact/QyzoGqVFH27rnVv4tcjVnU).
+Reusable interface elements and the rules they follow. Live reference: [Poke-Crawl Unit Tile](https://claude.ai/artifact/QyzoGqVFH27rnVv4tcjVnU).
 
 1. [Pokemon Unit — base tile](#1-pokemon-unit--base-tile)
 2. [Pokemon Unit — battle variant](#2-pokemon-unit--battle-variant)
