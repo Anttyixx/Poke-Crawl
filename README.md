@@ -1,7 +1,13 @@
 # Poke-Crawl
 
-A browser roguelite: pick a starter, climb a Slay-the-Spire style map of wild Pokémon,
-Poké Marts, Move Tutors, a daycare, trainers and gym leaders, with auto-battles and 3 lives.
+### [▶ Play the game](https://anttyixx.github.io/Poke-Crawl/)
+
+Poke-Crawl is a Pokémon roguelite that runs in your browser on phone or desktop.
+Pick Bulbasaur, Charmander or Squirtle and climb a branching, Slay-the-Spire style map toward 8 gym leaders.
+Along the way you recruit wild Pokémon, shop at Poké Marts, teach moves at Move Tutors, park extras in the daycare, and fight trainers.
+
+Battles play out automatically, so the strategy happens before each fight: who is on your team, where they
+stand on the field, which moves they know and which held items they carry. You get 3 lives per run.
 
 ## Run it
 
@@ -29,8 +35,7 @@ bundles everything (code, styles, data and sprites) into that one file.
 
 The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__` and `__TRS__` in the JS.
 
-## Play it online (GitHub Pages)
+## Play it online
 
-The workflow in `.github/workflows/pages.yml` rebuilds and publishes the game on every push to `main`.
-Turn it on once: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-The game will then be at `https://<your-username>.github.io/<repo-name>/`.
+The game is live at **https://anttyixx.github.io/Poke-Crawl/**. The workflow in
+`.github/workflows/pages.yml` rebuilds and republishes it on every push to `main`.
