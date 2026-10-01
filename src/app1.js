@@ -903,6 +903,21 @@ $('#scr-map').addEventListener('pointerup', e => {
   if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 10 && !e.target.closest('.node:not(:disabled)')) closeMapPop();
 });
 
+/* ================= title ================= */
+// the backdrop is a real generated map (nodes coloured by type), drifting slowly behind the logo; the three
+// starters bob on discs in their type colour. Start goes to the starter screen.
+function buildTitle(){
+  const { nodes } = generateMap(randomSeed()), lines = [];
+  for (const n of nodes.values()) for (const k of n.kids){ const b = nodes.get(k); lines.push(`<line x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>`); }
+  $('#title-map').innerHTML = `<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none">${lines.join('')}</svg>
+    <div class="tbg__nodes">${[...nodes.values()].map(n => `<span class="tnode" data-type="${n.type}" style="left:${n.x}%;top:${n.y}%">${ICON[n.type]}</span>`).join('')}</div>`;
+  $('#title-mons').innerHTML = STARTERS.map((l, i) => {
+    const f = LINES[l][1][0];
+    return `<div class="tmon" style="--t:var(--t-${f.type}); --i:${i}"><img src="${SPRITES[f.spr]}" alt="${f.name}"></div>`;
+  }).join('');
+}
+$('#title-start').addEventListener('click', () => wipeTo('scr-starter', openStarter, { mark: markHTML('🚩', 'New run') }));
+
 /* ================= starter ================= */
 // three offers on top, one big slot in the middle; tapping an offer hops it into the slot,
 // and its stats appear once it lands. Choose puts it in the front-middle party slot.
