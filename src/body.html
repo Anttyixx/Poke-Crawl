@@ -4,6 +4,7 @@
   <section class="screen title-scr" id="scr-title" aria-label="Poke-Crawl">
     <!-- a real, freshly generated map drifting behind the logo -->
     <div class="tbg" aria-hidden="true"><div class="tbg__map" id="title-map"></div></div>
+    <button class="dexbtn dexbtn--corner" type="button" data-dex-open aria-label="Open the Pokédex" title="Pokédex"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pokédex</span></button>
     <div class="tmain">
       <p class="tkicker">A Pokémon roguelite</p>
       <h1 class="tlogo"><span>Poke</span><span class="tlogo__dash">-</span><span class="tlogo__crawl">Crawl</span></h1>
@@ -11,6 +12,23 @@
       <button class="btn btn--go btn--big tstart" id="title-start">Start</button>
       <p class="tfoot">Pick a starter <i>·</i> Climb to 8 gym leaders <i>·</i> 3 lives</p>
     </div>
+  </section>
+
+  <!-- Pokédex: every Pokémon, move and item in the game -->
+  <section class="screen dex" id="scr-dex" aria-label="Pokédex">
+    <header class="dexhead">
+      <div class="dexhead__top">
+        <span class="dexhead__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h1 class="title">Pokédex</h1>
+        <button class="btn" id="dex-close" type="button">Close</button>
+      </div>
+      <div class="dextabs" role="tablist" aria-label="Pokédex sections">
+        <span class="dextabs__pill" aria-hidden="true"></span>
+        <button class="dextab" type="button" role="tab" data-tab="mons">Pokémon <small id="dex-n-mons"></small></button>
+        <button class="dextab" type="button" role="tab" data-tab="moves">Moves <small id="dex-n-moves"></small></button>
+        <button class="dextab" type="button" role="tab" data-tab="items">Items <small id="dex-n-items"></small></button>
+      </div>
+    </header>
+    <div class="dexbody" id="dex-body" role="tabpanel"></div>
   </section>
 
   <!-- starter -->
@@ -35,7 +53,7 @@
   <section class="screen" id="scr-map" aria-label="Map">
     <div class="hud">
       <div class="hud__map" id="hud-map"></div>
-      <div class="hud__right"><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
+      <div class="hud__right"><button class="dexbtn" type="button" data-dex-open aria-label="Open the Pokédex" title="Pokédex"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pokédex</span></button><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
     </div>
     <div class="mapwrap">
       <div class="map" id="map">
