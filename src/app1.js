@@ -32,6 +32,7 @@ const TUNE = {
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   martStock: 4, martRerollStep: 20,
+  bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
   itemPrice: { 'choice-band':120, 'choice-specs':100, 'choice-scarf':120, 'life-orb':120, 'weakness-policy':100,
     'leftovers':90, 'focus-sash':90, 'assault-vest':90, 'safety-goggles':90,
     'rocky-helmet':60, 'protective-pads':60, 'heavy-duty-boots':70 },
@@ -313,7 +314,7 @@ const randomSeed = () => Math.floor(Math.random() * 1e9);
 /* ================= run state ================= */
 const R = {};
 function newRun(){
-  Object.assign(R, { mapNo: 1, lives: TUNE.lives, coins: TUNE.startCoins, party: Array(6).fill(null), bag: Array(5).fill(null),
+  Object.assign(R, { mapNo: 1, lives: TUNE.lives, coins: TUNE.startCoins, party: Array(6).fill(null), bag: Array(TUNE.bagSize).fill(null),
     daycare: Array(TUNE.daycareSize).fill(null), at: 'S', trail: ['S'], gymsBeaten: 0, map: generateMap(randomSeed()) });
 }
 const partyMons = () => R.party.filter(Boolean);
@@ -336,8 +337,8 @@ const PRESET = {
   tpick:  { borderStyle:'type', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   tr:     { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
   bag:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
+  hud:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'exp', style:'bar' }, { stat:'held', style:'ring' }) },
   battle: { borderStyle:'battle', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'hp', style:'bar' }, { stat:'held', style:'ring' }) },
-  mini:   { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   result: { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:false, corners: CORNERS({ stat:'exp', style:'bar' }, { stat:'held', style:'ring' }) },
 };
 function createSlot(onTap, onHeld){
@@ -498,13 +499,12 @@ const AREA_CFG = {
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
-  'M.party': { holds:'mon', kind:'party', preset:'mini', get: () => R.party, onTap: () => $('#fab').click() },
+  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true },
+  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true },
   'T.line':  { holds:'mon', kind:'offer', preset:'offer', get: () => TU.line, onTap: i => tutorLineTap(i) },
   'T.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => TU.pickSlot, onTap: () => tutorReturn() },
   'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
-  'P.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, equip: true },
-  'P.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, equip: true },
 };
 function mountAreas(){
   document.querySelectorAll('[data-area]').forEach(grid => {
@@ -635,7 +635,7 @@ function tapSlot(name, i){
     const iname = ITEM[item.id].name;
     if (A.holds === 'mon'){
       if (!here) return rejectOrSwitch(name, i, 'Tap a Pokémon to give it this item.');
-      if (!A.equip) return rejectOrSwitch(name, i, 'Give items to your Pokémon from the party screen.');
+      if (!A.equip) return rejectOrSwitch(name, i, 'Give items to your Pokémon on the map.');
       if (S.kind === 'found') return rejectOrSwitch(name, i, 'Put it in your bag first.');
       if (sel.held){
         const owner = src[sel.i];
@@ -661,7 +661,7 @@ function tapSlot(name, i){
   } else {
     const mon = src[sel.i];
     if (A.holds === 'item'){
-      if (!(S.equip && A.equip)) return rejectOrSwitch(name, i, 'Manage held items from the party screen.');
+      if (!(S.equip && A.equip)) return rejectOrSwitch(name, i, 'Manage held items on the map.');
       const old = here, had = mon.item;
       arr[i] = had; mon.item = old;
       msg = old ? `${nm(mon)} now holds the ${ITEM[old.id].name}.` + (had ? ` The ${ITEM[had.id].name} went back in the bag.` : '')
@@ -824,7 +824,7 @@ function alignCoins(){
 }
 addEventListener("resize", alignCoins);
 document.fonts?.ready.then(alignCoins);
-function refresh(){ RENDER[screen]?.(); updateFab(); alignCoins(); }
+function refresh(){ RENDER[screen]?.(); updateMapHud(); alignCoins(); }
 function show(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('is-active', s.id === id));
   screen = id; $('#' + id).scrollTop = 0; hideTip();
@@ -837,7 +837,7 @@ function wipeAnim(el, from, to, dur){
 }
 async function wipeTo(id, prepare, opt = {}){
   if (wiping) return;
-  wiping = true; updateFab(); hideTip();
+  wiping = true; updateMapHud(); hideTip();
   const W_ = $('#wipe'), band = W_.querySelector('.wipe__band'), panel = W_.querySelector('.wipe__panel');
   W_.style.setProperty('--wipe-c', opt.color || 'var(--glow-selected)');
   $('#wipe-mark').innerHTML = opt.mark || '';
@@ -862,36 +862,36 @@ async function wipeTo(id, prepare, opt = {}){
   band.getAnimations().forEach(a => a.cancel()); panel.getAnimations().forEach(a => a.cancel());
   band.style.transform = panel.style.transform = '';
   W_.classList.remove('on');
-  wiping = false; updateFab();
+  wiping = false; updateMapHud();
   opt.after?.();
 }
 const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: scrollMapToCurrent });
 
-/* ---------- party / bag button ---------- */
-const FAB_SCREENS = new Set(['scr-map', 'scr-wild', 'scr-item', 'scr-tutor', 'scr-daycare']);
-let partyReturn = 'scr-map';
-function updateFab(){
-  const fab = $('#fab');
-  fab.hidden = wiping || !FAB_SCREENS.has(screen);
-  if (R.party) $('#fab-count').textContent = `${partyCount()}/6`;
-  // your team in small slots, bottom-left, while on the map (front row on top, like the battle formation)
-  const team = $('#mapteam');
-  team.hidden = wiping || screen !== 'scr-map' || !R.party;
-  if (!team.hidden) renderArea('M.party');
+/* ---------- your team and bag on the map ----------
+   the party sits bottom-left and the bag 2 by 2 bottom-right. Tap a slot to see it in a popup in the middle
+   of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
+function updateMapHud(){
+  const on = !wiping && screen === 'scr-map' && !!R.party;
+  $('#mapteam').hidden = $('#mapbag').hidden = !on;
+  if (on){ renderArea('M.party'); renderArea('M.bag'); }
+  const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
+  if (c){
+    const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
+    const sig = it ? it.uid : `${c.uid}|${c.form}|${c.star}|${c.exp}|${c.item?.uid}`;
+    if (pop.dataset.sig !== sig){ pop.dataset.sig = sig; $('#mappop-card').innerHTML = it ? itemDetail(it) : monDetail(c); }
+  } else delete pop.dataset.sig;
+  setShown('mappop', pop, !!c);
 }
-$('#fab').addEventListener('click', () => {
-  if (wiping) return;
-  partyReturn = screen;
-  wipeTo('scr-party', null, { mark: markHTML('🎒', 'Party and bag') });
+function closeMapPop(){ if (UI.sel && screen === 'scr-map'){ UI.sel = null; UI.notice = null; refresh(); } }
+$('#mappop').addEventListener('click', closeMapPop);
+// a tap anywhere on the map closes it, except on a node you can travel to. Pointer events (not click) so a tap
+// on a locked node counts too, since disabled buttons get no clicks; a drag that scrolls the map does not close it.
+let mapDown = null;
+$('#scr-map').addEventListener('pointerdown', e => { mapDown = { x: e.clientX, y: e.clientY }; });
+$('#scr-map').addEventListener('pointerup', e => {
+  const d = mapDown; mapDown = null;
+  if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 10 && !e.target.closest('.node:not(:disabled)')) closeMapPop();
 });
-$('#party-close').addEventListener('click', () => wipeTo(partyReturn, null, { mark: markHTML('🎒', 'Party and bag'), after: partyReturn === 'scr-map' ? scrollMapToCurrent : null }));
-RENDER['scr-party'] = () => {
-  renderArea('P.party'); renderArea('P.bag');
-  $('#party-bagcount').textContent = `${R.bag.filter(Boolean).length} of 5`;
-  renderDetail('party-detail', 'Tap a Pokémon to see its stats and moves, or an item to see what it does.');
-  renderNotice('party-notice');
-  $('#party-roster').innerHTML = rosterHTML(formationMons());
-};
 
 /* ================= starter ================= */
 // three offers on top, one big slot in the middle; tapping an offer hops it into the slot,
@@ -995,7 +995,7 @@ function goTo(id){
   if (wiping || screen !== 'scr-map') return;
   if (!R.map.nodes.get(R.at).kids.has(id)) return;
   R.at = id; R.trail.push(id);
-  renderMap();
+  UI.sel = null; refresh();
   const t = R.map.nodes.get(id).type;
   setTimeout(() => openNode(t), REDUCED ? 60 : 420);
 }
@@ -1174,7 +1174,7 @@ function buy(i){
   const id = MT.stock[i], cost = itemPrice(id), slot = R.bag.indexOf(null);
   if (MT.sold.has(i)) return;
   if (R.coins < cost){ UI.notice = { text: `You need ${cost} coins for the ${ITEM[id].name}.` }; return refresh(); }
-  if (slot < 0){ UI.notice = { text: 'Your bag is full. Give an item to a Pokémon from the party screen first.' }; return refresh(); }
+  if (slot < 0){ UI.notice = { text: 'Your bag is full. Give an item to a Pokémon on the map first.' }; return refresh(); }
   const img = document.querySelector(`#mart-stock .mcard[data-i="${i}"] img`), r = img.getBoundingClientRect();
   const start = { x: r.left, y: r.top, size: r.width };
   const el = AREAS['I.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
@@ -1197,7 +1197,7 @@ RENDER['scr-item'] = () => {
   }).join('');
   $('#mart-stock').querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', () => buy(+b.dataset.buy)));
   renderArea('I.bag');
-  $('#item-count').textContent = `${R.bag.filter(Boolean).length} of 5`;
+  $('#item-count').textContent = `${R.bag.filter(Boolean).length} of ${TUNE.bagSize}`;
   renderNotice('item-notice');
   const rr = $('#mart-reroll');
   rr.textContent = `New stock for ${martRerollFee()} coins`;
