@@ -24,6 +24,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
+  # every release to main is tagged with its version (vX.Y.Z from the VERSION file), once
+  tag:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag the release
+        run: |
+          [ -f VERSION ] || { echo "no VERSION file; nothing to tag"; exit 0; }
+          v="v$(tr -d '[:space:]' < VERSION)"
+          if git ls-remote --exit-code --tags origin "refs/tags/$v" > /dev/null; then echo "$v is already tagged"; exit 0; fi
+          git tag "$v" && git push origin "$v" && echo "tagged $v"
+
   deploy:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest

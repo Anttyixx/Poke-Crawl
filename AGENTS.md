@@ -49,7 +49,7 @@ To release, only when the user says the work on `dev` is ready:
 
 1. On `dev`, check `VERSION` is right for what is being released (MINOR or PATCH, as above), and in `CHANGELOG.md` change the heading `## X.Y.Z (upcoming, on dev)` to `## X.Y.Z (YYYY-MM-DD)`. Commit and push `dev`.
 2. Merge `dev` into `main` and push `main`.
-3. Tag the release: `git tag -a vX.Y.Z -m "Poke-Crawl X.Y.Z" origin/main` and `git push origin vX.Y.Z`.
+3. Nothing to do for the tag: the deploy workflow tags `main` as `vX.Y.Z` (from `VERSION`) on every push to `main`, if that tag doesn't exist yet. Check the run's `tag` job succeeded.
 4. Back on `dev`, set `VERSION` to the next minor version (e.g. `0.3.0`), add an empty `## 0.3.0 (upcoming, on dev)` section to the top of `CHANGELOG.md`, commit and push.
 
 ## Layout
