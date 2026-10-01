@@ -898,9 +898,47 @@ function updateMapHud(){
   if (c){
     const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
     const sig = it ? it.uid : `${c.uid}|${c.form}|${c.star}|${c.exp}|${c.item?.uid}`;
-    if (pop.dataset.sig !== sig){ pop.dataset.sig = sig; $('#mappop-card').innerHTML = it ? itemDetail(it) : monDetail(c); }
+    if (pop.dataset.sig !== sig){
+      pop.dataset.sig = sig;
+      const card = $('#mappop-card');
+      card.innerHTML = it ? mapItemHTML(it) : mapMonHTML(c);
+      dexReveal(card.firstElementChild);                  // the entry builds up piece by piece, as in the Pokédex
+    }
   } else delete pop.dataset.sig;
   setShown('mappop', pop, !!c);
+}
+// the popup's entries use the Pokédex layout, filled in with this Pokémon's own stars, EXP, held item and moves
+function mapMonHTML(m){
+  const f = FORM[m.form], maxed = m.star >= 3;
+  const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
+  const exp = `<div class="dstat" data-stat="exp"><span>EXP</span><b>${maxed ? 'Max' : pct(m.exp)}</b><i class="dstat__bar"><i style="width:${maxed ? 100 : Math.max(3, Math.round(m.exp * 100))}%"></i></i></div>`;
+  const it = m.item && ITEM[m.item.id];
+  return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
+    <div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(m.star)}</div>
+      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
+      <div class="dstats dstats--4">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}${exp}</div>
+    </div>
+    <div class="dexmon__more">
+      <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
+      ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
+      <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true)}</div></div>
+      <div class="dexkv"><span>Moves</span><div class="mvlist">${taughtSlotsHTML(m, false)}</div></div>
+    </div>
+  </div>`;
+}
+function mapItemHTML(it){
+  const d = ITEM[it.id], price = TUNE.itemPrice[it.id];
+  return `<div class="dexmon dexmon--item" style="--t:var(--t-held)">
+    <div class="dexmon__pic"><img src="${spriteURL(d.spr)}" alt=""></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${d.name}</b><span class="pill" style="--c:var(--t-held)">Held item</span></div>
+      ${price != null ? `<div class="dexmon__roles">Sells for ${price} coins at Poké Marts</div>` : ''}
+    </div>
+    <div class="dexmon__more"><div class="dexkv"><span>Effect</span><p>${d.fx}</p></div>
+      <div class="dexkv"><span>How to use</span><p>Tap it, then tap a Pokémon to have it hold it. Held items work automatically in battle.</p></div></div>
+  </div>`;
 }
 function closeMapPop(){ if (UI.sel && screen === 'scr-map'){ UI.sel = null; UI.notice = null; refresh(); } }
 $('#mappop').addEventListener('click', closeMapPop);
