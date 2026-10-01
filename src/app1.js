@@ -3,6 +3,7 @@ const DATA = __DATA__;
 const ITEMS_DATA = __ITEMS__;
 const CANDY_SPR = '__CANDY__';
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
+const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
 
 /* ================= data ================= */
 const FORMS = DATA.forms, MOVES = DATA.moves, SPRITES = DATA.sprites;
@@ -32,6 +33,7 @@ const TUNE = {
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   martStock: 4, martRerollStep: 20,
+  bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
   itemPrice: { 'choice-band':120, 'choice-specs':100, 'choice-scarf':120, 'life-orb':120, 'weakness-policy':100,
     'leftovers':90, 'focus-sash':90, 'assault-vest':90, 'safety-goggles':90,
     'rocky-helmet':60, 'protective-pads':60, 'heavy-duty-boots':70 },
@@ -313,7 +315,7 @@ const randomSeed = () => Math.floor(Math.random() * 1e9);
 /* ================= run state ================= */
 const R = {};
 function newRun(){
-  Object.assign(R, { mapNo: 1, lives: TUNE.lives, coins: TUNE.startCoins, party: Array(6).fill(null), bag: Array(5).fill(null),
+  Object.assign(R, { mapNo: 1, lives: TUNE.lives, coins: TUNE.startCoins, party: Array(6).fill(null), bag: Array(TUNE.bagSize).fill(null),
     daycare: Array(TUNE.daycareSize).fill(null), at: 'S', trail: ['S'], gymsBeaten: 0, map: generateMap(randomSeed()) });
 }
 const partyMons = () => R.party.filter(Boolean);
@@ -336,8 +338,8 @@ const PRESET = {
   tpick:  { borderStyle:'type', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   tr:     { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
   bag:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
+  hud:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'exp', style:'bar' }, { stat:'held', style:'ring' }) },
   battle: { borderStyle:'battle', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'hp', style:'bar' }, { stat:'held', style:'ring' }) },
-  mini:   { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   result: { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:false, corners: CORNERS({ stat:'exp', style:'bar' }, { stat:'held', style:'ring' }) },
 };
 function createSlot(onTap, onHeld){
@@ -414,7 +416,15 @@ const itemView = it => it ? { key: it.uid, sprite: ITEM[it.id].spr, type: 'held'
 
 /* ---------- hop / slide: content that changes slot flies from its old box to its new one ---------- */
 function spriteBox(el){ const r = el.getBoundingClientRect(), s = r.width * .7075; return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s }; }
-function discBox(el){ const d = el.querySelector('.g[data-stat="held"] .g__held') || el.querySelector('.g--br .g__held'); const r = d.getBoundingClientRect(), s = r.width * .72; return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s }; }
+function discBox(el){
+  let d = el.querySelector('.g[data-stat="held"] .g__held'), g = null, was;
+  // a slot about to receive an item still shows its old look, with the disc hidden (and measuring as a zero box at the
+  // screen's corner), so turn the disc on just long enough to measure where it will be
+  if (!d){ g = el.querySelector('.g--br'); was = g.dataset.stat; g.dataset.stat = 'held'; d = g.querySelector('.g__held'); }
+  const r = d.getBoundingClientRect(), s = r.width * .72;
+  if (g) g.dataset.stat = was;
+  return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s };
+}
 /* ---------- a destination slot keeps showing what it showed before until everything flying into it has landed ---------- */
 const slotLabel = el => el.parentElement?.querySelector('.slotname');
 function holdSlot(el, prevArgs, prevLabel){
@@ -460,7 +470,7 @@ function releaseSlot(el){
   if (wasEmpty && el.dataset.state === 'filled') crossfadeEmpty(el);
   const lab = slotLabel(el); if (lab) lab.textContent = h.label;
 }
-function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur } = {}){
+function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur, keep = false } = {}){
   const end = disc ? discBox(toEl) : spriteBox(toEl);
   const img = document.createElement('img');
   img.className = 'hopper'; img.src = src; img.alt = '';
@@ -472,15 +482,23 @@ function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur } =
   if (slide){
     frames.push({ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx}px, ${dy}px) scale(${sc})` });
   } else {
-    const h = Math.min(110, 34 + dist * .22);
+    const h = Math.min(110, 34 + dist * .22), air = keep ? .72 : 1;   // a kept hop spends its last 28% landing
     for (let i = 0; i <= 16; i++){
       const t = i / 16, sy = t < .15 ? 1 + .12 * (t / .15) : t > .85 ? 1 - .1 * ((t - .85) / .15) : 1.12 - .22 * ((t - .15) / .7), s = 1 + (sc - 1) * t;
-      frames.push({ transform: `translate(${dx * t}px, ${dy * t - 4 * h * t * (1 - t)}px) scale(${s * (2 - sy)}, ${s * sy})`, offset: t });
+      frames.push({ transform: `translate(${dx * t}px, ${dy * t - 4 * h * t * (1 - t)}px) scale(${s * (2 - sy)}, ${s * sy})`, offset: t * air });
+    }
+    // the landing is part of the same animation (squash, rebound, still), since whatever waits for the hop to finish
+    // may run late on a busy phone and would otherwise leave the sprite frozen mid-squash
+    if (keep){
+      const at = `translate(${dx}px, ${dy}px)`;
+      frames.push({ transform: `${at} scale(${sc * 1.12}, ${sc * .84})`, offset: .8 }, { transform: `${at} scale(${sc * .96}, ${sc * 1.05})`, offset: .9 },
+        { transform: `${at} scale(${sc})`, offset: 1 });
     }
   }
   const duration = dur ?? (slide ? Math.min(420, 240 + dist * .25) : Math.min(620, 360 + dist * .35) / 1.1 * TUNE.hopSlow);
   return new Promise(res => {
     img.animate(frames, { duration, delay: order * 60, easing: slide ? 'cubic-bezier(.3,.7,.3,1)' : 'linear', fill: 'both' }).onfinish = () => {
+      if (keep) return res(img);
       img.remove(); releaseSlot(toEl); toEl.classList.remove(disc ? 'arriving-held' : 'arriving');
       if (!disc){ toEl.classList.remove('land', 'seat'); void toEl.offsetWidth; toEl.classList.add(slide ? 'seat' : 'land'); }
       res();
@@ -498,13 +516,12 @@ const AREA_CFG = {
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
-  'M.party': { holds:'mon', kind:'party', preset:'mini', get: () => R.party, onTap: () => $('#fab').click() },
+  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true },
+  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true },
   'T.line':  { holds:'mon', kind:'offer', preset:'offer', get: () => TU.line, onTap: i => tutorLineTap(i) },
   'T.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => TU.pickSlot, onTap: () => tutorReturn() },
   'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
-  'P.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, equip: true },
-  'P.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, equip: true },
 };
 function mountAreas(){
   document.querySelectorAll('[data-area]').forEach(grid => {
@@ -569,7 +586,7 @@ function snapshot(){
       m.look.set(el, { args: el._hold ? el._hold.args : el._last, label: el._hold ? el._hold.label : (slotLabel(el)?.textContent ?? '') });
       const v = (el._hold ? el._hold.args : el._last)?.[1];      // what the slot really holds, even mid-flight
       if (v?.key) m.set(v.key, { el, box: spriteBox(el), src: v.sprite, disc: false });
-      if (v?.heldKey) m.set(v.heldKey, { el, box: discBox(el), src: v.held, disc: true });
+      if (v?.heldKey) m.set(v.heldKey, { el, box: discBox(el), src: v.held, disc: true, owner: v.key });
     }
   }
   return m;
@@ -582,6 +599,8 @@ function flip(before){
   for (const [k, a] of after){
     const b = before.get(k);
     if (!b || (b.el === a.el && b.disc === a.disc)) continue;
+    // an item that stays on the same Pokémon travels with it: it leaves with the old slot and shows up when the Pokémon lands
+    if (a.disc && b.disc && a.owner === b.owner) continue;
     if (!held.has(a.el) && before.look.has(a.el)){
       // show the destination as it was, minus anything that has just left it, until the hopper lands
       const look = before.look.get(a.el), [f, v, o] = look.args || [PRESET.party, null, {}];
@@ -635,7 +654,7 @@ function tapSlot(name, i){
     const iname = ITEM[item.id].name;
     if (A.holds === 'mon'){
       if (!here) return rejectOrSwitch(name, i, 'Tap a Pokémon to give it this item.');
-      if (!A.equip) return rejectOrSwitch(name, i, 'Give items to your Pokémon from the party screen.');
+      if (!A.equip) return rejectOrSwitch(name, i, 'Give items to your Pokémon on the map.');
       if (S.kind === 'found') return rejectOrSwitch(name, i, 'Put it in your bag first.');
       if (sel.held){
         const owner = src[sel.i];
@@ -661,7 +680,7 @@ function tapSlot(name, i){
   } else {
     const mon = src[sel.i];
     if (A.holds === 'item'){
-      if (!(S.equip && A.equip)) return rejectOrSwitch(name, i, 'Manage held items from the party screen.');
+      if (!(S.equip && A.equip)) return rejectOrSwitch(name, i, 'Manage held items on the map.');
       const old = here, had = mon.item;
       arr[i] = had; mon.item = old;
       msg = old ? `${nm(mon)} now holds the ${ITEM[old.id].name}.` + (had ? ` The ${ITEM[had.id].name} went back in the bag.` : '')
@@ -824,7 +843,7 @@ function alignCoins(){
 }
 addEventListener("resize", alignCoins);
 document.fonts?.ready.then(alignCoins);
-function refresh(){ RENDER[screen]?.(); updateFab(); alignCoins(); }
+function refresh(){ RENDER[screen]?.(); updateMapHud(); alignCoins(); }
 function show(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('is-active', s.id === id));
   screen = id; $('#' + id).scrollTop = 0; hideTip();
@@ -837,7 +856,7 @@ function wipeAnim(el, from, to, dur){
 }
 async function wipeTo(id, prepare, opt = {}){
   if (wiping) return;
-  wiping = true; updateFab(); hideTip();
+  wiping = true; updateMapHud(); hideTip();
   const W_ = $('#wipe'), band = W_.querySelector('.wipe__band'), panel = W_.querySelector('.wipe__panel');
   W_.style.setProperty('--wipe-c', opt.color || 'var(--glow-selected)');
   $('#wipe-mark').innerHTML = opt.mark || '';
@@ -862,36 +881,271 @@ async function wipeTo(id, prepare, opt = {}){
   band.getAnimations().forEach(a => a.cancel()); panel.getAnimations().forEach(a => a.cancel());
   band.style.transform = panel.style.transform = '';
   W_.classList.remove('on');
-  wiping = false; updateFab();
+  wiping = false; updateMapHud();
   opt.after?.();
 }
 const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: scrollMapToCurrent });
 
-/* ---------- party / bag button ---------- */
-const FAB_SCREENS = new Set(['scr-map', 'scr-wild', 'scr-item', 'scr-tutor', 'scr-daycare']);
-let partyReturn = 'scr-map';
-function updateFab(){
-  const fab = $('#fab');
-  fab.hidden = wiping || !FAB_SCREENS.has(screen);
-  if (R.party) $('#fab-count').textContent = `${partyCount()}/6`;
-  // your team in small slots, bottom-left, while on the map (front row on top, like the battle formation)
-  const team = $('#mapteam');
-  team.hidden = wiping || screen !== 'scr-map' || !R.party;
-  if (!team.hidden) renderArea('M.party');
+/* ---------- your team and bag on the map ----------
+   the party sits bottom-left and the bag 2 by 2 bottom-right. Tap a slot to see it in a popup in the middle
+   of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
+let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
+function updateMapHud(){
+  const on = (!wiping || mapIntro) && screen === 'scr-map' && !!R.party;
+  $('#mapteam').hidden = $('#mapbag').hidden = !on;
+  if (on){ renderArea('M.party'); renderArea('M.bag'); }
+  const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
+  if (c){
+    const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
+    const sig = it ? it.uid : `${c.uid}|${c.form}|${c.star}|${c.exp}|${c.item?.uid}`;
+    if (pop.dataset.sig !== sig){ pop.dataset.sig = sig; $('#mappop-card').innerHTML = it ? itemDetail(it) : monDetail(c); }
+  } else delete pop.dataset.sig;
+  setShown('mappop', pop, !!c);
 }
-$('#fab').addEventListener('click', () => {
-  if (wiping) return;
-  partyReturn = screen;
-  wipeTo('scr-party', null, { mark: markHTML('🎒', 'Party and bag') });
+function closeMapPop(){ if (UI.sel && screen === 'scr-map'){ UI.sel = null; UI.notice = null; refresh(); } }
+$('#mappop').addEventListener('click', closeMapPop);
+// a tap anywhere on the map closes it, except on a node you can travel to. Pointer events (not click) so a tap
+// on a locked node counts too, since disabled buttons get no clicks; a drag that scrolls the map does not close it.
+let mapDown = null;
+$('#scr-map').addEventListener('pointerdown', e => { mapDown = { x: e.clientX, y: e.clientY }; });
+$('#scr-map').addEventListener('pointerup', e => {
+  const d = mapDown; mapDown = null;
+  if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 10 && !e.target.closest('.node:not(:disabled)')) closeMapPop();
 });
-$('#party-close').addEventListener('click', () => wipeTo(partyReturn, null, { mark: markHTML('🎒', 'Party and bag'), after: partyReturn === 'scr-map' ? scrollMapToCurrent : null }));
-RENDER['scr-party'] = () => {
-  renderArea('P.party'); renderArea('P.bag');
-  $('#party-bagcount').textContent = `${R.bag.filter(Boolean).length} of 5`;
-  renderDetail('party-detail', 'Tap a Pokémon to see its stats and moves, or an item to see what it does.');
-  renderNotice('party-notice');
-  $('#party-roster').innerHTML = rosterHTML(formationMons());
+
+/* ================= Pokédex ================= */
+// every Pokémon, move and held item in the game, in three sections switched by tabs that stay pinned at the top.
+// Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
+const DEX_TABS = ['mons', 'moves', 'items'];
+const DEX = { tab: 'mons', from: 'scr-title', html: {}, token: 0 };
+// sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
+const blobURLs = new Map();
+function spriteURL(uri){
+  let u = blobURLs.get(uri); if (u) return u;
+  try {
+    const [head, b64] = uri.split(','), bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    u = URL.createObjectURL(new Blob([bytes], { type: head.slice(5).split(';')[0] }));
+  } catch { u = uri; }
+  blobURLs.set(uri, u); return u;
+}
+const formSprite = f => spriteURL(SPRITES[f.spr]);
+const typePill = t => `<span class="pill" style="--c:${typeColor(t)}">${cap(t)}</span>`;
+const starRow = n => `<span class="dt__stars" aria-label="${n} star">${'★'.repeat(n)}<i>${'★'.repeat(3 - n)}</i></span>`;
+// what a form can actually be taught: tutor moves at or below its star level, not counting its signature move
+const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= f.star)
+  .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
+const dexMini = f => `<button class="dexmini" type="button" data-form="${f.id}" title="${f.name}" aria-label="${f.name}: show its Pokédex entry"><img src="${formSprite(f)}" alt="" loading="lazy"></button>`;
+
+// tutor moves in an entry are buttons: tapping one opens its details under the chips, with a link to the Moves section
+const dexChipHTML = k => `<button class="chip dexchip" type="button" data-move="${k}" aria-expanded="false" style="--c:${typeColor(MOVES[k].type)}">${MOVES[k].name}</button>`;
+const dexGoHTML = k => `<button class="dexgo" type="button" data-move="${k}">See who else learns it in Moves<span aria-hidden="true"> ›</span></button>`;
+async function dexPeek(chip){
+  const kv = chip.closest('.dexkv'), panel = kv.querySelector('.dexpeek'), k = chip.dataset.move;
+  const closing = panel.dataset.move === k, from = panel.hidden ? 0 : panel.offsetHeight, token = (panel._tok = (panel._tok || 0) + 1);
+  kv.querySelectorAll('.dexchip').forEach(c => c.setAttribute('aria-expanded', !closing && c === chip));
+  if (closing){
+    delete panel.dataset.move;
+    await dexResize(panel, from, 0);
+    if (panel._tok === token){ panel.hidden = true; panel.innerHTML = ''; }
+    return;
+  }
+  panel.dataset.move = k; panel.hidden = false;
+  panel.innerHTML = `<div class="mvlist">${moveRow(k, false)}</div>${dexGoHTML(k)}`;
+  if (!REDUCED) panel.firstElementChild.animate([{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: DEX_EASE });
+  await dexResize(panel, from, panel.offsetHeight);
+}
+// over to the Moves section, scrolled to that move, which flashes so it's easy to spot
+async function dexJumpMove(k){
+  await dexShow('moves', true);
+  const row = document.querySelector(`.dexmove[data-move="${k}"]`), scr = $('#scr-dex'); if (!row) return;
+  const y = scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 16;
+  scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
+  row.classList.remove('dexflash'); void row.offsetWidth; row.classList.add('dexflash');
+}
+function dexMonHTML(f){
+  const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
+  const tutor = tutorMoves(f);
+  return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
+    <div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(f.star)}</div>
+      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
+      <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
+    </div>
+    <div class="dexmon__more">
+      <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
+      <div class="dexkv"><span>Signature move</span><div><div class="mvlist">${moveRow(f.sig, true)}</div>${dexGoHTML(f.sig)}</div></div>
+      <div class="dexkv"><span>Tutor moves</span><div>${tutor.length
+        ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
+        : '<i class="dexnone">None</i>'}</div></div>
+    </div>
+  </div>`;
+}
+// the evolution path: one column per star level (a branching line stacks its options), arrows between them.
+// Tapping a Pokémon opens its info under the path (see dexOpen).
+const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function dexEvoHTML(fs){
+  const cols = [1, 2, 3].map(n => fs.filter(f => f.star === n)).filter(c => c.length);
+  return `<div class="dexevo">
+    <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
+    <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
+      + `<div class="dexevo__col">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
+          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span>${starRow(f.star)}</button>`).join('')}</div>`).join('')}</div>
+  </div>`;
+}
+/* ---------- a Pokémon's info opens inside its line's card ----------
+   Opening: the tapped sprite hops, the card grows to fit, then the entry builds up piece by piece (the sprite
+   pops in, the text rises, the stat bars fill). Another stage of the same line slides the old entry out toward
+   the side the new one is on and the new one in; tapping the open one again folds the card shut. */
+const DEX_EASE = 'cubic-bezier(.2,.8,.2,1)';
+function dexReveal(entry){
+  if (REDUCED) return;
+  const parts = [entry.querySelector('.dexmon__head'), entry.querySelector('.dexmon__roles'), entry.querySelector('.dstats'), ...entry.querySelectorAll('.dexkv')].filter(Boolean);
+  entry.querySelector('.dexmon__pic')?.animate([{ opacity: 0, transform: 'scale(.55) rotate(-8deg)' }, { opacity: 1, transform: 'scale(1.08)', offset: .7 }, { opacity: 1, transform: 'none' }],
+    { duration: 420, easing: 'ease-out', fill: 'backwards' });
+  parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }],
+    { duration: 340, delay: 70 + i * 55, easing: DEX_EASE, fill: 'backwards' }));
+  entry.querySelectorAll('.dstat__bar i').forEach((bar, i) => bar.animate([{ width: '0%' }, { width: bar.style.width }],
+    { duration: 650, delay: 200 + i * 80, easing: DEX_EASE, fill: 'backwards' }));
+}
+function dexHop(btn){
+  if (REDUCED || !btn) return;
+  btn.querySelector('.dexevo__pic img').animate([{ transform: 'none' }, { transform: 'translateY(-22%) scale(1.06)', offset: .4 }, { transform: 'translateY(3%) scale(1.04, .94)', offset: .75 }, { transform: 'none' }],
+    { duration: 420, easing: 'ease-out' });
+}
+// grow or shrink the info box from its current height to whatever its new content needs
+function dexResize(box, from, to){
+  if (REDUCED || from === to) return Promise.resolve();
+  box.getAnimations().filter(x => x.id === 'size').forEach(x => x.cancel());
+  return box.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: 380, easing: DEX_EASE, id: 'size' }).finished.catch(() => {});
+}
+async function dexOpen(card, id, toggle = true){
+  const box = card.querySelector('.dexdetail'), cur = card.dataset.only, token = (card._tok = (card._tok || 0) + 1);
+  if (toggle && cur === id) id = '';
+  card.dataset.only = id;
+  card.querySelectorAll('.dexevo__mon').forEach(b => { b.setAttribute('aria-pressed', b.dataset.form === id); b.setAttribute('aria-expanded', b.dataset.form === id); });
+  if (id && id !== cur) dexHop(card.querySelector(`.dexevo__mon[data-form="${id}"]`));
+  const old = box.querySelector('.dexmon'), from = box.hidden ? 0 : box.offsetHeight;
+  // closing: the entry fades as the card folds shut
+  if (!id){
+    if (old && !REDUCED) old.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-6px)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+    await dexResize(box, from, 0);
+    if (card._tok === token){ box.hidden = true; box.innerHTML = ''; }
+    return;
+  }
+  // switching stages: the old entry slides out toward the side the new one comes from
+  const order = [...card.querySelectorAll('.dexevo__mon')].map(b => b.dataset.form), dir = Math.sign(order.indexOf(id) - order.indexOf(cur)) || 1;
+  if (old && !REDUCED){
+    await old.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 36}px)` }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
+    if (card._tok !== token) return;
+  }
+  box.hidden = false;
+  box.innerHTML = dexMonHTML(FORM[id]);
+  const entry = box.querySelector('.dexmon'), to = box.offsetHeight;
+  if (old && !REDUCED) entry.animate([{ opacity: 0, transform: `translateX(${dir * 36}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: DEX_EASE });
+  else dexReveal(entry);
+  await dexResize(box, from, to);
+}
+// from a sprite in the Moves section: open that Pokémon's line with its info showing, and scroll it into view
+async function dexJump(id){
+  const f = FORM[id]; if (!f) return;
+  await dexShow('mons', true);
+  const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#scr-dex'); if (!card) return;
+  dexOpen(card, id, false);
+  const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 12;
+  scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
+}
+$('#dex-body').addEventListener('click', e => {
+  const evo = e.target.closest('.dexevo__mon'); if (evo) return dexOpen(evo.closest('.dexline'), evo.dataset.form);
+  const mini = e.target.closest('.dexmini'); if (mini) return dexJump(mini.dataset.form);
+  const chip = e.target.closest('.dexchip'); if (chip) return dexPeek(chip);
+  const go = e.target.closest('.dexgo'); if (go) return dexJumpMove(go.dataset.move);
+});
+const DEX_BUILD = {
+  mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
+    + LINE_IDS.map(l => {
+      const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
+      return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
+    }).join(''),
+  moves: () => {
+    const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
+    return `<p class="dexintro">${ids.length} moves. A signature move is always known by the Pokémon it belongs to; the rest are taught at a Move Tutor.</p>`
+      + types.map(t => {
+        const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
+        return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
+          + ks.map(k => {
+            const m = MOVES[k], sigOf = FORMS.filter(f => f.sig === k), taught = m.learnableBy.map(id => FORM[id]).filter(f => f && f.sig !== k && m.star <= f.star);
+            const learn = (sigOf.length ? `<div class="dexlearn"><span>Signature of</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
+              + (taught.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexminis">${taught.map(dexMini).join('')}</div></div>` : '')
+              + (!sigOf.length && !taught.length ? `<div class="dexlearn"><span>${k === 'struggle' ? 'Used by any Pokémon whose moves are all out of PP' : 'No Pokémon learns this yet'}</span></div>` : '');
+            return `<article class="dexmove" data-move="${k}">${moveRow(k, false)}${learn}</article>`;
+          }).join('');
+      }).join('');
+  },
+  items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
+    + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
+      <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
 };
+function dexTabs(tab){
+  $('.dextabs').style.setProperty('--i', DEX_TABS.indexOf(tab));
+  document.querySelectorAll('.dextab').forEach(b => { const on = b.dataset.tab === tab; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+}
+// switching sections: the old list slides out toward the side you came from, the page jumps back to the top,
+// and the new list slides in from the other side
+async function dexShow(tab, animate){
+  const body = $('#dex-body'), scr = $('#scr-dex'), html = DEX.html[tab] ||= DEX_BUILD[tab]();
+  const dir = Math.sign(DEX_TABS.indexOf(tab) - DEX_TABS.indexOf(DEX.tab)) || 1;
+  if (animate && tab === DEX.tab) return scr.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
+  DEX.tab = tab; dexTabs(tab);
+  const token = ++DEX.token;
+  body.getAnimations().forEach(a => a.cancel());
+  if (animate && !REDUCED){
+    await body.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 32}px)` }], { duration: 150, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
+    if (token !== DEX.token) return;
+  }
+  body.innerHTML = html; scr.scrollTop = 0;
+  body.getAnimations().forEach(a => a.cancel());
+  if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+const dexMark = () => markHTML($('.dexbtn svg').outerHTML, 'Pokédex');
+function openDex(){
+  if (wiping || screen === 'scr-dex') return;
+  DEX.from = screen;
+  wipeTo('scr-dex', () => dexShow(DEX.tab, false), { mark: dexMark() });
+}
+function closeDex(){
+  if (wiping || screen !== 'scr-dex') return;
+  wipeTo(DEX.from, null, { mark: dexMark(), after: DEX.from === 'scr-map' ? scrollMapToCurrent : null });
+}
+document.querySelectorAll('[data-dex-open]').forEach(b => b.addEventListener('click', openDex));
+$('#dex-close').addEventListener('click', closeDex);
+addEventListener('keydown', e => { if (e.key === 'Escape') closeDex(); });
+document.querySelectorAll('.dextab').forEach(b => b.addEventListener('click', () => dexShow(b.dataset.tab, true)));
+// arrow keys move between the tabs, like any tab list
+$('.dextabs').addEventListener('keydown', e => {
+  const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!step) return;
+  const t = DEX_TABS[(DEX_TABS.indexOf(DEX.tab) + step + DEX_TABS.length) % DEX_TABS.length];
+  dexShow(t, true); document.querySelector(`.dextab[data-tab="${t}"]`).focus();
+});
+$('#dex-n-mons').textContent = FORMS.length; $('#dex-n-moves').textContent = Object.keys(MOVES).length; $('#dex-n-items').textContent = ITEMS_DATA.length;
+dexTabs(DEX.tab);
+
+/* ================= title ================= */
+// the backdrop is a real generated map (nodes coloured by type), drifting slowly behind the logo; the three
+// starters bob on discs in their type colour. Start goes to the starter screen.
+function buildTitle(){
+  const { nodes } = generateMap(randomSeed()), lines = [];
+  for (const n of nodes.values()) for (const k of n.kids){ const b = nodes.get(k); lines.push(`<line x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>`); }
+  $('#title-map').innerHTML = `<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none">${lines.join('')}</svg>
+    <div class="tbg__nodes">${[...nodes.values()].map(n => `<span class="tnode" data-type="${n.type}" style="left:${n.x}%;top:${n.y}%">${ICON[n.type]}</span>`).join('')}</div>`;
+  $('#title-version').textContent = 'v' + VERSION;
+  $('#title-mons').innerHTML = STARTERS.map((l, i) => {
+    const f = LINES[l][1][0];
+    return `<div class="tmon" style="--t:var(--t-${f.type}); --i:${i}"><img src="${SPRITES[f.spr]}" alt="${f.name}"></div>`;
+  }).join('');
+}
+$('#title-start').addEventListener('click', () => wipeTo('scr-starter', openStarter, { mark: markHTML('🚩', 'New run') }));
 
 /* ================= starter ================= */
 // three offers on top, one big slot in the middle; tapping an offer hops it into the slot,
@@ -931,10 +1185,68 @@ RENDER['scr-starter'] = () => {
 $('#starter-go').addEventListener('click', () => {
   if (!ST.landed || !ST.pick[0] || ST.chosen) return;
   ST.chosen = true; R.party[1] = ST.pick[0];              // front row, middle lane
-  const el = AREAS['S.pick'].els[0]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   refresh();
-  setTimeout(toMap, 450);
+  startRun();
 });
+
+/* ---------- from the starter screen straight into the first map, no wipe ----------
+   One step after another: the chosen Pokémon jumps at once toward the front-middle party slot (the starter screen fades
+   out under it) and lands; then the party and bag slots fade and pop in around it; then it moves into its slot; then
+   the top bar slides in and the map generates from the bottom row to the top, one node at a time, each path appearing
+   with the node it leads to. */
+const INTRO = { hop: 780, fade: 260, step: 30, slots: 45 };
+async function startRun(){
+  if (REDUCED) return toMap();
+  wiping = mapIntro = true; hideTip();
+  const pick = AREAS['S.pick'].els[0].el, from = spriteBox(pick), src = SPRITES[FORM[R.party[1].form].spr];
+  // lay the party slots out (invisible, over the starter screen) so the jump knows where it is headed
+  const team = $('#mapteam'), bag = $('#mapbag');
+  team.style.opacity = bag.style.opacity = '0';
+  team.hidden = bag.hidden = false;
+  renderArea('M.party'); renderArea('M.bag');
+  const target = AREAS['M.party'].els[1].el;
+  target.classList.add('arriving');                       // its sprite stays hidden until the jumper is handed over
+  pick.querySelector('.slot__sprite img').style.visibility = 'hidden';
+  const hop = fly(src, from, target, { dur: INTRO.hop, keep: true });
+
+  // the starter screen fades out under the jump; then the map takes its place, still hidden
+  await $('#scr-starter').animate([{ opacity: 1 }, { opacity: 0 }], { duration: INTRO.fade, easing: 'ease-out', fill: 'forwards' }).finished;
+  const map = $('#scr-map');
+  map.classList.add('intro');
+  UI.sel = null; UI.notice = null;
+  show('scr-map'); refresh(); scrollMapToCurrent(true);
+  $('#scr-starter').getAnimations().forEach(x => x.cancel());
+  pick.querySelector('.slot__sprite img').style.visibility = '';
+
+  // 1. the jump, landing included: it ends with the starter still and at full shape on its spot
+  const jumper = await hop;
+
+  // 2. then the party and bag slots fade and pop in around it
+  const ease = 'cubic-bezier(.3,1.4,.5,1)';
+  const slots = [...team.querySelectorAll('.slotwrap'), ...bag.querySelectorAll('.slotwrap')];
+  [team, bag].forEach(el => { el.style.opacity = ''; el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }); });
+  await Promise.all(slots.map((w, i) => w.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }],
+    { duration: 360, delay: i * INTRO.slots, easing: ease, fill: 'backwards' }).finished.catch(() => {})));
+
+  // 3. the starter moves into its slot (same place, same size, so nothing visibly changes; no extra landing bounce)
+  jumper.remove(); target.classList.remove('arriving');
+
+  // 4. then the rest: the top bar slides in and the map generates from the bottom row up, one node at a time
+  map.querySelector('.hud').animate([{ opacity: 0, transform: 'translateY(-14px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+  const nodes = [...document.querySelectorAll('#nodes .node')].map(b => ({ b, n: R.map.nodes.get(b.dataset.id) }))
+    .sort((p, q) => p.n.r - q.n.r || p.n.c - q.n.c);
+  const lines = [...document.querySelectorAll('#edges line')];
+  const built = nodes.map(({ b, n }, i) => {
+    const delay = 80 + i * INTRO.step;
+    lines.filter(l => l.dataset.to === n.id).forEach(l => l.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay - 40, easing: 'ease-out', fill: 'backwards' }));
+    if (n.id === R.at) $('#you').animate([{ opacity: 0, transform: 'translate(-50%, -90%)' }, { opacity: 1, transform: 'translate(-50%, -128%)' }], { duration: 360, delay: delay + 100, easing: ease, fill: 'backwards' });
+    return b.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1.14, offset: .65 }, { opacity: 1, scale: 1 }], { duration: 380, delay, easing: 'ease-out', fill: 'backwards' });
+  });
+  map.classList.remove('intro');                          // every piece now holds itself hidden until its turn
+  await Promise.all(built.map(x => x.finished.catch(() => {})));
+  wiping = mapIntro = false;
+  refresh();
+}
 
 /* ================= map ================= */
 function renderHud(){
@@ -953,7 +1265,7 @@ function renderMap(){
   for (const n of nodes.values()) for (const k of n.kids){
     const b = nodes.get(k), e = n.id + '>' + k;
     const cls = walked.has(e) ? 'walked' : (n.id === at && nextIds.has(k)) ? 'next' : '';
-    lines.push({ cls, html: `<line class="${cls}" x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>` });
+    lines.push({ cls, html: `<line class="${cls}" data-to="${k}" x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>` });
   }
   $('#edges').innerHTML = lines.sort((p, q) => rank(p.cls) - rank(q.cls)).map(p => p.html).join('');
   const box = $('#nodes');
@@ -985,17 +1297,17 @@ function renderMap(){
   else you.style.display = 'none';
 }
 RENDER['scr-map'] = () => { renderHud(); renderMap(); };
-function scrollMapToCurrent(){
+function scrollMapToCurrent(instant = false){
   const b = document.querySelector(`#nodes .node[data-id="${R.at}"]`), scr = $('#scr-map');
   if (!b) return;
   const r = b.getBoundingClientRect(), sr = scr.getBoundingClientRect();
-  scr.scrollTo({ top: scr.scrollTop + r.top - sr.top - sr.height * .62, behavior: REDUCED ? 'auto' : 'smooth' });
+  scr.scrollTo({ top: scr.scrollTop + r.top - sr.top - sr.height * .62, behavior: REDUCED || instant ? 'auto' : 'smooth' });
 }
 function goTo(id){
   if (wiping || screen !== 'scr-map') return;
   if (!R.map.nodes.get(R.at).kids.has(id)) return;
   R.at = id; R.trail.push(id);
-  renderMap();
+  UI.sel = null; refresh();
   const t = R.map.nodes.get(id).type;
   setTimeout(() => openNode(t), REDUCED ? 60 : 420);
 }
@@ -1174,7 +1486,7 @@ function buy(i){
   const id = MT.stock[i], cost = itemPrice(id), slot = R.bag.indexOf(null);
   if (MT.sold.has(i)) return;
   if (R.coins < cost){ UI.notice = { text: `You need ${cost} coins for the ${ITEM[id].name}.` }; return refresh(); }
-  if (slot < 0){ UI.notice = { text: 'Your bag is full. Give an item to a Pokémon from the party screen first.' }; return refresh(); }
+  if (slot < 0){ UI.notice = { text: 'Your bag is full. Give an item to a Pokémon on the map first.' }; return refresh(); }
   const img = document.querySelector(`#mart-stock .mcard[data-i="${i}"] img`), r = img.getBoundingClientRect();
   const start = { x: r.left, y: r.top, size: r.width };
   const el = AREAS['I.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
@@ -1197,7 +1509,7 @@ RENDER['scr-item'] = () => {
   }).join('');
   $('#mart-stock').querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', () => buy(+b.dataset.buy)));
   renderArea('I.bag');
-  $('#item-count').textContent = `${R.bag.filter(Boolean).length} of 5`;
+  $('#item-count').textContent = `${R.bag.filter(Boolean).length} of ${TUNE.bagSize}`;
   renderNotice('item-notice');
   const rr = $('#mart-reroll');
   rr.textContent = `New stock for ${martRerollFee()} coins`;

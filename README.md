@@ -44,3 +44,7 @@ The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__` and `__
 
 The workflow in `.github/workflows/pages.yml` rebuilds and redeploys both on every push to `main` or `dev`.
 Ongoing work is merged into `dev` for play-testing, then `dev` is merged into `main` when it is ready.
+
+## Versions
+
+Each release to the stable game gets a version number (`0.MINOR.PATCH` during development), shown in the title screen's corner; the experimental build shows the upcoming version and its commit, e.g. `0.2.0-dev (a1b2c3d)`. See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.

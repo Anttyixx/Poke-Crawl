@@ -801,5 +801,5 @@ async function finishBattle(outcome){
 mountAreas();
 buildField();
 $('#b-logbox').open = innerWidth > 760;
-openStarter();
-show('scr-starter'); refresh();
+buildTitle();
+show('scr-title'); refresh();

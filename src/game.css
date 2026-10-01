@@ -47,7 +47,7 @@ button{ font:inherit; color:inherit; }
 .rowlabel{ font-size:12px; color:var(--ink-dim); text-align:center; margin:0 0 9px; }
 .rowlabel + .slots{ margin-bottom:6px; }
 .slots{ display:grid; gap:8px 12px; justify-content:center; grid-template-columns: repeat(3, minmax(0, 72px)); }
-.slots--bag{ grid-template-columns: repeat(5, minmax(0, 57px)); gap:8px 10px; }
+.slots--bag{ grid-template-columns: repeat(4, minmax(0, 57px)); gap:8px 10px; }
 .slots--offer{ grid-template-columns: repeat(3, minmax(0, 87px)); gap:10px 16px; }
 .slotwrap{ width:100%; display:flex; flex-direction:column; align-items:center; gap:11px; min-width:0; }
 .slotname{ font-size:11.5px; color:#c3c9d6; text-align:center; line-height:1.25; min-height:1.3em; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -62,7 +62,7 @@ button{ font:inherit; color:inherit; }
 .btn--go{ background:var(--accent); border-color:var(--accent); color:#0c0e13; font-weight:650; }
 .btn--go:hover:not(:disabled){ background:#7fa2f5; }
 .btn:disabled{ opacity:.4; cursor:default; }
-.btn:focus-visible, .node:focus-visible, .fab:focus-visible, .mvcard:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
+.btn:focus-visible, .node:focus-visible, .mvcard:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
 .notice{ font-size:13.5px; color:var(--hp-yellow); min-height:1.4em; margin:12px 0 0; line-height:1.45; }
 .notice.ok{ color:var(--hp-green); }
 
@@ -107,7 +107,7 @@ button{ font:inherit; color:inherit; }
 @keyframes heartbreak{ 0%{ transform:scale(1); fill:#ff5d73; } 30%{ transform:scale(1.35); } 60%{ transform:scale(.8) rotate(-12deg); fill:#ff5d73; } 100%{ transform:scale(1); fill:#2d3240; filter:none; } }
 .hud .coins{ margin:0; }
 
-.mapwrap{ padding:0 8px 120px; }
+.mapwrap{ padding:0 8px 180px; }
 .map{ position:relative; margin:0 auto; width:min(100%, 560px); --row-h: clamp(54px, 8.4vh, 70px); height:calc(var(--rows, 12) * var(--row-h)); }
 .map svg.edges{ position:absolute; inset:14px 8px; width:calc(100% - 16px); height:calc(100% - 28px); overflow:visible; }
 .edges line{ stroke:#333a4a; stroke-width:2.5; vector-effect:non-scaling-stroke; stroke-dasharray:5 6; stroke-linecap:round; }
@@ -135,16 +135,6 @@ button{ font:inherit; color:inherit; }
   transition: left .45s cubic-bezier(.4,1.3,.5,1), top .45s cubic-bezier(.4,1.3,.5,1); }
 #you img{ width:100%; height:100%; object-fit:contain; image-rendering:pixelated;
   filter: drop-shadow(0 0 5px color-mix(in srgb, var(--glow-selected) 60%, transparent)); }
-
-/* ================= party / bag button ================= */
-.fab{ position:absolute; right:16px; bottom:16px; z-index:60; width:62px; height:62px; border-radius:20px;
-  background:#1b1f2a; border:2px solid #3a4152; display:grid; place-items:center; cursor:pointer; padding:0;
-  box-shadow:0 8px 22px rgba(0,0,0,.55); transition: transform .15s ease, border-color .15s ease, opacity .2s ease; }
-.fab:hover{ border-color:var(--glow-selected); transform:translateY(-2px); }
-.fab svg{ width:30px; height:30px; }
-.fab__count{ position:absolute; right:-6px; top:-7px; font-family:var(--display); font-weight:700; font-size:11.5px;
-  background:var(--glow-selected); color:#0c0e13; border-radius:999px; padding:1px 7px; }
-.fab[hidden]{ display:none; }
 
 /* ================= screen wipe ================= */
 #wipe{ position:fixed; inset:0; z-index:3000; pointer-events:none; visibility:hidden; overflow:hidden; --wipe-c: var(--glow-selected); }
@@ -483,13 +473,42 @@ button{ font:inherit; color:inherit; }
 .mvslot:hover > .mv, .mvslot:focus-visible > .mv{ background:color-mix(in srgb, var(--accent) 17%, var(--panel-2)) !important; }
 .mvlist--pick{ gap:6px; }
 
-/* ---------- your team on the map: small slots, bottom-left ---------- */
-.mapteam{ position:absolute; left:16px; bottom:16px; z-index:60; display:grid; gap:6px; cursor:pointer;
-  padding-bottom:env(safe-area-inset-bottom, 0px); }
-.mapteam[hidden]{ display:none; }
-.slots--mini{ grid-template-columns: repeat(3, 42px); gap:6px; justify-content:start; }
-.slots--mini .slotwrap{ padding-bottom:0; }
-@media (max-width:520px){ .slots--mini{ grid-template-columns: repeat(3, 36px); gap:5px; } .mapteam{ left:12px; bottom:12px; } }
+/* ---------- your team (bottom-left) and bag (bottom-right, 2 by 2) on the map ---------- */
+.mapteam, .mapbag{ --mini: 63px; --mini-gap: 8px; --edge: 16px;
+  position:absolute; bottom:calc(8px + env(safe-area-inset-bottom, 0px)); z-index:60; display:grid; gap:var(--mini-gap); }
+.mapteam{ left:var(--edge); }
+.mapbag{ right:var(--edge); }
+.mapteam[hidden], .mapbag[hidden]{ display:none; }
+.slots--mini{ grid-template-columns: repeat(3, var(--mini)); gap:var(--mini-gap); justify-content:start; }
+.slots--minibag{ grid-template-columns: repeat(2, var(--mini)); }
+.slots--mini .slotwrap{ padding-bottom:0; gap:0; }
+@media (max-width:520px){ .mapteam, .mapbag{ --mini: 54px; --mini-gap: 7px; --edge: 12px; } }
+/* a frosted backdrop behind each group (and around the popup) so map nodes and lines passing underneath blur and
+   darken instead of clashing with the slots. The blur feathers out to nothing: two eased gradient masks (left-right
+   and top-bottom) are intersected, so the corners feather too. It reaches 2.2 x --halo past the slots and fades
+   over the outer 1.9 x --halo of that. */
+.mapteam::before, .mapbag::before, .mappop__box::before{ content:""; position:absolute; z-index:-1; pointer-events:none;
+  --fade: calc(var(--halo, 28px) * 1.9);
+  --ease: transparent, rgb(0 0 0 / .1) calc(var(--fade) * .25), rgb(0 0 0 / .38) calc(var(--fade) * .5), rgb(0 0 0 / .76) calc(var(--fade) * .75), #000 var(--fade),
+          #000 calc(100% - var(--fade)), rgb(0 0 0 / .76) calc(100% - var(--fade) * .75), rgb(0 0 0 / .38) calc(100% - var(--fade) * .5), rgb(0 0 0 / .1) calc(100% - var(--fade) * .25), transparent;
+  inset:calc(var(--halo, 28px) * -2.2);
+  background:color-mix(in srgb, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  -webkit-mask-image: linear-gradient(to right, var(--ease)), linear-gradient(to bottom, var(--ease));
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, var(--ease)), linear-gradient(to bottom, var(--ease));
+  mask-composite: intersect; }
+/* the held-item disc on the map's party slots is a little bigger. Its bottom and right edges stay put (the
+   offsets are the standard ones) and it grows up and left, into its own slot, so it never covers a neighbour. */
+.slots--mini .g--br{ --held-size: calc(34 * 1cqw); }
+.slots--mini .g--br .g__held{ width:var(--held-size); height:var(--held-size); }
+.slots--mini .g--br[data-style="ring"] .g__mask::before{ width:calc(var(--held-size) + var(--hp-gap) * 2); height:calc(var(--held-size) + var(--hp-gap) * 2); }
+.mappop{ position:absolute; inset:0; z-index:70; display:grid; place-items:center; padding:16px; pointer-events:none; }
+.mappop[hidden]{ display:none; }
+.mappop__box{ --halo: 36px; position:relative; z-index:0; width:min(100%, 380px); pointer-events:none; }
+.mappop__card{ pointer-events:auto; cursor:pointer; margin:0; width:100%; max-height:min(64vh, 520px); overflow-y:auto;
+  background:color-mix(in srgb, var(--panel) 96%, transparent); border-color:#323949;
+  box-shadow:0 18px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4); }
 
 /* headers are left aligned everywhere */
 .starter__head{ justify-content:flex-start; text-align:left; }
@@ -767,3 +786,215 @@ button{ font:inherit; color:inherit; }
 .midline.is-away{ opacity:0; pointer-events:none; transition: opacity .2s ease-out; }
 .midline .slots{ margin:0 auto; }
 #scr-starter .infostage, #wild-root .infostage{ margin-top:18px; }
+
+/* ================= title screen ================= */
+.title-scr{ overflow:hidden; }
+/* backdrop: a generated map, faded, vignetted and drifting slowly upward */
+.tbg{ position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 72%, transparent);
+  mask-image: linear-gradient(transparent, #000 18%, #000 72%, transparent); }
+.tbg::after{ content:""; position:absolute; inset:0; background: radial-gradient(ellipse 70% 55% at 50% 44%, color-mix(in srgb, var(--bg) 82%, transparent), transparent 70%); }
+.tbg__map{ position:absolute; left:50%; top:0; width:min(100%, 560px); height:220%; opacity:.34; filter:blur(.4px);
+  transform:translateX(-50%); animation: tdrift 90s linear infinite alternate; }
+@keyframes tdrift{ from{ transform:translate(-50%, 0); } to{ transform:translate(-50%, -54.5%); } }
+.tbg__map .edges{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.tbg__nodes{ position:absolute; inset:0; }
+.tnode{ --n: var(--n-start); position:absolute; width:34px; height:34px; transform:translate(-50%, -50%); border-radius:50%;
+  border:3px solid color-mix(in srgb, var(--n) 60%, #1b1f29); background:#171a22; display:grid; place-items:center; font-size:15px; line-height:1; }
+.tnode[data-type="boss"]{ width:48px; height:48px; font-size:21px; }
+
+.tmain{ position:relative; z-index:1; min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:0; padding:40px 16px calc(36px + env(safe-area-inset-bottom, 0px)); text-align:center; }
+.tkicker{ margin:0 0 6px; font-family:var(--display); font-weight:600; font-size:13px; letter-spacing:.32em; text-transform:uppercase;
+  color:color-mix(in srgb, var(--glow-selected) 75%, var(--ink-dim)); }
+.tlogo{ margin:0; font-family:var(--display); font-weight:700; font-size:clamp(38px, 11.6vw, 96px); line-height:.95; letter-spacing:.01em;
+  text-transform:uppercase; white-space:nowrap; filter: drop-shadow(0 4px 0 #07080c) drop-shadow(0 0 22px color-mix(in srgb, var(--glow-selected) 30%, transparent)); }
+.tlogo span{ background:linear-gradient(180deg, #ffffff 35%, #c9d1e4); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.tlogo .tlogo__dash{ background:none; color:var(--glow-selected); }
+.tlogo .tlogo__crawl{ background:linear-gradient(180deg, #b6f6ff 10%, var(--glow-selected) 55%, #2fb4d6); -webkit-background-clip:text; background-clip:text; }
+
+/* the three starters, bobbing on glowing discs in their type colour */
+.tmons{ display:flex; justify-content:center; align-items:flex-end; gap:clamp(10px, 4vw, 28px); margin:clamp(26px, 6vh, 46px) 0 clamp(24px, 5vh, 40px); }
+.tmon{ --s: clamp(76px, 22vw, 110px); position:relative; width:var(--s); height:var(--s); display:grid; place-items:center; }
+.tmon::before{ content:""; position:absolute; left:8%; right:8%; bottom:2%; height:22%; border-radius:50%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--t) 55%, transparent), transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--t) 45%, transparent) inset; }
+.tmon img{ position:relative; width:86%; height:86%; object-fit:contain; image-rendering:pixelated;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,.5)); animation: tbob 2.6s ease-in-out infinite; animation-delay:calc(var(--i) * -.85s); }
+@keyframes tbob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9%); } }
+
+.tstart{ min-width:min(260px, 100%); font-size:20px; letter-spacing:.06em; text-transform:uppercase; animation: tpulse 2.4s ease-in-out infinite; }
+@keyframes tpulse{ 0%,100%{ box-shadow:0 0 10px 0 color-mix(in srgb, var(--accent) 25%, transparent); } 50%{ box-shadow:0 0 30px 4px color-mix(in srgb, var(--accent) 55%, transparent); } }
+@media (max-width:520px){ .tstart{ width:auto; min-width:220px; } }
+.tfoot{ margin:18px 0 0; font-size:13px; color:var(--ink-dim); }
+.tfoot i{ font-style:normal; color:var(--ink-faint); margin:0 6px; }
+@media (prefers-reduced-motion: reduce){ .tbg__map, .tmon img, .tstart{ animation:none; } }
+
+/* ================= Pokédex ================= */
+/* the button: on the map's top bar and in the title screen's corner */
+.dexbtn{ appearance:none; display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 12px 0 8px; border-radius:10px; cursor:pointer;
+  background:#1b1f2a; border:1px solid #3a4152; color:var(--ink); font-family:var(--display); font-weight:600; font-size:14px;
+  transition:border-color .15s ease, transform .15s ease; }
+.dexbtn:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }
+.dexbtn:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
+.dexbtn svg{ width:22px; height:22px; flex:none; }
+.dexbtn--corner{ position:absolute; top:calc(14px + env(safe-area-inset-top, 0px)); right:16px; z-index:2; }
+@media (max-width:520px){ .hud .dexbtn{ padding:0 7px; } .hud .dexbtn span{ display:none; } .hud__right{ gap:10px; } }
+.wipe__icon svg{ width:44%; height:44%; }
+
+/* the screen: a header pinned to the top with the section tabs, the list scrolling underneath */
+.dex{ --dex-w: 760px; }
+.dexhead{ position:sticky; top:0; z-index:5; padding:14px 16px 12px;
+  background:color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line); }
+.dexhead > *{ max-width:var(--dex-w); margin-left:auto; margin-right:auto; }
+.dexhead__top{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.dexhead__icon svg{ width:30px; height:30px; display:block; }
+.dexhead__top .btn{ margin-left:auto; }
+.dextabs{ --i: 0; position:relative; display:grid; grid-template-columns:repeat(3, 1fr); padding:4px; border-radius:13px;
+  background:var(--game-bg); border:1px solid var(--game-edge); }
+.dextabs__pill{ position:absolute; top:4px; bottom:4px; left:4px; width:calc((100% - 8px) / 3); border-radius:9px;
+  background:color-mix(in srgb, var(--glow-selected) 16%, var(--panel-2)); border:1px solid color-mix(in srgb, var(--glow-selected) 55%, transparent);
+  box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 18%, transparent);
+  transform:translateX(calc(var(--i) * 100%)); transition:transform .32s cubic-bezier(.3,1.25,.5,1); }
+.dextab{ position:relative; appearance:none; background:none; border:0; padding:9px 4px; border-radius:9px; cursor:pointer;
+  font-family:var(--display); font-weight:600; font-size:15px; color:var(--ink-dim); transition:color .2s ease; }
+.dextab small{ font-family:var(--body); font-weight:500; font-size:11.5px; color:var(--ink-faint); margin-left:3px; transition:color .2s ease; }
+.dextab[aria-selected="true"]{ color:var(--ink); }
+.dextab[aria-selected="true"] small{ color:color-mix(in srgb, var(--glow-selected) 80%, var(--ink-dim)); }
+.dextab:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:-2px; }
+@media (prefers-reduced-motion: reduce){ .dextabs__pill{ transition:none; } }
+
+.dexbody{ max-width:var(--dex-w); margin:0 auto; padding:16px 16px calc(48px + env(safe-area-inset-bottom, 0px)); }
+.dexintro{ color:var(--ink-dim); font-size:13.5px; line-height:1.5; margin:2px 0 16px; }
+.dexnone{ color:var(--ink-faint); font-size:12.5px; font-style:normal; }
+.chips{ display:flex; flex-wrap:wrap; gap:5px; }
+
+/* Pokémon: one card per evolution line, one row per form */
+.dexline{ background:var(--panel); border:1px solid var(--line); border-radius:14px; margin-bottom:12px; overflow:hidden; }
+.dexmon{ display:grid; grid-template-columns:76px 1fr; gap:4px 14px; padding:14px; }
+.dexmon + .dexmon{ border-top:1px solid #20242f; }
+.dexmon__pic{ grid-row:span 2; width:76px; height:76px; border-radius:16px; display:grid; place-items:center;
+  background:radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--t) 30%, transparent), transparent 70%), var(--tile);
+  border:2px solid color-mix(in srgb, var(--t) 55%, #1b1f29); }
+.dexmon__pic img{ width:86%; height:86%; object-fit:contain; image-rendering:pixelated; }
+.dexmon__head{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; }
+.dexmon__head b{ font-family:var(--display); font-size:18px; }
+.dexmon__roles{ font-size:12px; color:var(--ink-dim); margin-top:2px; }
+.dstats{ display:grid; grid-template-columns:repeat(3, 1fr); gap:6px 12px; margin-top:9px; }
+.dstat{ display:grid; grid-template-columns:auto 1fr; align-items:baseline; gap:0 6px; font-size:11px; color:var(--ink-dim); }
+.dstat b{ justify-self:end; font-family:var(--display); font-size:14px; color:var(--ink); font-variant-numeric:tabular-nums; }
+.dstat__bar{ grid-column:1 / -1; display:block; height:5px; border-radius:999px; background:rgba(255,255,255,.08); overflow:hidden; margin-top:3px; }
+.dstat__bar i{ display:block; height:100%; border-radius:inherit; background:var(--sc, var(--hp-green)); }
+.dstat[data-stat="atk"]{ --sc:#ff8a5c; } .dstat[data-stat="spd"]{ --sc:#5ec8ff; }
+.dexmon__more{ grid-column:2; display:grid; gap:8px; margin-top:10px; }
+.dexkv{ display:grid; grid-template-columns:86px 1fr; gap:10px; align-items:start; }
+.dexkv > span{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); padding-top:5px; }
+.dexkv p{ margin:0; font-size:13px; line-height:1.45; color:#c3c9d6; }
+.dexkv p b{ color:var(--ink); }
+@media (max-width:520px){
+  .dexmon{ grid-template-columns:60px 1fr; gap:4px 12px; padding:12px; }
+  .dexmon__pic{ width:60px; height:60px; border-radius:13px; grid-row:auto; }
+  .dexmon__more{ grid-column:1 / -1; }
+  .dexkv{ grid-template-columns:1fr; gap:5px; }
+  .dexkv > span{ padding-top:0; }
+}
+
+/* moves: grouped by type, each with who learns it */
+.dextype{ display:flex; align-items:baseline; gap:10px; margin:22px 0 10px; font-family:var(--display); font-size:17px; }
+.dextype::before{ content:""; width:12px; height:12px; border-radius:50%; background:var(--c); align-self:center; box-shadow:0 0 10px color-mix(in srgb, var(--c) 50%, transparent); }
+.dextype small{ font-family:var(--body); font-weight:400; font-size:12.5px; color:var(--ink-dim); }
+.dexintro + .dextype{ margin-top:4px; }
+.dexmove{ background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:4px; margin-bottom:8px; }
+.dexmove > .mv{ background:transparent !important; border:0 !important; }
+.dexlearn{ display:grid; grid-template-columns:86px 1fr; gap:8px; align-items:center; padding:6px 10px 8px; border-top:1px solid #20242f; }
+.dexlearn > span{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+.dexlearn > span:only-child{ grid-column:1 / -1; text-transform:none; letter-spacing:0; font-size:12.5px; }
+.dexminis{ display:flex; flex-wrap:wrap; gap:4px; }
+.dexmini{ width:34px; height:34px; border-radius:9px; background:var(--tile); display:grid; place-items:center; }
+.dexmini img{ width:90%; height:90%; object-fit:contain; image-rendering:pixelated; }
+@media (max-width:520px){ .dexlearn{ grid-template-columns:1fr; gap:6px; } .dexmini{ width:30px; height:30px; } }
+
+/* items */
+.dexitem{ display:grid; grid-template-columns:56px 1fr; gap:14px; align-items:start; background:var(--panel); border:1px solid var(--line);
+  border-radius:14px; padding:14px; margin-bottom:10px; }
+.dexitem__pic{ width:56px; height:56px; border-radius:14px; background:var(--tile); border:2px solid color-mix(in srgb, var(--t-held) 60%, #1b1f29); display:grid; place-items:center; }
+.dexitem__pic img{ width:78%; height:78%; object-fit:contain; image-rendering:pixelated; }
+.dexitem__head{ display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; }
+.dexitem__head b{ font-family:var(--display); font-size:17px; }
+.dexprice{ margin-left:auto; font-family:var(--display); font-weight:600; font-size:13.5px; color:var(--star-gold); white-space:nowrap; }
+.dexitem p{ margin:4px 0 0; font-size:13.5px; line-height:1.5; color:#c3c9d6; }
+
+/* ---------- Pokédex: evolution path on each line, tap a stage to narrow the card to it ---------- */
+.dexevo{ padding:12px 14px 14px; border-bottom:1px solid #20242f; background:linear-gradient(180deg, #1a1e28, var(--panel)); }
+.dexevo__bar{ display:flex; align-items:center; gap:10px; min-height:26px; margin-bottom:10px; }
+.dexevo__label{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
+.dexevo__hint{ margin-left:auto; font-size:12px; color:var(--ink-faint); }
+.dexevo__hint[hidden]{ display:none; }
+.dexevo__path{ display:flex; align-items:center; justify-content:center; gap:6px; }
+.dexevo__col{ display:flex; flex-direction:column; gap:8px; flex:0 1 128px; min-width:0; }
+.dexevo__arrow{ flex:none; color:var(--ink-faint); display:grid; place-items:center; }
+.dexevo__arrow svg{ width:18px; height:18px; }
+.dexevo__mon{ appearance:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px 7px; min-width:0;
+  border-radius:14px; border:1.5px solid transparent; background:transparent; color:var(--ink); font:inherit;
+  transition:background .2s ease, border-color .2s ease, opacity .2s ease, transform .15s ease; }
+.dexevo__mon:hover{ background:#1f2430; }
+.dexevo__mon:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; }
+.dexevo__pic{ width:62px; height:62px; border-radius:50%; display:grid; place-items:center;
+  background:radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--t) 34%, transparent), transparent 70%), var(--tile);
+  border:2px solid color-mix(in srgb, var(--t) 55%, #1b1f29); transition:box-shadow .2s ease, border-color .2s ease; }
+.dexevo__pic img{ width:84%; height:84%; object-fit:contain; image-rendering:pixelated; }
+.dexevo__name{ font-family:var(--display); font-weight:600; font-size:13.5px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dexevo__mon .dt__stars{ font-size:10.5px; letter-spacing:0; }
+.dexevo__col:has(> :nth-child(2)) .dexevo__pic{ width:50px; height:50px; }      /* a branching stage stacks two smaller choices */
+/* narrowed to one stage: it lights up, the others fade back */
+.dexevo__mon[aria-pressed="true"]{ background:color-mix(in srgb, var(--glow-selected) 10%, #1a1f29); border-color:color-mix(in srgb, var(--glow-selected) 60%, transparent); }
+.dexevo__mon[aria-pressed="true"] .dexevo__pic{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 40%, transparent); }
+.dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]{ opacity:.55; }
+.dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]:hover{ opacity:.8; }
+/* the info box under the path: closed by default, grows open (its height is animated from JS) */
+.dexdetail{ overflow:hidden; }
+.dexdetail[hidden]{ display:none; }
+.dexline .dexevo{ border-bottom:0; }
+/* a soft glow centred on the sprite that has faded to nothing before it reaches any edge of the box */
+.dexdetail .dexmon{ background:radial-gradient(ellipse 320px 130px at 70px 100px, color-mix(in srgb, var(--t) 13%, transparent), transparent 68%); }
+.dexline[data-only=""] .dexevo__hint{ color:var(--ink-faint); }
+.dexline:not([data-only=""]){ border-color:color-mix(in srgb, var(--glow-selected) 28%, var(--line)); }
+.dexline{ transition:border-color .3s ease; }
+/* sprites in the Moves section are buttons now */
+.dexmini{ appearance:none; padding:0; border:1px solid transparent; cursor:pointer; transition:border-color .15s ease, transform .15s ease; }
+.dexmini:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }
+.dexmini:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:1px; }
+@media (max-width:520px){
+  .dexevo{ padding:10px 10px 12px; }
+  .dexevo__path{ gap:2px; }
+  .dexevo__pic{ width:52px; height:52px; }
+  .dexevo__col:has(> :nth-child(2)) .dexevo__pic{ width:42px; height:42px; }
+  .dexevo__name{ font-size:12px; }
+  .dexevo__arrow svg{ width:14px; height:14px; }
+  .dexevo__hint{ font-size:11px; }
+}
+
+/* ---------- Pokédex entry: signature move in full, tutor moves you can tap open ---------- */
+.dexkv .mvlist{ gap:6px; }
+.dexchip{ appearance:none; cursor:pointer; font:inherit; font-size:11.5px; transition:border-color .15s ease, background .15s ease, transform .15s ease; }
+.dexchip:hover{ transform:translateY(-1px); }
+.dexchip[aria-expanded="true"]{ border-color:var(--glow-selected); background:color-mix(in srgb, var(--glow-selected) 14%, #151821); color:#fff; }
+.dexchip:focus-visible, .dexgo:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; }
+.dexpeek{ overflow:hidden; }
+.dexpeek[hidden]{ display:none; }
+.dexpeek .mvlist{ margin-top:8px; }
+.dexpeek .mv{ border-color:color-mix(in srgb, var(--glow-selected) 35%, var(--line)) !important; }
+.dexgo{ appearance:none; background:none; border:0; padding:6px 2px 2px; cursor:pointer; font:inherit; font-size:12.5px; color:color-mix(in srgb, var(--glow-selected) 80%, var(--ink-dim)); }
+.dexgo:hover{ color:var(--glow-selected); text-decoration:underline; text-underline-offset:3px; }
+/* a move you jumped to from a Pokémon's entry */
+.dexmove.dexflash{ animation:dexflash 1.6s ease-out .25s; }
+@keyframes dexflash{ 0%,30%{ border-color:var(--glow-selected); box-shadow:0 0 0 3px color-mix(in srgb, var(--glow-selected) 35%, transparent), 0 0 22px color-mix(in srgb, var(--glow-selected) 30%, transparent); } 100%{ border-color:var(--line); box-shadow:none; } }
+@media (prefers-reduced-motion: reduce){ .dexmove.dexflash{ animation:none; outline:2px solid var(--glow-selected); } }
+
+/* the first map is hidden while the starter jumps over; startRun() then animates every piece in */
+#scr-map.intro :is(.hud, .node, #edges line, #you){ opacity:0; }
+
+/* version label, title screen bottom-left corner */
+.tversion{ position:absolute; left:16px; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:2; margin:0;
+  font-family:var(--display); font-weight:500; font-size:12px; letter-spacing:.04em; color:var(--ink-faint); }
