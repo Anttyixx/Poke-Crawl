@@ -64,7 +64,7 @@
     <span class="coins screen__coins" id="mart-coins"></span>
     <div class="scr">
       <div class="scr__head"><span class="nodeicon" data-type="item">🛒</span><h1 class="title">Poké Mart</h1></div>
-      <p class="sub">Held items work automatically in battle. What you buy goes in your bag; give it to a Pokémon from the party screen.</p>
+      <p class="sub">Held items work automatically in battle. What you buy goes in your bag. On the map, tap an item and then a Pokémon to have it hold the item.</p>
       <div class="mvcards martcards" id="mart-stock"></div>
       <h2 class="panel-title">Bag <small id="item-count"></small></h2>
       <div class="game slotbox"><div class="slots slots--bag" data-area="I.bag"></div></div>
@@ -116,24 +116,6 @@
     </div>
   </section>
 
-  <!-- party + bag -->
-  <section class="screen" id="scr-party" aria-label="Party and bag">
-    <div class="scr">
-      <div class="scr__head"><h1 class="title">Party and bag</h1><button class="btn" id="party-close" style="margin-left:auto">Close</button></div>
-      <p class="sub">This is your battle formation. Tap a Pokémon, then another slot to move or swap. Tap an item, then a Pokémon to have it hold the item. Back-row Pokémon only use support moves until their lane opens up.</p>
-      <div class="partygrid">
-        <p class="rowlabel">Front row</p><div class="slots" data-area="P.party" data-part="front"></div>
-        <p class="rowlabel">Back row</p><div class="slots" data-area="P.party" data-part="back"></div>
-      </div>
-      <h2 class="panel-title">Bag <small id="party-bagcount"></small></h2>
-      <div class="game slotbox"><div class="slots slots--bag" data-area="P.bag"></div></div>
-      <div class="detail" id="party-detail"></div>
-      <p class="notice" id="party-notice"></p>
-      <h2 class="panel-title">Moves <small>★ = signature move</small></h2>
-      <div id="party-roster"></div>
-    </div>
-  </section>
-
   <!-- battle -->
   <section class="screen" id="scr-battle" aria-label="Battle">
     <div class="bscr">
@@ -174,14 +156,11 @@
     <div class="slots slots--mini" data-area="M.party" data-part="front"></div>
     <div class="slots slots--mini" data-area="M.party" data-part="back"></div>
   </div>
-  <button class="fab" id="fab" type="button" aria-label="Party and bag" title="Party and bag" hidden>
-    <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="#dfe4f2" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
-      <path d="M11 9V7.5a5 5 0 0 1 10 0V9"/>
-      <rect x="6" y="9" width="20" height="18" rx="5" fill="#262b37"/>
-      <path d="M6 16h20"/><rect x="13" y="14" width="6" height="5" rx="1.5" fill="#5ee8ff" stroke="#5ee8ff"/>
-    </svg>
-    <span class="fab__count" id="fab-count">1/6</span>
-  </button>
+  <div class="mapbag" id="mapbag" aria-label="Your bag" hidden>
+    <div class="slots slots--mini slots--minibag" data-area="M.bag"></div>
+  </div>
+  <!-- what you tapped on the map, in the middle of the screen; tap it to close -->
+  <div class="mappop" id="mappop" role="dialog" aria-label="Details" hidden><div class="mappop__card detail" id="mappop-card"></div></div>
 </div>
 
 <div class="tip" id="tip" role="tooltip"></div>
