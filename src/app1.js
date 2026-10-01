@@ -1176,47 +1176,58 @@ RENDER['scr-starter'] = () => {
 $('#starter-go').addEventListener('click', () => {
   if (!ST.landed || !ST.pick[0] || ST.chosen) return;
   ST.chosen = true; R.party[1] = ST.pick[0];              // front row, middle lane
-  const el = AREAS['S.pick'].els[0]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   refresh();
-  setTimeout(startRun, 450);
+  startRun();
 });
 
 /* ---------- from the starter screen straight into the first map, no wipe ----------
-   The starter screen fades away around the chosen Pokémon, which hops to where the front-middle party slot will be.
-   The map then builds itself from the bottom row to the top, one node at a time (each path appears with the node
-   it leads to), and finally the top bar, the party and the bag fade in, with the starter settling into its slot. */
-const INTRO = { hop: 620, start: 700, step: 26, ui: 520 };
+   The chosen Pokémon jumps at once toward the front-middle party slot while the starter screen fades out around it.
+   When it lands, everything else arrives together: the party and bag slots pop in, the top bar slides in, and the
+   map generates from the bottom row to the top, one node at a time, each path appearing with the node it leads to. */
+const INTRO = { hop: 560, fade: 260, step: 30, slots: 45 };
 async function startRun(){
   if (REDUCED) return toMap();
   wiping = mapIntro = true; hideTip();
   const pick = AREAS['S.pick'].els[0].el, from = spriteBox(pick), src = SPRITES[FORM[R.party[1].form].spr];
-  // a stand-in sprite over the big slot, so the Pokémon stays put while everything around it fades
-  const stand = Object.assign(document.createElement('img'), { className: 'hopper', src, alt: '' });
-  Object.assign(stand.style, { left: from.x + 'px', top: from.y + 'px', width: from.size + 'px', height: from.size + 'px' });
-  document.body.append(stand);
-  await $('#scr-starter').animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: 'ease-in', fill: 'forwards' }).finished;
+  // lay the party slots out (invisible, over the starter screen) so the jump knows where it is headed
+  const team = $('#mapteam'), bag = $('#mapbag');
+  team.style.opacity = bag.style.opacity = '0';
+  team.hidden = bag.hidden = false;
+  renderArea('M.party'); renderArea('M.bag');
+  const target = AREAS['M.party'].els[1].el;
+  target.classList.add('arriving');                       // its sprite stays hidden until the jumper is handed over
+  pick.querySelector('.slot__sprite img').style.visibility = 'hidden';
+  const hop = fly(src, from, target, { dur: INTRO.hop, keep: true });
 
-  // the map, laid out but invisible: every piece gets its entrance queued before the first frame is drawn
+  // the starter screen fades out under the jump; then the map takes its place, still hidden
+  await $('#scr-starter').animate([{ opacity: 1 }, { opacity: 0 }], { duration: INTRO.fade, easing: 'ease-out', fill: 'forwards' }).finished;
+  const map = $('#scr-map');
+  map.classList.add('intro');
   UI.sel = null; UI.notice = null;
   show('scr-map'); refresh(); scrollMapToCurrent(true);
-  $('#scr-starter').getAnimations().forEach(a => a.cancel());
+  $('#scr-starter').getAnimations().forEach(x => x.cancel());
+  pick.querySelector('.slot__sprite img').style.visibility = '';
+
+  // landed: the slots pop in, the top bar slides in, and the map starts generating, all together
+  const jumper = await hop;
+  const ease = 'cubic-bezier(.3,1.4,.5,1)';
+  const slots = [...team.querySelectorAll('.slotwrap'), ...bag.querySelectorAll('.slotwrap')];
+  const pops = slots.map((w, i) => w.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: i * INTRO.slots, easing: ease, fill: 'backwards' }));
+  [team, bag].forEach(el => { el.style.opacity = ''; el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }); });
+  map.querySelector('.hud').animate([{ opacity: 0, transform: 'translateY(-14px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
   const nodes = [...document.querySelectorAll('#nodes .node')].map(b => ({ b, n: R.map.nodes.get(b.dataset.id) }))
     .sort((p, q) => p.n.r - q.n.r || p.n.c - q.n.c);
   const lines = [...document.querySelectorAll('#edges line')];
-  nodes.forEach(({ b, n }, i) => {
-    const delay = INTRO.start + i * INTRO.step;
-    b.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1.14, offset: .65 }, { opacity: 1, scale: 1 }], { duration: 380, delay, easing: 'ease-out', fill: 'backwards' });
-    lines.filter(l => l.dataset.to === n.id).forEach(l => l.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay - 60, easing: 'ease-out', fill: 'backwards' }));
-    if (n.id === R.at) $('#you').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay + 120, fill: 'backwards' });
+  const built = nodes.map(({ b, n }, i) => {
+    const delay = 80 + i * INTRO.step;
+    lines.filter(l => l.dataset.to === n.id).forEach(l => l.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay - 40, easing: 'ease-out', fill: 'backwards' }));
+    if (n.id === R.at) $('#you').animate([{ opacity: 0, transform: 'translate(-50%, -90%)' }, { opacity: 1, transform: 'translate(-50%, -128%)' }], { duration: 360, delay: delay + 100, easing: ease, fill: 'backwards' });
+    return b.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1.14, offset: .65 }, { opacity: 1, scale: 1 }], { duration: 380, delay, easing: 'ease-out', fill: 'backwards' });
   });
-  const built = INTRO.start + nodes.length * INTRO.step, uiAt = built - 250;
-  const ui = [$('#scr-map .hud'), $('#mapteam'), $('#mapbag')].map(el => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: INTRO.ui, delay: uiAt, easing: 'ease-out', fill: 'backwards' }));
-
-  // the hop: to where the front-middle party slot will be; it waits there until the slots fade in under it
-  stand.remove();
-  const hop = await fly(src, from, AREAS['M.party'].els[1].el, { dur: INTRO.hop, keep: true });
-  await Promise.all(ui.map(a => a.finished.catch(() => {})));
-  hop.remove();
+  map.classList.remove('intro');                          // every piece now holds itself hidden until its turn
+  // hand the jumper over to its slot once that slot has popped in
+  pops[1].finished.then(() => { jumper.remove(); target.classList.remove('arriving'); target.classList.remove('land'); void target.offsetWidth; target.classList.add('land'); });
+  await Promise.all([...pops, ...built].map(x => x.finished.catch(() => {})));
   wiping = mapIntro = false;
   refresh();
 }

@@ -991,3 +991,6 @@ button{ font:inherit; color:inherit; }
 .dexmove.dexflash{ animation:dexflash 1.6s ease-out .25s; }
 @keyframes dexflash{ 0%,30%{ border-color:var(--glow-selected); box-shadow:0 0 0 3px color-mix(in srgb, var(--glow-selected) 35%, transparent), 0 0 22px color-mix(in srgb, var(--glow-selected) 30%, transparent); } 100%{ border-color:var(--line); box-shadow:none; } }
 @media (prefers-reduced-motion: reduce){ .dexmove.dexflash{ animation:none; outline:2px solid var(--glow-selected); } }
+
+/* the first map is hidden while the starter jumps over; startRun() then animates every piece in */
+#scr-map.intro :is(.hud, .node, #edges line, #you){ opacity:0; }
