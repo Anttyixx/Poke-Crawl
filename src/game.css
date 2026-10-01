@@ -930,10 +930,7 @@ button{ font:inherit; color:inherit; }
 .dexevo__bar{ display:flex; align-items:center; gap:10px; min-height:26px; margin-bottom:10px; }
 .dexevo__label{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
 .dexevo__hint{ margin-left:auto; font-size:12px; color:var(--ink-faint); }
-.dexevo__all{ margin-left:auto; appearance:none; cursor:pointer; font-size:12.5px; padding:4px 11px; border-radius:999px; color:var(--ink);
-  background:color-mix(in srgb, var(--glow-selected) 12%, var(--panel-2)); border:1px solid color-mix(in srgb, var(--glow-selected) 50%, transparent); }
-.dexevo__all:hover{ border-color:var(--glow-selected); }
-.dexevo__all[hidden], .dexevo__hint[hidden]{ display:none; }
+.dexevo__hint[hidden]{ display:none; }
 .dexevo__path{ display:flex; align-items:center; justify-content:center; gap:6px; }
 .dexevo__col{ display:flex; flex-direction:column; gap:8px; flex:0 1 128px; min-width:0; }
 .dexevo__arrow{ flex:none; color:var(--ink-faint); display:grid; place-items:center; }
@@ -953,9 +950,16 @@ button{ font:inherit; color:inherit; }
 /* narrowed to one stage: it lights up, the others fade back */
 .dexevo__mon[aria-pressed="true"]{ background:color-mix(in srgb, var(--glow-selected) 10%, #1a1f29); border-color:color-mix(in srgb, var(--glow-selected) 60%, transparent); }
 .dexevo__mon[aria-pressed="true"] .dexevo__pic{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 40%, transparent); }
-.dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]{ opacity:.45; }
+.dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]{ opacity:.55; }
 .dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]:hover{ opacity:.8; }
-.dexmon[hidden]{ display:none; }
+/* the info box under the path: closed by default, grows open (its height is animated from JS) */
+.dexdetail{ overflow:hidden; border-top:1px solid #20242f; }
+.dexdetail[hidden]{ display:none; }
+.dexline .dexevo{ border-bottom:0; }
+.dexdetail .dexmon{ background:linear-gradient(180deg, color-mix(in srgb, var(--t) 7%, var(--panel)), var(--panel) 70%); }
+.dexline[data-only=""] .dexevo__hint{ color:var(--ink-faint); }
+.dexline:not([data-only=""]){ border-color:color-mix(in srgb, var(--glow-selected) 28%, var(--line)); }
+.dexline{ transition:border-color .3s ease; }
 /* sprites in the Moves section are buttons now */
 .dexmini{ appearance:none; padding:0; border:1px solid transparent; cursor:pointer; transition:border-color .15s ease, transform .15s ease; }
 .dexmini:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }

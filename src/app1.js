@@ -950,43 +950,83 @@ const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8
 function dexEvoHTML(fs){
   const cols = [1, 2, 3].map(n => fs.filter(f => f.star === n)).filter(c => c.length);
   return `<div class="dexevo">
-    <div class="dexevo__bar"><span class="dexevo__label">Evolution</span><span class="dexevo__hint">Tap a Pokémon to see just its entry</span><button class="dexevo__all" type="button" hidden>Show all</button></div>
+    <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
     <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
-      + `<div class="dexevo__col">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" style="--t:${typeColor(f.type)}">
+      + `<div class="dexevo__col">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
           <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span>${starRow(f.star)}</button>`).join('')}</div>`).join('')}</div>
   </div>`;
 }
-function dexFilter(card, id, toggle = true){
-  if (toggle && card.dataset.only === id) id = '';
-  card.dataset.only = id || '';
-  card.querySelectorAll('.dexevo__mon').forEach(b => b.setAttribute('aria-pressed', b.dataset.form === id));
-  card.querySelector('.dexevo__all').hidden = !id;
-  card.querySelector('.dexevo__hint').hidden = !!id;
-  card.querySelectorAll('.dexmon').forEach(m => {
-    const show = !id || m.dataset.form === id, appearing = show && m.hidden;
-    m.hidden = !show;
-    if ((appearing || (show && id)) && !REDUCED) m.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
-  });
+/* ---------- a Pokémon's info opens inside its line's card ----------
+   Opening: the tapped sprite hops, the card grows to fit, then the entry builds up piece by piece (the sprite
+   pops in, the text rises, the stat bars fill). Another stage of the same line slides the old entry out toward
+   the side the new one is on and the new one in; tapping the open one again folds the card shut. */
+const DEX_EASE = 'cubic-bezier(.2,.8,.2,1)';
+function dexReveal(entry){
+  if (REDUCED) return;
+  const parts = [entry.querySelector('.dexmon__head'), entry.querySelector('.dexmon__roles'), entry.querySelector('.dstats'), ...entry.querySelectorAll('.dexkv')].filter(Boolean);
+  entry.querySelector('.dexmon__pic')?.animate([{ opacity: 0, transform: 'scale(.55) rotate(-8deg)' }, { opacity: 1, transform: 'scale(1.08)', offset: .7 }, { opacity: 1, transform: 'none' }],
+    { duration: 420, easing: 'ease-out', fill: 'backwards' });
+  parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(12px)' }, { opacity: 1, transform: 'none' }],
+    { duration: 340, delay: 70 + i * 55, easing: DEX_EASE, fill: 'backwards' }));
+  entry.querySelectorAll('.dstat__bar i').forEach((bar, i) => bar.animate([{ width: '0%' }, { width: bar.style.width }],
+    { duration: 650, delay: 200 + i * 80, easing: DEX_EASE, fill: 'backwards' }));
 }
-// from a sprite in the Moves section: open that Pokémon's line, narrowed to it, and scroll it into view
+function dexHop(btn){
+  if (REDUCED || !btn) return;
+  btn.querySelector('.dexevo__pic img').animate([{ transform: 'none' }, { transform: 'translateY(-22%) scale(1.06)', offset: .4 }, { transform: 'translateY(3%) scale(1.04, .94)', offset: .75 }, { transform: 'none' }],
+    { duration: 420, easing: 'ease-out' });
+}
+// grow or shrink the info box from its current height to whatever its new content needs
+function dexResize(box, from, to){
+  if (REDUCED || from === to) return Promise.resolve();
+  box.getAnimations().filter(x => x.id === 'size').forEach(x => x.cancel());
+  return box.animate([{ height: from + 'px' }, { height: to + 'px' }], { duration: 380, easing: DEX_EASE, id: 'size' }).finished.catch(() => {});
+}
+async function dexOpen(card, id, toggle = true){
+  const box = card.querySelector('.dexdetail'), cur = card.dataset.only, token = (card._tok = (card._tok || 0) + 1);
+  if (toggle && cur === id) id = '';
+  card.dataset.only = id;
+  card.querySelectorAll('.dexevo__mon').forEach(b => { b.setAttribute('aria-pressed', b.dataset.form === id); b.setAttribute('aria-expanded', b.dataset.form === id); });
+  if (id && id !== cur) dexHop(card.querySelector(`.dexevo__mon[data-form="${id}"]`));
+  const old = box.querySelector('.dexmon'), from = box.hidden ? 0 : box.offsetHeight;
+  // closing: the entry fades as the card folds shut
+  if (!id){
+    if (old && !REDUCED) old.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-6px)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
+    await dexResize(box, from, 0);
+    if (card._tok === token){ box.hidden = true; box.innerHTML = ''; }
+    return;
+  }
+  // switching stages: the old entry slides out toward the side the new one comes from
+  const order = [...card.querySelectorAll('.dexevo__mon')].map(b => b.dataset.form), dir = Math.sign(order.indexOf(id) - order.indexOf(cur)) || 1;
+  if (old && !REDUCED){
+    await old.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 36}px)` }], { duration: 160, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
+    if (card._tok !== token) return;
+  }
+  box.hidden = false;
+  box.innerHTML = dexMonHTML(FORM[id]);
+  const entry = box.querySelector('.dexmon'), to = box.offsetHeight;
+  if (old && !REDUCED) entry.animate([{ opacity: 0, transform: `translateX(${dir * 36}px)` }, { opacity: 1, transform: 'none' }], { duration: 300, easing: DEX_EASE });
+  else dexReveal(entry);
+  await dexResize(box, from, to);
+}
+// from a sprite in the Moves section: open that Pokémon's line with its info showing, and scroll it into view
 async function dexJump(id){
   const f = FORM[id]; if (!f) return;
   await dexShow('mons', true);
   const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#scr-dex'); if (!card) return;
-  dexFilter(card, id, false);
+  dexOpen(card, id, false);
   const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 12;
   scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
 $('#dex-body').addEventListener('click', e => {
-  const evo = e.target.closest('.dexevo__mon'); if (evo) return dexFilter(evo.closest('.dexline'), evo.dataset.form);
-  const all = e.target.closest('.dexevo__all'); if (all) return dexFilter(all.closest('.dexline'), '');
+  const evo = e.target.closest('.dexevo__mon'); if (evo) return dexOpen(evo.closest('.dexline'), evo.dataset.form);
   const mini = e.target.closest('.dexmini'); if (mini) return dexJump(mini.dataset.form);
 });
 const DEX_BUILD = {
-  mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Each one has a signature move it always knows, and can be taught tutor moves at a Move Tutor.</p>`
+  mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
-      return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexforms">${fs.map(dexMonHTML).join('')}</div></article>`;
+      return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
