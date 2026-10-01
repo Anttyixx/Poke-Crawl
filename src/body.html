@@ -1,5 +1,18 @@
 <div id="app">
 
+  <!-- title: shown when the game opens -->
+  <section class="screen title-scr" id="scr-title" aria-label="Poke-Crawl">
+    <!-- a real, freshly generated map drifting behind the logo -->
+    <div class="tbg" aria-hidden="true"><div class="tbg__map" id="title-map"></div></div>
+    <div class="tmain">
+      <p class="tkicker">A Pokémon roguelite</p>
+      <h1 class="tlogo"><span>Poke</span><span class="tlogo__dash">-</span><span class="tlogo__crawl">Crawl</span></h1>
+      <div class="tmons" id="title-mons"></div>
+      <button class="btn btn--go btn--big tstart" id="title-start">Start</button>
+      <p class="tfoot">Pick a starter <i>·</i> Climb to 8 gym leaders <i>·</i> 3 lives</p>
+    </div>
+  </section>
+
   <!-- starter -->
   <section class="screen starter" id="scr-starter" aria-label="Choose your first Pokémon">
     <!-- the offers sit in the middle of the screen until one is picked -->

@@ -786,3 +786,46 @@ button{ font:inherit; color:inherit; }
 .midline.is-away{ opacity:0; pointer-events:none; transition: opacity .2s ease-out; }
 .midline .slots{ margin:0 auto; }
 #scr-starter .infostage, #wild-root .infostage{ margin-top:18px; }
+
+/* ================= title screen ================= */
+.title-scr{ overflow:hidden; }
+/* backdrop: a generated map, faded, vignetted and drifting slowly upward */
+.tbg{ position:absolute; inset:0; overflow:hidden; pointer-events:none;
+  -webkit-mask-image: linear-gradient(transparent, #000 18%, #000 72%, transparent);
+  mask-image: linear-gradient(transparent, #000 18%, #000 72%, transparent); }
+.tbg::after{ content:""; position:absolute; inset:0; background: radial-gradient(ellipse 70% 55% at 50% 44%, color-mix(in srgb, var(--bg) 82%, transparent), transparent 70%); }
+.tbg__map{ position:absolute; left:50%; top:0; width:min(100%, 560px); height:220%; opacity:.34; filter:blur(.4px);
+  transform:translateX(-50%); animation: tdrift 90s linear infinite alternate; }
+@keyframes tdrift{ from{ transform:translate(-50%, 0); } to{ transform:translate(-50%, -54.5%); } }
+.tbg__map .edges{ position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.tbg__nodes{ position:absolute; inset:0; }
+.tnode{ --n: var(--n-start); position:absolute; width:34px; height:34px; transform:translate(-50%, -50%); border-radius:50%;
+  border:3px solid color-mix(in srgb, var(--n) 60%, #1b1f29); background:#171a22; display:grid; place-items:center; font-size:15px; line-height:1; }
+.tnode[data-type="boss"]{ width:48px; height:48px; font-size:21px; }
+
+.tmain{ position:relative; z-index:1; min-height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:0; padding:40px 16px calc(36px + env(safe-area-inset-bottom, 0px)); text-align:center; }
+.tkicker{ margin:0 0 6px; font-family:var(--display); font-weight:600; font-size:13px; letter-spacing:.32em; text-transform:uppercase;
+  color:color-mix(in srgb, var(--glow-selected) 75%, var(--ink-dim)); }
+.tlogo{ margin:0; font-family:var(--display); font-weight:700; font-size:clamp(38px, 11.6vw, 96px); line-height:.95; letter-spacing:.01em;
+  text-transform:uppercase; white-space:nowrap; filter: drop-shadow(0 4px 0 #07080c) drop-shadow(0 0 22px color-mix(in srgb, var(--glow-selected) 30%, transparent)); }
+.tlogo span{ background:linear-gradient(180deg, #ffffff 35%, #c9d1e4); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.tlogo .tlogo__dash{ background:none; color:var(--glow-selected); }
+.tlogo .tlogo__crawl{ background:linear-gradient(180deg, #b6f6ff 10%, var(--glow-selected) 55%, #2fb4d6); -webkit-background-clip:text; background-clip:text; }
+
+/* the three starters, bobbing on glowing discs in their type colour */
+.tmons{ display:flex; justify-content:center; align-items:flex-end; gap:clamp(10px, 4vw, 28px); margin:clamp(26px, 6vh, 46px) 0 clamp(24px, 5vh, 40px); }
+.tmon{ --s: clamp(76px, 22vw, 110px); position:relative; width:var(--s); height:var(--s); display:grid; place-items:center; }
+.tmon::before{ content:""; position:absolute; left:8%; right:8%; bottom:2%; height:22%; border-radius:50%;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--t) 55%, transparent), transparent);
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--t) 45%, transparent) inset; }
+.tmon img{ position:relative; width:86%; height:86%; object-fit:contain; image-rendering:pixelated;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,.5)); animation: tbob 2.6s ease-in-out infinite; animation-delay:calc(var(--i) * -.85s); }
+@keyframes tbob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9%); } }
+
+.tstart{ min-width:min(260px, 100%); font-size:20px; letter-spacing:.06em; text-transform:uppercase; animation: tpulse 2.4s ease-in-out infinite; }
+@keyframes tpulse{ 0%,100%{ box-shadow:0 0 10px 0 color-mix(in srgb, var(--accent) 25%, transparent); } 50%{ box-shadow:0 0 30px 4px color-mix(in srgb, var(--accent) 55%, transparent); } }
+@media (max-width:520px){ .tstart{ width:auto; min-width:220px; } }
+.tfoot{ margin:18px 0 0; font-size:13px; color:var(--ink-dim); }
+.tfoot i{ font-style:normal; color:var(--ink-faint); margin:0 6px; }
+@media (prefers-reduced-motion: reduce){ .tbg__map, .tmon img, .tstart{ animation:none; } }
