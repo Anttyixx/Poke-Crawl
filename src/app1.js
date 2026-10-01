@@ -577,7 +577,7 @@ function snapshot(){
       m.look.set(el, { args: el._hold ? el._hold.args : el._last, label: el._hold ? el._hold.label : (slotLabel(el)?.textContent ?? '') });
       const v = (el._hold ? el._hold.args : el._last)?.[1];      // what the slot really holds, even mid-flight
       if (v?.key) m.set(v.key, { el, box: spriteBox(el), src: v.sprite, disc: false });
-      if (v?.heldKey) m.set(v.heldKey, { el, box: discBox(el), src: v.held, disc: true });
+      if (v?.heldKey) m.set(v.heldKey, { el, box: discBox(el), src: v.held, disc: true, owner: v.key });
     }
   }
   return m;
@@ -590,6 +590,8 @@ function flip(before){
   for (const [k, a] of after){
     const b = before.get(k);
     if (!b || (b.el === a.el && b.disc === a.disc)) continue;
+    // an item that stays on the same Pokémon travels with it: it leaves with the old slot and shows up when the Pokémon lands
+    if (a.disc && b.disc && a.owner === b.owner) continue;
     if (!held.has(a.el) && before.look.has(a.el)){
       // show the destination as it was, minus anything that has just left it, until the hopper lands
       const look = before.look.get(a.el), [f, v, o] = look.args || [PRESET.party, null, {}];
