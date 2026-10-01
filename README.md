@@ -37,5 +37,10 @@ The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__` and `__
 
 ## Play it online
 
-The game is live at **https://anttyixx.github.io/Poke-Crawl/**. The workflow in
-`.github/workflows/pages.yml` rebuilds and republishes it on every push to `main`.
+| Version | Link | Built from |
+|---|---|---|
+| Stable | https://anttyixx.github.io/Poke-Crawl/ | `main` |
+| Experimental | https://anttyixx.github.io/Poke-Crawl/dev/ | `dev` |
+
+The workflow in `.github/workflows/pages.yml` rebuilds and redeploys both on every push to `main` or `dev`.
+Ongoing work is merged into `dev` for play-testing, then `dev` is merged into `main` when it is ready.
