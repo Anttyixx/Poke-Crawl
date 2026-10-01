@@ -2,8 +2,13 @@
 
 Usage:  python build.py          -> writes dist/index.html
 Only the Python standard library is needed (Python 3.8+).
+
+The version shown in the game comes from the VERSION file. A stable build (main) shows it as is, e.g. "0.2.0";
+any other build is marked as dev with its commit, e.g. "0.2.0-dev (a1b2c3d)". The channel is taken from the
+POKECRAWL_CHANNEL environment variable ("stable" or "dev", set by the deploy workflow), otherwise from the
+current git branch (main = stable).
 """
-import base64, glob, json, os
+import base64, glob, json, os, subprocess
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 p = lambda *parts: os.path.join(ROOT, *parts)
@@ -15,9 +20,19 @@ items = read('data', 'items.json')                    # held items
 trs   = json.dumps({os.path.basename(f)[:-4]: b64(f) for f in sorted(glob.glob(p('assets', 'tr', '*.png')))})
 candy = b64(p('assets', 'candy.png'))
 
+def git(*args):
+    try:
+        return subprocess.run(['git', *args], cwd=ROOT, capture_output=True, text=True, timeout=10).stdout.strip()
+    except Exception:
+        return ''
+
+version = read('VERSION').strip()
+channel = os.environ.get('POKECRAWL_CHANNEL') or ('stable' if git('branch', '--show-current') == 'main' else 'dev')
+label = version if channel == 'stable' else f"{version}-dev ({git('rev-parse', '--short', 'HEAD') or 'local'})"
+
 js = (read('src', 'app1.js') + read('src', 'app2.js')) \
     .replace('__DATA__', data, 1).replace('__ITEMS__', items, 1) \
-    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1)
+    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__VERSION__', label, 1)
 css = read('src', 'slot.css') + '\n' + read('src', 'game.css')
 
 html = f'''<!DOCTYPE html>
@@ -46,4 +61,4 @@ html = f'''<!DOCTYPE html>
 os.makedirs(p('dist'), exist_ok=True)
 with open(p('dist', 'index.html'), 'w', encoding='utf-8') as f:
     f.write(html)
-print(f'Built dist/index.html ({len(html) // 1024} KB)')
+print(f'Built dist/index.html, v{label} ({len(html) // 1024} KB)')

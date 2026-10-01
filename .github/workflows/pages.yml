@@ -52,12 +52,16 @@ jobs:
         with:
           python-version: '3.12'
       - name: Build stable (main)
+        env:
+          POKECRAWL_CHANNEL: stable
         run: |
           python stable/build.py
           mkdir -p site
           cp -r stable/dist/. site/
       - name: Build experimental (dev)
         if: steps.dev.outcome == 'success'
+        env:
+          POKECRAWL_CHANNEL: dev
         run: |
           if python dev-src/build.py; then
             mkdir -p site/dev

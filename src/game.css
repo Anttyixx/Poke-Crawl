@@ -994,3 +994,7 @@ button{ font:inherit; color:inherit; }
 
 /* the first map is hidden while the starter jumps over; startRun() then animates every piece in */
 #scr-map.intro :is(.hud, .node, #edges line, #you){ opacity:0; }
+
+/* version label, title screen bottom-left corner */
+.tversion{ position:absolute; left:16px; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:2; margin:0;
+  font-family:var(--display); font-weight:500; font-size:12px; letter-spacing:.04em; color:var(--ink-faint); }
