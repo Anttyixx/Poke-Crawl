@@ -415,7 +415,15 @@ const itemView = it => it ? { key: it.uid, sprite: ITEM[it.id].spr, type: 'held'
 
 /* ---------- hop / slide: content that changes slot flies from its old box to its new one ---------- */
 function spriteBox(el){ const r = el.getBoundingClientRect(), s = r.width * .7075; return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s }; }
-function discBox(el){ const d = el.querySelector('.g[data-stat="held"] .g__held') || el.querySelector('.g--br .g__held'); const r = d.getBoundingClientRect(), s = r.width * .72; return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s }; }
+function discBox(el){
+  let d = el.querySelector('.g[data-stat="held"] .g__held'), g = null, was;
+  // a slot about to receive an item still shows its old look, with the disc hidden (and measuring as a zero box at the
+  // screen's corner), so turn the disc on just long enough to measure where it will be
+  if (!d){ g = el.querySelector('.g--br'); was = g.dataset.stat; g.dataset.stat = 'held'; d = g.querySelector('.g__held'); }
+  const r = d.getBoundingClientRect(), s = r.width * .72;
+  if (g) g.dataset.stat = was;
+  return { x: r.left + (r.width - s) / 2, y: r.top + (r.height - s) / 2, size: s };
+}
 /* ---------- a destination slot keeps showing what it showed before until everything flying into it has landed ---------- */
 const slotLabel = el => el.parentElement?.querySelector('.slotname');
 function holdSlot(el, prevArgs, prevLabel){

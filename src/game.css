@@ -483,16 +483,29 @@ button{ font:inherit; color:inherit; }
 .slots--minibag{ grid-template-columns: repeat(2, var(--mini)); }
 .slots--mini .slotwrap{ padding-bottom:0; gap:0; }
 @media (max-width:520px){ .mapteam, .mapbag{ --mini: 54px; --mini-gap: 7px; --edge: 12px; } }
-/* a frosted, feathered backdrop behind each group (and around the popup) so map nodes and lines passing
-   underneath blur and darken instead of clashing with the slots */
+/* a frosted backdrop behind each group (and around the popup) so map nodes and lines passing underneath blur and
+   darken instead of clashing with the slots. The blur fades out to nothing at its edges: two gradient masks
+   (left-right and top-bottom) are intersected, so the corners feather too. It reaches 1.5 × --halo past the
+   slots and fades out over the outer --halo of that. */
 .mapteam::before, .mapbag::before, .mappop__box::before{ content:""; position:absolute; z-index:-1; pointer-events:none;
-  inset:calc(var(--halo, 14px) * -1); border-radius:calc(var(--halo, 14px) + 14px);
+  --fade: var(--halo, 28px);
+  inset:calc(var(--halo, 28px) * -1.5);
   background:color-mix(in srgb, var(--bg) 78%, transparent);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-  box-shadow:0 0 calc(var(--halo, 14px) * 2.2) var(--halo, 14px) color-mix(in srgb, var(--bg) 80%, transparent); }
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+                      linear-gradient(to bottom, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+              linear-gradient(to bottom, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  mask-composite: intersect; }
+/* the held-item disc on the map's party slots is a little bigger. Its bottom and right edges stay put (the
+   offsets are the standard ones) and it grows up and left, into its own slot, so it never covers a neighbour. */
+.slots--mini .g--br{ --held-size: calc(34 * 1cqw); }
+.slots--mini .g--br .g__held{ width:var(--held-size); height:var(--held-size); }
+.slots--mini .g--br[data-style="ring"] .g__mask::before{ width:calc(var(--held-size) + var(--hp-gap) * 2); height:calc(var(--held-size) + var(--hp-gap) * 2); }
 .mappop{ position:absolute; inset:0; z-index:70; display:grid; place-items:center; padding:16px; pointer-events:none; }
 .mappop[hidden]{ display:none; }
-.mappop__box{ --halo: 22px; position:relative; z-index:0; width:min(100%, 380px); pointer-events:none; }
+.mappop__box{ --halo: 36px; position:relative; z-index:0; width:min(100%, 380px); pointer-events:none; }
 .mappop__card{ pointer-events:auto; cursor:pointer; margin:0; width:100%; max-height:min(64vh, 520px); overflow-y:auto;
   background:color-mix(in srgb, var(--panel) 96%, transparent); border-color:#323949;
   box-shadow:0 18px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4); }
