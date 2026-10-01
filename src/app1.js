@@ -481,10 +481,17 @@ function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur, ke
   if (slide){
     frames.push({ transform: 'translate(0,0) scale(1)' }, { transform: `translate(${dx}px, ${dy}px) scale(${sc})` });
   } else {
-    const h = Math.min(110, 34 + dist * .22);
+    const h = Math.min(110, 34 + dist * .22), air = keep ? .72 : 1;   // a kept hop spends its last 28% landing
     for (let i = 0; i <= 16; i++){
       const t = i / 16, sy = t < .15 ? 1 + .12 * (t / .15) : t > .85 ? 1 - .1 * ((t - .85) / .15) : 1.12 - .22 * ((t - .15) / .7), s = 1 + (sc - 1) * t;
-      frames.push({ transform: `translate(${dx * t}px, ${dy * t - 4 * h * t * (1 - t)}px) scale(${s * (2 - sy)}, ${s * sy})`, offset: t });
+      frames.push({ transform: `translate(${dx * t}px, ${dy * t - 4 * h * t * (1 - t)}px) scale(${s * (2 - sy)}, ${s * sy})`, offset: t * air });
+    }
+    // the landing is part of the same animation (squash, rebound, still), since whatever waits for the hop to finish
+    // may run late on a busy phone and would otherwise leave the sprite frozen mid-squash
+    if (keep){
+      const at = `translate(${dx}px, ${dy}px)`;
+      frames.push({ transform: `${at} scale(${sc * 1.12}, ${sc * .84})`, offset: .8 }, { transform: `${at} scale(${sc * .96}, ${sc * 1.05})`, offset: .9 },
+        { transform: `${at} scale(${sc})`, offset: 1 });
     }
   }
   const duration = dur ?? (slide ? Math.min(420, 240 + dist * .25) : Math.min(620, 360 + dist * .35) / 1.1 * TUNE.hopSlow);
@@ -1181,10 +1188,11 @@ $('#starter-go').addEventListener('click', () => {
 });
 
 /* ---------- from the starter screen straight into the first map, no wipe ----------
-   The chosen Pokémon jumps at once toward the front-middle party slot while the starter screen fades out around it.
-   It lands, springs back from the squash, and once it has settled everything else arrives together: the party and bag slots pop in, the top bar slides in, and the
-   map generates from the bottom row to the top, one node at a time, each path appearing with the node it leads to. */
-const INTRO = { hop: 560, settle: 180, fade: 260, step: 30, slots: 45 };
+   One step after another: the chosen Pokémon jumps at once toward the front-middle party slot (the starter screen fades
+   out under it) and lands; then the party and bag slots fade and pop in around it; then it moves into its slot; then
+   the top bar slides in and the map generates from the bottom row to the top, one node at a time, each path appearing
+   with the node it leads to. */
+const INTRO = { hop: 780, fade: 260, step: 30, slots: 45 };
 async function startRun(){
   if (REDUCED) return toMap();
   wiping = mapIntro = true; hideTip();
@@ -1208,21 +1216,20 @@ async function startRun(){
   $('#scr-starter').getAnimations().forEach(x => x.cancel());
   pick.querySelector('.slot__sprite img').style.visibility = '';
 
-  // touchdown: the jump ends on a squash, so spring back to full shape and finish landing before anything else moves
+  // 1. the jump, landing included: it ends with the starter still and at full shape on its spot
   const jumper = await hop;
-  if (typeof DOMMatrix === 'function'){
-    const m = new DOMMatrix(getComputedStyle(jumper).transform), sc = Math.sqrt(m.a * m.d), at = `translate(${m.e}px, ${m.f}px)`;
-    // back to full shape almost at once, a small rebound, then still
-    await jumper.animate([{ transform: `${at} scale(${m.a}, ${m.d})`, easing: 'ease-out' }, { transform: `${at} scale(${sc})`, offset: .35, easing: 'ease-in-out' },
-      { transform: `${at} scale(${sc * .97}, ${sc * 1.04})`, offset: .65, easing: 'ease-in-out' }, { transform: `${at} scale(${sc})` }],
-      { duration: INTRO.settle, fill: 'forwards' }).finished.catch(() => {});
-  }
 
-  // landed: the slots pop in, the top bar slides in, and the map starts generating, all together
+  // 2. then the party and bag slots fade and pop in around it
   const ease = 'cubic-bezier(.3,1.4,.5,1)';
   const slots = [...team.querySelectorAll('.slotwrap'), ...bag.querySelectorAll('.slotwrap')];
-  const pops = slots.map((w, i) => w.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: i * INTRO.slots, easing: ease, fill: 'backwards' }));
   [team, bag].forEach(el => { el.style.opacity = ''; el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' }); });
+  await Promise.all(slots.map((w, i) => w.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }],
+    { duration: 360, delay: i * INTRO.slots, easing: ease, fill: 'backwards' }).finished.catch(() => {})));
+
+  // 3. the starter moves into its slot (same place, same size, so nothing visibly changes; no extra landing bounce)
+  jumper.remove(); target.classList.remove('arriving');
+
+  // 4. then the rest: the top bar slides in and the map generates from the bottom row up, one node at a time
   map.querySelector('.hud').animate([{ opacity: 0, transform: 'translateY(-14px)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
   const nodes = [...document.querySelectorAll('#nodes .node')].map(b => ({ b, n: R.map.nodes.get(b.dataset.id) }))
     .sort((p, q) => p.n.r - q.n.r || p.n.c - q.n.c);
@@ -1234,10 +1241,7 @@ async function startRun(){
     return b.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1.14, offset: .65 }, { opacity: 1, scale: 1 }], { duration: 380, delay, easing: 'ease-out', fill: 'backwards' });
   });
   map.classList.remove('intro');                          // every piece now holds itself hidden until its turn
-  // hand the jumper over to its slot once that slot has popped in
-  // (no landing bounce on the slot: the starter already landed, and the bounce would squash it a second time)
-  pops[1].finished.then(() => { jumper.remove(); target.classList.remove('arriving'); });
-  await Promise.all([...pops, ...built].map(x => x.finished.catch(() => {})));
+  await Promise.all(built.map(x => x.finished.catch(() => {})));
   wiping = mapIntro = false;
   refresh();
 }
