@@ -6,6 +6,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 ## 0.3.0 (upcoming, on dev)
 
+### Changed
+- Tapping a Pokémon or item on the map opens a redesigned popup in the Pokédex's style. A Pokémon's shows its stats with an EXP bar, ability, held item, signature move in full and the moves it knows, building up piece by piece as it opens.
+
 ## 0.2.0 (2026-10-01)
 
 ### Added

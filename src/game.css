@@ -505,7 +505,7 @@ button{ font:inherit; color:inherit; }
 .slots--mini .g--br[data-style="ring"] .g__mask::before{ width:calc(var(--held-size) + var(--hp-gap) * 2); height:calc(var(--held-size) + var(--hp-gap) * 2); }
 .mappop{ position:absolute; inset:0; z-index:70; display:grid; place-items:center; padding:16px; pointer-events:none; }
 .mappop[hidden]{ display:none; }
-.mappop__box{ --halo: 36px; position:relative; z-index:0; width:min(100%, 380px); pointer-events:none; }
+.mappop__box{ --halo: 36px; position:relative; z-index:0; width:min(100%, 440px); pointer-events:none; }
 .mappop__card{ pointer-events:auto; cursor:pointer; margin:0; width:100%; max-height:min(64vh, 520px); overflow-y:auto;
   background:color-mix(in srgb, var(--panel) 96%, transparent); border-color:#323949;
   box-shadow:0 18px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4); }
@@ -998,3 +998,17 @@ button{ font:inherit; color:inherit; }
 /* version label, title screen bottom-left corner */
 .tversion{ position:absolute; left:16px; bottom:calc(12px + env(safe-area-inset-bottom, 0px)); z-index:2; margin:0;
   font-family:var(--display); font-weight:500; font-size:12px; letter-spacing:.04em; color:var(--ink-faint); }
+
+/* ---------- map popup: the Pokédex entry layout ---------- */
+.mappop__card{ padding:0; font-size:13px; }
+.mappop__card .dexmon{ background:radial-gradient(ellipse 320px 130px at 70px 100px, color-mix(in srgb, var(--t) 14%, transparent), transparent 68%); }
+.dstats--4{ grid-template-columns:repeat(4, 1fr); }
+.dstat[data-stat="exp"]{ --sc:var(--exp-blue); }
+.dexheld{ display:flex; gap:10px; align-items:flex-start; }
+.dexheld img{ width:30px; height:30px; flex:none; image-rendering:pixelated; border-radius:8px; background:var(--tile); padding:2px; }
+.dexmon--item .dexmon__pic{ border-color:color-mix(in srgb, var(--t-held) 60%, #1b1f29); }
+@media (max-width:520px){ .dstats--4{ grid-template-columns:repeat(2, 1fr); } }
+/* the popup is narrow at every screen size, so its entry always uses the stacked layout: labels above, full width */
+.mappop__card .dexmon__more{ grid-column:1 / -1; }
+.mappop__card .dexkv{ grid-template-columns:1fr; gap:5px; }
+.mappop__card .dexkv > span{ padding-top:0; }
