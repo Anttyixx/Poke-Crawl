@@ -903,6 +903,113 @@ $('#scr-map').addEventListener('pointerup', e => {
   if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) < 10 && !e.target.closest('.node:not(:disabled)')) closeMapPop();
 });
 
+/* ================= Pokédex ================= */
+// every Pokémon, move and held item in the game, in three sections switched by tabs that stay pinned at the top.
+// Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
+const DEX_TABS = ['mons', 'moves', 'items'];
+const DEX = { tab: 'mons', from: 'scr-title', html: {}, token: 0 };
+// sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
+const blobURLs = new Map();
+function spriteURL(uri){
+  let u = blobURLs.get(uri); if (u) return u;
+  try {
+    const [head, b64] = uri.split(','), bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    u = URL.createObjectURL(new Blob([bytes], { type: head.slice(5).split(';')[0] }));
+  } catch { u = uri; }
+  blobURLs.set(uri, u); return u;
+}
+const formSprite = f => spriteURL(SPRITES[f.spr]);
+const typePill = t => `<span class="pill" style="--c:${typeColor(t)}">${cap(t)}</span>`;
+const starRow = n => `<span class="dt__stars" aria-label="${n} star">${'★'.repeat(n)}<i>${'★'.repeat(3 - n)}</i></span>`;
+// what a form can actually be taught: tutor moves at or below its star level, not counting its signature move
+const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= f.star)
+  .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
+const dexMini = f => `<span class="dexmini" title="${f.name}"><img src="${formSprite(f)}" alt="${f.name}" loading="lazy"></span>`;
+
+function dexMonHTML(f){
+  const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
+  const tutor = tutorMoves(f);
+  return `<div class="dexmon" style="--t:${typeColor(f.type)}">
+    <div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(f.star)}</div>
+      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
+      <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
+    </div>
+    <div class="dexmon__more">
+      <div class="dexkv"><span>Signature</span><div class="chips">${moveChip(f.sig, true)}</div></div>
+      <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
+      <div class="dexkv"><span>Tutor moves</span><div class="chips">${tutor.map(k => moveChip(k)).join('') || '<i class="dexnone">None</i>'}</div></div>
+    </div>
+  </div>`;
+}
+const DEX_BUILD = {
+  mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Each one has a signature move it always knows, and can be taught tutor moves at a Move Tutor.</p>`
+    + LINE_IDS.map(l => `<article class="dexline">${FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star).map(dexMonHTML).join('')}</article>`).join(''),
+  moves: () => {
+    const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
+    return `<p class="dexintro">${ids.length} moves. A signature move is always known by the Pokémon it belongs to; the rest are taught at a Move Tutor.</p>`
+      + types.map(t => {
+        const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
+        return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
+          + ks.map(k => {
+            const m = MOVES[k], sigOf = FORMS.filter(f => f.sig === k), taught = m.learnableBy.map(id => FORM[id]).filter(f => f && f.sig !== k && m.star <= f.star);
+            const learn = (sigOf.length ? `<div class="dexlearn"><span>Signature of</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
+              + (taught.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexminis">${taught.map(dexMini).join('')}</div></div>` : '')
+              + (!sigOf.length && !taught.length ? `<div class="dexlearn"><span>${k === 'struggle' ? 'Used by any Pokémon whose moves are all out of PP' : 'No Pokémon learns this yet'}</span></div>` : '');
+            return `<article class="dexmove">${moveRow(k, false)}${learn}</article>`;
+          }).join('');
+      }).join('');
+  },
+  items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
+    + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
+      <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
+};
+function dexTabs(tab){
+  $('.dextabs').style.setProperty('--i', DEX_TABS.indexOf(tab));
+  document.querySelectorAll('.dextab').forEach(b => { const on = b.dataset.tab === tab; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+}
+// switching sections: the old list slides out toward the side you came from, the page jumps back to the top,
+// and the new list slides in from the other side
+async function dexShow(tab, animate){
+  const body = $('#dex-body'), scr = $('#scr-dex'), html = DEX.html[tab] ||= DEX_BUILD[tab]();
+  const dir = Math.sign(DEX_TABS.indexOf(tab) - DEX_TABS.indexOf(DEX.tab)) || 1;
+  if (animate && tab === DEX.tab) return scr.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
+  DEX.tab = tab; dexTabs(tab);
+  const token = ++DEX.token;
+  body.getAnimations().forEach(a => a.cancel());
+  if (animate && !REDUCED){
+    await body.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 32}px)` }], { duration: 150, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
+    if (token !== DEX.token) return;
+  }
+  body.innerHTML = html; scr.scrollTop = 0;
+  body.getAnimations().forEach(a => a.cancel());
+  if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+const dexMark = () => markHTML($('.dexbtn svg').outerHTML, 'Pokédex');
+function openDex(){
+  if (wiping || screen === 'scr-dex') return;
+  DEX.from = screen;
+  wipeTo('scr-dex', () => dexShow(DEX.tab, false), { mark: dexMark() });
+}
+function closeDex(){
+  if (wiping || screen !== 'scr-dex') return;
+  wipeTo(DEX.from, null, { mark: dexMark(), after: DEX.from === 'scr-map' ? scrollMapToCurrent : null });
+}
+document.querySelectorAll('[data-dex-open]').forEach(b => b.addEventListener('click', openDex));
+$('#dex-close').addEventListener('click', closeDex);
+addEventListener('keydown', e => { if (e.key === 'Escape') closeDex(); });
+document.querySelectorAll('.dextab').forEach(b => b.addEventListener('click', () => dexShow(b.dataset.tab, true)));
+// arrow keys move between the tabs, like any tab list
+$('.dextabs').addEventListener('keydown', e => {
+  const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!step) return;
+  const t = DEX_TABS[(DEX_TABS.indexOf(DEX.tab) + step + DEX_TABS.length) % DEX_TABS.length];
+  dexShow(t, true); document.querySelector(`.dextab[data-tab="${t}"]`).focus();
+});
+$('#dex-n-mons').textContent = FORMS.length; $('#dex-n-moves').textContent = Object.keys(MOVES).length; $('#dex-n-items').textContent = ITEMS_DATA.length;
+dexTabs(DEX.tab);
+
 /* ================= title ================= */
 // the backdrop is a real generated map (nodes coloured by type), drifting slowly behind the logo; the three
 // starters bob on discs in their type colour. Start goes to the starter screen.

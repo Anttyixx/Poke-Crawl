@@ -41,7 +41,7 @@ Rules:
 
 | Path | What it is |
 |---|---|
-| `src/app1.js` | Game state, `TUNE` balance numbers (top of file), map generation, slots and animations, the title screen, every node screen (starter, wild, mart, tutor, daycare), the party and bag on the map |
+| `src/app1.js` | Game state, `TUNE` balance numbers (top of file), map generation, slots and animations, the title screen, the Pokédex, every node screen (starter, wild, mart, tutor, daycare), the party and bag on the map |
 | `src/app2.js` | Battle engine, encounters, results and run-end |
 | `src/body.html` | Screen markup |
 | `src/slot.css` | Dynamic slot component styles |
