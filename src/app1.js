@@ -1182,9 +1182,9 @@ $('#starter-go').addEventListener('click', () => {
 
 /* ---------- from the starter screen straight into the first map, no wipe ----------
    The chosen Pokémon jumps at once toward the front-middle party slot while the starter screen fades out around it.
-   When it lands, everything else arrives together: the party and bag slots pop in, the top bar slides in, and the
+   It lands, springs back from the squash, and once it has settled everything else arrives together: the party and bag slots pop in, the top bar slides in, and the
    map generates from the bottom row to the top, one node at a time, each path appearing with the node it leads to. */
-const INTRO = { hop: 560, fade: 260, step: 30, slots: 45 };
+const INTRO = { hop: 560, settle: 240, fade: 260, step: 30, slots: 45 };
 async function startRun(){
   if (REDUCED) return toMap();
   wiping = mapIntro = true; hideTip();
@@ -1208,8 +1208,15 @@ async function startRun(){
   $('#scr-starter').getAnimations().forEach(x => x.cancel());
   pick.querySelector('.slot__sprite img').style.visibility = '';
 
-  // landed: the slots pop in, the top bar slides in, and the map starts generating, all together
+  // touchdown: the jump ends on a squash, so spring back to full shape and finish landing before anything else moves
   const jumper = await hop;
+  if (typeof DOMMatrix === 'function'){
+    const m = new DOMMatrix(getComputedStyle(jumper).transform), sc = Math.sqrt(m.a * m.d), at = `translate(${m.e}px, ${m.f}px)`;
+    await jumper.animate([{ transform: `${at} scale(${m.a}, ${m.d})` }, { transform: `${at} scale(${sc * .95}, ${sc * 1.06})`, offset: .55 }, { transform: `${at} scale(${sc})` }],
+      { duration: INTRO.settle, easing: 'ease-out', fill: 'forwards' }).finished.catch(() => {});
+  }
+
+  // landed: the slots pop in, the top bar slides in, and the map starts generating, all together
   const ease = 'cubic-bezier(.3,1.4,.5,1)';
   const slots = [...team.querySelectorAll('.slotwrap'), ...bag.querySelectorAll('.slotwrap')];
   const pops = slots.map((w, i) => w.animate([{ opacity: 0, transform: 'scale(.55)' }, { opacity: 1, transform: 'none' }], { duration: 360, delay: i * INTRO.slots, easing: ease, fill: 'backwards' }));
