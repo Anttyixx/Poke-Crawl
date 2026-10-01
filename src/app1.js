@@ -469,7 +469,7 @@ function releaseSlot(el){
   if (wasEmpty && el.dataset.state === 'filled') crossfadeEmpty(el);
   const lab = slotLabel(el); if (lab) lab.textContent = h.label;
 }
-function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur } = {}){
+function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur, keep = false } = {}){
   const end = disc ? discBox(toEl) : spriteBox(toEl);
   const img = document.createElement('img');
   img.className = 'hopper'; img.src = src; img.alt = '';
@@ -490,6 +490,7 @@ function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur } =
   const duration = dur ?? (slide ? Math.min(420, 240 + dist * .25) : Math.min(620, 360 + dist * .35) / 1.1 * TUNE.hopSlow);
   return new Promise(res => {
     img.animate(frames, { duration, delay: order * 60, easing: slide ? 'cubic-bezier(.3,.7,.3,1)' : 'linear', fill: 'both' }).onfinish = () => {
+      if (keep) return res(img);
       img.remove(); releaseSlot(toEl); toEl.classList.remove(disc ? 'arriving-held' : 'arriving');
       if (!disc){ toEl.classList.remove('land', 'seat'); void toEl.offsetWidth; toEl.classList.add(slide ? 'seat' : 'land'); }
       res();
@@ -880,8 +881,9 @@ const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mar
 /* ---------- your team and bag on the map ----------
    the party sits bottom-left and the bag 2 by 2 bottom-right. Tap a slot to see it in a popup in the middle
    of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
+let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
 function updateMapHud(){
-  const on = !wiping && screen === 'scr-map' && !!R.party;
+  const on = (!wiping || mapIntro) && screen === 'scr-map' && !!R.party;
   $('#mapteam').hidden = $('#mapbag').hidden = !on;
   if (on){ renderArea('M.party'); renderArea('M.bag'); }
   const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
@@ -1176,8 +1178,48 @@ $('#starter-go').addEventListener('click', () => {
   ST.chosen = true; R.party[1] = ST.pick[0];              // front row, middle lane
   const el = AREAS['S.pick'].els[0]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
   refresh();
-  setTimeout(toMap, 450);
+  setTimeout(startRun, 450);
 });
+
+/* ---------- from the starter screen straight into the first map, no wipe ----------
+   The starter screen fades away around the chosen Pokémon, which hops to where the front-middle party slot will be.
+   The map then builds itself from the bottom row to the top, one node at a time (each path appears with the node
+   it leads to), and finally the top bar, the party and the bag fade in, with the starter settling into its slot. */
+const INTRO = { hop: 620, start: 700, step: 26, ui: 520 };
+async function startRun(){
+  if (REDUCED) return toMap();
+  wiping = mapIntro = true; hideTip();
+  const pick = AREAS['S.pick'].els[0].el, from = spriteBox(pick), src = SPRITES[FORM[R.party[1].form].spr];
+  // a stand-in sprite over the big slot, so the Pokémon stays put while everything around it fades
+  const stand = Object.assign(document.createElement('img'), { className: 'hopper', src, alt: '' });
+  Object.assign(stand.style, { left: from.x + 'px', top: from.y + 'px', width: from.size + 'px', height: from.size + 'px' });
+  document.body.append(stand);
+  await $('#scr-starter').animate([{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: 'ease-in', fill: 'forwards' }).finished;
+
+  // the map, laid out but invisible: every piece gets its entrance queued before the first frame is drawn
+  UI.sel = null; UI.notice = null;
+  show('scr-map'); refresh(); scrollMapToCurrent(true);
+  $('#scr-starter').getAnimations().forEach(a => a.cancel());
+  const nodes = [...document.querySelectorAll('#nodes .node')].map(b => ({ b, n: R.map.nodes.get(b.dataset.id) }))
+    .sort((p, q) => p.n.r - q.n.r || p.n.c - q.n.c);
+  const lines = [...document.querySelectorAll('#edges line')];
+  nodes.forEach(({ b, n }, i) => {
+    const delay = INTRO.start + i * INTRO.step;
+    b.animate([{ opacity: 0, scale: .3 }, { opacity: 1, scale: 1.14, offset: .65 }, { opacity: 1, scale: 1 }], { duration: 380, delay, easing: 'ease-out', fill: 'backwards' });
+    lines.filter(l => l.dataset.to === n.id).forEach(l => l.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay - 60, easing: 'ease-out', fill: 'backwards' }));
+    if (n.id === R.at) $('#you').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: delay + 120, fill: 'backwards' });
+  });
+  const built = INTRO.start + nodes.length * INTRO.step, uiAt = built - 250;
+  const ui = [$('#scr-map .hud'), $('#mapteam'), $('#mapbag')].map(el => el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: INTRO.ui, delay: uiAt, easing: 'ease-out', fill: 'backwards' }));
+
+  // the hop: to where the front-middle party slot will be; it waits there until the slots fade in under it
+  stand.remove();
+  const hop = await fly(src, from, AREAS['M.party'].els[1].el, { dur: INTRO.hop, keep: true });
+  await Promise.all(ui.map(a => a.finished.catch(() => {})));
+  hop.remove();
+  wiping = mapIntro = false;
+  refresh();
+}
 
 /* ================= map ================= */
 function renderHud(){
@@ -1196,7 +1238,7 @@ function renderMap(){
   for (const n of nodes.values()) for (const k of n.kids){
     const b = nodes.get(k), e = n.id + '>' + k;
     const cls = walked.has(e) ? 'walked' : (n.id === at && nextIds.has(k)) ? 'next' : '';
-    lines.push({ cls, html: `<line class="${cls}" x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>` });
+    lines.push({ cls, html: `<line class="${cls}" data-to="${k}" x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>` });
   }
   $('#edges').innerHTML = lines.sort((p, q) => rank(p.cls) - rank(q.cls)).map(p => p.html).join('');
   const box = $('#nodes');
@@ -1228,11 +1270,11 @@ function renderMap(){
   else you.style.display = 'none';
 }
 RENDER['scr-map'] = () => { renderHud(); renderMap(); };
-function scrollMapToCurrent(){
+function scrollMapToCurrent(instant = false){
   const b = document.querySelector(`#nodes .node[data-id="${R.at}"]`), scr = $('#scr-map');
   if (!b) return;
   const r = b.getBoundingClientRect(), sr = scr.getBoundingClientRect();
-  scr.scrollTo({ top: scr.scrollTop + r.top - sr.top - sr.height * .62, behavior: REDUCED ? 'auto' : 'smooth' });
+  scr.scrollTo({ top: scr.scrollTop + r.top - sr.top - sr.height * .62, behavior: REDUCED || instant ? 'auto' : 'smooth' });
 }
 function goTo(id){
   if (wiping || screen !== 'scr-map') return;
