@@ -3,6 +3,7 @@ const DATA = __DATA__;
 const ITEMS_DATA = __ITEMS__;
 const CANDY_SPR = '__CANDY__';
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
+const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
 
 /* ================= data ================= */
 const FORMS = DATA.forms, MOVES = DATA.moves, SPRITES = DATA.sprites;
@@ -1138,6 +1139,7 @@ function buildTitle(){
   for (const n of nodes.values()) for (const k of n.kids){ const b = nodes.get(k); lines.push(`<line x1="${n.x}" y1="${n.y}" x2="${b.x}" y2="${b.y}"/>`); }
   $('#title-map').innerHTML = `<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none">${lines.join('')}</svg>
     <div class="tbg__nodes">${[...nodes.values()].map(n => `<span class="tnode" data-type="${n.type}" style="left:${n.x}%;top:${n.y}%">${ICON[n.type]}</span>`).join('')}</div>`;
+  $('#title-version').textContent = 'v' + VERSION;
   $('#title-mons').innerHTML = STARTERS.map((l, i) => {
     const f = LINES[l][1][0];
     return `<div class="tmon" style="--t:var(--t-${f.type}); --i:${i}"><img src="${SPRITES[f.spr]}" alt="${f.name}"></div>`;

@@ -36,6 +36,21 @@ Rules:
 4. For each round of tweaks, commit on the same feature branch, merge it into `dev` again, and push.
 5. Another agent may be working in this repo too. Always fetch and merge the latest `dev` before merging into it, and never force-push `dev` or `main`.
 6. Run `python build.py` before every push and make sure it succeeds.
+7. When you merge a change into `dev`, add a line for it to the upcoming version's section of `CHANGELOG.md` (under Added, Changed, Removed or Fixed), written for players.
+
+## Versions and releases
+
+Versions are `0.MINOR.PATCH` while the game is in development. Only a release to `main` gets a new version; the dev channel shows the upcoming one.
+
+- `VERSION` holds one line: the version `dev` is heading toward (e.g. `0.2.0`). `build.py` puts it in the game: a stable build shows `0.2.0`, any other build `0.2.0-dev (a1b2c3d)` with its commit. The title screen shows it in the bottom-left corner.
+- A release with any new feature or noticeable change bumps MINOR (0.2.0 → 0.3.0). A release of only fixes and small tweaks bumps PATCH (0.2.0 → 0.2.1). 1.0.0 is for when the game is complete; only the user decides that.
+
+To release, only when the user says the work on `dev` is ready:
+
+1. On `dev`, check `VERSION` is right for what is being released (MINOR or PATCH, as above), and in `CHANGELOG.md` change the heading `## X.Y.Z (upcoming, on dev)` to `## X.Y.Z (YYYY-MM-DD)`. Commit and push `dev`.
+2. Merge `dev` into `main` and push `main`.
+3. Tag the release: `git tag -a vX.Y.Z -m "Poke-Crawl X.Y.Z" origin/main` and `git push origin vX.Y.Z`.
+4. Back on `dev`, set `VERSION` to the next minor version (e.g. `0.3.0`), add an empty `## 0.3.0 (upcoming, on dev)` section to the top of `CHANGELOG.md`, commit and push.
 
 ## Layout
 
@@ -51,6 +66,8 @@ Rules:
 | `assets/candy.png`, `assets/tr/*.png` | EXP Candy sprite and the 18 TR sprites, one per move type |
 | `docs/design/` | Feature and design notes (start at `features_00-index.md`; undecided items are in `features_open-questions.md`) |
 | `build.py` | Stitches everything into `dist/index.html` |
+| `VERSION` | The version `dev` is heading toward; see Versions and releases |
+| `CHANGELOG.md` | What changed in each version, written for players |
 | `.github/workflows/pages.yml` | Builds `main` and `dev` and deploys both to GitHub Pages on every push to either |
 
 ## How the build works
@@ -61,6 +78,7 @@ Rules:
 - `__ITEMS__` becomes the contents of `data/items.json`
 - `__CANDY__` becomes the data URI of `assets/candy.png`
 - `__TRS__` becomes a JSON map of move type to TR sprite data URI
+- `__VERSION__` becomes the version label, e.g. `0.2.0` or `0.2.0-dev (a1b2c3d)`
 
 The build also joins `slot.css` and `game.css` in that order and inlines them with `body.html` into one HTML page. The page's only external request is Google Fonts (Chakra Petch).
 
