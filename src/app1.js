@@ -1184,7 +1184,7 @@ $('#starter-go').addEventListener('click', () => {
    The chosen Pokémon jumps at once toward the front-middle party slot while the starter screen fades out around it.
    It lands, springs back from the squash, and once it has settled everything else arrives together: the party and bag slots pop in, the top bar slides in, and the
    map generates from the bottom row to the top, one node at a time, each path appearing with the node it leads to. */
-const INTRO = { hop: 560, settle: 240, fade: 260, step: 30, slots: 45 };
+const INTRO = { hop: 560, settle: 180, fade: 260, step: 30, slots: 45 };
 async function startRun(){
   if (REDUCED) return toMap();
   wiping = mapIntro = true; hideTip();
@@ -1212,8 +1212,10 @@ async function startRun(){
   const jumper = await hop;
   if (typeof DOMMatrix === 'function'){
     const m = new DOMMatrix(getComputedStyle(jumper).transform), sc = Math.sqrt(m.a * m.d), at = `translate(${m.e}px, ${m.f}px)`;
-    await jumper.animate([{ transform: `${at} scale(${m.a}, ${m.d})` }, { transform: `${at} scale(${sc * .95}, ${sc * 1.06})`, offset: .55 }, { transform: `${at} scale(${sc})` }],
-      { duration: INTRO.settle, easing: 'ease-out', fill: 'forwards' }).finished.catch(() => {});
+    // back to full shape almost at once, a small rebound, then still
+    await jumper.animate([{ transform: `${at} scale(${m.a}, ${m.d})`, easing: 'ease-out' }, { transform: `${at} scale(${sc})`, offset: .35, easing: 'ease-in-out' },
+      { transform: `${at} scale(${sc * .97}, ${sc * 1.04})`, offset: .65, easing: 'ease-in-out' }, { transform: `${at} scale(${sc})` }],
+      { duration: INTRO.settle, fill: 'forwards' }).finished.catch(() => {});
   }
 
   // landed: the slots pop in, the top bar slides in, and the map starts generating, all together
@@ -1233,7 +1235,8 @@ async function startRun(){
   });
   map.classList.remove('intro');                          // every piece now holds itself hidden until its turn
   // hand the jumper over to its slot once that slot has popped in
-  pops[1].finished.then(() => { jumper.remove(); target.classList.remove('arriving'); target.classList.remove('land'); void target.offsetWidth; target.classList.add('land'); });
+  // (no landing bounce on the slot: the starter already landed, and the bounce would squash it a second time)
+  pops[1].finished.then(() => { jumper.remove(); target.classList.remove('arriving'); });
   await Promise.all([...pops, ...built].map(x => x.finished.catch(() => {})));
   wiping = mapIntro = false;
   refresh();
