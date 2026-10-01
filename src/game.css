@@ -484,19 +484,19 @@ button{ font:inherit; color:inherit; }
 .slots--mini .slotwrap{ padding-bottom:0; gap:0; }
 @media (max-width:520px){ .mapteam, .mapbag{ --mini: 54px; --mini-gap: 7px; --edge: 12px; } }
 /* a frosted backdrop behind each group (and around the popup) so map nodes and lines passing underneath blur and
-   darken instead of clashing with the slots. The blur fades out to nothing at its edges: two gradient masks
-   (left-right and top-bottom) are intersected, so the corners feather too. It reaches 1.5 × --halo past the
-   slots and fades out over the outer --halo of that. */
+   darken instead of clashing with the slots. The blur feathers out to nothing: two eased gradient masks (left-right
+   and top-bottom) are intersected, so the corners feather too. It reaches 2.2 x --halo past the slots and fades
+   over the outer 1.9 x --halo of that. */
 .mapteam::before, .mapbag::before, .mappop__box::before{ content:""; position:absolute; z-index:-1; pointer-events:none;
-  --fade: var(--halo, 28px);
-  inset:calc(var(--halo, 28px) * -1.5);
+  --fade: calc(var(--halo, 28px) * 1.9);
+  --ease: transparent, rgb(0 0 0 / .1) calc(var(--fade) * .25), rgb(0 0 0 / .38) calc(var(--fade) * .5), rgb(0 0 0 / .76) calc(var(--fade) * .75), #000 var(--fade),
+          #000 calc(100% - var(--fade)), rgb(0 0 0 / .76) calc(100% - var(--fade) * .75), rgb(0 0 0 / .38) calc(100% - var(--fade) * .5), rgb(0 0 0 / .1) calc(100% - var(--fade) * .25), transparent;
+  inset:calc(var(--halo, 28px) * -2.2);
   background:color-mix(in srgb, var(--bg) 78%, transparent);
   -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
-                      linear-gradient(to bottom, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  -webkit-mask-image: linear-gradient(to right, var(--ease)), linear-gradient(to bottom, var(--ease));
   -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
-              linear-gradient(to bottom, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  mask-image: linear-gradient(to right, var(--ease)), linear-gradient(to bottom, var(--ease));
   mask-composite: intersect; }
 /* the held-item disc on the map's party slots is a little bigger. Its bottom and right edges stay put (the
    offsets are the standard ones) and it grows up and left, into its own slot, so it never covers a neighbour. */
