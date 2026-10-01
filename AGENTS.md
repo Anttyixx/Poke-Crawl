@@ -64,6 +64,7 @@ To release, only when the user says the work on `dev` is ready:
 | `data/data.json` | Pokémon `forms`, `moves` and `sprites` |
 | `data/items.json` | Held items, each with an embedded base64 sprite |
 | `assets/candy.png`, `assets/tr/*.png` | EXP Candy sprite and the 18 TR sprites, one per move type |
+| `assets/sprites/pokemon/` | 1,123 Pokémon sprites (40×30 PNG, named like `nidoran-f.png`), kept for future use and not loaded by the game yet; see `assets/sprites/README.md` |
 | `docs/design/` | Feature and design notes (start at `features_00-index.md`; undecided items are in `features_open-questions.md`) |
 | `build.py` | Stitches everything into `dist/index.html` |
 | `VERSION` | The version `dev` is heading toward; see Versions and releases |
