@@ -107,7 +107,7 @@ button{ font:inherit; color:inherit; }
 @keyframes heartbreak{ 0%{ transform:scale(1); fill:#ff5d73; } 30%{ transform:scale(1.35); } 60%{ transform:scale(.8) rotate(-12deg); fill:#ff5d73; } 100%{ transform:scale(1); fill:#2d3240; filter:none; } }
 .hud .coins{ margin:0; }
 
-.mapwrap{ padding:0 8px 150px; }
+.mapwrap{ padding:0 8px 180px; }
 .map{ position:relative; margin:0 auto; width:min(100%, 560px); --row-h: clamp(54px, 8.4vh, 70px); height:calc(var(--rows, 12) * var(--row-h)); }
 .map svg.edges{ position:absolute; inset:14px 8px; width:calc(100% - 16px); height:calc(100% - 28px); overflow:visible; }
 .edges line{ stroke:#333a4a; stroke-width:2.5; vector-effect:non-scaling-stroke; stroke-dasharray:5 6; stroke-linecap:round; }
@@ -474,7 +474,7 @@ button{ font:inherit; color:inherit; }
 .mvlist--pick{ gap:6px; }
 
 /* ---------- your team (bottom-left) and bag (bottom-right, 2 by 2) on the map ---------- */
-.mapteam, .mapbag{ --mini: 52.5px; --mini-gap: 7px; --edge: 14px;
+.mapteam, .mapbag{ --mini: 63px; --mini-gap: 8px; --edge: 16px;
   position:absolute; bottom:calc(8px + env(safe-area-inset-bottom, 0px)); z-index:60; display:grid; gap:var(--mini-gap); }
 .mapteam{ left:var(--edge); }
 .mapbag{ right:var(--edge); }
@@ -482,12 +482,18 @@ button{ font:inherit; color:inherit; }
 .slots--mini{ grid-template-columns: repeat(3, var(--mini)); gap:var(--mini-gap); justify-content:start; }
 .slots--minibag{ grid-template-columns: repeat(2, var(--mini)); }
 .slots--mini .slotwrap{ padding-bottom:0; gap:0; }
-@media (max-width:520px){ .mapteam, .mapbag{ --mini: 45px; --mini-gap: 6px; --edge: 10px; } }
-
-/* ---------- popup in the middle of the map: what you tapped ---------- */
+@media (max-width:520px){ .mapteam, .mapbag{ --mini: 54px; --mini-gap: 7px; --edge: 12px; } }
+/* a frosted, feathered backdrop behind each group (and around the popup) so map nodes and lines passing
+   underneath blur and darken instead of clashing with the slots */
+.mapteam::before, .mapbag::before, .mappop__box::before{ content:""; position:absolute; z-index:-1; pointer-events:none;
+  inset:calc(var(--halo, 14px) * -1); border-radius:calc(var(--halo, 14px) + 14px);
+  background:color-mix(in srgb, var(--bg) 78%, transparent);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+  box-shadow:0 0 calc(var(--halo, 14px) * 2.2) var(--halo, 14px) color-mix(in srgb, var(--bg) 80%, transparent); }
 .mappop{ position:absolute; inset:0; z-index:70; display:grid; place-items:center; padding:16px; pointer-events:none; }
 .mappop[hidden]{ display:none; }
-.mappop__card{ pointer-events:auto; cursor:pointer; margin:0; width:min(100%, 380px); max-height:min(64vh, 520px); overflow-y:auto;
+.mappop__box{ --halo: 22px; position:relative; z-index:0; width:min(100%, 380px); pointer-events:none; }
+.mappop__card{ pointer-events:auto; cursor:pointer; margin:0; width:100%; max-height:min(64vh, 520px); overflow-y:auto;
   background:color-mix(in srgb, var(--panel) 96%, transparent); border-color:#323949;
   box-shadow:0 18px 48px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4); }
 
