@@ -953,10 +953,11 @@ button{ font:inherit; color:inherit; }
 .dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]{ opacity:.55; }
 .dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]:hover{ opacity:.8; }
 /* the info box under the path: closed by default, grows open (its height is animated from JS) */
-.dexdetail{ overflow:hidden; border-top:1px solid #20242f; }
+.dexdetail{ overflow:hidden; }
 .dexdetail[hidden]{ display:none; }
 .dexline .dexevo{ border-bottom:0; }
-.dexdetail .dexmon{ background:linear-gradient(180deg, color-mix(in srgb, var(--t) 7%, var(--panel)), var(--panel) 70%); }
+/* a soft glow centred on the sprite that has faded to nothing before it reaches any edge of the box */
+.dexdetail .dexmon{ background:radial-gradient(ellipse 320px 130px at 70px 100px, color-mix(in srgb, var(--t) 13%, transparent), transparent 68%); }
 .dexline[data-only=""] .dexevo__hint{ color:var(--ink-faint); }
 .dexline:not([data-only=""]){ border-color:color-mix(in srgb, var(--glow-selected) 28%, var(--line)); }
 .dexline{ transition:border-color .3s ease; }
@@ -973,3 +974,20 @@ button{ font:inherit; color:inherit; }
   .dexevo__arrow svg{ width:14px; height:14px; }
   .dexevo__hint{ font-size:11px; }
 }
+
+/* ---------- Pokédex entry: signature move in full, tutor moves you can tap open ---------- */
+.dexkv .mvlist{ gap:6px; }
+.dexchip{ appearance:none; cursor:pointer; font:inherit; font-size:11.5px; transition:border-color .15s ease, background .15s ease, transform .15s ease; }
+.dexchip:hover{ transform:translateY(-1px); }
+.dexchip[aria-expanded="true"]{ border-color:var(--glow-selected); background:color-mix(in srgb, var(--glow-selected) 14%, #151821); color:#fff; }
+.dexchip:focus-visible, .dexgo:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; }
+.dexpeek{ overflow:hidden; }
+.dexpeek[hidden]{ display:none; }
+.dexpeek .mvlist{ margin-top:8px; }
+.dexpeek .mv{ border-color:color-mix(in srgb, var(--glow-selected) 35%, var(--line)) !important; }
+.dexgo{ appearance:none; background:none; border:0; padding:6px 2px 2px; cursor:pointer; font:inherit; font-size:12.5px; color:color-mix(in srgb, var(--glow-selected) 80%, var(--ink-dim)); }
+.dexgo:hover{ color:var(--glow-selected); text-decoration:underline; text-underline-offset:3px; }
+/* a move you jumped to from a Pokémon's entry */
+.dexmove.dexflash{ animation:dexflash 1.6s ease-out .25s; }
+@keyframes dexflash{ 0%,30%{ border-color:var(--glow-selected); box-shadow:0 0 0 3px color-mix(in srgb, var(--glow-selected) 35%, transparent), 0 0 22px color-mix(in srgb, var(--glow-selected) 30%, transparent); } 100%{ border-color:var(--line); box-shadow:none; } }
+@media (prefers-reduced-motion: reduce){ .dexmove.dexflash{ animation:none; outline:2px solid var(--glow-selected); } }

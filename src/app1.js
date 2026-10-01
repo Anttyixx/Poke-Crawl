@@ -927,6 +927,32 @@ const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].
   .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
 const dexMini = f => `<button class="dexmini" type="button" data-form="${f.id}" title="${f.name}" aria-label="${f.name}: show its Pokédex entry"><img src="${formSprite(f)}" alt="" loading="lazy"></button>`;
 
+// tutor moves in an entry are buttons: tapping one opens its details under the chips, with a link to the Moves section
+const dexChipHTML = k => `<button class="chip dexchip" type="button" data-move="${k}" aria-expanded="false" style="--c:${typeColor(MOVES[k].type)}">${MOVES[k].name}</button>`;
+const dexGoHTML = k => `<button class="dexgo" type="button" data-move="${k}">See who else learns it in Moves<span aria-hidden="true"> ›</span></button>`;
+async function dexPeek(chip){
+  const kv = chip.closest('.dexkv'), panel = kv.querySelector('.dexpeek'), k = chip.dataset.move;
+  const closing = panel.dataset.move === k, from = panel.hidden ? 0 : panel.offsetHeight, token = (panel._tok = (panel._tok || 0) + 1);
+  kv.querySelectorAll('.dexchip').forEach(c => c.setAttribute('aria-expanded', !closing && c === chip));
+  if (closing){
+    delete panel.dataset.move;
+    await dexResize(panel, from, 0);
+    if (panel._tok === token){ panel.hidden = true; panel.innerHTML = ''; }
+    return;
+  }
+  panel.dataset.move = k; panel.hidden = false;
+  panel.innerHTML = `<div class="mvlist">${moveRow(k, false)}</div>${dexGoHTML(k)}`;
+  if (!REDUCED) panel.firstElementChild.animate([{ opacity: 0, transform: 'translateY(-6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: DEX_EASE });
+  await dexResize(panel, from, panel.offsetHeight);
+}
+// over to the Moves section, scrolled to that move, which flashes so it's easy to spot
+async function dexJumpMove(k){
+  await dexShow('moves', true);
+  const row = document.querySelector(`.dexmove[data-move="${k}"]`), scr = $('#scr-dex'); if (!row) return;
+  const y = scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 16;
+  scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
+  row.classList.remove('dexflash'); void row.offsetWidth; row.classList.add('dexflash');
+}
 function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
   const tutor = tutorMoves(f);
@@ -938,14 +964,16 @@ function dexMonHTML(f){
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
     <div class="dexmon__more">
-      <div class="dexkv"><span>Signature</span><div class="chips">${moveChip(f.sig, true)}</div></div>
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
-      <div class="dexkv"><span>Tutor moves</span><div class="chips">${tutor.map(k => moveChip(k)).join('') || '<i class="dexnone">None</i>'}</div></div>
+      <div class="dexkv"><span>Signature move</span><div><div class="mvlist">${moveRow(f.sig, true)}</div>${dexGoHTML(f.sig)}</div></div>
+      <div class="dexkv"><span>Tutor moves</span><div>${tutor.length
+        ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
+        : '<i class="dexnone">None</i>'}</div></div>
     </div>
   </div>`;
 }
 // the evolution path: one column per star level (a branching line stacks its options), arrows between them.
-// Tapping a Pokémon narrows the card to its entry; tapping it again, or Show all, brings every stage back.
+// Tapping a Pokémon opens its info under the path (see dexOpen).
 const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 function dexEvoHTML(fs){
   const cols = [1, 2, 3].map(n => fs.filter(f => f.star === n)).filter(c => c.length);
@@ -1021,6 +1049,8 @@ async function dexJump(id){
 $('#dex-body').addEventListener('click', e => {
   const evo = e.target.closest('.dexevo__mon'); if (evo) return dexOpen(evo.closest('.dexline'), evo.dataset.form);
   const mini = e.target.closest('.dexmini'); if (mini) return dexJump(mini.dataset.form);
+  const chip = e.target.closest('.dexchip'); if (chip) return dexPeek(chip);
+  const go = e.target.closest('.dexgo'); if (go) return dexJumpMove(go.dataset.move);
 });
 const DEX_BUILD = {
   mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
@@ -1039,7 +1069,7 @@ const DEX_BUILD = {
             const learn = (sigOf.length ? `<div class="dexlearn"><span>Signature of</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
               + (taught.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexminis">${taught.map(dexMini).join('')}</div></div>` : '')
               + (!sigOf.length && !taught.length ? `<div class="dexlearn"><span>${k === 'struggle' ? 'Used by any Pokémon whose moves are all out of PP' : 'No Pokémon learns this yet'}</span></div>` : '');
-            return `<article class="dexmove">${moveRow(k, false)}${learn}</article>`;
+            return `<article class="dexmove" data-move="${k}">${moveRow(k, false)}${learn}</article>`;
           }).join('');
       }).join('');
   },
