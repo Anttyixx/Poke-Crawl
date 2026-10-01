@@ -4,7 +4,7 @@ Each release to `main` (the stable game) gets a version number, `0.MINOR.PATCH` 
 a new feature or noticeable change bumps MINOR, a release of only fixes and small tweaks bumps PATCH. The dev
 channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
-## 0.2.0 (upcoming, on dev)
+## 0.2.0 (2026-10-01)
 
 ### Added
 - **Title screen.** The game opens on the Poke-Crawl logo over a slowly drifting, freshly generated map, with the three starters and a Start button.
