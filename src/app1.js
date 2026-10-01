@@ -925,12 +925,12 @@ const starRow = n => `<span class="dt__stars" aria-label="${n} star">${'★'.rep
 // what a form can actually be taught: tutor moves at or below its star level, not counting its signature move
 const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= f.star)
   .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
-const dexMini = f => `<span class="dexmini" title="${f.name}"><img src="${formSprite(f)}" alt="${f.name}" loading="lazy"></span>`;
+const dexMini = f => `<button class="dexmini" type="button" data-form="${f.id}" title="${f.name}" aria-label="${f.name}: show its Pokédex entry"><img src="${formSprite(f)}" alt="" loading="lazy"></button>`;
 
 function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
   const tutor = tutorMoves(f);
-  return `<div class="dexmon" style="--t:${typeColor(f.type)}">
+  return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
     <div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(f.star)}</div>
@@ -944,9 +944,50 @@ function dexMonHTML(f){
     </div>
   </div>`;
 }
+// the evolution path: one column per star level (a branching line stacks its options), arrows between them.
+// Tapping a Pokémon narrows the card to its entry; tapping it again, or Show all, brings every stage back.
+const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function dexEvoHTML(fs){
+  const cols = [1, 2, 3].map(n => fs.filter(f => f.star === n)).filter(c => c.length);
+  return `<div class="dexevo">
+    <div class="dexevo__bar"><span class="dexevo__label">Evolution</span><span class="dexevo__hint">Tap a Pokémon to see just its entry</span><button class="dexevo__all" type="button" hidden>Show all</button></div>
+    <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
+      + `<div class="dexevo__col">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" style="--t:${typeColor(f.type)}">
+          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span>${starRow(f.star)}</button>`).join('')}</div>`).join('')}</div>
+  </div>`;
+}
+function dexFilter(card, id, toggle = true){
+  if (toggle && card.dataset.only === id) id = '';
+  card.dataset.only = id || '';
+  card.querySelectorAll('.dexevo__mon').forEach(b => b.setAttribute('aria-pressed', b.dataset.form === id));
+  card.querySelector('.dexevo__all').hidden = !id;
+  card.querySelector('.dexevo__hint').hidden = !!id;
+  card.querySelectorAll('.dexmon').forEach(m => {
+    const show = !id || m.dataset.form === id, appearing = show && m.hidden;
+    m.hidden = !show;
+    if ((appearing || (show && id)) && !REDUCED) m.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'ease-out' });
+  });
+}
+// from a sprite in the Moves section: open that Pokémon's line, narrowed to it, and scroll it into view
+async function dexJump(id){
+  const f = FORM[id]; if (!f) return;
+  await dexShow('mons', true);
+  const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#scr-dex'); if (!card) return;
+  dexFilter(card, id, false);
+  const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 12;
+  scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
+}
+$('#dex-body').addEventListener('click', e => {
+  const evo = e.target.closest('.dexevo__mon'); if (evo) return dexFilter(evo.closest('.dexline'), evo.dataset.form);
+  const all = e.target.closest('.dexevo__all'); if (all) return dexFilter(all.closest('.dexline'), '');
+  const mini = e.target.closest('.dexmini'); if (mini) return dexJump(mini.dataset.form);
+});
 const DEX_BUILD = {
   mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Each one has a signature move it always knows, and can be taught tutor moves at a Move Tutor.</p>`
-    + LINE_IDS.map(l => `<article class="dexline">${FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star).map(dexMonHTML).join('')}</article>`).join(''),
+    + LINE_IDS.map(l => {
+      const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
+      return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexforms">${fs.map(dexMonHTML).join('')}</div></article>`;
+    }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
     return `<p class="dexintro">${ids.length} moves. A signature move is always known by the Pokémon it belongs to; the rest are taught at a Move Tutor.</p>`
