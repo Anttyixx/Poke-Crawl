@@ -21,6 +21,9 @@
   <div class="dexpop" id="dexpop" hidden>
   <div class="dexpop__veil"></div>
   <div class="dexpop__frame">
+  <!-- the shell is what opens out of Rotom; in scan mode the svg draws its outline, with a bump up to Rotom -->
+  <div class="dexpop__shell">
+  <svg class="dexpop__outline" aria-hidden="true"><path/></svg>
   <section class="dex dexpop__card" id="scr-dex" role="dialog" aria-modal="true" aria-label="RotomDex">
     <header class="dexhead">
       <div class="dexhead__top">
@@ -29,7 +32,6 @@
       </div>
       <div class="dextabs" role="tablist" aria-label="RotomDex sections">
         <span class="dextabs__pill" aria-hidden="true"></span>
-        <button class="dextab" type="button" role="tab" data-tab="scan" hidden>Scan</button>
         <button class="dextab" type="button" role="tab" data-tab="mons">Pokémon <small id="dex-n-mons"></small></button>
         <button class="dextab" type="button" role="tab" data-tab="moves">Moves <small id="dex-n-moves"></small></button>
         <button class="dextab" type="button" role="tab" data-tab="items">Items <small id="dex-n-items"></small></button>
@@ -38,6 +40,7 @@
     <div class="dexbody" id="dex-body" role="tabpanel"></div>
     <div class="dexact" id="dex-act" hidden></div>
   </section>
+  </div>
   <!-- Rotom perches on the popup's top edge, overlapping it, 25% bigger than in the corner; tapping it closes the popup -->
   <img class="dexicon dexpop__rotom" id="dex-rotom" alt="RotomDex" title="Close the RotomDex">
   </div>
