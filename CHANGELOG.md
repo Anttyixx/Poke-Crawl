@@ -6,6 +6,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 ## 0.4.0 (upcoming, on dev)
 
+### Changed
+- Every Pokémon now knows just 2 moves: its signature move and one move taught at a Move Tutor (it was 2 taught moves). Teaching a Pokémon a new move replaces the one it was taught before. Trainers' and gym leaders' Pokémon follow the same rule.
+
 ## 0.3.0 (2026-10-02)
 
 ### Changed
