@@ -15,6 +15,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **Moves rebuilt for 2-move Pokémon.** Signature moves are now their own kind of move: learned by leveling and never taught. Most are shared within a type (Ember, Flamethrower, Surf, Earthquake…), and 26 standout Pokémon have one of their own: Charizard's Blast Burn, Raichu's Volt Tackle, Jigglypuff's Sing, Persian's Pay Day (bonus coins), Ditto's Transform, Magikarp's Splash, Mewtwo's Psystrike and more. The Move Tutor teaches everything else.
 - Signature moves have more PP, so a Pokémon's main attack carries more of the fight.
 - The RotomDex's Moves tab says which Pokémon can be taught each move, and marks unique signatures.
+- The RotomDex shows each line as how it evolves, with each Pokémon once and no star levels (Raticate no longer appears twice). Eevee's eight evolutions sit in a grid, and a Pokémon whose signature move changes as it levels lists each one.
 - Rotom's flight into the RotomDex is now a short hop and shallow dip, matching its way back (which dips a little less), and opening and closing are 10% quicker.
 - Every Pokémon now knows just 2 moves: its signature move and one move taught at a Move Tutor (it was 2 taught moves). Teaching a Pokémon a new move replaces the one it was taught before. Trainers' and gym leaders' Pokémon follow the same rule.
 
