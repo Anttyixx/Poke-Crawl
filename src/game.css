@@ -1072,8 +1072,11 @@ button{ font:inherit; color:inherit; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }
 .dexpop--scan .dextab small{ display:none; }        /* four tabs in a smaller popup: names only */
-/* the starters sit a little above the middle, leaving the lower part of the screen for Rotom's scan popup */
-#starter-line{ top:34%; }
+/* the starters sit at the top, under the title, leaving the rest of the screen for Rotom's scan popup.
+   Their slots are hidden: no frame, tile, stars or corner gauges, just the Pokémon */
+#starter-line{ position:static; transform:none; padding:0; margin-top:26px; }
+#scr-starter .slot__frame{ border-color:transparent !important; background:none; box-shadow:none !important; }
+#scr-starter .slot__frame::after, #scr-starter .slot .stars, #scr-starter .slot .stars__mask, #scr-starter .slot .g{ display:none; }
 /* a page's own button under a scan popup (the starter screen's "I Choose You!!"), pinned to the bottom of the screen */
 .pageact{ position:fixed; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:2450; display:flex; justify-content:center; pointer-events:none; }
 .pageact[hidden]{ display:none; }

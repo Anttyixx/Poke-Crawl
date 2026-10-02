@@ -48,11 +48,11 @@
 
   <!-- starter -->
   <section class="screen starter" id="scr-starter" aria-label="Choose your first Pokémon">
-    <!-- the offers sit in the middle of the screen until one is picked -->
-    <div class="midline" id="starter-line"><div class="slots slots--offer" data-area="S.offer"></div></div>
     <div class="scr">
       <div class="scr__head starter__head"><h1 class="title">Choose your first Pokémon</h1></div>
       <p class="sub starter__hint">Tap a Pokémon to scan it with the RotomDex.</p>
+      <!-- the three starters, just under the title: bare sprites, no slot frames -->
+      <div class="midline" id="starter-line"><div class="slots slots--offer" data-area="S.offer"></div></div>
       <!-- shown while Rotom scans a starter, pinned under the scan popup -->
       <div class="pageact" id="starter-act" hidden><button class="btn btn--go btn--big" id="starter-go" type="button">I Choose You!!</button></div>
     </div>
