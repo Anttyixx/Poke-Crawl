@@ -1160,7 +1160,9 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
    header icon is and the hand-over can't jump. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
-const RD_MS = { swoop: 870, land: 220, open: 330, item: 250, stagger: 38, fade: 110, fold: 230, home: 330 };   // 20% faster than at first
+const RD_MS = { swoop: 870, land: 220, fade: 110, fold: 230,
+  open: 300, item: 227, stagger: 35,                // the popup opening out and filling in: 10% faster than the rest
+  home: 363 };                                      // Rotom's hop home: 10% slower
 const rdFlyer = box => {
   const img = document.createElement('img');
   img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
