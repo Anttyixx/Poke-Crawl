@@ -1327,7 +1327,7 @@ async function closeDex(now = false){
    bump to meet it (on the top edge for a popup below, the bottom edge for one above), so Rotom needs no padding
    inside. The Pokémon stays in view; tapping another one makes Rotom hop over and scan that one instead. `actions`
    are buttons at the bottom (e.g. the starter screen's "I Choose You!!"); "Full RotomDex" is always there and turns
-   the popup into the full RotomDex. */
+   the popup into the full RotomDex, which has the same bump in its top edge for Rotom, near the left corner. */
 const SCAN = { gap: 22, margin: 10, maxW: 520, rdp: 65, bump: 30, top: 74, slope: 26, r: 18 };
 // the outline: a rounded rectangle from y0 to y1 with a bump around x reaching up (or down) to the shell's edge
 function scanOutline(w, h, x, down){
@@ -1341,29 +1341,36 @@ function scanOutline(w, h, x, down){
     : `M${r},${y0} L${w - r},${y0} Q${w},${y0} ${w},${y0 + r} L${w},${y1 - r} Q${w},${y1} ${w - r},${y1} ${bumpPath} L${r},${y1} Q0,${y1} 0,${y1 - r} L0,${y0 + r} Q0,${y0} ${r},${y0} Z`;
 }
 function dexLayout(){
-  const frame = $('.dexpop__frame'), spot = rdSpot();
+  const frame = $('.dexpop__frame'), spot = rdSpot(), { bump: B } = SCAN, r = SCAN.rdp / 2;
+  const edge = SCAN.top / 2 + SCAN.slope + SCAN.r + 4;        // how far the bump's middle must stay from a corner
   DEXPOP.classList.toggle('dexpop--scan', !!DEX.scan);
-  if (!DEX.scan){ frame.removeAttribute('style'); spot.removeAttribute('style'); DEXCARD.removeAttribute('style'); DEXPOP.classList.remove('dexpop--perch-bottom'); return; }
-  const S = DEX.scan.slot.getBoundingClientRect(), { gap, margin, bump: B } = SCAN, top0 = margin + 6;
-  const below = innerHeight - S.bottom - gap - margin, above = S.top - gap - top0;
-  const down = below >= above, room = Math.max(200, down ? below : above);
-  const w = Math.min(innerWidth - margin * 2, SCAN.maxW);
-  // as tall as the Pokémon's info and the buttons need, up to the room there is (then it scrolls)
-  frame.style.width = w + 'px';
-  const need = $('#dex-body').scrollHeight + $('#dex-act').offsetHeight + B + 2;
-  const h = Math.min(room, need);
-  const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
-  const top = down ? S.bottom + gap : S.top - gap - h;
-  Object.assign(frame.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
+  let w, h, x, down = true;
+  if (!DEX.scan){
+    // the full RotomDex: the screen-filling frame, Rotom on its top edge near the left corner
+    frame.removeAttribute('style'); DEXPOP.classList.remove('dexpop--perch-bottom');
+    const fr = frame.getBoundingClientRect(); w = fr.width; h = fr.height; x = edge;
+  } else {
+    const S = DEX.scan.slot.getBoundingClientRect(), { gap, margin } = SCAN, top0 = margin + 6;
+    const below = innerHeight - S.bottom - gap - margin, above = S.top - gap - top0;
+    down = below >= above;
+    const room = Math.max(200, down ? below : above);
+    w = Math.min(innerWidth - margin * 2, SCAN.maxW);
+    // as tall as the Pokémon's info and the buttons need, up to the room there is (then it scrolls)
+    frame.style.width = w + 'px';
+    h = Math.min(room, $('#dex-body').scrollHeight + $('#dex-act').offsetHeight + B + 2);
+    const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
+    const top = down ? S.bottom + gap : S.top - gap - h;
+    Object.assign(frame.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
+    // Rotom: on the edge facing the slot, over the slot's corner nearest the middle of the screen
+    const cx = S.left + S.width / 2 < innerWidth / 2 ? S.right - 8 : S.left + 8;
+    x = Math.min(w - edge, Math.max(edge, cx - left));
+    DEXPOP.classList.toggle('dexpop--perch-bottom', !down);
+  }
   Object.assign(DEXCARD.style, { top: (down ? B : 0) + 'px', height: (h - B) + 'px' });
-  // Rotom: on the edge facing the slot, over the slot's corner nearest the middle of the screen, kept clear of the corners
-  const r = SCAN.rdp / 2, cx = S.left + S.width / 2 < innerWidth / 2 ? S.right - 8 : S.left + 8, edge = SCAN.top / 2 + SCAN.slope + SCAN.r + 4;
-  const x = Math.min(w - edge, Math.max(edge, cx - left));
-  Object.assign(spot.style, { left: (x - r) + 'px', top: ((down ? 0 : h) - r) + 'px' });
+  Object.assign(spot.style, { left: (x - r) + 'px', top: ((down ? 0 : h) - r) + 'px' });   // keeps its visibility as set
   const svg = $('.dexpop__outline');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('width', w); svg.setAttribute('height', h);
   svg.firstElementChild.setAttribute('d', scanOutline(w, h, x, down));
-  DEXPOP.classList.toggle('dexpop--perch-bottom', !down);
 }
 function dexActions(){
   const bar = $('#dex-act'), acts = DEX.scan ? [...DEX.scan.actions, { label: 'Full RotomDex', run: dexToFull }] : [];
@@ -1382,10 +1389,10 @@ async function openScan(slot, mon, actions = []){
     return openDex();
   }
   // already scanning another Pokémon: fold the panel into Rotom, hop over, open again
-  await dexHop(() => { DEX.scan = { slot, mon, actions }; dexActions(); dexShow('scan', false); }, .45);
+  await rdRelocate(() => { DEX.scan = { slot, mon, actions }; dexActions(); dexShow('scan', false); }, .45);
 }
 // fold the panel into Rotom, change what the popup shows (and where), hop Rotom to its new perch, open again
-async function dexHop(change, dip){
+async function rdRelocate(change, dip){
   DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   if (!REDUCED) await dexFold();
@@ -1403,7 +1410,7 @@ async function dexHop(change, dip){
 // "Full RotomDex": Rotom leaves the Pokémon, the page dims, and it opens the full RotomDex on the Pokémon section
 async function dexToFull(){
   DEXVEIL.style.opacity = 0;
-  await dexHop(() => {
+  await rdRelocate(() => {
     DEX.scan = null; DEX.tab = DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
     DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.home, easing: 'ease-out', fill: 'forwards' });
   }, .6);
@@ -1413,7 +1420,7 @@ async function dexToFull(){
 addEventListener('pointerdown', e => {
   if (DEX.open && DEX.scan && !DEX.busy && !e.target.closest('.dexpop__frame') && !e.target.closest('.slot')) closeDex();
 }, true);
-addEventListener('resize', () => { if (DEX.open && DEX.scan) dexLayout(); });
+addEventListener('resize', () => { if (DEX.open) dexLayout(); });
 RD_BTN.addEventListener('click', openDex);
 DEXVEIL.addEventListener('click', () => closeDex());
 rdSpot().addEventListener('click', () => closeDex());
