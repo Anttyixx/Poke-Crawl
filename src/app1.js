@@ -1180,10 +1180,10 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
    header icon is and the hand-over can't jump. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
-// every step 10% faster than the last round of tuning (the numbers in the comments were the previous ones)
-const RD_MS = { swoop: 791 /* 870 */, land: 200 /* 220 */, fade: 100 /* 110 */, fold: 209 /* 230 */,
+// RotomDex timings in ms (the numbers in comments are from before the last 10% speed-up)
+const RD_MS = { swoop: 600, land: 200 /* 220 */, fade: 100 /* 110 */, fold: 209 /* 230 */,
   open: 273 /* 300 */, item: 206 /* 227 */, stagger: 32 /* 35 */,
-  home: 564 /* 620 */ };
+  home: 600 };                                      // both flights take 0.6s
 // the dip both hops make between Rotom's corner and the popup header: a shallow curve below both ends
 const rdDip = (a, b, depth) => {
   const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170) * depth;
