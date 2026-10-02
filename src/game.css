@@ -1061,7 +1061,7 @@ button{ font:inherit; color:inherit; }
 .dexpop .dexpop__card{ position:absolute; left:0; right:0; width:auto; background:none; border:0; box-shadow:none; }
 .dexpop--scan .dexhead{ display:none; }                    /* scanning shows only the Pokémon, no title or tabs */
 .dexpop--scan .dexbody{ padding-top:0; padding-bottom:12px; }
-.dexscan{ margin:0; }
+.dexscan{ margin:0; background:none; border:0; border-radius:0; }   /* the scan sits straight in the popup, no inner card */
 .dexscan .dexmon__head{ padding-right:4px; }
 .dextab[hidden]{ display:none; }
 /* "Full RotomDex" sits in the scan popup's top right and stays there while it scrolls, over a fade */
