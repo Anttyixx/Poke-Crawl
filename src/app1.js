@@ -959,7 +959,7 @@ $('#scr-map').addEventListener('pointerup', e => {
 // every Pokémon, move and held item in the game, in three sections switched by tabs that stay pinned at the top.
 // Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
 const DEX_TABS = ['mons', 'moves', 'items'];
-const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false };
+const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false, anim: 0 };
 // sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
 const blobURLs = new Map();
 function spriteURL(uri){
@@ -1152,56 +1152,81 @@ async function dexShow(tab, animate){
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 /* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
-   Opening: Rotom hops up, swoops down and across the screen and back up into its spot in the popup's header, then
-   the popup opens out around it. Closing reverses it: the popup folds back into Rotom, which hops home. */
+   Opening: Rotom crouches, hops, swoops down and across the screen and back up into its spot in the popup's header,
+   landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
+   header, tabs and list fade up into it one after another. Closing runs the other way: the contents fade, the panel
+   folds back into Rotom, and Rotom hops home to the corner.
+   Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the real
+   header icon is and the hand-over can't jump. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
+const RD_MS = { swoop: 870, land: 220, open: 330, item: 250, stagger: 38, fade: 110, fold: 230, home: 330 };   // 20% faster than at first
 const rdFlyer = box => {
   const img = document.createElement('img');
   img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
   Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
   return document.body.appendChild(img);
 };
+const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
-// the popup opens out from (or folds back into) Rotom's spot in its header
-function dexReveal(open, dur){
-  const c = DEXCARD.getBoundingClientRect(), r = rdSpot().getBoundingClientRect();
-  const at = `at ${r.left + r.width / 2 - c.left}px ${r.top + r.height / 2 - c.top}px`, far = Math.hypot(c.width, c.height);
-  const shut = `circle(${r.width * .45}px ${at})`, wide = `circle(${far}px ${at})`;
-  const ease = open ? 'cubic-bezier(.3,.7,.2,1)' : 'cubic-bezier(.6,0,.8,.4)';
-  DEXVEIL.animate([{ opacity: open ? 0 : 1 }, { opacity: open ? 1 : 0 }], { duration: dur, easing: 'ease-out', fill: 'forwards' });
-  return DEXCARD.animate([{ clipPath: open ? shut : wide, opacity: open ? .6 : 1 }, { clipPath: open ? wide : shut, opacity: open ? 1 : .6 }],
-    { duration: dur, easing: ease, fill: 'forwards' }).finished;
+const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
+// a squash-and-settle on landing, at the flyer's final place and size
+const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }, { transform: rdT(dx, dy, 0, sc * 1.1, sc * .86) },
+  { transform: rdT(dx, dy, 0, sc * .97, sc * 1.04) }, { transform: rdT(dx, dy, 0, sc) }], { duration: RD_MS.land, easing: 'ease-out', fill: 'forwards' }).finished;
+// the panel's outline: a Rotom-sized rounded square around its spot, or the whole card
+function dexInset(open){
+  const c = DEXCARD.getBoundingClientRect(), r = rdMid(rdSpot().getBoundingClientRect()), s = 24;
+  const x = r.x - c.left, y = r.y - c.top;
+  return open ? 'inset(0px 0px 0px 0px round 18px)' : `inset(${y - s}px ${c.width - x - s}px ${c.height - y - s}px ${x - s}px round ${s}px)`;
+}
+// what fades up into the opened panel, top to bottom: the title, Close, the tabs, then the list's first screenful
+function dexParts(){
+  const list = [...$('#dex-body').children].filter(el => el.getBoundingClientRect().top < innerHeight).slice(0, 8);
+  return [$('.dexhead__top .title'), $('#dex-close'), $('.dextabs'), ...list];
 }
 async function openDex(){
   if (wiping || DEX.open || DEX.busy) return;
   DEX.open = DEX.busy = true; hideTip();
+  const tok = ++DEX.anim, live = () => tok === DEX.anim;   // a screen wipe can cut the animation short
   dexShow(DEX.tab, false);
   DEXPOP.hidden = false; DEXCARD.scrollTop = 0;
   RD_BTN.classList.add('is-out');
   if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
   const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
   DEXCARD.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
-  const fl = rdFlyer(from);
-  // the path: a little hop straight up, then one sweeping curve down, across the screen and back up into place
-  const W_ = innerWidth, H_ = innerHeight, sx = from.left, sy = from.top, ux = sx, uy = sy - 30;
-  const c1 = { x: W_ * .75, y: H_ * .86 }, c2 = { x: W_ * .04, y: H_ * .62 }, ex = to.left, ey = to.top, sc = to.width / from.width;
-  const pt = u => { const v = 1 - u; return { x: v*v*v*ux + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*ex, y: v*v*v*uy + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*ey }; };
-  const hop = .2, frames = [{ transform: 'translate(0,0) scale(1)', offset: 0 },
-    { transform: 'translate(0,2px) scale(1.12,.86)', offset: .05 },                         // crouch
-    { transform: `translate(0,${uy - sy}px) scale(.94,1.08)`, offset: hop, easing: 'linear' }];
+  const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
+  // the path, centre to centre: a small hop straight up, then one curve down, across and back up into place
+  const up = { x: a.x, y: a.y - 22 }, W_ = innerWidth, H_ = innerHeight;
+  const c1 = { x: W_ * .68, y: H_ * .66 }, c2 = { x: W_ * .14, y: H_ * .48 };
+  const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
+  const hop = .18, n = 28, frames = [{ transform: rdT(0, 0, 0, 1), offset: 0 },
+    { transform: rdT(0, 2, 0, 1.12, .86), offset: .05 },                                    // crouch
+    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), offset: hop }];                          // and spring up
   let prev = pt(0);
-  for (let i = 1; i <= 24; i++){
-    const u = easeInOut(i / 24), p = pt(u), s = 1 + (sc - 1) * u;
-    const tilt = Math.max(-28, Math.min(28, (p.x - prev.x) * .5));                          // leans into the swoop
-    frames.push({ transform: `translate(${p.x - sx}px, ${p.y - sy}px) rotate(${i === 24 ? 0 : tilt}deg) scale(${s})`, offset: i === 24 ? 1 : hop + (1 - hop) * i / 24 });
+  for (let i = 1; i <= n; i++){
+    const k = i / n, u = easeInOut(k), p = pt(u), s = 1 + (sc - 1) * u;
+    // leans into the swoop, the lean fading out smoothly as it slows into place
+    const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
+    const st = 1 + .06 * Math.sin(Math.PI * k);                                           // stretched a little at speed
+    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), offset: i === n ? 1 : hop + (1 - hop) * k });
     prev = p;
   }
-  await fl.animate(frames, { duration: Math.round(1150 / 1.1), fill: 'forwards' }).finished;   // 10% faster than at first
+  const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
+  // the backdrop dims over the last part of the flight
+  DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
+  await flight.finished;
+  if (!live()) return;
+  // lands; the panel opens out from Rotom as it settles, then the contents fade up in turn
+  const landed = rdLand(fl, b.x - a.x, b.y - a.y, sc);
   DEXCARD.style.visibility = '';
-  await dexReveal(true, Math.round(380 / 1.1));
+  const parts = dexParts();
+  parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
+    { duration: RD_MS.item, delay: RD_MS.open * .7 + i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+  const opened = DEXCARD.animate([{ clipPath: dexInset(false) }, { clipPath: dexInset(true) }], { duration: RD_MS.open, easing: 'cubic-bezier(.25,.85,.3,1)' }).finished;
+  await Promise.all([landed, opened, ...parts.map(el => el.getAnimations().at(-1)?.finished)]);
+  if (!live()) return;
   spot.style.visibility = ''; fl.remove();
-  DEXCARD.getAnimations().forEach(a => a.cancel()); DEXVEIL.getAnimations().forEach(a => a.cancel()); DEXVEIL.style.opacity = '';
+  DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
   DEX.busy = false;
   $('#dex-close').focus({ preventScroll: true });
 }
@@ -1210,17 +1235,31 @@ async function closeDex(now = false){
   DEX.busy = true;
   if (!now && !REDUCED){
     const spot = rdSpot(), from = spot.getBoundingClientRect();
-    await dexReveal(false, Math.round(260 / 1.1));
+    // the contents fade, then the panel folds back into Rotom
+    const parts = dexParts();
+    await Promise.all(parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }).finished));
+    DEXVEIL.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fold + RD_MS.home * .5, easing: 'ease-in', fill: 'forwards' });
+    await DEXCARD.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: RD_MS.fold, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+    // then Rotom hops home
     const fl = rdFlyer(from); spot.style.visibility = 'hidden';
-    DEXPOP.hidden = true;
-    const to = rdHome().getBoundingClientRect(), dx = to.left - from.left, dy = to.top - from.top, sc = to.width / from.width;
-    await fl.animate([{ transform: 'none' }, { transform: `translate(${dx / 2}px, ${dy / 2 - 40}px) scale(${(1 + sc) / 2})`, easing: 'ease-in' },
-      { transform: `translate(${dx}px, ${dy}px) scale(${sc * 1.1}, ${sc * .88})`, offset: .85 }, { transform: `translate(${dx}px, ${dy}px) scale(${sc})` }],
-      { duration: Math.round(420 / 1.1), easing: 'ease-out', fill: 'forwards' }).finished;
+    DEXCARD.style.visibility = 'hidden';
+    const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
+    const hf = [];
+    for (let i = 0; i <= 12; i++){
+      const t = i / 12, e = easeInOut(t), s = 1 + (sc - 1) * e;
+      hf.push({ transform: rdT(dx * e, dy * e - 48 * 4 * t * (1 - t), 0, s) });
+    }
+    await fl.animate(hf, { duration: RD_MS.home, fill: 'forwards' }).finished;
+    RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
+    await rdLand(fl, dx, dy, sc);
     fl.remove(); spot.style.visibility = '';
+    parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));
   }
+  DEX.anim++;
+  document.querySelectorAll('.rd-fly').forEach(x => x.remove()); rdSpot().style.visibility = '';
   DEXPOP.hidden = true;
-  DEXCARD.getAnimations().forEach(a => a.cancel()); DEXVEIL.getAnimations().forEach(a => a.cancel());
+  DEXCARD.style.visibility = '';
+  DEXCARD.getAnimations().forEach(x => x.cancel()); DEXVEIL.getAnimations().forEach(x => x.cancel());
   RD_BTN.classList.remove('is-out');
   DEX.open = DEX.busy = false;
 }
