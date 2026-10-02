@@ -30,11 +30,11 @@ bundles everything (code, styles, data and sprites) into that one file.
 | `data/data.json` | Pokémon forms and moves |
 | `data/items.json` | Held items |
 | `assets/pokesprite/` | Pokémon and item sprites (from PokéSprite) |
-| `assets/` | EXP Candy and the 18 TR sprites |
+| `assets/` | EXP Candy, the 18 TR sprites and Rotom Pokédex (the Pokédex icon) |
 | `docs/design/` | Feature/design notes |
 | `build.py` | Stitches it all into `dist/index.html` |
 
-The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__` and `__TRS__` in the JS.
+The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__`, `__TRS__` and `__ROTOMDEX__` in the JS.
 
 ## Play it online
 

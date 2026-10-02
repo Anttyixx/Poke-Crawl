@@ -103,6 +103,7 @@ for it in items_json: it['spr'] = game_sprite(item_sprite_path(it['id']))
 items = json.dumps(items_json, ensure_ascii=False, separators=(',', ':'))
 trs   = json.dumps({os.path.basename(f)[:-4]: b64(f) for f in sorted(glob.glob(p('assets', 'tr', '*.png')))})
 candy = b64(p('assets', 'candy.png'))
+rotomdex = game_sprite(p('assets', 'rotomdex.png'))   # the Pokédex's icon: Rotom Pokédex
 
 def git(*args):
     try:
@@ -116,7 +117,7 @@ label = version if channel == 'stable' else f"{version}-dev ({git('rev-parse', '
 
 js = (read('src', 'app1.js') + read('src', 'app2.js')) \
     .replace('__DATA__', data, 1).replace('__ITEMS__', items, 1) \
-    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__VERSION__', label, 1)
+    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__ROTOMDEX__', rotomdex, 1).replace('__VERSION__', label, 1)
 css = read('src', 'slot.css') + '\n' + read('src', 'game.css')
 
 html = f'''<!DOCTYPE html>

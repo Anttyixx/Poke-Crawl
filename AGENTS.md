@@ -64,6 +64,7 @@ To release, only when the user says the work on `dev` is ready:
 | `data/data.json` | Pokémon `forms` and `moves`; each form's `spr` names its sprite in `assets/pokesprite` |
 | `data/items.json` | Held items; each item's `id` names its sprite in `assets/pokesprite/items` |
 | `assets/candy.png`, `assets/tr/*.png` | EXP Candy sprite and the 18 TR sprites, one per move type |
+| `assets/rotomdex.png` | Rotom Pokédex (RotomDex), the Pokédex's icon (96×96, trimmed and scaled like the other sprites) |
 | `assets/pokesprite/` | Sprite library from PokéSprite: every Pokémon (normal and shiny) and ~1,000 items, plus `data/pokemon.json`. The source of all Pokémon and item sprites; see `assets/pokesprite/README.md` (the art is © Nintendo, not MIT) |
 | `docs/design/` | Feature and design notes (start at `features_00-index.md`; undecided items are in `features_open-questions.md`) |
 | `build.py` | Stitches everything into `dist/index.html` |
@@ -79,6 +80,7 @@ To release, only when the user says the work on `dev` is ready:
 - `__ITEMS__` becomes `data/items.json` with each item's sprite added as `spr`, from `assets/pokesprite/items`
 - `__CANDY__` becomes the data URI of `assets/candy.png`
 - `__TRS__` becomes a JSON map of move type to TR sprite data URI
+- `__ROTOMDEX__` becomes the data URI of `assets/rotomdex.png`, the Pokédex's icon
 - `__VERSION__` becomes the version label, e.g. `0.2.0` or `0.2.0-dev (a1b2c3d)`
 
 The build also joins `slot.css` and `game.css` in that order and inlines them with `body.html` into one HTML page. The page's only external request is Google Fonts (Chakra Petch).
