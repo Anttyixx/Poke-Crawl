@@ -3,7 +3,6 @@ const DATA = __DATA__;
 const ITEMS_DATA = __ITEMS__;
 const CANDY_SPR = '__CANDY__';
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
-const BUSH_SPR = '__BUSH__';                              // the wild screen's bush, 16x16 pixel art
 const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
 
 /* ================= data ================= */
@@ -1383,30 +1382,10 @@ async function wildMove(change){
 /* ---------- the wild Pokémon hide in a rustling bush ----------
    The screen opens on a bush above three empty slots. It rustles hard, then before each Pokémon a quick rustle and
    that Pokémon jumps out of the bush into its slot, left to right. Once all three are out the bush fades away and
-   picking works as before (taps wait until then). The animation is Bush Kit (assets/bush-kit, window.BushKit) with
-   our own bush sprite (assets/bush-kit/sprites/bush-round.png).
+   picking works as before (taps wait until then). The bush is Bush Kit (assets/bush-kit, window.BushKit).
    Players who prefer reduced motion, or if the kit fails to load, just see the three Pokémon. */
 let bushKit = null, wildBush = null;
-(window.BushKit ? window.BushKit.load() : Promise.reject()).then(useOurBush).then(k => { bushKit = k; }, () => {});
-// swap the kit's tall-grass tile for our rounded bush: drawn at 2x onto the kit's 32x32 tile, plus the kit's 7 shake
-// frames remade from it (each row shifted so the top leans -3..+3 px and the bottom stays put, as the kit's own are)
-function useOurBush(kit){
-  return new Promise((res, rej) => {
-    const img = new Image();
-    img.onload = () => {
-      const T = kit.TILE, tile = document.createElement('canvas'), strip = document.createElement('canvas');
-      tile.width = tile.height = T; strip.width = T * 7; strip.height = T;
-      const t = tile.getContext('2d'), s = strip.getContext('2d');
-      t.imageSmoothingEnabled = s.imageSmoothingEnabled = false;
-      t.drawImage(img, 0, 0, T, T);
-      for (let f = 0; f < 7; f++) for (let y = 0; y < T; y++)
-        s.drawImage(tile, 0, y, T, 1, f * T + Math.round((f - 3) * (T - 1 - y) / (T - 1)), y, T, 1);
-      kit.images.bush = tile; kit.images.shake = strip;
-      res(kit);
-    };
-    img.onerror = rej; img.src = BUSH_SPR;
-  });
-}
+(window.BushKit ? window.BushKit.load() : Promise.reject()).then(k => { bushKit = k; }, () => {});
 function wildBushSetup(){
   const host = $('#wild-bush');
   wildBush?.destroy(); wildBush = null; host.innerHTML = ''; host.getAnimations().forEach(a => a.cancel());
