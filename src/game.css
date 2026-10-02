@@ -852,7 +852,7 @@ button{ font:inherit; color:inherit; }
 .bhead{ padding-right:clamp(0px, calc(var(--rd-room) - 14px - (100vw - 900px) / 2), calc(var(--rd-room) - 14px)); }
 
 /* the RotomDex popup: fills most of the screen over a dimmed, blurred backdrop */
-.dexpop{ position:fixed; inset:0; z-index:2400; display:grid; place-items:center;
+.dexpop{ position:fixed; inset:0; z-index:2400; display:grid; place-items:center; grid-template-rows:minmax(0, 1fr);
   padding:calc(max(14px, 3vh) + 26px + env(safe-area-inset-top, 0px)) max(10px, 3vw) calc(max(14px, 3vh) + env(safe-area-inset-bottom, 0px)); }
 .dexpop[hidden]{ display:none; }
 .dexpop__veil{ position:absolute; inset:0; background:rgba(8,10,14,.62); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
@@ -1053,16 +1053,23 @@ button{ font:inherit; color:inherit; }
 .dexpop.dexpop--scan{ display:block; padding:0; pointer-events:none; }
 .dexpop--scan .dexpop__veil{ background:none; -webkit-backdrop-filter:none; backdrop-filter:none; pointer-events:none; }
 .dexpop--scan .dexpop__frame{ position:fixed; pointer-events:auto; }
-.dexpop--scan .dexpop__card{ box-shadow:0 18px 50px rgba(0,0,0,.55), 0 0 0 1px color-mix(in srgb, var(--glow-selected) 22%, transparent); }
-.dexpop--scan .dexhead__top{ padding-top:16px; }
-.dexpop--scan .dexbody{ padding-top:12px; padding-bottom:16px; }
+/* the shell opens out of Rotom; in the full RotomDex it is just the card, in scan mode the svg draws the outline
+   (a rounded box whose border rises in a bump to meet Rotom) and the card sits inside it, below or above the bump */
+.dexpop__shell{ position:relative; width:100%; height:100%; }
+.dexpop__outline{ display:none; }
+.dexpop--scan .dexpop__shell{ position:absolute; inset:0; }
+.dexpop--scan .dexpop__outline{ display:block; position:absolute; inset:0; overflow:visible; pointer-events:none;
+  filter:drop-shadow(0 18px 40px rgba(0,0,0,.55)); }
+.dexpop--scan .dexpop__outline path{ fill:var(--bg); stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
+.dexpop--scan .dexpop__card{ position:absolute; left:0; right:0; background:none; border:0; box-shadow:none; }
+.dexpop--scan .dexhead{ display:none; }                    /* scanning shows only the Pokémon, no title or tabs */
+.dexpop--scan .dexbody{ padding-top:14px; padding-bottom:6px; }
 .dextab[hidden]{ display:none; }
 /* the Scan tab's buttons stay pinned to the bottom of the popup */
 .dexact{ position:sticky; bottom:0; z-index:4; display:flex; justify-content:center; gap:10px; padding:12px 12px 14px;
   background:linear-gradient(transparent, var(--bg) 34%); }
 .dexact[hidden]{ display:none; }
-.dexact .btn{ min-width:200px; }
-.dexpop--perch-bottom .dexact{ padding-bottom:38px; }      /* room for Rotom perched on the bottom edge */
+.dexact .btn{ flex:1 1 0; max-width:230px; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }
 .dexpop--scan .dextab small{ display:none; }        /* four tabs in a smaller popup: names only */
