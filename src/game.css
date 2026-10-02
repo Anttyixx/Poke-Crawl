@@ -928,6 +928,8 @@ button{ font:inherit; color:inherit; }
 .dexlearn{ display:grid; grid-template-columns:86px 1fr; gap:8px; align-items:center; padding:6px 10px 8px; border-top:1px solid #20242f; }
 .dexlearn > span{ font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); }
 .dexlearn > span:only-child{ grid-column:1 / -1; text-transform:none; letter-spacing:0; font-size:12.5px; }
+.dexpools{ font-size:13px; line-height:1.5; color:var(--ink-dim); }
+.dexpools small{ color:var(--ink-faint); }
 .dexminis{ display:flex; flex-wrap:wrap; gap:4px; }
 .dexmini{ width:34px; height:34px; border-radius:9px; background:var(--tile); display:grid; place-items:center; }
 .dexmini img{ width:90%; height:90%; object-fit:contain; image-rendering:pixelated; }
@@ -1033,3 +1035,4 @@ button{ font:inherit; color:inherit; }
 .dexpop__card .dexhead{ padding-left:12px; padding-right:12px; }
 .dexpop__card .dexbody{ padding-left:12px; padding-right:12px; }
 .dexpop__card .dextab{ white-space:nowrap; }
+@media (max-width:420px){ .dexpop__card .dextab{ font-size:14px; padding-left:2px; padding-right:2px; } .dexpop__card .dextab small{ font-size:10.5px; margin-left:2px; } }
