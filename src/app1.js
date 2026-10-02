@@ -512,7 +512,7 @@ const AREAS = {};
 const AREA_CFG = {
   'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => starterTap(i) },
   'S.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => ST.pick, onTap: () => starterReturn() },
-  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer, onTap: i => wildTap(i) },
+  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => i < W.out ? m : null), onTap: i => wildTap(i) },
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
@@ -1352,7 +1352,7 @@ function goTo(id){
 function openNode(t){
   const mark = markHTML(ICON[t], t === 'boss' ? `Gym ${R.mapNo}` : LABEL[t]);
   const opt = { color: NODE_COLOR(t), mark };
-  if (t === 'wild') return wipeTo('scr-wild', openWild, opt);
+  if (t === 'wild') return wipeTo('scr-wild', openWild, { ...opt, after: wildBushIntro });
   if (t === 'item') return wipeTo('scr-item', openItem, opt);
   if (t === 'tutor') return wipeTo('scr-tutor', openTutor, opt);
   if (t === 'daycare') return wipeTo('scr-daycare', () => openDaycare(false), opt);
@@ -1364,11 +1364,12 @@ function openNode(t){
 // pick phase: tap an offer to hop it into the big slot; the button reads Skip until one has landed, then Choose.
 // place phase: the other offers and the info panel fade out, your party fades in where the info was;
 // tap a party slot to put the new Pokémon there, or press Send to daycare.
-const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false };
+const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false, out: 0 };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
   Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star, star < 3 ? Math.random() * .4 : 1)),
     pick: [null], home: -1, landed: false, phase: 'pick', done: false, candy: false, leveled: null });
+  W.out = 0; wildBushSetup();
 }
 async function wildMove(change){
   const before = snapshot(), token = ++W.token;
@@ -1378,8 +1379,48 @@ async function wildMove(change){
   W.landed = !!W.pick[0]; refresh();
   if (W.landed){ revealInfo('wild'); fitName($('#wild-left')); }
 }
+/* ---------- the wild Pokémon hide in a rustling bush ----------
+   The screen opens on a bush above three empty slots. It rustles hard, then before each Pokémon a quick rustle and
+   that Pokémon jumps out of the bush into its slot, left to right. Once all three are out the bush fades away and
+   picking works as before (taps wait until then). The bush is Bush Kit (assets/bush-kit, window.BushKit).
+   Players who prefer reduced motion, or if the kit fails to load, just see the three Pokémon. */
+let bushKit = null, wildBush = null;
+(window.BushKit ? window.BushKit.load() : Promise.reject()).then(k => { bushKit = k; }, () => {});
+function wildBushSetup(){
+  const host = $('#wild-bush');
+  wildBush?.destroy(); wildBush = null; host.innerHTML = ''; host.getAnimations().forEach(a => a.cancel());
+  if (!bushKit || REDUCED){ W.out = W.offer.length; host.hidden = true; return; }
+  wildBush = bushKit.createBushElement({ scale: 4, ground: false });
+  host.append(wildBush.el); host.hidden = false;
+}
+async function wildBushIntro(){
+  if (!wildBush || W.out >= W.offer.length) return;
+  const tok = W.introTok = (W.introTok || 0) + 1, { el, bush } = wildBush, host = $('#wild-bush');
+  const live = () => W.introTok === tok && screen === 'scr-wild';
+  const shake = type => new Promise(r => bush.shake(type, { onDone: r }));
+  await shake('vigorous');
+  for (let i = 0; i < W.offer.length && live(); i++){
+    await shake('normal');
+    if (!live()) break;
+    // the Pokémon leaves from the middle of the bush, small, and grows to full size as it lands in its slot
+    const slot = AREAS['W.offer'].els[i].el, empty = slot._last;
+    W.out = i + 1; refresh();
+    holdSlot(slot, empty, '');                            // the slot stays empty until it lands
+    slot.classList.add('arriving');
+    const r = el.getBoundingClientRect(), size = r.width * .42;
+    const landed = fly(SPRITES[FORM[W.offer[i].form].spr], { x: r.left + (r.width - size) / 2, y: r.top + r.height * .55 - size / 2, size }, slot, { dur: 560 });
+    if (i === W.offer.length - 1) await landed; else await sleep(140);
+  }
+  W.out = W.offer.length;
+  if (W.introTok !== tok) return;
+  refresh();
+  await host.animate([{ opacity: 1, transform: 'translateX(-50%)' }, { opacity: 0, transform: 'translateX(-50%) scale(.85) translateY(10px)' }],
+    { duration: 320, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
+  if (W.introTok !== tok) return;
+  wildBush?.destroy(); wildBush = null; host.innerHTML = ''; host.hidden = true; host.getAnimations().forEach(a => a.cancel());
+}
 function wildTap(i){
-  if (W.phase !== 'pick' || wiping || !W.offer[i]) return;
+  if (W.phase !== 'pick' || wiping || W.out < W.offer.length || !W.offer[i]) return;
   wildMove(() => { if (W.pick[0]) W.offer[W.home] = W.pick[0]; W.pick[0] = W.offer[i]; W.offer[i] = null; W.home = i; });
 }
 function wildReturn(){
