@@ -29,12 +29,14 @@
       </div>
       <div class="dextabs" role="tablist" aria-label="RotomDex sections">
         <span class="dextabs__pill" aria-hidden="true"></span>
+        <button class="dextab" type="button" role="tab" data-tab="scan" hidden>Scan</button>
         <button class="dextab" type="button" role="tab" data-tab="mons">Pokémon <small id="dex-n-mons"></small></button>
         <button class="dextab" type="button" role="tab" data-tab="moves">Moves <small id="dex-n-moves"></small></button>
         <button class="dextab" type="button" role="tab" data-tab="items">Items <small id="dex-n-items"></small></button>
       </div>
     </header>
     <div class="dexbody" id="dex-body" role="tabpanel"></div>
+    <div class="dexact" id="dex-act" hidden></div>
   </section>
   <!-- Rotom perches on the popup's top edge, overlapping it, 25% bigger than in the corner; tapping it closes the popup -->
   <img class="dexicon dexpop__rotom" id="dex-rotom" alt="RotomDex" title="Close the RotomDex">
@@ -47,15 +49,7 @@
     <div class="midline" id="starter-line"><div class="slots slots--offer" data-area="S.offer"></div></div>
     <div class="scr">
       <div class="scr__head starter__head"><h1 class="title">Choose your first Pokémon</h1></div>
-      <div class="infostage">
-        <div class="info__side info__left" id="starter-left" hidden></div>
-        <div class="pickstage">
-          <div class="slots slots--pick" data-area="S.pick"></div>
-        </div>
-        <div class="info__side info__right" id="starter-right" hidden></div>
-      </div>
-      <div class="info__moves" id="starter-detail" hidden></div>
-      <div class="bigaction"><button class="btn btn--go btn--big" id="starter-go" disabled>I Choose You!!</button></div>
+      <p class="sub starter__hint">Tap a Pokémon to scan it with the RotomDex.</p>
     </div>
   </section>
 
