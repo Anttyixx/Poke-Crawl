@@ -513,8 +513,8 @@ button{ font:inherit; color:inherit; }
 /* headers are left aligned everywhere */
 .starter__head{ justify-content:flex-start; text-align:left; }
 /* coins sit in the screen's upper-right corner, where the map HUD shows them */
-.screen__coins{ position:absolute; top:calc(env(safe-area-inset-top, 0px) + 14px); right:18px; z-index:5; font-size:16px; margin:0; }
-.has-coins .scr__head{ padding-right:96px; }
+.screen__coins{ position:absolute; top:calc(env(safe-area-inset-top, 0px) + 14px); right:calc(var(--rd-room) + 2px); z-index:5; font-size:16px; margin:0; }
+.has-coins .scr__head{ padding-right:calc(var(--rd-room) + 80px); }
 @media (min-width:900px){ .has-coins .scr__head{ padding-right:0; } }
 
 /* Back to map lives in the bottom-left corner of the screen */
@@ -834,9 +834,9 @@ button{ font:inherit; color:inherit; }
 /* the button: on the map's top bar and in the title screen's corner */
 .dexicon{ image-rendering:pixelated; display:block; }
 @media (max-width:520px){ .hud__right{ gap:10px; } }
-/* the RotomDex in the top-left corner: just the sprite, no button frame. It steps aside during screen wipes and
+/* the RotomDex in the top-right corner: just the sprite, no button frame. It steps aside during screen wipes and
    while the popup is open (Rotom is up in the popup's header then). */
-.rotomdex{ --rd: 52px; position:fixed; z-index:2500; left:calc(8px + env(safe-area-inset-left, 0px)); top:calc(6px + env(safe-area-inset-top, 0px));
+.rotomdex{ --rd: 52px; position:fixed; z-index:2500; right:calc(8px + env(safe-area-inset-right, 0px)); top:calc(6px + env(safe-area-inset-top, 0px));
   width:var(--rd); height:var(--rd); padding:0; margin:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
   filter:drop-shadow(0 2px 6px rgba(0,0,0,.55)); transition:opacity .18s ease, transform .15s ease; }
 .rotomdex .dexicon{ width:100%; height:100%; }
@@ -845,11 +845,11 @@ button{ font:inherit; color:inherit; }
 .rotomdex.is-out{ opacity:0; pointer-events:none; transition:none; }
 .rotomdex.is-wiping{ opacity:0; pointer-events:none; }
 .rd-fly{ position:fixed; z-index:2600; pointer-events:none; image-rendering:pixelated; transform-origin:50% 50%; filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
-/* room for it: headers near the screen's left edge start past it */
+/* room for it: headers near the screen's right edge stop short of it */
 :root{ --rd-room: 72px; }
-.hud{ padding-left:var(--rd-room); }
-.scr__head{ padding-left:clamp(0px, calc(var(--rd-room) - 16px - (100vw - 720px) / 2), calc(var(--rd-room) - 16px)); }
-.bhead{ padding-left:clamp(0px, calc(var(--rd-room) - 14px - (100vw - 900px) / 2), calc(var(--rd-room) - 14px)); }
+.hud{ padding-right:var(--rd-room); }
+.scr__head{ padding-right:clamp(0px, calc(var(--rd-room) - 16px - (100vw - 720px) / 2), calc(var(--rd-room) - 16px)); }
+.bhead{ padding-right:clamp(0px, calc(var(--rd-room) - 14px - (100vw - 900px) / 2), calc(var(--rd-room) - 14px)); }
 
 /* the RotomDex popup: fills most of the screen over a dimmed, blurred backdrop */
 .dexpop{ position:fixed; inset:0; z-index:2400; display:grid; place-items:center;

@@ -7,7 +7,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 ## 0.3.0 (upcoming, on dev)
 
 ### Changed
-- The Pokédex is now the RotomDex. Rotom Pokédex waits in the top-left corner of every screen; tap it and it hops up, swoops across the screen and opens the RotomDex as a popup over the game, instead of a separate screen.
+- The Pokédex is now the RotomDex. Rotom Pokédex waits in the top-right corner of every screen; tap it and it hops up, swoops across the screen and opens the RotomDex as a popup over the game, instead of a separate screen.
 - Wild Pokémon now leap onto the screen from different spots along the top half of its edges, at staggered moments, before you choose one.
 - Tapping a Pokémon or item on the map opens a redesigned popup in the Pokédex's style. A Pokémon's shows its stats with an EXP bar, ability, held item, signature move in full and the moves it knows, building up piece by piece as it opens.
 
