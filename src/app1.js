@@ -1381,27 +1381,36 @@ async function wildMove(change){
   if (W.landed){ revealInfo('wild'); fitName($('#wild-left')); }
 }
 /* ---------- the wild Pokémon leap in from the edges of the screen ----------
-   Once the screen is in, the three slots start empty and the Pokémon arrive one at a time, in a random order: the
-   left one leaps in from the left edge, the right one from the right edge, the middle one from the top or the bottom.
-   Each starts just before the previous one lands. Picking waits until all three have landed. */
+   Once the screen is in, the three slots start empty and the Pokémon leap in from random spots along the edges of
+   the top half of the screen (the left edge, the top, the right edge), in a random order and at uneven intervals, so
+   they neither march in one after another nor arrive all at once. Picking waits until all three have landed. */
+const rand = (a, b) => a + Math.random() * (b - a);
+// a spot just off screen, at fraction u (0..1) along the top half's edge: up the left side, across the top, down the right
+function topHalfEdge(u, size){
+  const m = 24, half = innerHeight / 2, len = half * 2 + innerWidth;
+  let d = u * len;
+  if (d < half) return { x: -size - m, y: half - d - size / 2, size };
+  d -= half;
+  if (d < innerWidth) return { x: d - size / 2, y: -size - m, size };
+  return { x: innerWidth + m, y: d - innerWidth - size / 2, size };
+}
 async function wildEntrance(){
   if (!W.entering) return;
   const tok = W.enterTok = (W.enterTok || 0) + 1, live = () => W.enterTok === tok && screen === 'scr-wild';
-  const from = ['left', Math.random() < .5 ? 'top' : 'bottom', 'right'], dur = 640, landings = [];
-  for (const i of shuffle([0, 1, 2]).filter(i => W.offer[i])){
+  const landings = [];
+  await sleep(rand(0, 160));
+  // left to right, each slot's Pokémon comes from its own third of the edge (so they all come from different places,
+  // and their paths don't cross), at a random spot within it
+  const order = shuffle([0, 1, 2]).filter(i => W.offer[i]);
+  for (const [k, i] of order.entries()){
     if (!live()) break;
     const slot = AREAS['W.offer'].els[i].el, empty = slot._last;
     W.arrived[i] = true; refresh();
     holdSlot(slot, empty, '');                                  // the slot stays empty until the Pokémon lands
     slot.classList.add('arriving');
-    // start just beyond the chosen screen edge, full size, level with (or straight above/below) the slot
-    const end = spriteBox(slot), m = 24, start = { ...end };
-    if (from[i] === 'left') start.x = -end.size - m;
-    else if (from[i] === 'right') start.x = innerWidth + m;
-    else if (from[i] === 'top') start.y = -end.size - m;
-    else start.y = innerHeight + m;
-    landings.push(fly(SPRITES[FORM[W.offer[i].form].spr], start, slot, { dur }));
-    await sleep(dur * .7);
+    const end = spriteBox(slot), start = topHalfEdge((i + rand(.1, .9)) / 3, end.size);
+    landings.push(fly(SPRITES[FORM[W.offer[i].form].spr], start, slot, { dur: rand(580, 720) }));
+    if (k < order.length - 1) await sleep(rand(160, 520));      // never together, never in lockstep
   }
   await Promise.all(landings);
   if (W.enterTok !== tok) return;
