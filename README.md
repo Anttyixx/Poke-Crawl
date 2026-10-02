@@ -27,13 +27,14 @@ bundles everything (code, styles, data and sprites) into that one file.
 | `src/body.html` | Screen markup |
 | `src/slot.css` | Dynamic slot component styles |
 | `src/game.css` | Everything else (later rules override earlier ones) |
-| `data/data.json` | Pokémon forms, moves, sprite data |
+| `data/data.json` | Pokémon forms and moves |
 | `data/items.json` | Held items |
-| `assets/` | EXP Candy and the 18 TR sprites |
+| `assets/pokesprite/` | Pokémon and item sprites (from PokéSprite) |
+| `assets/` | EXP Candy, the 18 TR sprites and Rotom Pokédex (the Pokédex icon) |
 | `docs/design/` | Feature/design notes |
 | `build.py` | Stitches it all into `dist/index.html` |
 
-The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__` and `__TRS__` in the JS.
+The build replaces the placeholders `__DATA__`, `__ITEMS__`, `__CANDY__`, `__TRS__` and `__ROTOMDEX__` in the JS.
 
 ## Play it online
 
@@ -48,3 +49,7 @@ Ongoing work is merged into `dev` for play-testing, then `dev` is merged into `m
 ## Versions
 
 Each release to the stable game gets a version number (`0.MINOR.PATCH` during development), shown in the title screen's corner; the experimental build shows the upcoming version and its commit, e.g. `0.2.0-dev (a1b2c3d)`. See [CHANGELOG.md](CHANGELOG.md) for what changed in each version.
+
+## Credits
+
+Pokémon and item sprites come from [PokéSprite](https://github.com/msikma/pokesprite) by Michiel Sikma and contributors (code and data under the MIT license). The sprite images are © Nintendo / Creatures Inc. / GAME FREAK Inc. Poke-Crawl is a free, non-commercial fan project and is not affiliated with or endorsed by them.

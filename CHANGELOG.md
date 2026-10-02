@@ -4,6 +4,13 @@ Each release to `main` (the stable game) gets a version number, `0.MINOR.PATCH` 
 a new feature or noticeable change bumps MINOR, a release of only fixes and small tweaks bumps PATCH. The dev
 channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
+## 0.3.0 (2026-10-02)
+
+### Changed
+- The Pokédex is now the RotomDex. Rotom Pokédex waits in the top-right corner of every screen; tap it and it hops up, swoops across the screen and opens the RotomDex as a popup over the game, instead of a separate screen.
+- Wild Pokémon now leap onto the screen from different spots along the top half of its edges, at staggered moments, before you choose one.
+- Tapping a Pokémon or item on the map opens a redesigned popup in the Pokédex's style. A Pokémon's shows its stats with an EXP bar, ability, held item, signature move in full and the moves it knows, building up piece by piece as it opens.
+
 ## 0.2.0 (2026-10-01)
 
 ### Added

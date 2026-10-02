@@ -4,7 +4,6 @@
   <section class="screen title-scr" id="scr-title" aria-label="Poke-Crawl">
     <!-- a real, freshly generated map drifting behind the logo -->
     <div class="tbg" aria-hidden="true"><div class="tbg__map" id="title-map"></div></div>
-    <button class="dexbtn dexbtn--corner" type="button" data-dex-open aria-label="Open the Pokédex" title="Pokédex"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pokédex</span></button>
     <div class="tmain">
       <p class="tkicker">A Pokémon roguelite</p>
       <h1 class="tlogo"><span>Poke</span><span class="tlogo__dash">-</span><span class="tlogo__crawl">Crawl</span></h1>
@@ -15,14 +14,19 @@
     <p class="tversion" id="title-version"></p>
   </section>
 
-  <!-- Pokédex: every Pokémon, move and item in the game -->
-  <section class="screen dex" id="scr-dex" aria-label="Pokédex">
+  <!-- RotomDex: always in the top-left corner (except during screen wipes); tapping it opens the Pokédex popup -->
+  <button class="rotomdex" id="rotomdex" type="button" aria-label="Open the RotomDex" title="RotomDex"><img class="dexicon" alt=""></button>
+
+  <!-- the RotomDex popup: every Pokémon, move and item in the game, over whatever screen you are on -->
+  <div class="dexpop" id="dexpop" hidden>
+  <div class="dexpop__veil"></div>
+  <section class="dex dexpop__card" id="scr-dex" role="dialog" aria-modal="true" aria-label="RotomDex">
     <header class="dexhead">
       <div class="dexhead__top">
-        <span class="dexhead__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h1 class="title">Pokédex</h1>
+        <span class="dexhead__icon"><img class="dexicon" alt=""></span><h1 class="title">RotomDex</h1>
         <button class="btn" id="dex-close" type="button">Close</button>
       </div>
-      <div class="dextabs" role="tablist" aria-label="Pokédex sections">
+      <div class="dextabs" role="tablist" aria-label="RotomDex sections">
         <span class="dextabs__pill" aria-hidden="true"></span>
         <button class="dextab" type="button" role="tab" data-tab="mons">Pokémon <small id="dex-n-mons"></small></button>
         <button class="dextab" type="button" role="tab" data-tab="moves">Moves <small id="dex-n-moves"></small></button>
@@ -31,6 +35,7 @@
     </header>
     <div class="dexbody" id="dex-body" role="tabpanel"></div>
   </section>
+  </div>
 
   <!-- starter -->
   <section class="screen starter" id="scr-starter" aria-label="Choose your first Pokémon">
@@ -54,7 +59,7 @@
   <section class="screen" id="scr-map" aria-label="Map">
     <div class="hud">
       <div class="hud__map" id="hud-map"></div>
-      <div class="hud__right"><button class="dexbtn" type="button" data-dex-open aria-label="Open the Pokédex" title="Pokédex"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="3" fill="#e5484d"/><path d="M4 9.5h16" stroke="#0c0e13" stroke-width="1.6"/><circle cx="8.6" cy="6" r="2.1" fill="#5ee8ff" stroke="#e7e9f0" stroke-width="1.1"/><circle cx="13" cy="5.2" r=".9" fill="#ffd35a"/><circle cx="15.6" cy="5.2" r=".9" fill="#6ddc6d"/><rect x="7" y="12" width="10" height="6.5" rx="1.4" fill="#0c0e13"/><path d="M8.6 16.5l2-2.2 1.6 1.4 2.4-2.6" stroke="#5ee8ff" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Pokédex</span></button><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
+      <div class="hud__right"><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
     </div>
     <div class="mapwrap">
       <div class="map" id="map">

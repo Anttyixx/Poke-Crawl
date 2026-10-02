@@ -2,6 +2,7 @@
 const DATA = __DATA__;
 const ITEMS_DATA = __ITEMS__;
 const CANDY_SPR = '__CANDY__';
+const ROTOMDEX_SPR = '__ROTOMDEX__';                      // Rotom Pokédex, the Pokédex's icon
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
 const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
 
@@ -512,7 +513,7 @@ const AREAS = {};
 const AREA_CFG = {
   'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => starterTap(i) },
   'S.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => ST.pick, onTap: () => starterReturn() },
-  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer, onTap: i => wildTap(i) },
+  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => wildTap(i) },
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
@@ -857,6 +858,8 @@ function wipeAnim(el, from, to, dur){
 async function wipeTo(id, prepare, opt = {}){
   if (wiping) return;
   wiping = true; updateMapHud(); hideTip();
+  if (DEX.open) closeDex(true);
+  RD_BTN.classList.add('is-wiping');
   const W_ = $('#wipe'), band = W_.querySelector('.wipe__band'), panel = W_.querySelector('.wipe__panel');
   W_.style.setProperty('--wipe-c', opt.color || 'var(--glow-selected)');
   $('#wipe-mark').innerHTML = opt.mark || '';
@@ -882,6 +885,7 @@ async function wipeTo(id, prepare, opt = {}){
   band.style.transform = panel.style.transform = '';
   W_.classList.remove('on');
   wiping = false; updateMapHud();
+  RD_BTN.classList.remove('is-wiping');
   opt.after?.();
 }
 const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: scrollMapToCurrent });
@@ -898,9 +902,47 @@ function updateMapHud(){
   if (c){
     const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
     const sig = it ? it.uid : `${c.uid}|${c.form}|${c.star}|${c.exp}|${c.item?.uid}`;
-    if (pop.dataset.sig !== sig){ pop.dataset.sig = sig; $('#mappop-card').innerHTML = it ? itemDetail(it) : monDetail(c); }
+    if (pop.dataset.sig !== sig){
+      pop.dataset.sig = sig;
+      const card = $('#mappop-card');
+      card.innerHTML = it ? mapItemHTML(it) : mapMonHTML(c);
+      dexReveal(card.firstElementChild);                  // the entry builds up piece by piece, as in the Pokédex
+    }
   } else delete pop.dataset.sig;
   setShown('mappop', pop, !!c);
+}
+// the popup's entries use the Pokédex layout, filled in with this Pokémon's own stars, EXP, held item and moves
+function mapMonHTML(m){
+  const f = FORM[m.form], maxed = m.star >= 3;
+  const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
+  const exp = `<div class="dstat" data-stat="exp"><span>EXP</span><b>${maxed ? 'Max' : pct(m.exp)}</b><i class="dstat__bar"><i style="width:${maxed ? 100 : Math.max(3, Math.round(m.exp * 100))}%"></i></i></div>`;
+  const it = m.item && ITEM[m.item.id];
+  return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
+    <div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(m.star)}</div>
+      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
+      <div class="dstats dstats--4">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}${exp}</div>
+    </div>
+    <div class="dexmon__more">
+      <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
+      ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
+      <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true)}</div></div>
+      <div class="dexkv"><span>Moves</span><div class="mvlist">${taughtSlotsHTML(m, false)}</div></div>
+    </div>
+  </div>`;
+}
+function mapItemHTML(it){
+  const d = ITEM[it.id], price = TUNE.itemPrice[it.id];
+  return `<div class="dexmon dexmon--item" style="--t:var(--t-held)">
+    <div class="dexmon__pic"><img src="${spriteURL(d.spr)}" alt=""></div>
+    <div class="dexmon__main">
+      <div class="dexmon__head"><b>${d.name}</b><span class="pill" style="--c:var(--t-held)">Held item</span></div>
+      ${price != null ? `<div class="dexmon__roles">Sells for ${price} coins at Poké Marts</div>` : ''}
+    </div>
+    <div class="dexmon__more"><div class="dexkv"><span>Effect</span><p>${d.fx}</p></div>
+      <div class="dexkv"><span>How to use</span><p>Tap it, then tap a Pokémon to have it hold it. Held items work automatically in battle.</p></div></div>
+  </div>`;
 }
 function closeMapPop(){ if (UI.sel && screen === 'scr-map'){ UI.sel = null; UI.notice = null; refresh(); } }
 $('#mappop').addEventListener('click', closeMapPop);
@@ -917,7 +959,7 @@ $('#scr-map').addEventListener('pointerup', e => {
 // every Pokémon, move and held item in the game, in three sections switched by tabs that stay pinned at the top.
 // Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
 const DEX_TABS = ['mons', 'moves', 'items'];
-const DEX = { tab: 'mons', from: 'scr-title', html: {}, token: 0 };
+const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false, anim: 0 };
 // sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
 const blobURLs = new Map();
 function spriteURL(uri){
@@ -1108,18 +1150,127 @@ async function dexShow(tab, animate){
   body.getAnimations().forEach(a => a.cancel());
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
-const dexMark = () => markHTML($('.dexbtn svg').outerHTML, 'Pokédex');
-function openDex(){
-  if (wiping || screen === 'scr-dex') return;
-  DEX.from = screen;
-  wipeTo('scr-dex', () => dexShow(DEX.tab, false), { mark: dexMark() });
+document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
+/* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
+   Opening: Rotom crouches, hops, swoops down and across the screen and back up into its spot in the popup's header,
+   landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
+   header, tabs and list fade up into it one after another. Closing runs the other way: the contents fade, the panel
+   folds back into Rotom, and Rotom hops home to the corner.
+   Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the real
+   header icon is and the hand-over can't jump. */
+const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
+const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
+const RD_MS = { swoop: 870, land: 220, fade: 110, fold: 230,
+  open: 300, item: 227, stagger: 35,                // the popup opening out and filling in: 10% faster than the rest
+  home: 620 };                                      // Rotom's hop and dip home
+const rdFlyer = box => {
+  const img = document.createElement('img');
+  img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
+  Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
+  return document.body.appendChild(img);
+};
+const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
+// a crouch and a small hop straight up, then one curve (through control points c1 and c2) into place at b, all centre
+// to centre. Rotom leans into the curve and stretches a little at speed, both fading out smoothly as it slows.
+function rdSwoop(a, b, c1, c2, sc){
+  const up = { x: a.x, y: a.y - 22 };
+  const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
+  const hop = .18, n = 28, frames = [{ transform: rdT(0, 0, 0, 1), offset: 0 },
+    { transform: rdT(0, 2, 0, 1.12, .86), offset: .05 },                                    // crouch
+    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), offset: hop }];                          // and spring up
+  let prev = pt(0);
+  for (let i = 1; i <= n; i++){
+    const k = i / n, u = easeInOut(k), p = pt(u), s = 1 + (sc - 1) * u;
+    const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
+    const st = 1 + .06 * Math.sin(Math.PI * k);
+    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), offset: i === n ? 1 : hop + (1 - hop) * k });
+    prev = p;
+  }
+  return frames;
 }
-function closeDex(){
-  if (wiping || screen !== 'scr-dex') return;
-  wipeTo(DEX.from, null, { mark: dexMark(), after: DEX.from === 'scr-map' ? scrollMapToCurrent : null });
+// a squash-and-settle on landing, at the flyer's final place and size
+const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }, { transform: rdT(dx, dy, 0, sc * 1.1, sc * .86) },
+  { transform: rdT(dx, dy, 0, sc * .97, sc * 1.04) }, { transform: rdT(dx, dy, 0, sc) }], { duration: RD_MS.land, easing: 'ease-out', fill: 'forwards' }).finished;
+// the panel's outline: a Rotom-sized rounded square around its spot, or the whole card
+function dexInset(open){
+  const c = DEXCARD.getBoundingClientRect(), r = rdMid(rdSpot().getBoundingClientRect()), s = 24;
+  const x = r.x - c.left, y = r.y - c.top;
+  return open ? 'inset(0px 0px 0px 0px round 18px)' : `inset(${y - s}px ${c.width - x - s}px ${c.height - y - s}px ${x - s}px round ${s}px)`;
 }
-document.querySelectorAll('[data-dex-open]').forEach(b => b.addEventListener('click', openDex));
-$('#dex-close').addEventListener('click', closeDex);
+// what fades up into the opened panel, top to bottom: the title, Close, the tabs, then the list's first screenful
+function dexParts(){
+  const list = [...$('#dex-body').children].filter(el => el.getBoundingClientRect().top < innerHeight).slice(0, 8);
+  return [$('.dexhead__top .title'), $('#dex-close'), $('.dextabs'), ...list];
+}
+async function openDex(){
+  if (wiping || DEX.open || DEX.busy) return;
+  DEX.open = DEX.busy = true; hideTip();
+  const tok = ++DEX.anim, live = () => tok === DEX.anim;   // a screen wipe can cut the animation short
+  dexShow(DEX.tab, false);
+  DEXPOP.hidden = false; DEXCARD.scrollTop = 0;
+  RD_BTN.classList.add('is-out');
+  if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
+  const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
+  DEXCARD.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
+  const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
+  // the path, centre to centre: a small hop straight up, then one curve down, across and back up into place
+  const W_ = innerWidth, H_ = innerHeight;
+  const frames = rdSwoop(a, b, { x: W_ * .68, y: H_ * .66 }, { x: W_ * .14, y: H_ * .48 }, sc);
+  const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
+  // the backdrop dims over the last part of the flight
+  DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
+  await flight.finished;
+  if (!live()) return;
+  // lands; the panel opens out from Rotom as it settles, then the contents fade up in turn
+  const landed = rdLand(fl, b.x - a.x, b.y - a.y, sc);
+  DEXCARD.style.visibility = '';
+  const parts = dexParts();
+  parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
+    { duration: RD_MS.item, delay: RD_MS.open * .7 + i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+  const opened = DEXCARD.animate([{ clipPath: dexInset(false) }, { clipPath: dexInset(true) }], { duration: RD_MS.open, easing: 'cubic-bezier(.25,.85,.3,1)' }).finished;
+  await Promise.all([landed, opened, ...parts.map(el => el.getAnimations().at(-1)?.finished)]);
+  if (!live()) return;
+  spot.style.visibility = ''; fl.remove();
+  DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
+  DEX.busy = false;
+  $('#dex-close').focus({ preventScroll: true });
+}
+async function closeDex(now = false){
+  if (!DEX.open || (DEX.busy && !now)) return;
+  DEX.busy = true;
+  if (!now && !REDUCED){
+    const spot = rdSpot(), from = spot.getBoundingClientRect();
+    // the contents fade, then the panel folds back into Rotom
+    const parts = dexParts();
+    await Promise.all(parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }).finished));
+    DEXVEIL.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fold + RD_MS.home * .5, easing: 'ease-in', fill: 'forwards' });
+    await DEXCARD.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: RD_MS.fold, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+    // then Rotom hops home
+    const fl = rdFlyer(from); spot.style.visibility = 'hidden';
+    DEXCARD.style.visibility = 'hidden';
+    const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
+    // the same hop as on the way out, then a shallower dip down and back up to the corner
+    const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170);
+    const home = rdSwoop(a, b, { x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }, sc);
+    await fl.animate(home, { duration: RD_MS.home, fill: 'forwards' }).finished;
+    RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
+    await rdLand(fl, dx, dy, sc);
+    fl.remove(); spot.style.visibility = '';
+    parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));
+  }
+  DEX.anim++;
+  document.querySelectorAll('.rd-fly').forEach(x => x.remove()); rdSpot().style.visibility = '';
+  DEXPOP.hidden = true;
+  DEXCARD.style.visibility = '';
+  DEXCARD.getAnimations().forEach(x => x.cancel()); DEXVEIL.getAnimations().forEach(x => x.cancel());
+  RD_BTN.classList.remove('is-out');
+  DEX.open = DEX.busy = false;
+}
+RD_BTN.addEventListener('click', openDex);
+DEXVEIL.addEventListener('click', () => closeDex());
+$('#dex-close').addEventListener('click', () => closeDex());
 addEventListener('keydown', e => { if (e.key === 'Escape') closeDex(); });
 document.querySelectorAll('.dextab').forEach(b => b.addEventListener('click', () => dexShow(b.dataset.tab, true)));
 // arrow keys move between the tabs, like any tab list
@@ -1314,7 +1465,7 @@ function goTo(id){
 function openNode(t){
   const mark = markHTML(ICON[t], t === 'boss' ? `Gym ${R.mapNo}` : LABEL[t]);
   const opt = { color: NODE_COLOR(t), mark };
-  if (t === 'wild') return wipeTo('scr-wild', openWild, opt);
+  if (t === 'wild') return wipeTo('scr-wild', openWild, { ...opt, after: wildEntrance });
   if (t === 'item') return wipeTo('scr-item', openItem, opt);
   if (t === 'tutor') return wipeTo('scr-tutor', openTutor, opt);
   if (t === 'daycare') return wipeTo('scr-daycare', () => openDaycare(false), opt);
@@ -1326,11 +1477,13 @@ function openNode(t){
 // pick phase: tap an offer to hop it into the big slot; the button reads Skip until one has landed, then Choose.
 // place phase: the other offers and the info panel fade out, your party fades in where the info was;
 // tap a party slot to put the new Pokémon there, or press Send to daycare.
-const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false };
+const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false, arrived: [], entering: false };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
   Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star, star < 3 ? Math.random() * .4 : 1)),
     pick: [null], home: -1, landed: false, phase: 'pick', done: false, candy: false, leveled: null });
+  const all = REDUCED;                                      // reduced motion: they are simply there
+  Object.assign(W, { arrived: W.offer.map(() => all), entering: !all });
 }
 async function wildMove(change){
   const before = snapshot(), token = ++W.token;
@@ -1340,8 +1493,45 @@ async function wildMove(change){
   W.landed = !!W.pick[0]; refresh();
   if (W.landed){ revealInfo('wild'); fitName($('#wild-left')); }
 }
+/* ---------- the wild Pokémon leap in from the edges of the screen ----------
+   Once the screen is in, the three slots start empty and the Pokémon leap in from random spots along the edges of
+   the top half of the screen (the left edge, the top, the right edge), in a random order and at uneven intervals, so
+   they neither march in one after another nor arrive all at once. Picking waits until all three have landed. */
+const rand = (a, b) => a + Math.random() * (b - a);
+// a spot just off screen, at fraction u (0..1) along the top half's edge: up the left side, across the top, down the right
+function topHalfEdge(u, size){
+  const m = 24, half = innerHeight / 2, len = half * 2 + innerWidth;
+  let d = u * len;
+  if (d < half) return { x: -size - m, y: half - d - size / 2, size };
+  d -= half;
+  if (d < innerWidth) return { x: d - size / 2, y: -size - m, size };
+  return { x: innerWidth + m, y: d - innerWidth - size / 2, size };
+}
+async function wildEntrance(){
+  if (!W.entering) return;
+  const tok = W.enterTok = (W.enterTok || 0) + 1, live = () => W.enterTok === tok && screen === 'scr-wild';
+  const landings = [];
+  await sleep(rand(0, 160));
+  // left to right, each slot's Pokémon comes from its own third of the edge (so they all come from different places,
+  // and their paths don't cross), at a random spot within it
+  const order = shuffle([0, 1, 2]).filter(i => W.offer[i]);
+  for (const [k, i] of order.entries()){
+    if (!live()) break;
+    const slot = AREAS['W.offer'].els[i].el, empty = slot._last;
+    W.arrived[i] = true; refresh();
+    holdSlot(slot, empty, '');                                  // the slot stays empty until the Pokémon lands
+    slot.classList.add('arriving');
+    const end = spriteBox(slot), start = topHalfEdge((i + rand(.1, .9)) / 3, end.size);
+    landings.push(fly(SPRITES[FORM[W.offer[i].form].spr], start, slot, { dur: rand(580, 720) }));
+    if (k < order.length - 1) await sleep(rand(160, 520));      // never together, never in lockstep
+  }
+  await Promise.all(landings);
+  if (W.enterTok !== tok) return;
+  W.arrived = W.offer.map(() => true); W.entering = false;
+  refresh();
+}
 function wildTap(i){
-  if (W.phase !== 'pick' || wiping || !W.offer[i]) return;
+  if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i]) return;
   wildMove(() => { if (W.pick[0]) W.offer[W.home] = W.pick[0]; W.pick[0] = W.offer[i]; W.offer[i] = null; W.home = i; });
 }
 function wildReturn(){
