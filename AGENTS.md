@@ -65,6 +65,7 @@ To release, only when the user says the work on `dev` is ready:
 | `data/items.json` | Held items; each item's `id` names its sprite in `assets/pokesprite/items` |
 | `assets/candy.png`, `assets/tr/*.png` | EXP Candy sprite and the 18 TR sprites, one per move type |
 | `assets/pokesprite/` | Sprite library from PokéSprite: every Pokémon (normal and shiny) and ~1,000 items, plus `data/pokemon.json`. The source of all Pokémon and item sprites; see `assets/pokesprite/README.md` (the art is © Nintendo, not MIT) |
+| `assets/bush-kit/` | Bush Kit: the rustling-bush animation on the wild screen (`bush-kit.js`, loaded by `build.py` as its own script, exposes `window.BushKit`; art from Pokémon Essentials, credit required) |
 | `docs/design/` | Feature and design notes (start at `features_00-index.md`; undecided items are in `features_open-questions.md`) |
 | `build.py` | Stitches everything into `dist/index.html` |
 | `VERSION` | The version `dev` is heading toward; see Versions and releases |
@@ -81,7 +82,7 @@ To release, only when the user says the work on `dev` is ready:
 - `__TRS__` becomes a JSON map of move type to TR sprite data URI
 - `__VERSION__` becomes the version label, e.g. `0.2.0` or `0.2.0-dev (a1b2c3d)`
 
-The build also joins `slot.css` and `game.css` in that order and inlines them with `body.html` into one HTML page. The page's only external request is Google Fonts (Chakra Petch).
+`assets/bush-kit/bush-kit.js` goes in as its own `<script>` before the game's. The build also joins `slot.css` and `game.css` in that order and inlines them with `body.html` into one HTML page. The page's only external request is Google Fonts (Chakra Petch).
 
 ## Conventions
 

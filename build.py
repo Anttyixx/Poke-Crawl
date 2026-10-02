@@ -118,6 +118,7 @@ js = (read('src', 'app1.js') + read('src', 'app2.js')) \
     .replace('__DATA__', data, 1).replace('__ITEMS__', items, 1) \
     .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__VERSION__', label, 1)
 css = read('src', 'slot.css') + '\n' + read('src', 'game.css')
+bush_kit = read('assets', 'bush-kit', 'bush-kit.js')   # rustling-bush animation (window.BushKit), used by the wild screen
 
 html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -134,6 +135,9 @@ html = f'''<!DOCTYPE html>
 </head>
 <body>
 {read('src', 'body.html')}
+<script>
+{bush_kit}
+</script>
 <script>
 (() => {{
 {js}
