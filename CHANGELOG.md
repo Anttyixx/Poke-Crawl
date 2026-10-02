@@ -17,7 +17,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - The RotomDex's Moves tab says which Pokémon can be taught each move, and marks unique signatures.
 - The RotomDex shows each line as how it evolves, with each Pokémon once and no star levels (Raticate no longer appears twice). Eevee's eight evolutions sit in a grid, and a Pokémon whose signature move changes as it levels lists each one.
 - Rotom's flight into the RotomDex is now a short hop and shallow dip, matching its way back (which dips a little less), and opening and closing are 10% quicker.
-- Rotom now perches on the RotomDex's top edge, overlapping the window and a little bigger, instead of sitting inside the header; the window opens out from it. Tap Rotom to close the RotomDex.
+- Rotom now perches on the RotomDex's top-left corner, overlapping the window and a little bigger, with the RotomDex title under it; the window opens out from it. Tap Rotom to close the RotomDex.
 - Every Pokémon now knows just 2 moves: its signature move and one move taught at a Move Tutor (it was 2 taught moves). Teaching a Pokémon a new move replaces the one it was taught before. Trainers' and gym leaders' Pokémon follow the same rule.
 
 ## 0.3.0 (2026-10-02)

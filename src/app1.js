@@ -1185,7 +1185,7 @@ async function dexShow(tab, animate){
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 /* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
    Opening: Rotom crouches, hops, dips down and back up to its perch on the popup's top edge (overlapping it, a little
-   in from the left corner, 25% bigger than in the corner), landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
+   by the top-left corner, 25% bigger than in the corner), landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
    header, tabs and list fade up into it one after another. Closing runs the other way: the contents fade, the panel
    folds back into Rotom, and Rotom hops home to the corner.
    Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the perched
