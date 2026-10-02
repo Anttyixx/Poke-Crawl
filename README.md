@@ -52,4 +52,4 @@ Each release to the stable game gets a version number (`0.MINOR.PATCH` during de
 
 ## Credits
 
-Pokémon and item sprites come from [PokéSprite](https://github.com/msikma/pokesprite) by Michiel Sikma and contributors (code and data under the MIT license). The sprite images are © Nintendo / Creatures Inc. / GAME FREAK Inc. The rustling bush on the wild Pokémon screen comes from Bush Kit, with grass art from Pokémon Essentials v21.1 and its graphics contributors. Poke-Crawl is a free, non-commercial fan project and is not affiliated with or endorsed by them.
+Pokémon and item sprites come from [PokéSprite](https://github.com/msikma/pokesprite) by Michiel Sikma and contributors (code and data under the MIT license). The sprite images are © Nintendo / Creatures Inc. / GAME FREAK Inc. Poke-Crawl is a free, non-commercial fan project and is not affiliated with or endorsed by them.
