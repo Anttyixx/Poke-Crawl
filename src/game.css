@@ -965,7 +965,11 @@ button{ font:inherit; color:inherit; }
   border:2px solid color-mix(in srgb, var(--t) 55%, #1b1f29); transition:box-shadow .2s ease, border-color .2s ease; }
 .dexevo__pic img{ width:84%; height:84%; object-fit:contain; image-rendering:pixelated; }
 .dexevo__name{ font-family:var(--display); font-weight:600; font-size:13.5px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.dexevo__mon .dt__stars{ font-size:10.5px; letter-spacing:0; }
+/* a stage with many branches (Eevee's eight) packs into a grid */
+.dexevo__col--grid{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:4px; flex:0 1 340px; }
+.dexevo__col--grid .dexevo__mon{ padding:6px 2px 5px; }
+.dexevo__col.dexevo__col--grid .dexevo__pic{ width:46px; height:46px; }
+.dexevo__col--grid .dexevo__name{ font-size:11.5px; }
 .dexevo__col:has(> :nth-child(2)) .dexevo__pic{ width:50px; height:50px; }      /* a branching stage stacks two smaller choices */
 /* narrowed to one stage: it lights up, the others fade back */
 .dexevo__mon[aria-pressed="true"]{ background:color-mix(in srgb, var(--glow-selected) 10%, #1a1f29); border-color:color-mix(in srgb, var(--glow-selected) 60%, transparent); }
@@ -991,6 +995,9 @@ button{ font:inherit; color:inherit; }
   .dexevo__pic{ width:52px; height:52px; }
   .dexevo__col:has(> :nth-child(2)) .dexevo__pic{ width:42px; height:42px; }
   .dexevo__name{ font-size:12px; }
+  .dexevo__col--grid{ grid-template-columns:repeat(3, minmax(0, 1fr)); }   /* 3 across keeps the names whole */
+  .dexevo__col.dexevo__col--grid .dexevo__pic{ width:42px; height:42px; }
+  .dexevo__col--grid .dexevo__name{ font-size:11px; }
   .dexevo__arrow svg{ width:14px; height:14px; }
   .dexevo__hint{ font-size:11px; }
 }
@@ -1036,3 +1043,4 @@ button{ font:inherit; color:inherit; }
 .dexpop__card .dexbody{ padding-left:12px; padding-right:12px; }
 .dexpop__card .dextab{ white-space:nowrap; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:14px; padding-left:2px; padding-right:2px; } .dexpop__card .dextab small{ font-size:10.5px; margin-left:2px; } }
+.dexnote{ margin:0 0 6px; font-size:12.5px; color:var(--ink-faint); }

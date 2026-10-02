@@ -1027,33 +1027,45 @@ async function dexJumpMove(k){
 }
 function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
-  const tutor = tutorMoves(f);
+  const tutor = tutorMoves(f), sigs = [...new Set(speciesForms(f).map(x => x.sig))];
   return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
     <div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>
     <div class="dexmon__main">
-      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(f.star)}</div>
+      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}</div>
       ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
-      <div class="dexkv"><span>Signature move</span><div><div class="mvlist">${moveRow(f.sig, true)}</div>${dexGoHTML(f.sig)}</div></div>
+      <div class="dexkv"><span>${sigs.length > 1 ? 'Signature moves' : 'Signature move'}</span><div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}</div></div>
       <div class="dexkv"><span>Tutor moves</span><div>${tutor.length
         ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
         : '<i class="dexnone">None</i>'}</div></div>
     </div>
   </div>`;
 }
-// the evolution path: one column per star level (a branching line stacks its options), arrows between them.
-// Tapping a Pokémon opens its info under the path (see dexOpen).
+// the evolution path, one column per evolution stage: each species appears once, however many levels it spans
+// (Raticate is ★2 and ★3 but shows once), and stands for its most-leveled form (its full stats). A stage with
+// many branches (Eevee's eight) is a grid. Tapping a Pokémon opens its info under the path (see dexOpen).
 const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+// every form of the same species on the same line (one per level it spans), lowest level first
+const speciesForms = f => FORMS.filter(x => x.line === f.line && x.name === f.name).sort((a, b) => a.star - b.star);
+function dexStages(fs){
+  const seen = new Set(), cols = [];
+  for (const n of [1, 2, 3]){
+    const col = [];
+    for (const f of fs.filter(x => x.star === n)) if (!seen.has(f.name)){ seen.add(f.name); col.push(speciesForms(f).at(-1)); }
+    if (col.length) cols.push(col);
+  }
+  return cols;
+}
 function dexEvoHTML(fs){
-  const cols = [1, 2, 3].map(n => fs.filter(f => f.star === n)).filter(c => c.length);
+  const cols = dexStages(fs);
   return `<div class="dexevo">
     <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
     <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
-      + `<div class="dexevo__col">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
-          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span>${starRow(f.star)}</button>`).join('')}</div>`).join('')}</div>
+      + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
+          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span></button>`).join('')}</div>`).join('')}</div>
   </div>`;
 }
 /* ---------- a Pokémon's info opens inside its line's card ----------
@@ -1114,7 +1126,7 @@ async function dexJump(id){
   const f = FORM[id]; if (!f) return;
   await dexShow('mons', true);
   const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#scr-dex'); if (!card) return;
-  dexOpen(card, id, false);
+  dexOpen(card, speciesForms(f).at(-1).id, false);       // the species' button stands for all its levels
   const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 12;
   scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
@@ -1137,7 +1149,7 @@ const DEX_BUILD = {
         const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
         return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
           + ks.map(k => {
-            const m = MOVES[k], sigOf = FORMS.filter(f => f.sig === k), pools = POOLS.filter(p => p.moves.includes(k));
+            const m = MOVES[k], sigOf = FORMS.filter((f, i, all) => f.sig === k && all.findIndex(x => x.sig === k && x.name === f.name) === i), pools = POOLS.filter(p => p.moves.includes(k));
             const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
               + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
               + (k === 'struggle' ? `<div class="dexlearn"><span>Used by any Pokémon whose moves are all out of PP</span></div>` : '');
