@@ -1172,7 +1172,7 @@ async function dexShow(tab, animate){
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 /* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
-   Opening: Rotom crouches, hops, swoops down and across the screen and back up into its spot in the popup's header,
+   Opening: Rotom crouches, hops, dips down and back up into its spot in the popup's header,
    landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
    header, tabs and list fade up into it one after another. Closing runs the other way: the contents fade, the panel
    folds back into Rotom, and Rotom hops home to the corner.
@@ -1180,9 +1180,15 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
    header icon is and the hand-over can't jump. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
-const RD_MS = { swoop: 870, land: 220, fade: 110, fold: 230,
-  open: 300, item: 227, stagger: 35,                // the popup opening out and filling in: 10% faster than the rest
-  home: 620 };                                      // Rotom's hop and dip home
+// every step 10% faster than the last round of tuning (the numbers in the comments were the previous ones)
+const RD_MS = { swoop: 791 /* 870 */, land: 200 /* 220 */, fade: 100 /* 110 */, fold: 209 /* 230 */,
+  open: 273 /* 300 */, item: 206 /* 227 */, stagger: 32 /* 35 */,
+  home: 564 /* 620 */ };
+// the dip both hops make between Rotom's corner and the popup header: a shallow curve below both ends
+const rdDip = (a, b, depth) => {
+  const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170) * depth;
+  return [{ x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }];
+};
 const rdFlyer = box => {
   const img = document.createElement('img');
   img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
@@ -1235,9 +1241,8 @@ async function openDex(){
   const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
   DEXCARD.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
   const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  // the path, centre to centre: a small hop straight up, then one curve down, across and back up into place
-  const W_ = innerWidth, H_ = innerHeight;
-  const frames = rdSwoop(a, b, { x: W_ * .68, y: H_ * .66 }, { x: W_ * .14, y: H_ * .48 }, sc);
+  // the path, centre to centre: a small hop straight up, then a shallow dip down and back up into place
+  const frames = rdSwoop(a, b, ...rdDip(a, b, 1), sc);
   const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
   // the backdrop dims over the last part of the flight
   DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
@@ -1272,8 +1277,7 @@ async function closeDex(now = false){
     DEXCARD.style.visibility = 'hidden';
     const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
     // the same hop as on the way out, then a shallower dip down and back up to the corner
-    const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170);
-    const home = rdSwoop(a, b, { x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }, sc);
+    const home = rdSwoop(a, b, ...rdDip(a, b, .9), sc);              // the way home dips 10% less
     await fl.animate(home, { duration: RD_MS.home, fill: 'forwards' }).finished;
     RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
     await rdLand(fl, dx, dy, sc);
