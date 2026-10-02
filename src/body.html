@@ -20,10 +20,11 @@
   <!-- the RotomDex popup: every Pokémon, move and item in the game, over whatever screen you are on -->
   <div class="dexpop" id="dexpop" hidden>
   <div class="dexpop__veil"></div>
+  <div class="dexpop__frame">
   <section class="dex dexpop__card" id="scr-dex" role="dialog" aria-modal="true" aria-label="RotomDex">
     <header class="dexhead">
       <div class="dexhead__top">
-        <span class="dexhead__icon"><img class="dexicon" alt=""></span><h1 class="title">RotomDex</h1>
+        <h1 class="title">RotomDex</h1>
         <button class="btn" id="dex-close" type="button">Close</button>
       </div>
       <div class="dextabs" role="tablist" aria-label="RotomDex sections">
@@ -35,6 +36,9 @@
     </header>
     <div class="dexbody" id="dex-body" role="tabpanel"></div>
   </section>
+  <!-- Rotom perches on the popup's top edge, overlapping it, 25% bigger than in the corner; tapping it closes the popup -->
+  <img class="dexicon dexpop__rotom" id="dex-rotom" alt="RotomDex" title="Close the RotomDex">
+  </div>
   </div>
 
   <!-- starter -->

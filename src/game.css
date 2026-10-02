@@ -853,10 +853,14 @@ button{ font:inherit; color:inherit; }
 
 /* the RotomDex popup: fills most of the screen over a dimmed, blurred backdrop */
 .dexpop{ position:fixed; inset:0; z-index:2400; display:grid; place-items:center;
-  padding:calc(max(14px, 3vh) + env(safe-area-inset-top, 0px)) max(10px, 3vw) calc(max(14px, 3vh) + env(safe-area-inset-bottom, 0px)); }
+  padding:calc(max(14px, 3vh) + 26px + env(safe-area-inset-top, 0px)) max(10px, 3vw) calc(max(14px, 3vh) + env(safe-area-inset-bottom, 0px)); }
 .dexpop[hidden]{ display:none; }
 .dexpop__veil{ position:absolute; inset:0; background:rgba(8,10,14,.62); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
-.dexpop__card{ position:relative; width:min(100%, 860px); height:100%; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain;
+.dexpop__frame{ position:relative; width:min(100%, 860px); height:100%; }
+.dexpop__rotom{ position:absolute; z-index:10; left:22px; top:calc(var(--rdp) / -2); width:var(--rdp); height:var(--rdp); --rdp:65px; cursor:pointer;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }       /* 52px corner sprite × 1.25, centred on the top edge */
+.dexpop__card .dexhead__top{ min-height:38px; padding-left:clamp(0px, calc(83px - (100% - 760px) / 2), 83px); }   /* the title starts clear of Rotom where they would meet */
+.dexpop__card{ position:relative; width:100%; height:100%; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain;
   background:var(--bg); border:1px solid var(--line); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.6); }
 .dexpop__card .dexhead{ border-radius:18px 18px 0 0; }
 
@@ -867,7 +871,6 @@ button{ font:inherit; color:inherit; }
   border-bottom:1px solid var(--line); }
 .dexhead > *{ max-width:var(--dex-w); margin-left:auto; margin-right:auto; }
 .dexhead__top{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.dexhead__icon .dexicon{ width:40px; height:40px; margin:-5px; filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }   /* the same shadow as in flight, so the hand-over is seamless */
 .dexhead__top .btn{ margin-left:auto; }
 .dextabs{ --i: 0; position:relative; display:grid; grid-template-columns:repeat(3, 1fr); padding:4px; border-radius:13px;
   background:var(--game-bg); border:1px solid var(--game-edge); }
