@@ -33,8 +33,9 @@ Rules:
 1. **Never push directly to `main`.** Update `main` only by merging `dev` into it, and only when the user says the work is ready.
 2. Start each new change on a feature branch cut from the latest `dev`, named `feature/<short-name>`. If the user names a branch, use that one.
 3. To let the user play-test, merge the feature branch into `dev` and push `dev`. Then tell them to refresh the experimental link.
-   End every reply that pushes `dev` with the link to the dev build as its very last line, so it is easy to tap. Add the merge commit as `?v=<short hash>` so the browser fetches the new build instead of a cached one, and say which version the title screen should show:
-   `Play-test: https://anttyixx.github.io/Poke-Crawl/dev/?v=a1b2c3d` (title screen shows `0.3.0-dev (a1b2c3d)`)
+   End every reply that pushes `dev` with the link to that exact build as its very last line, so it is easy to tap. Every dev deploy is also published at `/dev/<short hash>/` (the `dev` merge commit), a new address that is never cached, so use that form and say which version the title screen should show:
+   `Play-test: https://anttyixx.github.io/Poke-Crawl/dev/a1b2c3d/` (title screen shows `0.3.0-dev (a1b2c3d)`)
+   It goes live when the deploy run finishes, a minute or two after the push. The plain `/dev/` link can lag behind by several minutes.
 4. For each round of tweaks, commit on the same feature branch, merge it into `dev` again, and push.
 5. Another agent may be working in this repo too. Always fetch and merge the latest `dev` before merging into it, and never force-push `dev` or `main`.
 6. Run `python build.py` before every push and make sure it succeeds.
@@ -72,7 +73,7 @@ To release, only when the user says the work on `dev` is ready:
 | `build.py` | Stitches everything into `dist/index.html` |
 | `VERSION` | The version `dev` is heading toward; see Versions and releases |
 | `CHANGELOG.md` | What changed in each version, written for players |
-| `.github/workflows/pages.yml` | Builds `main` and `dev` and deploys both to GitHub Pages on every push to either |
+| `.github/workflows/pages.yml` | Builds `main` and `dev` and deploys both to GitHub Pages on every push to either; the dev build is also published at `/dev/<commit>/`. The copy on `main` is the one that runs, so changes to it must reach `main` |
 
 ## How the build works
 
