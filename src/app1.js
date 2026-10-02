@@ -1162,7 +1162,7 @@ const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElem
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
 const RD_MS = { swoop: 870, land: 220, fade: 110, fold: 230,
   open: 300, item: 227, stagger: 35,                // the popup opening out and filling in: 10% faster than the rest
-  home: 363 };                                      // Rotom's hop home: 10% slower
+  home: 620 };                                      // Rotom's hop and dip home
 const rdFlyer = box => {
   const img = document.createElement('img');
   img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
@@ -1172,6 +1172,24 @@ const rdFlyer = box => {
 const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
+// a crouch and a small hop straight up, then one curve (through control points c1 and c2) into place at b, all centre
+// to centre. Rotom leans into the curve and stretches a little at speed, both fading out smoothly as it slows.
+function rdSwoop(a, b, c1, c2, sc){
+  const up = { x: a.x, y: a.y - 22 };
+  const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
+  const hop = .18, n = 28, frames = [{ transform: rdT(0, 0, 0, 1), offset: 0 },
+    { transform: rdT(0, 2, 0, 1.12, .86), offset: .05 },                                    // crouch
+    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), offset: hop }];                          // and spring up
+  let prev = pt(0);
+  for (let i = 1; i <= n; i++){
+    const k = i / n, u = easeInOut(k), p = pt(u), s = 1 + (sc - 1) * u;
+    const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
+    const st = 1 + .06 * Math.sin(Math.PI * k);
+    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), offset: i === n ? 1 : hop + (1 - hop) * k });
+    prev = p;
+  }
+  return frames;
+}
 // a squash-and-settle on landing, at the flyer's final place and size
 const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }, { transform: rdT(dx, dy, 0, sc * 1.1, sc * .86) },
   { transform: rdT(dx, dy, 0, sc * .97, sc * 1.04) }, { transform: rdT(dx, dy, 0, sc) }], { duration: RD_MS.land, easing: 'ease-out', fill: 'forwards' }).finished;
@@ -1198,21 +1216,8 @@ async function openDex(){
   DEXCARD.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
   const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
   // the path, centre to centre: a small hop straight up, then one curve down, across and back up into place
-  const up = { x: a.x, y: a.y - 22 }, W_ = innerWidth, H_ = innerHeight;
-  const c1 = { x: W_ * .68, y: H_ * .66 }, c2 = { x: W_ * .14, y: H_ * .48 };
-  const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
-  const hop = .18, n = 28, frames = [{ transform: rdT(0, 0, 0, 1), offset: 0 },
-    { transform: rdT(0, 2, 0, 1.12, .86), offset: .05 },                                    // crouch
-    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), offset: hop }];                          // and spring up
-  let prev = pt(0);
-  for (let i = 1; i <= n; i++){
-    const k = i / n, u = easeInOut(k), p = pt(u), s = 1 + (sc - 1) * u;
-    // leans into the swoop, the lean fading out smoothly as it slows into place
-    const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
-    const st = 1 + .06 * Math.sin(Math.PI * k);                                           // stretched a little at speed
-    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), offset: i === n ? 1 : hop + (1 - hop) * k });
-    prev = p;
-  }
+  const W_ = innerWidth, H_ = innerHeight;
+  const frames = rdSwoop(a, b, { x: W_ * .68, y: H_ * .66 }, { x: W_ * .14, y: H_ * .48 }, sc);
   const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
   // the backdrop dims over the last part of the flight
   DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
@@ -1246,12 +1251,10 @@ async function closeDex(now = false){
     const fl = rdFlyer(from); spot.style.visibility = 'hidden';
     DEXCARD.style.visibility = 'hidden';
     const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
-    const hf = [];
-    for (let i = 0; i <= 12; i++){
-      const t = i / 12, e = easeInOut(t), s = 1 + (sc - 1) * e;
-      hf.push({ transform: rdT(dx * e, dy * e - 48 * 4 * t * (1 - t), 0, s) });
-    }
-    await fl.animate(hf, { duration: RD_MS.home, fill: 'forwards' }).finished;
+    // the same hop as on the way out, then a shallower dip down and back up to the corner
+    const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170);
+    const home = rdSwoop(a, b, { x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }, sc);
+    await fl.animate(home, { duration: RD_MS.home, fill: 'forwards' }).finished;
     RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
     await rdLand(fl, dx, dy, sc);
     fl.remove(); spot.style.visibility = '';
