@@ -30,7 +30,8 @@ const TUNE = {
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
   tutorPrice: { 1: 40, 2: 80, 3: 150 }, rerollStep: 20,
-  taughtMax: 2, daycareSize: 10,
+  taughtMax: 1,                                      // moves besides its signature: every Pokémon knows 2 moves in all
+  daycareSize: 10,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   martStock: 4, martRerollStep: 20,
@@ -1714,7 +1715,7 @@ $('#mart-leave').addEventListener('click', toMap);
 /* ================= move tutor ================= */
 // starter layout: your party across the top, one big slot in the middle. Tap a Pokémon to hop it into the
 // slot; once it lands its stats and moves appear, and under them the tutor's moves it can learn.
-// Teach one, then pick which of its 2 taught slots it goes into. The tutor still offers 5 moves per visit,
+// Teach one, then pick its taught slot (it has TUNE.taughtMax of them). The tutor still offers 5 moves per visit,
 // each learnable by someone in the party, and the offer can be rerolled.
 const TU = { offer: [], rerolls: 0, line: [], pickSlot: [null], home: -1, landed: false, token: 0, teaching: null, taught: new Map() };
 const canLearn = (m, k) => learnable(m).includes(k);
