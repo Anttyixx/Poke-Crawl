@@ -1151,7 +1151,7 @@ async function dexShow(tab, animate){
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
-/* ---------- the RotomDex: a sprite in the top-left corner that opens the Pokédex as a popup ----------
+/* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
    Opening: Rotom hops up, swoops down and across the screen and back up into its spot in the popup's header, then
    the popup opens out around it. Closing reverses it: the popup folds back into Rotom, which hops home. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
@@ -1185,7 +1185,7 @@ async function openDex(){
   const fl = rdFlyer(from);
   // the path: a little hop straight up, then one sweeping curve down, across the screen and back up into place
   const W_ = innerWidth, H_ = innerHeight, sx = from.left, sy = from.top, ux = sx, uy = sy - 30;
-  const c1 = { x: W_ * .25, y: H_ * .86 }, c2 = { x: W_ * .96, y: H_ * .62 }, ex = to.left, ey = to.top, sc = to.width / from.width;
+  const c1 = { x: W_ * .75, y: H_ * .86 }, c2 = { x: W_ * .04, y: H_ * .62 }, ex = to.left, ey = to.top, sc = to.width / from.width;
   const pt = u => { const v = 1 - u; return { x: v*v*v*ux + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*ex, y: v*v*v*uy + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*ey }; };
   const hop = .2, frames = [{ transform: 'translate(0,0) scale(1)', offset: 0 },
     { transform: 'translate(0,2px) scale(1.12,.86)', offset: .05 },                         // crouch
@@ -1197,9 +1197,9 @@ async function openDex(){
     frames.push({ transform: `translate(${p.x - sx}px, ${p.y - sy}px) rotate(${i === 24 ? 0 : tilt}deg) scale(${s})`, offset: i === 24 ? 1 : hop + (1 - hop) * i / 24 });
     prev = p;
   }
-  await fl.animate(frames, { duration: 1150, fill: 'forwards' }).finished;
+  await fl.animate(frames, { duration: Math.round(1150 / 1.1), fill: 'forwards' }).finished;   // 10% faster than at first
   DEXCARD.style.visibility = '';
-  await dexReveal(true, 380);
+  await dexReveal(true, Math.round(380 / 1.1));
   spot.style.visibility = ''; fl.remove();
   DEXCARD.getAnimations().forEach(a => a.cancel()); DEXVEIL.getAnimations().forEach(a => a.cancel()); DEXVEIL.style.opacity = '';
   DEX.busy = false;
@@ -1210,13 +1210,13 @@ async function closeDex(now = false){
   DEX.busy = true;
   if (!now && !REDUCED){
     const spot = rdSpot(), from = spot.getBoundingClientRect();
-    await dexReveal(false, 260);
+    await dexReveal(false, Math.round(260 / 1.1));
     const fl = rdFlyer(from); spot.style.visibility = 'hidden';
     DEXPOP.hidden = true;
     const to = rdHome().getBoundingClientRect(), dx = to.left - from.left, dy = to.top - from.top, sc = to.width / from.width;
     await fl.animate([{ transform: 'none' }, { transform: `translate(${dx / 2}px, ${dy / 2 - 40}px) scale(${(1 + sc) / 2})`, easing: 'ease-in' },
       { transform: `translate(${dx}px, ${dy}px) scale(${sc * 1.1}, ${sc * .88})`, offset: .85 }, { transform: `translate(${dx}px, ${dy}px) scale(${sc})` }],
-      { duration: 420, easing: 'ease-out', fill: 'forwards' }).finished;
+      { duration: Math.round(420 / 1.1), easing: 'ease-out', fill: 'forwards' }).finished;
     fl.remove(); spot.style.visibility = '';
   }
   DEXPOP.hidden = true;
