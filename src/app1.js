@@ -10,14 +10,27 @@ const VERSION = '__VERSION__';                            // from the VERSION fi
 const FORMS = DATA.forms, MOVES = DATA.moves, SPRITES = DATA.sprites;
 const FORM = Object.fromEntries(FORMS.map(f => [f.id, f]));
 const STAT_MAX = { hp: 255, atk: 255, spd: 255 };   // the highest any stat can naturally be; stat bars are drawn against this
-const LEARN = {};
-for (const [id, m] of Object.entries(MOVES)) for (const f of m.learnableBy) (LEARN[f] ||= []).push(id);
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, pp:0, fx:'Used when every move is out of PP. The user takes 12% of its max HP.', role:'—', learnableBy:[] };
 const LINES = {};
 for (const f of FORMS) ((LINES[f.line] ||= {})[f.star] ||= []).push(f);
 const LINE_IDS = Object.keys(LINES);
+/* Moves come in three kinds (MOVES[k].cat): 'sig', a shared signature move, learned by leveling and never taught;
+   'unique', a signature only one line has; 'tutor', taught at the Move Tutor. Who can be taught what comes from move
+   pools: each pool is a list of tutor moves plus a rule (every Pokémon, one type, or a ★1 stat at or above a bar).
+   Type pools follow the current species' type; stat pools check the line's ★1 stats so they never change. */
+const POOLS = DATA.pools;
+const poolFits = (p, f) => p.rule.all || p.rule.type === f.type || (p.rule.stat && LINES[f.line][1][0][p.rule.stat] >= p.rule.min);
+const LEARN = {};
+for (const f of FORMS) LEARN[f.id] = [...new Set(POOLS.filter(p => poolFits(p, f)).flatMap(p => p.moves))].filter(k => k !== f.sig);
+for (const m of Object.values(MOVES)) m.learnableBy = [];
+for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
+const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Raticate at ★2 and ★3 is one Pokémon
+const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, pp:0, fx:'Used when every move is out of PP. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
-const WILD_LINES = LINE_IDS.filter(l => !STARTERS.includes(l));
+// legendaries come only from Legendary nodes: never in wild offers or on trainers' and gym leaders' teams
+const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
+const TEAM_LINES = LINE_IDS.filter(l => !LEGEND_LINES.includes(l));
+const WILD_LINES = TEAM_LINES.filter(l => !STARTERS.includes(l));
 const ITEM = Object.fromEntries(ITEMS_DATA.map(i => [i.id, i]));
 const ITEM_IDS = ITEMS_DATA.map(i => i.id);
 
@@ -59,14 +72,19 @@ const shuffle = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.fl
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pct = x => `${Math.round(x * 100)}%`;
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-const typeColor = t => `var(--t-${t === 'none' || t === 'user' ? 'normal' : t})`;
+const typeColor = t => `var(--t-${t === 'none' ? 'normal' : t})`;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const STAR_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2l2.95 6.3 6.9.75-5.15 4.7 1.45 6.8L12 17.3l-6.15 3.45 1.45-6.8-5.15-4.7 6.9-.75z"/></svg>';
 const HEART = '<svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C.9 8.2 3 4.5 6.6 4.5c2.1 0 3.9 1.3 5.4 3.2 1.5-1.9 3.3-3.2 5.4-3.2 3.6 0 5.7 3.7 4.2 7.2C19.5 16.4 12 21 12 21z"/></svg>';
 
 /* ================= pokemon + items ================= */
 let uidN = 0;
-const formFor = (line, star) => LINES[line][star][0].id;           // Gloom's split defaults to its first form (Vileplume)
+// the form a line takes at a level. Where a line splits (Eevee, Slowpoke, Tyrogue, Scyther at ★2; Oddish, Poliwag at ★3)
+// the branch is picked at random; after that a Pokémon stays on its branch as it levels.
+function formFor(line, star, prev){
+  const opts = LINES[line][star], b = prev && FORM[prev].branch;
+  return ((b && opts.find(f => f.branch === b)) || pick(opts)).id;
+}
 const known = m => [FORM[m.form].sig, ...m.taught];
 const nm = m => FORM[m.form].name;
 function learnable(m){
@@ -82,7 +100,7 @@ function makeMon(line, star = 1, exp = 0){
 const makeItem = id => ({ uid: 'i' + (++uidN), id });
 function levelUp(m){
   const from = nm(m);
-  m.star++; m.form = formFor(m.line, m.star);
+  m.star++; m.form = formFor(m.line, m.star, m.form);
   const sig = FORM[m.form].sig;
   m.taught = m.taught.filter(k => k !== sig);
   return { from, to: nm(m) };
@@ -978,6 +996,7 @@ const starRow = n => `<span class="dt__stars" aria-label="${n} star">${'★'.rep
 // what a form can actually be taught: tutor moves at or below its star level, not counting its signature move
 const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= f.star)
   .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
+const poolText = p => p.rule.all ? 'Every Pokémon' : p.rule.type ? `${cap(p.rule.type)}-type Pokémon` : `Pokémon with ${p.rule.min}+ ${{ hp:'HP', atk:'Attack', spd:'Speed' }[p.rule.stat]} at ★1`;
 const dexMini = f => `<button class="dexmini" type="button" data-form="${f.id}" title="${f.name}" aria-label="${f.name}: show its Pokédex entry"><img src="${formSprite(f)}" alt="" loading="lazy"></button>`;
 
 // tutor moves in an entry are buttons: tapping one opens its details under the chips, with a link to the Moves section
@@ -1106,22 +1125,22 @@ $('#dex-body').addEventListener('click', e => {
   const go = e.target.closest('.dexgo'); if (go) return dexJumpMove(go.dataset.move);
 });
 const DEX_BUILD = {
-  mons: () => `<p class="dexintro">${FORMS.length} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
+  mons: () => `<p class="dexintro">${SPECIES_N} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
       return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
-    return `<p class="dexintro">${ids.length} moves. A signature move is always known by the Pokémon it belongs to; the rest are taught at a Move Tutor.</p>`
+    return `<p class="dexintro">${ids.length} moves. Every Pokémon knows 2: its signature move, which it learns by leveling and changes as it evolves, and one move taught at a Move Tutor. Signature moves are never taught; a few are unique to one Pokémon.</p>`
       + types.map(t => {
         const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
         return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
           + ks.map(k => {
-            const m = MOVES[k], sigOf = FORMS.filter(f => f.sig === k), taught = m.learnableBy.map(id => FORM[id]).filter(f => f && f.sig !== k && m.star <= f.star);
-            const learn = (sigOf.length ? `<div class="dexlearn"><span>Signature of</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
-              + (taught.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexminis">${taught.map(dexMini).join('')}</div></div>` : '')
-              + (!sigOf.length && !taught.length ? `<div class="dexlearn"><span>${k === 'struggle' ? 'Used by any Pokémon whose moves are all out of PP' : 'No Pokémon learns this yet'}</span></div>` : '');
+            const m = MOVES[k], sigOf = FORMS.filter(f => f.sig === k), pools = POOLS.filter(p => p.moves.includes(k));
+            const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
+              + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
+              + (k === 'struggle' ? `<div class="dexlearn"><span>Used by any Pokémon whose moves are all out of PP</span></div>` : '');
             return `<article class="dexmove" data-move="${k}">${moveRow(k, false)}${learn}</article>`;
           }).join('');
       }).join('');
@@ -1280,7 +1299,7 @@ $('.dextabs').addEventListener('keydown', e => {
   const t = DEX_TABS[(DEX_TABS.indexOf(DEX.tab) + step + DEX_TABS.length) % DEX_TABS.length];
   dexShow(t, true); document.querySelector(`.dextab[data-tab="${t}"]`).focus();
 });
-$('#dex-n-mons').textContent = FORMS.length; $('#dex-n-moves').textContent = Object.keys(MOVES).length; $('#dex-n-items').textContent = ITEMS_DATA.length;
+$('#dex-n-mons').textContent = SPECIES_N; $('#dex-n-moves').textContent = Object.keys(MOVES).length; $('#dex-n-items').textContent = ITEMS_DATA.length;
 dexTabs(DEX.tab);
 
 /* ================= title ================= */
@@ -1724,12 +1743,12 @@ const rerollFee = () => TUNE.rerollStep * (TU.rerolls + 1);
 function rollTutor(){
   const party = partyMons(), offered = [];
   let universal = 0;
-  const ok = k => !offered.includes(k) && (MOVES[k].role !== 'universal' || universal < 1);
+  const ok = k => !offered.includes(k) && (!UNIVERSAL.has(k) || universal < 1);
   for (let s = 0; s < 5; s++){
     const who = shuffle(party.filter(m => learnable(m).some(ok)));
     if (!who.length) break;
     const k = pick(learnable(who[0]).filter(ok));
-    if (MOVES[k].role === 'universal') universal++;
+    if (UNIVERSAL.has(k)) universal++;
     offered.push(k);
   }
   TU.offer = offered; TU.teaching = null; TU.taught = new Map();

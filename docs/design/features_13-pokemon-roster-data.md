@@ -5,6 +5,8 @@ status: draft content pass 6 — numbers are placeholders, ready to rebalance
 
 # Pokémon Roster Data
 
+> **Now in the game (0.4.0).** All 78 lines below are in `data/data.json`, which is the source of truth from here on; this doc is the original design pass. Since then: a Pokémon knows **2 moves** (signature + 1 taught), signatures are a separate kind of move (shared by type, never taught, with 26 unique ones for standout Pokémon), the move list was rebuilt around that, Scyther can also become Kleavor, and real legendaries appear on Legendary nodes. Annihilape is left out until it has a sprite (PokéSprite stops at Gen 8). Regional forms and their evolutions (Sirfetch'd, Mr. Rime, Perrserker) are left out.
+
 Status: 🟡 draft content, unblocks prototyping — see [00-index.md](00-index.md) and [open-questions.md](open-questions.md). Rules for learning and the Move Tutor are in [11-moves.md](11-moves.md). Visual reference: the **Pokédex** artifact, generated from the same data.
 
 Species-level data for all of Gen 1 plus the other members of those families (babies like Pichu and Happiny, later evolutions like Crobat, Scizor and the Eeveelutions): 78 evolution lines, 183 species. Megas, Gigantamax and regional forms are left out. Everything numeric is a first pass meant to be rebalanced.

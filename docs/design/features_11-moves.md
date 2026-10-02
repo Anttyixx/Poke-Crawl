@@ -5,6 +5,8 @@ status: principles set; star ratings, move pools and Move Tutor drafted
 
 # Moves
 
+> **Now in the game (0.4.0):** a Pokémon knows **2 moves**, its signature plus **1** taught move. Signature moves are their own kind: shared signatures (a type's main attacks, used by many lines), and unique signatures for standout Pokémon. Signatures are never taught; the Move Tutor only teaches tutor moves, from pools. The current lists live in `data/data.json` and the RotomDex's Moves tab.
+
 Status: 🟡 principles set, learning rules and Move Tutor drafted — see [00-index.md](00-index.md)
 
 Combat resolution (how a center is picked, what each shape hits) lives in [04-battle-system.md](04-battle-system.md). The actual move list, star ratings, PP values and who learns what live in [13-pokemon-roster-data.md](13-pokemon-roster-data.md). This doc covers what a move *is*, how Pokémon get moves, and how moves get balanced against each other.

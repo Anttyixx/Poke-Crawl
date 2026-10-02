@@ -20,26 +20,31 @@ const CHART = {
   fairy:{fire:.5,fighting:2,poison:.5,dragon:2,dark:2,steel:.5},
 };
 const eff = (at, dt) => (CHART[at] && dt in CHART[at]) ? CHART[at][dt] : 1;
-const FIRST_ROUND = new Set(['quick-attack','mach-punch']);
-const ALWAYS_FIRST = new Set(['extreme-speed']);
-const DRAIN = { 'draining-kiss':.5, 'leech-life':.5, 'absorb':.5, 'mega-drain':.5 };
-const RECOIL = { 'take-down':.25, 'double-edge':.33, 'volt-tackle':.2 };
-const RECHARGE = new Set(['hyper-beam','blast-burn']);
-const IGNORE_GUARD = new Set(['brick-break','skyward-dive']);
-const SPD_DROP = { 'mud-shot':.1, 'icy-wind':.1, 'string-shot':.15, 'rock-tomb':.15, 'mud-slap':.1, 'stun-spore':.15, 'sticky-web':.25 };
-const ATK_DROP = { 'growl':.1 };
-const DOTS = { 'smog':[5,5], 'poison-fang':[5,5], 'toxic':[5,10,15] };
-const USER_TYPE = new Set(['hidden-power','tera-blast']);
-const NO_METRONOME = new Set(['metronome','mirror-move','counter','last-resort','struggle']);
+// move effects are data: each move lists its own (drain, recoil, first, spdDrop, dot, …) in data/data.json
+const FIRST_ROUND = new Set(), ALWAYS_FIRST = new Set(), RECHARGE = new Set(), IGNORE_GUARD = new Set();
+const DRAIN = {}, RECOIL = {}, SPD_DROP = {}, ATK_DROP = {}, DOTS = {};
+for (const [k, m] of Object.entries(MOVES)){
+  if (m.first === 'round1') FIRST_ROUND.add(k);
+  if (m.first === 'always') ALWAYS_FIRST.add(k);
+  if (m.recharge) RECHARGE.add(k);
+  if (m.ignoreGuard) IGNORE_GUARD.add(k);
+  if (m.drain) DRAIN[k] = m.drain;
+  if (m.recoil) RECOIL[k] = m.recoil;
+  if (m.spdDrop) SPD_DROP[k] = m.spdDrop;
+  if (m.atkDrop) ATK_DROP[k] = m.atkDrop;
+  if (m.dot) DOTS[k] = m.dot;
+}
+const ALL_TYPES = Object.keys(CHART);
+const NO_METRONOME = new Set(['metronome','counter','struggle', ...Object.keys(MOVES).filter(k => MOVES[k].selfFaint)]);
 const CHOICE = new Set(['choice-band','choice-specs','choice-scarf']);
 const AREA_SHAPES = new Set(['splash','row','back','field']);
-const SIDE_MOVES = new Set(['reflect','light-screen','wide-guard','safeguard','wish']);
+const SIDE_MOVES = new Set(['reflect','light-screen','barrier','wide-guard','safeguard','wish']);
 
 const SIDES = ['you','opp'];
 let lineup = null, board = null, sideSt = null, round = 0, ctx = null, running = false, battleToken = 0, uidSeq = 0;
 let speed = 2, speedPref = 2, countAbort = null;
 const turnOf = new Map();
-const B = { enc: null, slotEls: { you:[[],[]], opp:[[],[]] } };
+const B = { enc: null, coins: 0, slotEls: { you:[[],[]], opp:[[],[]] } };
 
 /* ---------- encounters: the opponent always fields as many Pokémon as you do ---------- */
 function enemyUnit(line, star, mul, nMoves, item, formId){
@@ -59,8 +64,8 @@ function buildEncounter(kind){
   // on maps 1-2, trainers skip lines that hit your Pokémon super-effectively, so an unlucky
   // type matchup can't cost a life before you've had a chance to build
   const types = mons.map(m => FORM[m.form].type);
-  const gentle = LINE_IDS.filter(l => !types.some(t => eff(LINES[l][1][0].type, t) > 1));
-  const trainerLine = () => pick(R.mapNo <= 2 && gentle.length ? gentle : LINE_IDS);
+  const gentle = TEAM_LINES.filter(l => !types.some(t => eff(LINES[l][1][0].type, t) > 1));
+  const trainerLine = () => pick(R.mapNo <= 2 && gentle.length ? gentle : TEAM_LINES);
   const enc = { kind, team: [] };
   if (kind === 'trainer'){
     enc.title = pick(TRAINERS); enc.sub = `Sends out ${n} Pokémon to match yours.`;
@@ -69,31 +74,31 @@ function buildEncounter(kind){
       enc.team.push(enemyUnit(trainerLine(), s, TUNE.enemyMul.trainer + bonus, nMoves(0), item(R.mapNo >= 3 ? .2 : 0)));
     }
   } else if (kind === 'boss'){
-    const g = GYMS[R.mapNo - 1], typed = LINE_IDS.filter(l => LINES[l][1][0].type === g.type);
+    const g = GYMS[R.mapNo - 1], typed = TEAM_LINES.filter(l => LINES[l][1][0].type === g.type);
     enc.title = g.name; enc.sub = `Gym ${R.mapNo}, ${cap(g.type)} type. Sends out ${n} Pokémon to match yours.`;
     for (let k = 0; k < n; k++){
-      const line = typed.length > 1 || Math.random() < .7 ? pick(typed) : pick(LINE_IDS);
+      const line = typed.length > 1 || Math.random() < .7 ? pick(typed) : pick(TEAM_LINES);
       enc.team.push(enemyUnit(line, stars[k], TUNE.enemyMul.boss + bonus, nMoves(1), item(R.mapNo >= 3 ? .35 : 0)));
     }
   } else {
-    const line = pick(WILD_LINES), ls = clamp(stars[0] + 1, 1, 3), form = formFor(line, ls);
+    const line = pick(LEGEND_LINES), ls = clamp(stars[0] + 1, 1, 3), form = formFor(line, ls);
     enc.legend = { line, star: ls };
-    enc.title = `Legendary ${FORM[form].name}`; enc.sub = 'Beat its team to capture it. A stand-in until the roster has real legendaries.';
+    enc.title = `Legendary ${FORM[form].name}`; enc.sub = 'Beat it and its escorts to capture it.';
     enc.team.push(enemyUnit(line, ls, TUNE.enemyMul.legendary + bonus, nMoves(1), pick(ITEM_IDS), form));
-    for (let k = 1; k < n; k++) enc.team.push(enemyUnit(pick(LINE_IDS), Math.max(1, stars[k] - 1), TUNE.enemyMul.trainer + bonus, nMoves(0), null));
+    for (let k = 1; k < n; k++) enc.team.push(enemyUnit(pick(TEAM_LINES), Math.max(1, stars[k] - 1), TUNE.enemyMul.trainer + bonus, nMoves(0), null));
   }
   return enc;
 }
 
 function freshStatus(){
   return { atkMod:0, spdMod:0, shields:[], protect:false, focus:false, skip:0, rage:0, rollout:0, used:new Set(),
-    lastHit:null, hitThisRound:false, vuln:0, mist:false, dots:[], seed:null, lastMove:null, planned:null, lock:null, sashUsed:false, wpUsed:false };
+    lastHit:null, hitThisRound:false, vuln:0, skipWhy:'', mist:false, dots:[], seed:null, lastMove:null, planned:null, lock:null, sashUsed:false, wpUsed:false };
 }
 function freshBoard(){
   board = {}; sideSt = {};
   for (const side of SIDES){
     board[side] = [[null,null,null],[null,null,null]];
-    sideSt[side] = { reflect:0, screen:0, wideGuard:0, safeguard:false, fainted:false, wishes:[] };
+    sideSt[side] = { reflect:0, reflectP:.25, screen:0, wideGuard:0, safeguard:false, fainted:false, wishes:[] };
     for (const { cell, unit } of lineup[side]){
       const f = FORM[unit.form], it = unit.item;
       const maxHp = Math.round(f.hp * unit.mul * (it === 'assault-vest' ? 1.25 : 1));
@@ -203,7 +208,7 @@ function mid(el){ const r = el.getBoundingClientRect(); return { x: r.left + r.w
 function showMoveTag(el, m, u){
   if (!animOn() || !el) return () => {};
   const t = document.createElement('div'); t.className = 'movetag'; t.textContent = m.name;
-  t.style.setProperty('--c', typeColor(m.type === 'user' ? u.type : m.type)); el.append(t);
+  t.style.setProperty('--c', typeColor(m.type)); el.append(t);
   return () => t.remove();
 }
 function dash(el, toEl){
@@ -232,7 +237,7 @@ function log(html, cls = ''){
 }
 function clearLog(msg){ $('#b-log').innerHTML = `<div class="bf__empty">${msg}</div>`; }
 const who = u => `<span class="lw ${u.side}"><i class="sd ${u.side}"></i>${u.name}</span>`;
-const mvChip = (m, u) => `<span class="le-mv" style="--c:${typeColor(m.type === 'user' ? u.type : m.type)}">${m.name}</span>`;
+const mvChip = (m, u) => `<span class="le-mv" style="--c:${typeColor(m.type)}">${m.name}</span>`;
 const status = html => $('#b-status').innerHTML = html;
 
 /* ---------- rules ---------- */
@@ -280,8 +285,7 @@ function lower(t, stat, amt){ if (t.st.mist || sideSt[t.side].safeguard) return 
 function draw(u){
   if (u.st.lock){ const i = u.bag.indexOf(u.st.lock); return i >= 0 ? u.bag.splice(i, 1)[0] : 'struggle'; }
   if (!u.bag.length) return 'struggle';
-  const lrOK = u.moves.filter(k => k !== 'last-resort').every(k => u.st.used.has(k));
-  let idx = [...u.bag.keys()].filter(i => u.bag[i] !== 'last-resort' || lrOK);
+  let idx = [...u.bag.keys()].filter(i => round > 1 || !MOVES[u.bag[i]].charge);     // charging moves can't open a battle
   if (!idx.length) idx = [...u.bag.keys()];
   return u.bag.splice(pick(idx), 1)[0];
 }
@@ -293,16 +297,10 @@ function supportTargets(u, pos, key, m){
     case 'self': return [u];
     case 'team': return living(side);
     case 'front': return board[side][0].filter(Boolean);
-    case 'lowest': { const t = lowestAlly(side, key === 'healing-wish' ? u : null); return t ? [t] : []; }
+    case 'lowest': { const t = lowestAlly(side, null); return t ? [t] : []; }
     case 'ahead': {
       const ahead = pos.row === 1 ? board[side][0][pos.lane] : null;
-      if (key === 'after-you'){
-        if (ahead && !ctx.acted.has(ahead.uid)) return [ahead];
-        const rest = ctx.order.slice(ctx.idx + 1).filter(x => x.side === side && x !== u && find(x));
-        return rest.length ? [rest.reduce((a, b) => effSpd(b) > effSpd(a) ? b : a)] : [];
-      }
       if (ahead) return [ahead];
-      if (key === 'floral-healing'){ const t = lowestAlly(side, null); return t ? [t] : []; }
       const t = strongestAlly(side, u); return t ? [t] : [];
     }
   }
@@ -315,32 +313,28 @@ function applySupport(u, key, m, t){
   const bf = (atk, spd, txt) => { if (atk) t.st.atkMod += atk * mul; if (spd) t.st.spdMod += spd * mul; res.push({ txt }); };
   const P = x => pct(x * mul);
   switch (key){
-    case 'defense-curl': case 'harden': t.st.shields.push({ n:2, p:.5 }); res.push({ txt:'2 hits −50%' }); break;
-    case 'stockpile': t.st.shields.push({ n:3, p:.25 }); res.push({ txt:'3 hits −25%' }); break;
-    case 'bulk-up': bf(.15, 0, `Atk +${P(.15)}, 2 hits −25%`); t.st.shields.push({ n:2, p:.25 }); break;
-    case 'focus-energy': t.st.focus = true; res.push({ txt:'next hit +50%' }); break;
+    case 'focus-energy': case 'charge': t.st.focus = true; res.push({ txt:'next hit +50%' }); break;
     case 'protect': t.st.protect = true; res.push({ txt:'protected' }); break;
-    case 'swords-dance': bf(.5, 0, `Atk +${P(.5)}`); break;
-    case 'agility': bf(0, .3, `Spd +${P(.3)}`); break;
-    case 'work-up': bf(.1, .1, `Atk/Spd +${P(.1)}`); break;
-    case 'shell-smash': bf(.5, .5, `Atk/Spd +${P(.5)}, takes +25%`); t.st.vuln += .25; break;
-    case 'tailwind': bf(0, .2, `Spd +${P(.2)}`); break;
-    case 'quiver-wind': bf(.15, .25, `Atk +${P(.15)}, Spd +${P(.25)}`); break;
-    case 'coaching': case 'howl': bf(.1, 0, `Atk +${P(.1)}`); break;
-    case 'helping-hand': bf(.3, 0, `Atk +${P(.3)}`); break;
-    case 'decorate': bf(.4, 0, `Atk +${P(.4)}`); break;
     case 'mist': t.st.mist = true; res.push({ txt:'stats locked' }); break;
-    case 'rest': { const a = t.maxHp - t.hp; t.hp = t.maxHp; t.st.skip = 2; res.push({ heal:a, txt:'sleeps 2 turns' }); break; }
-    case 'round-chorus': heal(.2); bf(.15, 0, `Atk +${P(.15)}`); break;
+    case 'rest': { const a = t.maxHp - t.hp; t.hp = t.maxHp; t.st.skip = 2; t.st.skipWhy = 'asleep'; res.push({ heal:a, txt:'sleeps 2 turns' }); break; }
     case 'refresh': t.st.atkMod = Math.max(0, t.st.atkMod); t.st.spdMod = Math.max(0, t.st.spdMod); t.st.dots = []; t.st.seed = null; res.push({ txt:'cleansed' }); break;
-    case 'healing-wish': { const a = t.maxHp - t.hp; t.hp = t.maxHp; res.push({ heal:a }); break; }
-    default: if (m.heal) heal(m.heal);
+    default: {
+      // everything else is data: a heal, Attack/Speed changes, damage shields, and taking more or less damage
+      if (m.heal) heal(m.heal);
+      if (m.buff){
+        const sign = x => x > 0 ? '+' : '−', at = m.buff.atk || 0, sp = m.buff.spd || 0;
+        bf(at, sp, [at && `Atk ${sign(at)}${P(Math.abs(at))}`, sp && `Spd ${sign(sp)}${P(Math.abs(sp))}`].filter(Boolean).join(', '));
+      }
+      if (m.shield){ t.st.shields.push({ ...m.shield }); res.push({ txt:`${m.shield.n} hit${m.shield.n > 1 ? 's' : ''} −${pct(m.shield.p)}` }); }
+      if (m.vuln){ t.st.vuln += m.vuln; res.push({ txt: m.vuln < 0 ? `takes −${pct(-m.vuln)}` : `takes +${pct(m.vuln)}` }); }
+    }
   }
   return res;
 }
 function doSideSupport(u, key){
   const s = sideSt[u.side];
-  if (key === 'reflect'){ s.reflect = 2; return 'front row −25% for 2 rounds'; }
+  if (key === 'reflect'){ s.reflect = 2; s.reflectP = .25; return 'front row −25% for 2 rounds'; }
+  if (key === 'barrier'){ s.reflect = 2; s.reflectP = .4; return 'front row −40% for 2 rounds'; }
   if (key === 'light-screen'){ s.screen = 2; return 'front row −25% vs area for 2 rounds'; }
   if (key === 'wide-guard'){ s.wideGuard = round + 1; return 'blocks area moves until end of next round'; }
   if (key === 'safeguard'){ s.safeguard = true; for (const t of living(u.side)){ t.st.dots = []; t.st.seed = null; } return 'no stat drops or damage over time'; }
@@ -352,37 +346,35 @@ async function resolveSupport(u, pos, key, m, refund, el){
   if (SIDE_MOVES.has(key)){
     await wait(300);
     const txt = doSideSupport(u, key);
-    const team = key === 'reflect' || key === 'light-screen' ? board[u.side][0].filter(Boolean) : living(u.side);
+    const team = ['reflect', 'light-screen', 'barrier'].includes(key) ? board[u.side][0].filter(Boolean) : living(u.side);
     team.forEach(t => { setTurn(t, t === u ? 'acting' : 'ally'); burst(elOf(t), typeColor(m.type)); });
     floatText(el, key === 'wish' ? 'wish' : 'team', 'info');
     log(note(txt), 'le');
     await wait(520); team.forEach(t => t !== u && setTurn(t, null));
     return true;
   }
+  if (key === 'splash'){
+    status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
+    floatText(el, 'nothing happens', 'info'); log(note('but nothing happens'), 'le'); await wait(420); return true;
+  }
+  if (key === 'transform'){
+    // copies the moves of the enemy directly across (or the nearest one), at full PP, for the rest of the battle
+    const c = center(u.side, pos.lane), t = c >= 0 ? board[foe(u.side)][0][c] : living(foe(u.side))[0];
+    status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
+    if (!t){ refund(); flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to copy, PP returned'), 'le fail'); await wait(420); return false; }
+    await shoot(elOf(t), el, typeColor(t.type));
+    u.moves = [...t.moves]; u.bag = u.moves.flatMap(k => Array(MOVES[k].pp).fill(k));
+    burst(el, typeColor(t.type)); floatText(el, 'transformed', 'buff');
+    log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>copies ${who(t)}: ${u.moves.map(k => mvChip(MOVES[k], u)).join(' ')}</div></div>`, 'le');
+    await wait(420); return true;
+  }
   const targets = supportTargets(u, pos, key, m);
   status(`${who(u)} ${mvChip(m, u)} ${targets.length ? '→ ' + targets.map(who).join(', ') : ''}`);
   await wait(300);
   if (!targets.length){ refund(); flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to target, PP returned'), 'le fail'); await wait(420); return false; }
-  if (key === 'after-you'){
-    const t = targets[0], i = ctx.order.indexOf(t);
-    if (i > ctx.idx) ctx.order.splice(i, 1);
-    ctx.order.splice(ctx.idx + 1, 0, t);
-    setTurn(t, 'ally'); floatText(elOf(t), 'next!', 'info');
-    log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>${who(t)} acts next</div></div>`, 'le');
-    await wait(520); setTurn(t, null); return true;
-  }
-  if (key === 'instruct'){
-    const t = targets[0];
-    if (!t.st.lastMove || t.st.lastMove === 'instruct'){ refund(); flash(el, 'fizzle'); floatText(el, 'nothing to repeat', 'info'); log(note(`${t.name} has no move to repeat, PP returned`), 'le fail'); await wait(420); return false; }
-    log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>${who(t)} repeats ${MOVES[t.st.lastMove].name}</div></div>`, 'le');
-    await wait(300); setTurn(u, null);
-    await act(t, { move: t.st.lastMove, noPP: true });
-    return true;
-  }
   targets.forEach(t => t !== u && setTurn(t, 'ally'));
   await wait(160);
   await Promise.all(targets.filter(t => t !== u).map(t => shoot(el, elOf(t), typeColor(m.type))));
-  if (key === 'healing-wish') u.hp = 0;
   const lines = [];
   for (const t of targets){
     const res = applySupport(u, key, m, t), tel = elOf(t), healed = res.find(r => r.heal != null);
@@ -392,7 +384,6 @@ async function resolveSupport(u, pos, key, m, refund, el){
   }
   render();
   log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res">${lines.join('')}</div>`, 'le');
-  if (key === 'healing-wish'){ await wait(300); faint(u, ' (Healing Wish)'); render(); }
   await wait(420);
   targets.forEach(t => t !== u && setTurn(t, null));
   return true;
@@ -405,19 +396,18 @@ function movePower(u, key, m, t, h){
   if (key === 'rollout') p = 20 * Math.pow(2, Math.min(3, u.st.rollout));
   if (key === 'facade' && u.hp < u.maxHp / 2) p *= 2;
   if (key === 'retaliate' && sideSt[u.side].fainted) p *= 2;
-  if (key === 'payback' && u.st.hitThisRound) p *= 2;
-  if (key === 'venoshock' && (t.st.dots.length || t.st.seed)) p *= 2;
+  if (m.vsDot && (t.st.dots.length || t.st.seed)) p *= 2;
+  if (m.lowBonus && t.hp < t.maxHp * .25) p *= 2;
   if (key === 'electro-ball'){ const d = effSpd(u) - effSpd(t); if (d > 0) p = Math.min(120, 50 * (1 + .25 * Math.floor(d / 10))); }
-  if (key === 'triple-axel') p = 20 * (h + 1);
+  if (m.rising) p = m.rising[Math.min(h, m.rising.length - 1)];
   return p;
 }
 function moveType(u, key, m, t){
-  if (USER_TYPE.has(key)) return u.type;
-  if (key === 'toxic-bloom') return eff('poison', t.type) > eff('grass', t.type) ? 'poison' : 'grass';
+  if (m.bestType) return ALL_TYPES.reduce((a, b) => eff(b, t.type) > eff(a, t.type) ? b : a, m.type);
   return m.type;
 }
 function hitDamage(u, key, m, t, h, multi){
-  const ty = moveType(u, key, m, t), e = ty === 'none' ? 1 : eff(ty, t.type);
+  const ty = moveType(u, key, m, t), e = ty === 'none' ? 1 : m.superVs === t.type ? 2 : eff(ty, t.type);
   let dmg;
   if (key === 'super-fang') dmg = Math.ceil(t.hp * .5);
   else if (key === 'body-press') dmg = u.maxHp * .2 * e;
@@ -437,7 +427,7 @@ function guard(t, key, m, dmg, area){
   if (area && s.wideGuard >= round) return { dmg:0, note:'wide guard' };
   const ignore = IGNORE_GUARD.has(key);
   if (!ignore && t.st.shields.length){ const sh = t.st.shields[0]; dmg *= 1 - sh.p; if (--sh.n <= 0) t.st.shields.shift(); }
-  if (!ignore && front && s.reflect > 0) dmg *= .75;
+  if (!ignore && front && s.reflect > 0) dmg *= 1 - s.reflectP;
   if (area && front && s.screen > 0) dmg *= .75;
   if (t.st.vuln) dmg *= 1 + t.st.vuln;
   return { dmg: Math.max(dmg > 0 ? 1 : 0, Math.round(dmg)), note:'' };
@@ -494,6 +484,7 @@ async function resolveOffense(u, pos, key, m, refund, el, origKey){
     if (ATK_DROP[key]){ const r = lower(t, 'atkMod', ATK_DROP[key]); add(r === true ? `Atk −${pct(ATK_DROP[key])}` : 'drop blocked'); }
     if (key === 'tri-attack'){ const st = Math.random() < .5 ? 'atkMod' : 'spdMod'; const r = lower(t, st, .1); add(r === true ? `${st === 'atkMod' ? 'Atk' : 'Spd'} −10%` : 'drop blocked'); }
     if (DOTS[key]){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.dots.push([...DOTS[key]]); add(key === 'toxic' ? 'badly poisoned' : 'poisoned'); } }
+    if (m.skipTarget){ t.st.skip = Math.max(t.st.skip, m.skipTarget); t.st.skipWhy = 'asleep'; add('falls asleep'); }
     if (key === 'leech-seed'){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.seed = u; add('seeded'); } }
   }
   const dealt = tot.reduce((a, x) => a + x.dmg, 0), selfNotes = [];
@@ -502,8 +493,17 @@ async function resolveOffense(u, pos, key, m, refund, el, origKey){
   if (RECOIL[key] && dealt) selfHurt(RECOIL[key], 'recoil', dealt);
   if (u.item !== 'protective-pads') targets.forEach((t, i) => { if (t.item === 'rocky-helmet' && tot[i].dmg > 0) selfHurt(.12, `${t.name}'s Rocky Helmet`); });
   if (u.item === 'life-orb' && damaging) selfHurt(.1, 'Life Orb');
-  if (key === 'rapid-spin'){ u.st.spdMod += .15; selfNotes.push('Spd +15%'); }
-  if (RECHARGE.has(key)){ u.st.skip = 1; selfNotes.push('must recharge'); }
+  if (m.selfAtk || m.selfSpd){
+    const sign = x => x > 0 ? '+' : '−';
+    u.st.atkMod += m.selfAtk || 0; u.st.spdMod += m.selfSpd || 0;
+    selfNotes.push([m.selfAtk && `Atk ${sign(m.selfAtk)}${pct(Math.abs(m.selfAtk))}`, m.selfSpd && `Spd ${sign(m.selfSpd)}${pct(Math.abs(m.selfSpd))}`].filter(Boolean).join(', '));
+  }
+  if (m.selfShield){ u.st.shields.push({ ...m.selfShield }); selfNotes.push(`next hit −${pct(m.selfShield.p)}`); }
+  if (m.selfVuln){ u.st.vuln += m.selfVuln; selfNotes.push(`takes +${pct(m.selfVuln)}`); }
+  if (m.crash && tot.every(x => x.e === 0)) selfHurt(m.crash, 'crashes');
+  if (m.coins && u.side === 'you'){ B.coins += m.coins; selfNotes.push(`+${m.coins} coins if you win`); }
+  if (m.selfFaint){ u.hp = 0; selfNotes.push('faints'); }
+  if (RECHARGE.has(key)){ u.st.skip = 1; u.st.skipWhy = 'recharging'; selfNotes.push('must recharge'); }
   if (key === 'rage') u.st.rage++;
   if (key === 'rollout') u.st.rollout++;
   if (key === 'struggle') selfHurt(.12, 'hurt by Struggle');
@@ -529,9 +529,10 @@ async function act(u, forced){
   u.st.protect = false;
   if (!forced && u.st.skip > 0){
     u.st.skip--; u.st.planned = null;
-    setTurn(u, 'acting'); floatText(el, 'recharging', 'info');
-    log(`<div class="le-top">${who(u)} <span class="le-note">is recharging</span></div>`, 'le fail');
-    status(`${who(u)} is recharging`);
+    const why = u.st.skipWhy || 'recharging';
+    setTurn(u, 'acting'); floatText(el, why, 'info');
+    log(`<div class="le-top">${who(u)} <span class="le-note">is ${why}</span></div>`, 'le fail');
+    status(`${who(u)} is ${why}`);
     await wait(420); setTurn(u, null); return;
   }
   const origKey = forced ? forced.move : (u.st.planned || draw(u));
@@ -539,14 +540,6 @@ async function act(u, forced){
   const refund = () => { if (!forced?.noPP && origKey !== 'struggle') u.bag.push(origKey); };
   let key = origKey, m = MOVES[key];
   if (key === 'metronome'){ key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k))); m = MOVES[key]; }
-  if (key === 'mirror-move'){
-    if (!u.st.lastHit || NO_METRONOME.has(u.st.lastHit.move)){
-      setTurn(u, 'acting'); await wait(260); refund(); flash(el, 'fizzle'); floatText(el, 'nothing to copy', 'info');
-      log(`<div class="le-top">${who(u)} ${mvChip(m, u)} <span class="le-note">nothing has hit it yet, PP returned</span></div>`, 'le fail');
-      await wait(420); setTurn(u, null); return;
-    }
-    key = u.st.lastHit.move; m = MOVES[key];
-  }
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
@@ -650,7 +643,7 @@ function abortBattle(){
 /* ---------- battle screen flow ---------- */
 function setupBattle(enc){
   abortBattle();
-  B.enc = enc;
+  B.enc = enc; B.coins = 0;
   lineup = {
     you: R.party.map((m, i) => m && { cell: i, unit: { side:'you', form: m.form, moves: known(m), item: m.item?.id || null, mul: 1 } }).filter(Boolean),
     opp: enc.team.map((u, k) => ({ cell: FILL[k], unit: { side:'opp', ...u } })),
@@ -749,7 +742,7 @@ async function finishBattle(outcome){
   const enc = B.enc, won = outcome === 'win', card = $('#b-rcard');
   let button = null, action = null, xp = null, els = null;
   if (won){
-    const pay = TUNE.pay[enc.kind]; R.coins += pay;
+    const pay = TUNE.pay[enc.kind] + B.coins; R.coins += pay;
     xp = awardXP(TUNE.xp[enc.kind]);
     let captured = '';
     if (enc.kind === 'legendary'){

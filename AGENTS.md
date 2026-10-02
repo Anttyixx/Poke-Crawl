@@ -63,7 +63,7 @@ To release, only when the user says the work on `dev` is ready:
 | `src/body.html` | Screen markup |
 | `src/slot.css` | Dynamic slot component styles |
 | `src/game.css` | All other styles. Later rules override earlier ones. |
-| `data/data.json` | Pokémon `forms` and `moves`; each form's `spr` names its sprite in `assets/pokesprite` |
+| `data/data.json` | Pokémon `forms`, `moves` and move `pools`. Each form's `spr` names its sprite in `assets/pokesprite`; a `branch` marks a split (Eevee, Oddish…), `legendary` keeps a line on Legendary nodes. Each move has a `cat` (`sig` shared signature, `unique` signature, `tutor`) and its effects as fields (`drain`, `recoil`, `first`, `spdDrop`, `dot`, …) that the battle engine reads. A pool is a list of tutor moves plus a rule (every Pokémon, a type, or a ★1 stat bar) |
 | `data/items.json` | Held items; each item's `id` names its sprite in `assets/pokesprite/items` |
 | `assets/candy.png`, `assets/tr/*.png` | EXP Candy sprite and the 18 TR sprites, one per move type |
 | `assets/rotomdex.png` | Rotom Pokédex (RotomDex), the Pokédex's icon (96×96, trimmed and scaled like the other sprites) |
