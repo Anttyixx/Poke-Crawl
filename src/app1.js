@@ -1184,14 +1184,14 @@ async function dexShow(tab, animate){
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 /* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
-   Opening: Rotom crouches, hops, dips down and back up into its spot in the popup's header,
-   landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
+   Opening: Rotom crouches, hops, dips down and back up to its perch on the popup's top edge (overlapping it, a little
+   in from the left corner, 25% bigger than in the corner), landing with a little squash. As it lands the popup's panel opens out from Rotom to fill the screen, then the
    header, tabs and list fade up into it one after another. Closing runs the other way: the contents fade, the panel
    folds back into Rotom, and Rotom hops home to the corner.
-   Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the real
-   header icon is and the hand-over can't jump. */
+   Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the perched
+   sprite is and the hand-over can't jump. Tapping the perched Rotom closes the popup. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
-const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
+const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('#dex-rotom');
 // RotomDex timings in ms (the numbers in comments are from before the last 10% speed-up)
 const RD_MS = { swoop: 600, land: 200 /* 220 */, fade: 100 /* 110 */, fold: 209 /* 230 */,
   open: 273 /* 300 */, item: 206 /* 227 */, stagger: 32 /* 35 */,
@@ -1234,7 +1234,7 @@ const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }
 // the panel's outline: a Rotom-sized rounded square around its spot, or the whole card
 function dexInset(open){
   const c = DEXCARD.getBoundingClientRect(), r = rdMid(rdSpot().getBoundingClientRect()), s = 24;
-  const x = r.x - c.left, y = r.y - c.top;
+  const x = r.x - c.left, y = Math.max(s, r.y - c.top);     // Rotom straddles the top edge, so start just inside it
   return open ? 'inset(0px 0px 0px 0px round 18px)' : `inset(${y - s}px ${c.width - x - s}px ${c.height - y - s}px ${x - s}px round ${s}px)`;
 }
 // what fades up into the opened panel, top to bottom: the title, Close, the tabs, then the list's first screenful
@@ -1306,6 +1306,7 @@ async function closeDex(now = false){
 }
 RD_BTN.addEventListener('click', openDex);
 DEXVEIL.addEventListener('click', () => closeDex());
+rdSpot().addEventListener('click', () => closeDex());
 $('#dex-close').addEventListener('click', () => closeDex());
 addEventListener('keydown', e => { if (e.key === 'Escape') closeDex(); });
 document.querySelectorAll('.dextab').forEach(b => b.addEventListener('click', () => dexShow(b.dataset.tab, true)));
