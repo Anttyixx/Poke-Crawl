@@ -1,6 +1,7 @@
 # Publishes two builds of the game to GitHub Pages as one site:
 #   main -> https://<user>.github.io/<repo>/       (stable)
 #   dev  -> https://<user>.github.io/<repo>/dev/   (experimental)
+#           and https://<user>.github.io/<repo>/dev/<commit>/ (that exact build; never stale)
 # A push to either branch rebuilds and redeploys both.
 #
 # The github-pages environment only accepts deploys from main by default, so a
@@ -82,6 +83,12 @@ jobs:
             mkdir -p site/dev
             cp -r dev-src/dist/. site/dev/
             sed -i 's|<title>Poke-Crawl</title>|<title>Poke-Crawl (dev)</title>|' site/dev/index.html
+            # the same build at its own address, /dev/<commit>/: a brand-new URL is never cached anywhere,
+            # so a play-test link always opens exactly that build
+            short="$(git -C dev-src rev-parse --short HEAD)"
+            mkdir -p "site/dev/$short"
+            cp site/dev/index.html "site/dev/$short/index.html"
+            echo "dev build also published at /dev/$short/"
           else
             echo "::warning::dev failed to build; only the stable game was deployed"
           fi
