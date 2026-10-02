@@ -1148,7 +1148,7 @@ async function dexShow(tab, animate){
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
-const dexMark = () => markHTML($('.dexbtn .dexicon').outerHTML, 'Pokédex');
+const dexMark = () => markHTML($('.dexbtn .dexicon').outerHTML, 'RotomDex');
 function openDex(){
   if (wiping || screen === 'scr-dex') return;
   DEX.from = screen;
