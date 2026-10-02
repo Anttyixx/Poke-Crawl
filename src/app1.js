@@ -2,6 +2,7 @@
 const DATA = __DATA__;
 const ITEMS_DATA = __ITEMS__;
 const CANDY_SPR = '__CANDY__';
+const ROTOMDEX_SPR = '__ROTOMDEX__';                      // Rotom Pokédex, the Pokédex's icon
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
 const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
 
@@ -1146,7 +1147,8 @@ async function dexShow(tab, animate){
   body.getAnimations().forEach(a => a.cancel());
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
-const dexMark = () => markHTML($('.dexbtn svg').outerHTML, 'Pokédex');
+document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
+const dexMark = () => markHTML($('.dexbtn .dexicon').outerHTML, 'Pokédex');
 function openDex(){
   if (wiping || screen === 'scr-dex') return;
   DEX.from = screen;

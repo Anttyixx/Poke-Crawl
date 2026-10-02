@@ -837,10 +837,11 @@ button{ font:inherit; color:inherit; }
   transition:border-color .15s ease, transform .15s ease; }
 .dexbtn:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }
 .dexbtn:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
-.dexbtn svg{ width:22px; height:22px; flex:none; }
+.dexicon{ image-rendering:pixelated; display:block; }
+.dexbtn .dexicon{ width:30px; height:30px; flex:none; margin:-4px -2px; }
 .dexbtn--corner{ position:absolute; top:calc(14px + env(safe-area-inset-top, 0px)); right:16px; z-index:2; }
 @media (max-width:520px){ .hud .dexbtn{ padding:0 7px; } .hud .dexbtn span{ display:none; } .hud__right{ gap:10px; } }
-.wipe__icon svg{ width:44%; height:44%; }
+.wipe__icon .dexicon{ width:86%; height:86%; }
 
 /* the screen: a header pinned to the top with the section tabs, the list scrolling underneath */
 .dex{ --dex-w: 760px; }
@@ -849,7 +850,7 @@ button{ font:inherit; color:inherit; }
   border-bottom:1px solid var(--line); }
 .dexhead > *{ max-width:var(--dex-w); margin-left:auto; margin-right:auto; }
 .dexhead__top{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.dexhead__icon svg{ width:30px; height:30px; display:block; }
+.dexhead__icon .dexicon{ width:40px; height:40px; margin:-5px; }
 .dexhead__top .btn{ margin-left:auto; }
 .dextabs{ --i: 0; position:relative; display:grid; grid-template-columns:repeat(3, 1fr); padding:4px; border-radius:13px;
   background:var(--game-bg); border:1px solid var(--game-edge); }
