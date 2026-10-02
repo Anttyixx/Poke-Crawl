@@ -1158,7 +1158,7 @@ const DEX_BUILD = {
       }).join('');
   },
   // everything about the one Pokémon Rotom is scanning: its stars and EXP, stats, ability, held item and moves
-  scan: () => DEX.scan ? mapMonHTML(DEX.scan.mon) : '',
+  scan: () => DEX.scan ? `<article class="dexline dexscan" data-only="${DEX.scan.mon.form}"><div class="dexdetail">${mapMonHTML(DEX.scan.mon)}</div></article>` : '',
   items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
     + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
       <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
@@ -1318,16 +1318,17 @@ async function closeDex(now = false){
   DEXSHELL.getAnimations().forEach(x => x.cancel()); DEXVEIL.getAnimations().forEach(x => x.cancel());
   RD_BTN.classList.remove('is-out');
   DEX.open = DEX.busy = false;
-  if (DEX.scan){ DEX.scan = null; DEX.tab = DEX.tabBefore || 'mons'; dexTabs(DEX.tab); dexLayout(); $('#dex-act').hidden = true; }
+  if (DEX.scan){ endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexTabs(DEX.tab); dexLayout(); $('#dex-act').hidden = true; }
 }
 /* ---------- scanning one Pokémon ----------
    Rotom flies to a Pokémon on the screen and opens a small RotomDex popup next to it showing just that Pokémon: below
    it, or above it if there is more room there, and only as tall as its contents. Rotom perches on the popup's edge
    right at the Pokémon's slot, overlapping the slot's corner and the popup's border: the border rises in a smooth
    bump to meet it (on the top edge for a popup below, the bottom edge for one above), so Rotom needs no padding
-   inside. The Pokémon stays in view; tapping another one makes Rotom hop over and scan that one instead. `actions`
-   are buttons at the bottom (e.g. the starter screen's "I Choose You!!"); "Full RotomDex" is always there and turns
-   the popup into the full RotomDex, which has the same bump in its top edge for Rotom, near the left corner. */
+   inside. The Pokémon stays in view; tapping another one makes Rotom hop over and scan that one instead. "Full
+   RotomDex", pinned to the popup's top right, turns it into the full RotomDex (which has the same bump in its top edge
+   for Rotom, near the left corner). opts.reserve keeps that many pixels free at the bottom of the screen for the
+   page's own buttons (the starter screen's "I Choose You!!"); opts.onClose runs when the scan ends. */
 const SCAN = { gap: 22, margin: 10, maxW: 520, rdp: 65, bump: 30, top: 74, slope: 26, r: 18 };
 // the outline: a rounded rectangle from y0 to y1 with a bump around x reaching up (or down) to the shell's edge
 function scanOutline(w, h, x, down){
@@ -1351,13 +1352,14 @@ function dexLayout(){
     const fr = frame.getBoundingClientRect(); w = fr.width; h = fr.height; x = edge;
   } else {
     const S = DEX.scan.slot.getBoundingClientRect(), { gap, margin } = SCAN, top0 = margin + 6;
-    const below = innerHeight - S.bottom - gap - margin, above = S.top - gap - top0;
+    const below = innerHeight - (DEX.scan.reserve || 0) - S.bottom - gap - margin, above = S.top - gap - top0;
     down = below >= above;
     const room = Math.max(200, down ? below : above);
     w = Math.min(innerWidth - margin * 2, SCAN.maxW);
     // as tall as the Pokémon's info and the buttons need, up to the room there is (then it scrolls)
     frame.style.width = w + 'px';
-    h = Math.min(room, $('#dex-body').scrollHeight + $('#dex-act').offsetHeight + B + 2);
+    const act = $('#dex-act'), overlap = parseFloat(getComputedStyle(act).marginBottom) || 0;   // the button bar overlaps the top of the info
+    h = Math.min(room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
     const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
     const top = down ? S.bottom + gap : S.top - gap - h;
     Object.assign(frame.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
@@ -1373,23 +1375,26 @@ function dexLayout(){
   svg.firstElementChild.setAttribute('d', scanOutline(w, h, x, down));
 }
 function dexActions(){
-  const bar = $('#dex-act'), acts = DEX.scan ? [...DEX.scan.actions, { label: 'Full RotomDex', run: dexToFull }] : [];
+  const bar = $('#dex-act'), acts = DEX.scan ? [{ label: 'Full RotomDex', run: dexToFull }] : [];
   bar.hidden = !acts.length;
   bar.innerHTML = acts.map((a, i) => `<button class="btn ${a.go ? 'btn--go' : ''}" type="button" data-act="${i}">${a.label}</button>`).join('');
   bar._acts = acts;
 }
 $('#dex-act').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !DEX.busy) $('#dex-act')._acts?.[+b.dataset.act]?.run(); });
-async function openScan(slot, mon, actions = []){
+// the scan is over (closed, or turned into the full RotomDex)
+function endScan(){ const s = DEX.scan; DEX.scan = null; s?.onClose?.(); }
+async function openScan(slot, mon, opts = {}){
+  const { reserve = 0, onClose = null } = opts;
   if (wiping || DEX.busy) return;
   if (DEX.open && !DEX.scan) return;                          // the full RotomDex is open
   if (DEX.open && DEX.scan.mon === mon) return closeDex();    // tapping the scanned Pokémon again puts Rotom away
   if (!DEX.open){
-    DEX.tabBefore = DEX.tab; DEX.scan = { slot, mon, actions }; DEX.tab = 'scan';
+    DEX.tabBefore = DEX.tab; DEX.scan = { slot, mon, reserve, onClose }; DEX.tab = 'scan';
     dexActions();
     return openDex();
   }
   // already scanning another Pokémon: fold the panel into Rotom, hop over, open again
-  await rdRelocate(() => { DEX.scan = { slot, mon, actions }; dexActions(); dexShow('scan', false); }, .45);
+  await rdRelocate(() => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); }, .45);
 }
 // fold the panel into Rotom, change what the popup shows (and where), hop Rotom to its new perch, open again
 async function rdRelocate(change, dip){
@@ -1411,14 +1416,14 @@ async function rdRelocate(change, dip){
 async function dexToFull(){
   DEXVEIL.style.opacity = 0;
   await rdRelocate(() => {
-    DEX.scan = null; DEX.tab = DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
+    endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
     DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.home, easing: 'ease-out', fill: 'forwards' });
   }, .6);
   DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
 }
 // while scanning, the page behind stays usable: a tap outside the popup (that isn't on another Pokémon to scan) closes it
 addEventListener('pointerdown', e => {
-  if (DEX.open && DEX.scan && !DEX.busy && !e.target.closest('.dexpop__frame') && !e.target.closest('.slot')) closeDex();
+  if (DEX.open && DEX.scan && !DEX.busy && !e.target.closest('.dexpop__frame, .slot, .pageact')) closeDex();
 }, true);
 addEventListener('resize', () => { if (DEX.open) dexLayout(); });
 RD_BTN.addEventListener('click', openDex);
@@ -1456,18 +1461,24 @@ $('#title-start').addEventListener('click', () => wipeTo('scr-starter', openStar
 // three starters across the middle of the screen. Tapping one sends Rotom to scan it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
 const ST = { offer: [], home: -1, chosen: false };
-function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1)), home: -1, chosen: false }); }
+function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
 function starterTap(i){
-  if (ST.chosen || wiping || !ST.offer[i]) return;
-  const m = ST.offer[i];
-  openScan(AREAS['S.offer'].els[i].el, m, [{ label: 'I Choose You!!', go: true, run: () => chooseStarter(i) }]);
+  if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
+  const act = $('#starter-act'), same = DEX.open && DEX.scan?.mon === ST.offer[i];
+  ST.home = same ? -1 : i;
+  setShown('starter-act', act, !same);
+  openScan(AREAS['S.offer'].els[i].el, ST.offer[i], { reserve: act.offsetHeight + 12 || 88,
+    onClose: () => { if (!ST.chosen) setShown('starter-act', act, false); } });
 }
-async function chooseStarter(i){
-  if (ST.chosen || !ST.offer[i]) return;
-  ST.chosen = true; ST.home = i; R.party[1] = ST.offer[i];  // front row, middle lane
+async function chooseStarter(){
+  const i = ST.home;
+  if (ST.chosen || i < 0 || !ST.offer[i] || DEX.busy) return;
+  ST.chosen = true; R.party[1] = ST.offer[i];              // front row, middle lane
+  setShown('starter-act', $('#starter-act'), false);
   await closeDex();                                         // Rotom folds the popup away and flies home first
   startRun();
 }
+$('#starter-go').addEventListener('click', chooseStarter);
 RENDER['scr-starter'] = () => renderArea('S.offer');
 
 /* ---------- from the starter screen straight into the first map, no wipe ----------

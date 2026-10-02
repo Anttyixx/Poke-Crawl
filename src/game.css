@@ -1060,15 +1060,21 @@ button{ font:inherit; color:inherit; }
 .dexpop__outline path{ fill:var(--bg); stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
 .dexpop .dexpop__card{ position:absolute; left:0; right:0; width:auto; background:none; border:0; box-shadow:none; }
 .dexpop--scan .dexhead{ display:none; }                    /* scanning shows only the Pokémon, no title or tabs */
-.dexpop--scan .dexbody{ padding-top:14px; padding-bottom:6px; }
+.dexpop--scan .dexbody{ padding-top:0; padding-bottom:12px; }
+.dexscan{ margin:0; }
+.dexscan .dexmon__head{ padding-right:4px; }
 .dextab[hidden]{ display:none; }
-/* the Scan tab's buttons stay pinned to the bottom of the popup */
-.dexact{ position:sticky; bottom:0; z-index:4; display:flex; justify-content:center; gap:10px; padding:12px 12px 14px;
-  background:linear-gradient(transparent, var(--bg) 34%); }
+/* "Full RotomDex" sits in the scan popup's top right and stays there while it scrolls, over a fade */
+.dexact{ position:sticky; top:0; z-index:4; display:flex; justify-content:flex-end; padding:10px 12px 18px; margin-bottom:-26px;
+  background:linear-gradient(var(--bg) 55%, color-mix(in srgb, var(--bg) 0%, transparent)); pointer-events:none; }
+.dexact .btn{ pointer-events:auto; padding:7px 13px; font-size:13px; }
 .dexact[hidden]{ display:none; }
-.dexact .btn{ flex:1 1 0; max-width:230px; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }
 .dexpop--scan .dextab small{ display:none; }        /* four tabs in a smaller popup: names only */
 /* the starters sit a little above the middle, leaving the lower part of the screen for Rotom's scan popup */
 #starter-line{ top:34%; }
+/* a page's own button under a scan popup (the starter screen's "I Choose You!!"), pinned to the bottom of the screen */
+.pageact{ position:fixed; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:2450; display:flex; justify-content:center; pointer-events:none; }
+.pageact[hidden]{ display:none; }
+.pageact .btn{ pointer-events:auto; min-width:min(320px, calc(100vw - 32px)); }
