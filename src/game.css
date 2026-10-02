@@ -832,15 +832,15 @@ button{ font:inherit; color:inherit; }
 
 /* ================= Pokédex ================= */
 /* the button: on the map's top bar and in the title screen's corner */
-.dexbtn{ appearance:none; display:inline-flex; align-items:center; gap:7px; height:36px; padding:0 12px 0 8px; border-radius:10px; cursor:pointer;
+.dexbtn{ appearance:none; display:inline-flex; align-items:center; justify-content:center; width:43px; height:43px; padding:0; border-radius:12px; cursor:pointer;
   background:#1b1f2a; border:1px solid #3a4152; color:var(--ink); font-family:var(--display); font-weight:600; font-size:14px;
   transition:border-color .15s ease, transform .15s ease; }
 .dexbtn:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }
 .dexbtn:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
 .dexicon{ image-rendering:pixelated; display:block; }
-.dexbtn .dexicon{ width:30px; height:30px; flex:none; margin:-4px -2px; }
+.dexbtn .dexicon{ width:36px; height:36px; flex:none; }   /* the button is just RotomDex */
 .dexbtn--corner{ position:absolute; top:calc(14px + env(safe-area-inset-top, 0px)); right:16px; z-index:2; }
-@media (max-width:520px){ .hud .dexbtn{ padding:0 7px; } .hud .dexbtn span{ display:none; } .hud__right{ gap:10px; } }
+@media (max-width:520px){ .hud__right{ gap:10px; } }
 .wipe__icon .dexicon{ width:86%; height:86%; }
 
 /* the screen: a header pinned to the top with the section tabs, the list scrolling underneath */
