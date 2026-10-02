@@ -858,6 +858,8 @@ function wipeAnim(el, from, to, dur){
 async function wipeTo(id, prepare, opt = {}){
   if (wiping) return;
   wiping = true; updateMapHud(); hideTip();
+  if (DEX.open) closeDex(true);
+  RD_BTN.classList.add('is-wiping');
   const W_ = $('#wipe'), band = W_.querySelector('.wipe__band'), panel = W_.querySelector('.wipe__panel');
   W_.style.setProperty('--wipe-c', opt.color || 'var(--glow-selected)');
   $('#wipe-mark').innerHTML = opt.mark || '';
@@ -883,6 +885,7 @@ async function wipeTo(id, prepare, opt = {}){
   band.style.transform = panel.style.transform = '';
   W_.classList.remove('on');
   wiping = false; updateMapHud();
+  RD_BTN.classList.remove('is-wiping');
   opt.after?.();
 }
 const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: scrollMapToCurrent });
@@ -956,7 +959,7 @@ $('#scr-map').addEventListener('pointerup', e => {
 // every Pokémon, move and held item in the game, in three sections switched by tabs that stay pinned at the top.
 // Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
 const DEX_TABS = ['mons', 'moves', 'items'];
-const DEX = { tab: 'mons', from: 'scr-title', html: {}, token: 0 };
+const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false };
 // sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
 const blobURLs = new Map();
 function spriteURL(uri){
@@ -1148,18 +1151,82 @@ async function dexShow(tab, animate){
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
-const dexMark = () => markHTML($('.dexbtn .dexicon').outerHTML, 'RotomDex');
-function openDex(){
-  if (wiping || screen === 'scr-dex') return;
-  DEX.from = screen;
-  wipeTo('scr-dex', () => dexShow(DEX.tab, false), { mark: dexMark() });
+/* ---------- the RotomDex: a sprite in the top-left corner that opens the Pokédex as a popup ----------
+   Opening: Rotom hops up, swoops down and across the screen and back up into its spot in the popup's header, then
+   the popup opens out around it. Closing reverses it: the popup folds back into Rotom, which hops home. */
+const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
+const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('.dexhead__icon .dexicon');
+const rdFlyer = box => {
+  const img = document.createElement('img');
+  img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
+  Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
+  return document.body.appendChild(img);
+};
+const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+// the popup opens out from (or folds back into) Rotom's spot in its header
+function dexReveal(open, dur){
+  const c = DEXCARD.getBoundingClientRect(), r = rdSpot().getBoundingClientRect();
+  const at = `at ${r.left + r.width / 2 - c.left}px ${r.top + r.height / 2 - c.top}px`, far = Math.hypot(c.width, c.height);
+  const shut = `circle(${r.width * .45}px ${at})`, wide = `circle(${far}px ${at})`;
+  const ease = open ? 'cubic-bezier(.3,.7,.2,1)' : 'cubic-bezier(.6,0,.8,.4)';
+  DEXVEIL.animate([{ opacity: open ? 0 : 1 }, { opacity: open ? 1 : 0 }], { duration: dur, easing: 'ease-out', fill: 'forwards' });
+  return DEXCARD.animate([{ clipPath: open ? shut : wide, opacity: open ? .6 : 1 }, { clipPath: open ? wide : shut, opacity: open ? 1 : .6 }],
+    { duration: dur, easing: ease, fill: 'forwards' }).finished;
 }
-function closeDex(){
-  if (wiping || screen !== 'scr-dex') return;
-  wipeTo(DEX.from, null, { mark: dexMark(), after: DEX.from === 'scr-map' ? scrollMapToCurrent : null });
+async function openDex(){
+  if (wiping || DEX.open || DEX.busy) return;
+  DEX.open = DEX.busy = true; hideTip();
+  dexShow(DEX.tab, false);
+  DEXPOP.hidden = false; DEXCARD.scrollTop = 0;
+  RD_BTN.classList.add('is-out');
+  if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
+  const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
+  DEXCARD.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
+  const fl = rdFlyer(from);
+  // the path: a little hop straight up, then one sweeping curve down, across the screen and back up into place
+  const W_ = innerWidth, H_ = innerHeight, sx = from.left, sy = from.top, ux = sx, uy = sy - 30;
+  const c1 = { x: W_ * .25, y: H_ * .86 }, c2 = { x: W_ * .96, y: H_ * .62 }, ex = to.left, ey = to.top, sc = to.width / from.width;
+  const pt = u => { const v = 1 - u; return { x: v*v*v*ux + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*ex, y: v*v*v*uy + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*ey }; };
+  const hop = .2, frames = [{ transform: 'translate(0,0) scale(1)', offset: 0 },
+    { transform: 'translate(0,2px) scale(1.12,.86)', offset: .05 },                         // crouch
+    { transform: `translate(0,${uy - sy}px) scale(.94,1.08)`, offset: hop, easing: 'linear' }];
+  let prev = pt(0);
+  for (let i = 1; i <= 24; i++){
+    const u = easeInOut(i / 24), p = pt(u), s = 1 + (sc - 1) * u;
+    const tilt = Math.max(-28, Math.min(28, (p.x - prev.x) * .5));                          // leans into the swoop
+    frames.push({ transform: `translate(${p.x - sx}px, ${p.y - sy}px) rotate(${i === 24 ? 0 : tilt}deg) scale(${s})`, offset: i === 24 ? 1 : hop + (1 - hop) * i / 24 });
+    prev = p;
+  }
+  await fl.animate(frames, { duration: 1150, fill: 'forwards' }).finished;
+  DEXCARD.style.visibility = '';
+  await dexReveal(true, 380);
+  spot.style.visibility = ''; fl.remove();
+  DEXCARD.getAnimations().forEach(a => a.cancel()); DEXVEIL.getAnimations().forEach(a => a.cancel()); DEXVEIL.style.opacity = '';
+  DEX.busy = false;
+  $('#dex-close').focus({ preventScroll: true });
 }
-document.querySelectorAll('[data-dex-open]').forEach(b => b.addEventListener('click', openDex));
-$('#dex-close').addEventListener('click', closeDex);
+async function closeDex(now = false){
+  if (!DEX.open || (DEX.busy && !now)) return;
+  DEX.busy = true;
+  if (!now && !REDUCED){
+    const spot = rdSpot(), from = spot.getBoundingClientRect();
+    await dexReveal(false, 260);
+    const fl = rdFlyer(from); spot.style.visibility = 'hidden';
+    DEXPOP.hidden = true;
+    const to = rdHome().getBoundingClientRect(), dx = to.left - from.left, dy = to.top - from.top, sc = to.width / from.width;
+    await fl.animate([{ transform: 'none' }, { transform: `translate(${dx / 2}px, ${dy / 2 - 40}px) scale(${(1 + sc) / 2})`, easing: 'ease-in' },
+      { transform: `translate(${dx}px, ${dy}px) scale(${sc * 1.1}, ${sc * .88})`, offset: .85 }, { transform: `translate(${dx}px, ${dy}px) scale(${sc})` }],
+      { duration: 420, easing: 'ease-out', fill: 'forwards' }).finished;
+    fl.remove(); spot.style.visibility = '';
+  }
+  DEXPOP.hidden = true;
+  DEXCARD.getAnimations().forEach(a => a.cancel()); DEXVEIL.getAnimations().forEach(a => a.cancel());
+  RD_BTN.classList.remove('is-out');
+  DEX.open = DEX.busy = false;
+}
+RD_BTN.addEventListener('click', openDex);
+DEXVEIL.addEventListener('click', () => closeDex());
+$('#dex-close').addEventListener('click', () => closeDex());
 addEventListener('keydown', e => { if (e.key === 'Escape') closeDex(); });
 document.querySelectorAll('.dextab').forEach(b => b.addEventListener('click', () => dexShow(b.dataset.tab, true)));
 // arrow keys move between the tabs, like any tab list

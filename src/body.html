@@ -4,7 +4,6 @@
   <section class="screen title-scr" id="scr-title" aria-label="Poke-Crawl">
     <!-- a real, freshly generated map drifting behind the logo -->
     <div class="tbg" aria-hidden="true"><div class="tbg__map" id="title-map"></div></div>
-    <button class="dexbtn dexbtn--corner" type="button" data-dex-open aria-label="Open the RotomDex" title="RotomDex"><img class="dexicon" alt=""></button>
     <div class="tmain">
       <p class="tkicker">A Pokémon roguelite</p>
       <h1 class="tlogo"><span>Poke</span><span class="tlogo__dash">-</span><span class="tlogo__crawl">Crawl</span></h1>
@@ -15,8 +14,13 @@
     <p class="tversion" id="title-version"></p>
   </section>
 
-  <!-- Pokédex: every Pokémon, move and item in the game -->
-  <section class="screen dex" id="scr-dex" aria-label="RotomDex">
+  <!-- RotomDex: always in the top-left corner (except during screen wipes); tapping it opens the Pokédex popup -->
+  <button class="rotomdex" id="rotomdex" type="button" aria-label="Open the RotomDex" title="RotomDex"><img class="dexicon" alt=""></button>
+
+  <!-- the RotomDex popup: every Pokémon, move and item in the game, over whatever screen you are on -->
+  <div class="dexpop" id="dexpop" hidden>
+  <div class="dexpop__veil"></div>
+  <section class="dex dexpop__card" id="scr-dex" role="dialog" aria-modal="true" aria-label="RotomDex">
     <header class="dexhead">
       <div class="dexhead__top">
         <span class="dexhead__icon"><img class="dexicon" alt=""></span><h1 class="title">RotomDex</h1>
@@ -31,6 +35,7 @@
     </header>
     <div class="dexbody" id="dex-body" role="tabpanel"></div>
   </section>
+  </div>
 
   <!-- starter -->
   <section class="screen starter" id="scr-starter" aria-label="Choose your first Pokémon">
@@ -54,7 +59,7 @@
   <section class="screen" id="scr-map" aria-label="Map">
     <div class="hud">
       <div class="hud__map" id="hud-map"></div>
-      <div class="hud__right"><button class="dexbtn" type="button" data-dex-open aria-label="Open the RotomDex" title="RotomDex"><img class="dexicon" alt=""></button><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
+      <div class="hud__right"><div class="hearts" id="hud-hearts" aria-label="Lives"></div><span class="coins" id="hud-coins"></span></div>
     </div>
     <div class="mapwrap">
       <div class="map" id="map">

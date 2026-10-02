@@ -832,16 +832,33 @@ button{ font:inherit; color:inherit; }
 
 /* ================= Pokédex ================= */
 /* the button: on the map's top bar and in the title screen's corner */
-.dexbtn{ appearance:none; display:inline-flex; align-items:center; justify-content:center; width:43px; height:43px; padding:0; border-radius:12px; cursor:pointer;
-  background:#1b1f2a; border:1px solid #3a4152; color:var(--ink); font-family:var(--display); font-weight:600; font-size:14px;
-  transition:border-color .15s ease, transform .15s ease; }
-.dexbtn:hover{ border-color:var(--glow-selected); transform:translateY(-1px); }
-.dexbtn:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:3px; }
 .dexicon{ image-rendering:pixelated; display:block; }
-.dexbtn .dexicon{ width:36px; height:36px; flex:none; }   /* the button is just RotomDex */
-.dexbtn--corner{ position:absolute; top:calc(14px + env(safe-area-inset-top, 0px)); right:16px; z-index:2; }
 @media (max-width:520px){ .hud__right{ gap:10px; } }
-.wipe__icon .dexicon{ width:86%; height:86%; }
+/* the RotomDex in the top-left corner: just the sprite, no button frame. It steps aside during screen wipes and
+   while the popup is open (Rotom is up in the popup's header then). */
+.rotomdex{ --rd: 52px; position:fixed; z-index:2500; left:calc(8px + env(safe-area-inset-left, 0px)); top:calc(6px + env(safe-area-inset-top, 0px));
+  width:var(--rd); height:var(--rd); padding:0; margin:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.55)); transition:opacity .18s ease, transform .15s ease; }
+.rotomdex .dexicon{ width:100%; height:100%; }
+.rotomdex:hover{ transform:translateY(-2px) rotate(-4deg); }
+.rotomdex:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; border-radius:12px; }
+.rotomdex.is-out{ opacity:0; pointer-events:none; transition:none; }
+.rotomdex.is-wiping{ opacity:0; pointer-events:none; }
+.rd-fly{ position:fixed; z-index:2600; pointer-events:none; image-rendering:pixelated; transform-origin:50% 50%; filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
+/* room for it: headers near the screen's left edge start past it */
+:root{ --rd-room: 72px; }
+.hud{ padding-left:var(--rd-room); }
+.scr__head{ padding-left:clamp(0px, calc(var(--rd-room) - 16px - (100vw - 720px) / 2), calc(var(--rd-room) - 16px)); }
+.bhead{ padding-left:clamp(0px, calc(var(--rd-room) - 14px - (100vw - 900px) / 2), calc(var(--rd-room) - 14px)); }
+
+/* the RotomDex popup: fills most of the screen over a dimmed, blurred backdrop */
+.dexpop{ position:fixed; inset:0; z-index:2400; display:grid; place-items:center;
+  padding:calc(max(14px, 3vh) + env(safe-area-inset-top, 0px)) max(10px, 3vw) calc(max(14px, 3vh) + env(safe-area-inset-bottom, 0px)); }
+.dexpop[hidden]{ display:none; }
+.dexpop__veil{ position:absolute; inset:0; background:rgba(8,10,14,.62); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); }
+.dexpop__card{ position:relative; width:min(100%, 860px); height:100%; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain;
+  background:var(--bg); border:1px solid var(--line); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.6); }
+.dexpop__card .dexhead{ border-radius:18px 18px 0 0; }
 
 /* the screen: a header pinned to the top with the section tabs, the list scrolling underneath */
 .dex{ --dex-w: 760px; }
@@ -1013,3 +1030,6 @@ button{ font:inherit; color:inherit; }
 .mappop__card .dexmon__more{ grid-column:1 / -1; }
 .mappop__card .dexkv{ grid-template-columns:1fr; gap:5px; }
 .mappop__card .dexkv > span{ padding-top:0; }
+.dexpop__card .dexhead{ padding-left:12px; padding-right:12px; }
+.dexpop__card .dexbody{ padding-left:12px; padding-right:12px; }
+.dexpop__card .dextab{ white-space:nowrap; }
