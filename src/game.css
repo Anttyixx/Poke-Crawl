@@ -1118,3 +1118,6 @@ button{ font:inherit; color:inherit; }
 .dexpop__frame, .dexpop__outline{ will-change:transform; }
 /* the starters react on press: no waiting to tell a tap from a double-tap zoom */
 #scr-starter .slot{ touch-action:manipulation; }
+/* the daycare's detail box gives way to the RotomDex, which scans the Pokémon you tap */
+#day-detail{ display:none; }
+#scr-wild [data-area="W.offer"] .slot{ touch-action:manipulation; }

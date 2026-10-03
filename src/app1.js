@@ -532,7 +532,7 @@ const UI = { sel: null, notice: null };
 const AREAS = {};
 const AREA_CFG = {
   'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => { if (performance.now() - ST.pressed > 700) starterTap(i); } },
-  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => wildTap(i) },
+  'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => { if (performance.now() - W.pressed > 700) wildTap(i); } },
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
@@ -863,7 +863,7 @@ function alignCoins(){
 }
 addEventListener("resize", alignCoins);
 document.fonts?.ready.then(alignCoins);
-function refresh(){ RENDER[screen]?.(); updateMapHud(); alignCoins(); }
+function refresh(){ RENDER[screen]?.(); updateMapHud(); alignCoins(); syncSelScan(); }
 function show(id){
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('is-active', s.id === id));
   screen = id; $('#' + id).scrollTop = 0; hideTip();
@@ -928,7 +928,7 @@ function updateMapHud(){
       dexReveal(card.firstElementChild);                  // the entry builds up piece by piece, as in the Pokédex
     }
   } else delete pop.dataset.sig;
-  setShown('mappop', pop, !!c);
+  pop.hidden = true;                                       // the RotomDex scans what you tap instead (syncSelScan)
 }
 // the popup's entries use the Pokédex layout, filled in with this Pokémon's own stars, EXP, held item and moves
 function mapMonHTML(m){
@@ -1159,7 +1159,9 @@ const DEX_BUILD = {
       }).join('');
   },
   // everything about the one Pokémon Rotom is scanning: its stars and EXP, stats, ability, held item and moves
-  scan: () => DEX.scan ? `<article class="dexline dexscan" data-only="${DEX.scan.mon.form}"><div class="dexdetail">${mapMonHTML(DEX.scan.mon)}</div></article>` : '',
+  // a scanned Pokémon, or an item (anything without a form)
+  scan: () => { const s = DEX.scan?.mon; if (!s) return '';
+    return `<article class="dexline dexscan" data-only="${s.form || ''}"><div class="dexdetail">${s.form ? mapMonHTML(s) : mapItemHTML(s)}</div></article>`; },
   items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
     + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
       <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
@@ -1315,7 +1317,7 @@ async function dexUnfold(fl, dx, dy, sc, live){
   const spot = rdSpot(), landed = rdLand(fl, dx, dy, sc);
   DEXSHELL.style.visibility = '';
   const parts = dexParts();
-  parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));      // clear any fade-out left by a fold
+  dexUnfade(); parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));      // clear any fade-out left by a fold
   parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
     { duration: RD_MS.item, delay: RD_MS.open * .7 + i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
   const opened = DEXSHELL.animate([{ clipPath: dexInset(false) }, { clipPath: dexInset(true) }], { duration: RD_MS.open, easing: 'cubic-bezier(.25,.85,.3,1)' }).finished;
@@ -1326,10 +1328,17 @@ async function dexUnfold(fl, dx, dy, sc, live){
   return true;
 }
 // the contents fade, then the panel folds back into Rotom (it stays perched)
+// The fades are kept (DEX.folds) and cancelled by hand when the panel next opens or closes: Chrome can lose track of a
+// finished fade in getAnimations() and leave its element invisible for good.
+const dexUnfade = () => { (DEX.folds || []).forEach(x => x.cancel()); DEX.folds = []; };
 async function dexFold(){
   const parts = dexParts();
-  await Promise.all(parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }).finished));
-  await DEXSHELL.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: RD_MS.fold, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+  dexUnfade();
+  DEX.folds = parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }));
+  await Promise.all(DEX.folds.map(x => x.finished.catch(() => {})));
+  const shut = DEXSHELL.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: RD_MS.fold, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+  DEX.folds.push(shut);
+  await shut.finished.catch(() => {});
   return parts;
 }
 async function closeDex(now = false){
@@ -1352,6 +1361,7 @@ async function closeDex(now = false){
     fl.remove(); spot.style.visibility = '';
     parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));
   }
+  dexUnfade();
   DEX.anim++;
   document.querySelectorAll('.rd-fly').forEach(x => x.remove()); rdSpot().style.visibility = '';
   DEXPOP.hidden = true;
@@ -1361,6 +1371,38 @@ async function closeDex(now = false){
   DEX.open = DEX.busy = false; rdStill(false);
   if (DEX.scan){ endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexTabs(DEX.tab); dexLayout(); $('#dex-act').hidden = true; }
 }
+/* ---------- scanning what you tap on the map and at the daycare ----------
+   Tapping a Pokémon, an item in the bag or a held item there selects it (to move or swap it with the next tap); the
+   RotomDex scans whatever is selected, flying over from one to the next, and puts itself away when nothing is.
+   Closing the scan (tapping outside it, or Rotom) keeps the selection, so the next tap can still move it, even to a
+   slot the scan was covering; it isn't scanned again until something else is selected. */
+const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare'];
+const SELSCAN = { running: false, again: false, dismissed: null };
+const selKey = sel => sel ? `${sel.area}|${sel.i}|${!!sel.held}` : null;
+function selScanWant(){
+  const sel = UI.sel;
+  if (selKey(sel) !== SELSCAN.dismissed) SELSCAN.dismissed = null;
+  if (!sel || wiping || !SEL_SCAN_SCREENS.includes(screen) || SELSCAN.dismissed) return null;
+  const A = AREAS[sel.area], c = A?.get()[sel.i], el = A?.els[sel.i]?.el;
+  if (!c || !el) return null;
+  return { el, subject: sel.held ? c.item : c };
+}
+async function syncSelScan(){
+  if (SELSCAN.running){ SELSCAN.again = true; return; }
+  SELSCAN.running = true;
+  try {
+    do {
+      SELSCAN.again = false;
+      while (DEX.busy) await sleep(30);
+      const want = selScanWant(), cur = DEX.open && DEX.scan?.sel ? DEX.scan : null;
+      if (want && !(cur && cur.mon === want.subject && cur.slot === want.el)){
+        if (DEX.open && !DEX.scan) break;                      // the full RotomDex is open: leave it be
+        await openScan(want.el, want.subject, { sel: true, onClose: () => { SELSCAN.dismissed = selKey(UI.sel); } });
+      } else if (!want && cur) await closeDex();
+    } while (SELSCAN.again);
+  } finally { SELSCAN.running = false; }
+}
+
 /* ---------- scanning one Pokémon ----------
    Rotom flies to a Pokémon on the screen and opens a small RotomDex popup next to it showing just that Pokémon: below
    it, or above it if there is more room there, and only as tall as its contents. Rotom perches on the popup's edge
@@ -1450,17 +1492,17 @@ $('#dex-act').addEventListener('click', e => { const b = e.target.closest('[data
 // the scan is over (closed, or turned into the full RotomDex)
 function endScan(){ const s = DEX.scan; DEX.scan = null; s?.onClose?.(); }
 async function openScan(slot, mon, opts = {}){
-  const { reserve = 0, onClose = null } = opts;
+  const { reserve = 0 } = opts;
   if (wiping || DEX.busy) return;
   if (DEX.open && !DEX.scan) return;                          // the full RotomDex is open
   if (DEX.open && DEX.scan.mon === mon) return closeDex();    // tapping the scanned Pokémon again puts Rotom away
   if (!DEX.open){
-    DEX.tabBefore = DEX.tab; DEX.scan = { slot, mon, reserve, onClose }; DEX.tab = 'scan';
+    DEX.tabBefore = DEX.tab; DEX.scan = { ...opts, slot, mon, reserve }; DEX.tab = 'scan';
     dexActions();
     return openDex();
   }
   // already scanning another Pokémon: the popup stays open and glides along with Rotom to the new one
-  await rdGlide(slot, reserve, () => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); });
+  await rdGlide(slot, reserve, () => { DEX.scan = { ...opts, slot, mon, reserve }; dexActions(); dexShow('scan', false); });
 }
 // scan to scan: the old info fades, Rotom hops to its new perch while the popup slides and resizes under it (its
 // bump following Rotom along the edge), and the new info fades up as Rotom comes in to land. If the popup has to flip to the
@@ -1789,11 +1831,13 @@ function openNode(t){
 // pick phase: tap an offer to hop it into the big slot; the button reads Skip until one has landed, then Choose.
 // place phase: the other offers and the info panel fade out, your party fades in where the info was;
 // tap a party slot to put the new Pokémon there, or press Send to daycare.
-const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false, arrived: [], entering: false };
+const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false, arrived: [], entering: false,
+  scanning: -1, direct: false, pressed: -1e9 };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
   Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star, star < 3 ? Math.random() * .4 : 1)),
-    pick: [null], home: -1, landed: false, phase: 'pick', done: false, candy: false, leveled: null });
+    pick: [null], home: -1, landed: false, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1, direct: false });
+  $('#wild-act').hidden = true;
   const all = REDUCED;                                      // reduced motion: they are simply there
   Object.assign(W, { arrived: W.offer.map(() => all), entering: !all });
 }
@@ -1803,7 +1847,7 @@ async function wildMove(change){
   await flip(before);
   if (token !== W.token) return;
   W.landed = !!W.pick[0]; refresh();
-  if (W.landed){ revealInfo('wild'); fitName($('#wild-left')); }
+  if (W.landed && !W.direct){ revealInfo('wild'); fitName($('#wild-left')); }
 }
 /* ---------- the wild Pokémon leap in from the edges of the screen ----------
    Once the screen is in, the three slots start empty and the Pokémon leap in from random spots along the edges of
@@ -1842,10 +1886,34 @@ async function wildEntrance(){
   W.arrived = W.offer.map(() => true); W.entering = false;
   refresh();
 }
+// tap a wild Pokémon and the RotomDex scans it, as on the starter screen; "I Choose You!!" (pinned under the scan)
+// then sends it to the big slot and straight on to placing it in your party
 function wildTap(i){
-  if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i]) return;
-  wildMove(() => { if (W.pick[0]) W.offer[W.home] = W.pick[0]; W.pick[0] = W.offer[i]; W.offer[i] = null; W.home = i; });
+  if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i] || DEX.busy) return;
+  const act = $('#wild-act'), same = DEX.open && DEX.scan?.mon === W.offer[i];
+  W.scanning = same ? -1 : i;
+  setShown('wild-act', act, !same);
+  openScan(AREAS['W.offer'].els[i].el, W.offer[i], { reserve: act.offsetHeight + 12 || 88,
+    onClose: () => { if (W.phase === 'pick' && !W.direct) setShown('wild-act', act, false); } });
 }
+async function wildPickScanned(){
+  const i = W.scanning;
+  if (W.phase !== 'pick' || i < 0 || !W.offer[i] || DEX.busy || W.direct) return;
+  W.direct = true;                                      // no info panel: the scan has shown it already
+  setShown('wild-act', $('#wild-act'), false);
+  await closeDex();
+  await wildMove(() => { W.pick[0] = W.offer[i]; W.offer[i] = null; W.home = i; });
+  W.scanning = -1;
+  wildChoose();
+}
+$('#wild-choose').addEventListener('click', wildPickScanned);
+// like the starters, a wild Pokémon reacts the moment it is pressed (the click that follows is skipped)
+$('[data-area="W.offer"]').addEventListener('pointerdown', e => {
+  if (e.button) return;
+  const i = AREAS['W.offer'].els.findIndex(s => s.el === e.target.closest('.slot'));
+  if (i < 0) return;
+  W.pressed = performance.now(); wildTap(i);
+});
 function wildReturn(){
   if (W.phase !== 'pick' || wiping || !W.pick[0]) return;
   $('#scr-wild').scrollTop = 0;
@@ -1957,7 +2025,7 @@ RENDER['scr-wild'] = () => {
   $('#wild-line').classList.toggle('is-away', !!W.pick[0] || W.phase !== 'pick');   // only the pick phase shows the offers
   root.classList.toggle('wild--placing', ['place', 'feed', 'done', 'leaving'].includes(W.phase));
   const c = W.landed ? W.pick[0] : null;
-  if (W.phase === 'pick') renderInfo('wild', c);
+  if (W.phase === 'pick') renderInfo('wild', W.direct ? null : c);
   else if (W.phase !== 'fading') renderInfo('wild', null);   // the party takes over once chosen
   const party = $('#wild-party'), showParty = ['place', 'feed', 'done', 'leaving'].includes(W.phase);
   if (showParty && party.hidden){ party.hidden = false; party.classList.remove('reveal'); void party.offsetWidth; party.classList.add('reveal'); }
@@ -1968,7 +2036,7 @@ RENDER['scr-wild'] = () => {
   renderNotice('wild-notice');
   const go = $('#wild-go');
   go.classList.remove('btn--release');
-  setShown('wild-go', go, W.phase === 'pick' ? !!c : W.phase !== 'done');   // fades in and out like the info boxes
+  setShown('wild-go', go, W.phase === 'pick' ? !!c && !W.direct : W.phase !== 'done');   // fades in and out like the info boxes
   if (W.phase === 'pick'){ go.textContent = 'I Choose You!!'; go.disabled = !c; go.classList.add('btn--go'); }
   else if (W.phase === 'fading'){ go.disabled = true; }
   else if (W.phase === 'place' && mustRelease()){ go.textContent = 'Release'; go.disabled = false; go.classList.remove('btn--go'); go.classList.add('btn--release'); }
@@ -2262,7 +2330,7 @@ RENDER['scr-daycare'] = () => {
   renderArea('D.party'); renderArea('D.day');
   $('#day-title').textContent = DC.postGym ? `Gym ${R.mapNo} cleared` : 'Daycare';
   $('#day-sub').textContent = (DC.postGym ? 'The daycare is open before you head out. ' : '')
-    + `Tap a Pokémon, then another slot to move or swap. The daycare holds ${TUNE.daycareSize}, and its Pokémon earn half as much EXP as your party.`;
+    + `Tap a Pokémon to scan it, then another slot to move or swap. The daycare holds ${TUNE.daycareSize}, and its Pokémon earn half as much EXP as your party.`;
   $('#day-count').textContent = `${partyCount()} of 6`;
   $('#day-count2').textContent = `${daycareCount()} of ${TUNE.daycareSize}`;
   renderDetail('day-detail', 'Tap a Pokémon to see its stats and moves.');
