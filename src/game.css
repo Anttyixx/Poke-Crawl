@@ -1121,3 +1121,22 @@ button{ font:inherit; color:inherit; }
 /* the daycare's detail box gives way to the RotomDex, which scans the Pokémon you tap */
 #day-detail{ display:none; }
 #scr-wild [data-area="W.offer"] .slot{ touch-action:manipulation; }
+
+/* ---------- Move Tutor: the moves, with your party and bag in the bottom corners as on the map ---------- */
+/* room under the list for the party and bag, so the last move and the reroll button are never hidden behind them */
+#scr-tutor .scr{ padding-bottom:calc(var(--tutor-hud, 156px) + 24px + env(safe-area-inset-bottom, 0px)); }
+@media (max-width:520px){ #scr-tutor .scr{ --tutor-hud: 136px; } }
+#tutor-moves .trcard{ cursor:pointer; }
+#tutor-moves .mvcard__who{ min-height:26px; }
+/* a move is picked: the party Pokémon that can learn it glow and pulse, the others dim */
+.slot[data-learn] .slot__frame{ border-color:var(--glow-selected) !important;
+  animation: learnGlow 1.15s ease-in-out infinite alternate; }
+@keyframes learnGlow{
+  from{ box-shadow:0 0 0 1px color-mix(in srgb, var(--glow-selected) 40%, transparent), 0 0 6px color-mix(in srgb, var(--glow-selected) 35%, transparent); }
+  to{ box-shadow:0 0 0 2px color-mix(in srgb, var(--glow-selected) 70%, transparent), 0 0 18px color-mix(in srgb, var(--glow-selected) 65%, transparent); }
+}
+.slot[data-nolearn]{ opacity:.35; filter:saturate(.35); }
+.slot[data-learn], .slot[data-nolearn]{ transition: opacity .2s ease, filter .2s ease; }
+@media (prefers-reduced-motion: reduce){ .slot[data-learn] .slot__frame{ animation:none; box-shadow:0 0 0 2px var(--glow-selected), 0 0 14px color-mix(in srgb, var(--glow-selected) 55%, transparent); } }
+.tutor__actions{ justify-content:space-between; }
+#tutor-notice{ margin:0 0 10px; }

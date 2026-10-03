@@ -536,10 +536,10 @@ const AREA_CFG = {
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
-  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true },
-  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true },
-  'T.line':  { holds:'mon', kind:'offer', preset:'offer', get: () => TU.line, onTap: i => tutorLineTap(i) },
-  'T.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => TU.pickSlot, onTap: () => tutorReturn() },
+  // the party and bag in the bottom corners, on the map and at the Move Tutor (where, with a move picked, tapping a
+  // Pokémon teaches it; otherwise both work as on the map)
+  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true, onTap: i => screen === 'scr-tutor' && TU.teaching ? tutorTeachTo(i) : false },
+  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true, onTap: () => { if (screen === 'scr-tutor' && TU.teaching){ TU.teaching = null; refresh(); } return false; } },
   'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
 };
@@ -650,7 +650,8 @@ function rejectOrSwitch(name, i, why){
 }
 function tapHeld(name, i){
   const A = AREAS[name], mon = A.get()[i];
-  if (!A.equip || !mon?.item || A.onTap) return tapSlot(name, i);
+  if (A.onTap && A.onTap(i) !== false) return;           // the area handled it (an onTap that returns false lets it through)
+  if (!A.equip || !mon?.item) return tapSlot(name, i);
   if (!UI.sel){ UI.sel = { area: name, i, held: true }; UI.notice = null; return refresh(); }
   if (UI.sel.area === name && UI.sel.i === i && UI.sel.held){ UI.sel = null; return refresh(); }
   tapSlot(name, i);
@@ -778,7 +779,7 @@ function monDetail(m, opts = {}){
 /* ---------- info slot layout: stats left of the big slot, ability right, moves underneath ----------
    no card around it; every metric sits in its own small container */
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;   // types are shown capitalised
-const INFO_AREA = { wild: 'W.pick', tutor: 'T.pick' };
+const INFO_AREA = { wild: 'W.pick' };
 // fade a group of elements out, then hide and clear them; showing them again cancels the fade
 const FADE_OUT_MS = 200, fading = new Map();
 function fadeOutGroup(key, els, clear = true){
@@ -914,9 +915,9 @@ const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mar
    of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
 let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
 function updateMapHud(){
-  const on = (!wiping || mapIntro) && screen === 'scr-map' && !!R.party;
+  const on = (!wiping || mapIntro) && (screen === 'scr-map' || screen === 'scr-tutor') && !!R.party;
   $('#mapteam').hidden = $('#mapbag').hidden = !on;
-  if (on){ renderArea('M.party'); renderArea('M.bag'); }
+  if (on){ renderArea('M.party'); renderArea('M.bag'); tutorMarkParty(); }
   const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
   if (c){
     const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
@@ -1387,7 +1388,7 @@ async function closeDex(now = false){
    RotomDex scans whatever is selected, flying over from one to the next, and puts itself away when nothing is.
    Closing the scan (tapping outside it, or Rotom) keeps the selection, so the next tap can still move it, even to a
    slot the scan was covering; it isn't scanned again until something else is selected. */
-const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare'];
+const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare', 'scr-tutor'];
 const SELSCAN = { running: false, again: false, dismissed: null };
 const selKey = sel => sel ? `${sel.area}|${sel.i}|${!!sel.held}` : null;
 function selScanWant(){
@@ -2047,11 +2048,11 @@ $('#mart-reroll').addEventListener('click', () => {
 $('#mart-leave').addEventListener('click', toMap);
 
 /* ================= move tutor ================= */
-// starter layout: your party across the top, one big slot in the middle. Tap a Pokémon to hop it into the
-// slot; once it lands its stats and moves appear, and under them the tutor's moves it can learn.
-// Teach one, then pick its taught slot (it has TUNE.taughtMax of them). The tutor still offers 5 moves per visit,
-// each learnable by someone in the party, and the offer can be rerolled.
-const TU = { offer: [], rerolls: 0, line: [], pickSlot: [null], home: -1, landed: false, token: 0, teaching: null, taught: new Map() };
+// The tutor offers 5 moves per visit, each learnable by someone in the party, and the offer can be rerolled. Your
+// party and bag sit in the bottom corners as on the map. Tap a move (its TR) and the party Pokémon that can learn it
+// glow while the rest dim; tap one of them and the TR flies over and teaches it. A Pokémon has one taught move
+// (TUNE.taughtMax), so a new one replaces the old. With no move picked, the party and bag work as on the map.
+const TU = { offer: [], rerolls: 0, teaching: null, busy: false };
 const canLearn = (m, k) => learnable(m).includes(k);
 const price = k => TUNE.tutorPrice[MOVES[k].star];
 const rerollFee = () => TUNE.rerollStep * (TU.rerolls + 1);
@@ -2066,137 +2067,78 @@ function rollTutor(){
     if (UNIVERSAL.has(k)) universal++;
     offered.push(k);
   }
-  TU.offer = offered; TU.teaching = null; TU.taught = new Map();
+  TU.offer = offered; TU.teaching = null;
 }
-function openTutor(){
-  TU.rerolls = 0; rollTutor();
-  Object.assign(TU, { line: partyMons(), pickSlot: [null], home: -1, landed: false, teaching: null });
+function openTutor(){ TU.rerolls = 0; TU.busy = false; rollTutor(); }
+// tap a move: pick it (or put it back); the party lights up with who can learn it
+function pickTutorMove(k){
+  if (TU.busy || wiping) return;
+  UI.sel = null;
+  if (TU.teaching === k){ TU.teaching = null; UI.notice = null; return refresh(); }
+  const mv = MOVES[k];
+  if (R.coins < price(k)){ TU.teaching = null; UI.notice = { text: `You need ${price(k)} coins to teach ${mv.name}.` }; return refresh(); }
+  if (!partyMons().some(m => canLearn(m, k))){ TU.teaching = null; UI.notice = { text: `Nobody in your party can learn ${mv.name} right now.` }; return refresh(); }
+  TU.teaching = k; UI.notice = null; refresh();
 }
-const tutorMon = () => TU.landed ? TU.pickSlot[0] : null;
-async function tutorMove(change){
-  const before = snapshot(), token = ++TU.token;
-  change(); TU.landed = false; TU.teaching = null; refresh();
-  await flip(before);
-  if (token !== TU.token) return;
-  TU.landed = !!TU.pickSlot[0]; refresh();
-  if (TU.landed){ revealInfo('tutor'); fitName($('#tutor-left')); }
-  if (TU.landed) for (const id of ['#tutor-learn']){ const d = $(id); d.classList.remove('reveal'); void d.offsetWidth; d.classList.add('reveal'); }
-}
-function tutorLineTap(i){
-  if (wiping || !TU.line[i]) return;
-  UI.notice = null;
-  tutorMove(() => { if (TU.pickSlot[0]) TU.line[TU.home] = TU.pickSlot[0]; TU.pickSlot[0] = TU.line[i]; TU.line[i] = null; TU.home = i; });
-}
-function tutorReturn(){
-  if (wiping || !TU.pickSlot[0] || TU.busy) return;
-  UI.notice = null;
-  $('#scr-tutor').scrollTop = 0;                        // the party row lives mid-screen at the top of the page
-  tutorMove(() => { TU.line[TU.home] = TU.pickSlot[0]; TU.pickSlot[0] = null; TU.home = -1; });
-}
-function startTeach(k){
-  const m = tutorMon(); if (!m || TU.busy) return;
-  if (R.coins < price(k)){ UI.notice = { text: `You need ${price(k)} coins to teach ${MOVES[k].name}.` }; return refresh(); }
-  TU.teaching = TU.teaching === k ? null : k;
-  UI.notice = null;                                      // the glowing slots say it all; no instruction line
-  refresh();
-  if (TU.teaching) $('#tutor-detail .mvslot')?.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
-}
-// Teaching with a TR, in four beats:
-//  1. lift-off  - the disc pops up out of its slot, the move card starts folding away, the other slot stops glowing
-//  2. flight    - it arcs over to the chosen move, spinning and shrinking to 60%, leaving a trail of type-coloured sparks
-//  3. arrival   - it spins down and fades into the row while a ring bursts out; the old move fades out underneath
-//  4. learned   - the new move fades in with a shine sweeping across it and the coins count down
-function sendTR(m, k, slot, target){
+// tap a party Pokémon while a move is picked: teach it, if it can learn it
+function tutorTeachTo(i){
   if (TU.busy) return;
-  const card = document.querySelector(`#tutor-moves .trcard[data-k="${k}"]`), src = card?.querySelector('.slot');
-  if (!src || REDUCED) return teach(m, k, slot);
+  const m = R.party[i], k = TU.teaching;
+  if (!m || !canLearn(m, k)){
+    shake('M.party', i);
+    UI.notice = { text: m ? `${nm(m)} can't learn ${MOVES[k].name}.` : `Tap a glowing Pokémon to teach it ${MOVES[k].name}.` };
+    return refresh();
+  }
+  sendTR(m, k, i);
+}
+// the TR lifts out of its card, arcs over to the Pokémon spinning and shrinking with a trail of type-coloured sparks,
+// and bursts into it; then the Pokémon has learned the move
+function sendTR(m, k, i){
+  const card = document.querySelector(`#tutor-moves .trcard[data-k="${k}"]`), src = card?.querySelector('.slot'), dest = AREAS['M.party'].els[i]?.el;
+  if (!src || !dest || REDUCED) return teach(m, k, i);
   TU.busy = true;
-  const mv = MOVES[k], col = typeColor(mv.type);
-  const detail = $('#tutor-detail'), row = target.querySelector('.mv') || target;
-  // only the chosen slot keeps glowing
-  detail.querySelectorAll('.mvslot').forEach(b => b.classList.toggle('mvslot--chosen', b === target));
-  detail.classList.add('is-sending');
-
-  const img = src.querySelector('.slot__sprite img'), from = spriteBox(src), to = row.getBoundingClientRect();
-  src.classList.add('depart'); void src.offsetWidth; src.dataset.state = 'empty';           // the TR leaves its slot
+  const col = typeColor(MOVES[k].type), img = src.querySelector('.slot__sprite img'), from = spriteBox(src), to = spriteBox(dest);
   const fl = document.createElement('img'); fl.className = 'hopper tr-flyer'; fl.src = img.src; fl.alt = '';
   fl.style.setProperty('--tc', col);
   Object.assign(fl.style, { left: from.x + 'px', top: from.y + 'px', width: from.size + 'px', height: from.size + 'px' });
   document.body.append(fl);
-
-  // the arc: a quadratic curve from the slot to the middle of the move row, bowed upward
-  const sx = from.x + from.size / 2, sy = from.y + from.size / 2;
-  const tx = to.left + Math.min(to.width / 2, 70), ty = to.top + to.height / 2;              // lands near the move's name
+  const sx = from.x + from.size / 2, sy = from.y + from.size / 2, tx = to.x + to.size / 2, ty = to.y + to.size / 2;
   const dx = tx - sx, dy = ty - sy, dist = Math.hypot(dx, dy);
   const cx = dx * .5 + (dx >= 0 ? -1 : 1) * Math.min(90, dist * .18), cy = dy * .5 - Math.min(140, 50 + dist * .25);
-  const LIFT = 130, FLY = Math.round(Math.min(720, 420 + dist * .35)), LAND = 260, total = LIFT + FLY + LAND;
-  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;              // easeInOutCubic
-  const frames = [
-    { offset: 0,             transform: 'translate(0,0) rotate(0deg) scale(1)',        opacity: 1 },
-    { offset: LIFT / total,  transform: 'translate(0,-10px) rotate(-12deg) scale(1.18)', opacity: 1 }
-  ];
-  const N = 14;
-  for (let s = 1; s <= N; s++){
-    const u = ease(s / N), x = 2 * (1 - u) * u * cx + u * u * dx, y = 2 * (1 - u) * u * cy + u * u * dy - 10 * (1 - u);
-    frames.push({ offset: (LIFT + FLY * s / N) / total,
-      transform: `translate(${x}px, ${y}px) rotate(${-12 + 552 * u}deg) scale(${1.18 - .58 * u})`, opacity: 1 });
+  const LIFT = 120, FLY = Math.round(Math.min(680, 380 + dist * .3)), total = LIFT + FLY;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const end = to.size / from.size;
+  const frames = [{ offset: 0, transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1 },
+    { offset: LIFT / total, transform: 'translate(0,-10px) rotate(-12deg) scale(1.15)', opacity: 1 }];
+  for (let s = 1; s <= 14; s++){
+    const u = ease(s / 14), x = 2 * (1 - u) * u * cx + u * u * dx, y = 2 * (1 - u) * u * cy + u * u * dy - 10 * (1 - u);
+    frames.push({ offset: (LIFT + FLY * s / 14) / total, transform: `translate(${x}px, ${y}px) rotate(${-12 + 552 * u}deg) scale(${1.15 + (end * .7 - 1.15) * u})`, opacity: s === 14 ? 0 : 1 });
   }
-  frames.push({ offset: 1, transform: `translate(${dx}px, ${dy}px) rotate(760deg) scale(.6)`, opacity: 0 });
+  src.classList.add('depart');
   const anim = fl.animate(frames, { duration: total, easing: 'linear', fill: 'forwards' });
-
-  // the card folds away while the disc is in the air, so the list closes up instead of jumping
-  const h = card.getBoundingClientRect().height;
-  card.animate([{ height: h + 'px', opacity: 1, marginBottom: '0px' }, { height: '0px', opacity: 0, marginBottom: '-12px', paddingTop: '0px', paddingBottom: '0px' }],
-    { duration: 420, delay: LIFT + 220, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
-  card.style.overflow = 'hidden';
-
-  // sparks trail behind the disc during the flight
   const t0 = performance.now(); let last = 0;
   const trail = now => {
-    const t = now - t0;
-    if (t > LIFT + FLY) return;
-    if (t > LIFT && now - last > 34){
+    if (now - t0 > total) return;
+    if (now - t0 > LIFT && now - last > 34){
       last = now;
-      const r = fl.getBoundingClientRect(), s = document.createElement('i');
-      s.className = 'tr-spark'; s.style.setProperty('--tc', col);
-      const sz = 4 + Math.random() * 5;
-      Object.assign(s.style, { left: r.left + r.width / 2 - sz / 2 + (Math.random() - .5) * 8 + 'px', top: r.top + r.height / 2 - sz / 2 + (Math.random() - .5) * 8 + 'px', width: sz + 'px', height: sz + 'px' });
-      document.body.append(s);
-      s.animate([{ opacity: .9, transform: 'scale(1)' }, { opacity: 0, transform: `translate(${(Math.random() - .5) * 14}px, ${6 + Math.random() * 10}px) scale(.2)` }],
-        { duration: 420, easing: 'ease-out' }).finished.then(() => s.remove());
+      const r = fl.getBoundingClientRect(), sp = document.createElement('i'), sz = 4 + Math.random() * 5;
+      sp.className = 'tr-spark'; sp.style.setProperty('--tc', col);
+      Object.assign(sp.style, { left: r.left + r.width / 2 - sz / 2 + (Math.random() - .5) * 8 + 'px', top: r.top + r.height / 2 - sz / 2 + (Math.random() - .5) * 8 + 'px', width: sz + 'px', height: sz + 'px' });
+      document.body.append(sp);
+      sp.animate([{ opacity: .9, transform: 'scale(1)' }, { opacity: 0, transform: `translate(${(Math.random() - .5) * 14}px, ${6 + Math.random() * 10}px) scale(.2)` }],
+        { duration: 420, easing: 'ease-out' }).finished.then(() => sp.remove());
     }
     requestAnimationFrame(trail);
   };
   requestAnimationFrame(trail);
-
-  // arrival: a ring bursts from the landing point and the old move fades out under the disc
-  setTimeout(() => {
+  anim.finished.then(() => {
+    fl.remove();
     const ring = document.createElement('i'); ring.className = 'tr-burst'; ring.style.setProperty('--tc', col);
     Object.assign(ring.style, { left: tx - 28 + 'px', top: ty - 28 + 'px' });
     document.body.append(ring);
     ring.animate([{ transform: 'scale(.3)', opacity: .95 }, { transform: 'scale(2.4)', opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.2,.7,.3,1)' }).finished.then(() => ring.remove());
-    row.classList.add('mv--receiving'); row.style.setProperty('--tc', col);
-    for (const c of row.children) c.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-3px)' }], { duration: 200, easing: 'ease-in', fill: 'forwards' });
-  }, LIFT + FLY - 40);
-
-  anim.finished.then(() => {
-    fl.remove(); TU.busy = false;
-    const coinsBefore = R.coins, oldH = row.getBoundingClientRect().height, rr = $('#tutor-reroll'), rrTop = rr.getBoundingClientRect().top;
-    detail.classList.remove('is-sending');
-    teach(m, k, slot);                                   // the move only changes once the TR is gone
-    const nrow = $('#tutor-detail').querySelectorAll('.mv')[slot + 1];
-    if (nrow){
-      nrow.style.setProperty('--tc', col); nrow.classList.add('mv--learned');
-      for (const c of nrow.children) c.animate([{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)' });
-      // the new move may be taller or shorter than the old one: ease the row to its new height so nothing below jumps
-      const newH = nrow.getBoundingClientRect().height;
-      if (Math.abs(newH - oldH) > 1) nrow.animate([{ height: oldH + 'px' }, { height: newH + 'px' }], { duration: 300, easing: 'cubic-bezier(.2,.8,.2,1)' });
-      setTimeout(() => nrow.classList.remove('mv--learned'), 1100);
-    }
-    // whatever is left of the TR list glides from where it was rather than snapping (the folded card is gone now)
-    const shift = rrTop - rr.getBoundingClientRect().top;
-    if (Math.abs(shift) > 1) $('#tutor-learn').animate([{ transform: `translateY(${shift}px)` }, { transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.2,.8,.2,1)' });
-    countCoins($('#tutor-coins'), coinsBefore, R.coins);
+    TU.busy = false;
+    teach(m, k, i);
   });
 }
 // tick a coin readout from one value to another
@@ -2211,68 +2153,63 @@ function countCoins(el, a, b){
   };
   requestAnimationFrame(step);
 }
-function teach(m, k, slot){
+function teach(m, k, i){
+  const coins = R.coins, old = m.taught.length >= TUNE.taughtMax ? m.taught.at(-1) : null;
   R.coins -= price(k);
-  let msg = `${nm(m)} learned ${MOVES[k].name}.`;
-  if (m.taught[slot]){ msg = `${nm(m)} forgot ${MOVES[m.taught[slot]].name} and learned ${MOVES[k].name}.`; m.taught[slot] = k; }
-  else m.taught.push(k);                     // empty slots always sit at the end, so this fills the one picked
-  (TU.taught.get(k) || TU.taught.set(k, []).get(k)).push(m.uid);
-  TU.teaching = null; UI.notice = null;                // no learned / forgot line
+  if (old) m.taught[m.taught.length - 1] = k; else m.taught.push(k);
+  UI.notice = { ok: true, text: old ? `${nm(m)} forgot ${MOVES[old].name} and learned ${MOVES[k].name}.` : `${nm(m)} learned ${MOVES[k].name}.` };
+  TU.teaching = null;
   refresh();
-  const el = AREAS['T.pick'].els[0]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  countCoins($('#tutor-coins'), coins, R.coins);
+  const el = AREAS['M.party'].els[i]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
 function moveMeta(m){
   return m.kind === 'sup' ? `Support, ${TARGET_NAME[m.target]}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
     : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : m.power + '% of Attack'}${m.hits ? `, ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : ''}`;
 }
+// the party in the bottom corner, while a move is picked: who can learn it glows, everyone else dims
+function tutorMarkParty(){
+  const k = screen === 'scr-tutor' ? TU.teaching : null;
+  AREAS['M.party']?.els.forEach(({ el }, i) => {
+    const m = R.party[i], can = !!(k && m && canLearn(m, k));
+    el.toggleAttribute('data-learn', can);
+    el.toggleAttribute('data-nolearn', !!k && !can);
+  });
+}
 RENDER['scr-tutor'] = () => {
   $('#tutor-coins').textContent = `${R.coins} coins`;
-  // phones: 5-6 Pokémon wrap into two rows of 3 so the slots keep their full size
-  const line = $('[data-area="T.line"]'), n = Math.max(1, TU.line.length);
-  line.style.setProperty('--n', innerWidth <= 520 && n > 4 ? 3 : n);
-  renderArea('T.line'); renderArea('T.pick');
-  // a Pokémon in the big slot (landed or on its way) hides the party row; emptying it brings the row back
-  $('#tutor-line').classList.toggle('is-away', !!TU.pickSlot[0]);
-  const m = tutorMon();
-  renderInfo('tutor', m, { pickable: !!TU.teaching }); const d = $('#tutor-detail');
-  if (m && TU.teaching) d.querySelectorAll('.mvslot').forEach(b => b.addEventListener('click', () => sendTR(m, TU.teaching, +b.dataset.slot, b)));
-  const learn = $('#tutor-learn');
-  if (m){ cancelFade('tutor-learn', [learn]); learn.hidden = false; } else fadeOutGroup('tutor-learn', [learn], false);
-  if (m){
-    const list = TU.offer.filter(k => canLearn(m, k));
-    const vest = m.item?.id === 'assault-vest' && TU.offer.some(k => MOVES[k].kind === 'sup' && !known(m).includes(k));
-    $('#tutor-learn-title').textContent = `Moves ${nm(m)} can learn`;
-    $('#tutor-learn-sub').textContent = `${TUNE.taughtMax - m.taught.length} of ${TUNE.taughtMax} taught slots open`;
-    const box = $('#tutor-moves');
-    box.innerHTML = list.length ? list.map(k => {
-      const mv = MOVES[k], afford = R.coins >= price(k);
-      return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}">
-        <div class="trcard__slot"></div>
-        <div class="trcard__body">
-          <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
-          <span class="mvcard__meta">${moveMeta(mv)}, ${mv.pp} PP${mv.fx ? `. ${mv.fx}` : ''}</span>
-        </div>
-        <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'need more'}</small></span>
-      </div>`;
-    }).join('') : `<p class="detail__empty">None of today's moves suit ${nm(m)}${vest ? ' (its Assault Vest blocks support moves)' : ''}. Try another Pokémon, or reroll for new moves.</p>`;
-    // each move gets a dynamic slot holding its type's TR; tapping it (or the card) picks the move
-    box.querySelectorAll('.trcard').forEach(card => {
-      const k = card.dataset.k, mv = MOVES[k];
-      const slot = createSlot(e => { e.stopPropagation(); startTeach(k); });
-      slot.tabIndex = 0; slot.setAttribute('role', 'button'); slot.setAttribute('aria-label', `${mv.name} TR`);
-      card.querySelector('.trcard__slot').append(slot);
-      renderSlot(slot, PRESET.tr, { key: 'tr-' + k, sprite: TR_SPR[mv.type] || TR_SPR.normal, type: mv.type, stars: mv.star, name: mv.name + ' TR' }, { interactive: true });
-      slot.toggleAttribute('data-selected', TU.teaching === k);
-      card.addEventListener('click', () => startTeach(k));
-    });
-    const rr = $('#tutor-reroll');
-    rr.textContent = `New moves for ${rerollFee()} coins`;
-    rr.disabled = R.coins < rerollFee();
-  }
+  const box = $('#tutor-moves'), party = partyMons();
+  box.innerHTML = TU.offer.length ? TU.offer.map(k => {
+    const mv = MOVES[k], afford = R.coins >= price(k), who = party.filter(m => canLearn(m, k)), knows = party.filter(m => known(m).includes(k));
+    const none = knows.length ? `${knows.map(nm).join(' and ')} already know${knows.length > 1 ? '' : 's'} it` : 'Nobody in your party can learn it yet';
+    return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}" role="button" tabindex="0">
+      <div class="trcard__slot"></div>
+      <div class="trcard__body">
+        <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
+        <span class="mvcard__meta">${moveMeta(mv)}, ${mv.pp} PP${mv.fx ? `. ${mv.fx}` : ''}</span>
+        <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
+      </div>
+      <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'need more'}</small></span>
+    </div>`;
+  }).join('') : `<p class="detail__empty">The tutor has nothing new for your party today. Reroll for new moves.</p>`;
+  // each move gets a dynamic slot holding its type's TR; tapping it (or the card) picks the move
+  box.querySelectorAll('.trcard').forEach(card => {
+    const k = card.dataset.k, mv = MOVES[k];
+    const slot = createSlot(e => { e.stopPropagation(); pickTutorMove(k); });
+    slot.tabIndex = -1; slot.setAttribute('aria-hidden', 'true');
+    card.querySelector('.trcard__slot').append(slot);
+    renderSlot(slot, PRESET.tr, { key: 'tr-' + k, sprite: TR_SPR[mv.type] || TR_SPR.normal, type: mv.type, stars: mv.star, name: mv.name + ' TR' }, { interactive: true });
+    slot.toggleAttribute('data-selected', TU.teaching === k);
+    card.addEventListener('click', () => pickTutorMove(k));
+    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pickTutorMove(k); } });
+  });
+  const rr = $('#tutor-reroll');
+  rr.textContent = `New moves for ${rerollFee()} coins`;
+  rr.disabled = R.coins < rerollFee() || TU.busy;
   renderNotice('tutor-notice');
 };
 $('#tutor-reroll').addEventListener('click', () => {
-  if (R.coins < rerollFee()) return;
+  if (R.coins < rerollFee() || TU.busy) return;
   R.coins -= rerollFee(); TU.rerolls++; rollTutor(); UI.notice = null; refresh();
 });
 $('#tutor-leave').addEventListener('click', toMap);

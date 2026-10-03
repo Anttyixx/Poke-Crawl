@@ -129,28 +129,17 @@
     </div>
   </section>
 
-  <!-- move tutor -->
+  <!-- move tutor: today's moves; your party and bag sit in the bottom corners as on the map. Tap a move, then a
+       glowing Pokémon, to teach it -->
   <section class="screen has-coins" id="scr-tutor" aria-label="Move Tutor">
-    <button class="btn btn--go btn--corner" id="tutor-leave">Back to map</button>
     <span class="coins screen__coins" id="tutor-coins"></span>
-    <!-- the party sits in the middle of the screen until one is picked -->
-    <div class="tutor__line midline" id="tutor-line"><div class="slots slots--offer slots--line" data-area="T.line"></div></div>
     <div class="scr tutor" id="tutor-root">
-      <div class="scr__head starter__head"><span class="nodeicon" data-type="tutor">💿</span><h1 class="title">Move Tutor</h1></div>
-      <div class="infostage">
-        <div class="info__side info__left" id="tutor-left" hidden></div>
-        <div class="pickstage">
-          <div class="slots slots--pick" data-area="T.pick"></div>
-        </div>
-        <div class="info__side info__right" id="tutor-right" hidden></div>
-      </div>
-      <div class="info__moves" id="tutor-detail" hidden></div>
+      <div class="scr__head"><span class="nodeicon" data-type="tutor">💿</span><h1 class="title">Move Tutor</h1></div>
+      <p class="sub" id="tutor-sub">Tap a move, then a glowing Pokémon in your party to teach it. Each Pokémon knows one taught move, so a new one replaces it.</p>
       <p class="notice" id="tutor-notice"></p>
-      <div class="tutor__learn" id="tutor-learn" hidden>
-        <h2 class="panel-title" hidden><span id="tutor-learn-title"></span> <small id="tutor-learn-sub"></small></h2>
-        <div class="mvcards" id="tutor-moves"></div>
-        <div class="actions"><button class="btn" id="tutor-reroll"></button></div>
-      </div>
+      <div class="mvcards" id="tutor-moves"></div>
+      <!-- (no corner button here: the party sits in that corner) -->
+      <div class="actions tutor__actions"><button class="btn" id="tutor-reroll"></button><button class="btn btn--go" id="tutor-leave" type="button">Back to map</button></div>
     </div>
   </section>
 
