@@ -860,13 +860,14 @@ button{ font:inherit; color:inherit; }
 .dexpop__rotom{ position:absolute; z-index:10; left:4px; top:calc(var(--rdp) / -2); width:var(--rdp); height:var(--rdp); --rdp:65px; cursor:pointer;
   filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }       /* 52px corner sprite × 1.25, centred on the top edge */
 .dexpop__card .dexhead__top{ min-height:38px; }
-.dexpop__card{ position:relative; width:100%; height:100%; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain;
+/* the card is a column: the header stays put and only .dexscroll under it scrolls */
+.dexpop__card{ position:relative; width:100%; height:100%; display:flex; flex-direction:column; overflow:hidden;
   background:var(--bg); border:1px solid var(--line); border-radius:18px; box-shadow:0 24px 70px rgba(0,0,0,.6); }
 .dexpop__card .dexhead{ border-radius:18px 18px 0 0; }
 
 /* the screen: a header pinned to the top with the section tabs, the list scrolling underneath */
 .dex{ --dex-w: 760px; }
-.dexhead{ position:sticky; top:0; z-index:5; padding:14px 16px 12px;
+.dexhead{ position:relative; flex:none; z-index:5; padding:14px 16px 12px;
   background:color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line); }
 .dexhead > *{ max-width:var(--dex-w); margin-left:auto; margin-right:auto; }
@@ -1065,9 +1066,13 @@ button{ font:inherit; color:inherit; }
 .dexscan .dexmon__head{ padding-right:4px; }
 .dextab[hidden]{ display:none; }
 /* "Full RotomDex" sits in the scan popup's top right and stays there while it scrolls, over a fade */
-.dexact{ position:sticky; top:0; z-index:4; display:flex; justify-content:flex-end; padding:10px 12px 18px; margin-bottom:-26px;
-  background:linear-gradient(var(--bg) 55%, color-mix(in srgb, var(--bg) 0%, transparent)); pointer-events:none; }
-.dexact .btn{ pointer-events:auto; padding:7px 13px; font-size:13px; }
+.dexscroll{ position:relative; flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
+/* "Full RotomDex": just the button, floating in the scan's top right corner over the info as it scrolls, with a
+   shadow under it; no bar behind it. The info starts below it. */
+.dexact{ position:sticky; top:0; z-index:4; height:0; display:flex; justify-content:flex-end; padding:0 12px; pointer-events:none; }
+.dexact .btn{ pointer-events:auto; height:max-content; margin-top:10px; padding:7px 13px; font-size:13px; background:var(--panel-2);
+  box-shadow:0 6px 14px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.4); }
+.dexpop--scan .dexact:not([hidden]) + .dexbody{ padding-top:48px; }
 .dexact[hidden]{ display:none; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }

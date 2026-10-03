@@ -47,8 +47,11 @@
         <button class="dextab" type="button" role="tab" data-tab="items">Items <small id="dex-n-items"></small></button>
       </div>
     </header>
-    <div class="dexact" id="dex-act" hidden></div>
-    <div class="dexbody" id="dex-body" role="tabpanel"></div>
+    <!-- only this part scrolls: the header above stays put -->
+    <div class="dexscroll" id="dex-scroll">
+      <div class="dexact" id="dex-act" hidden></div>
+      <div class="dexbody" id="dex-body" role="tabpanel"></div>
+    </div>
   </section>
   </div>
   <!-- Rotom perches on the popup's top edge, overlapping it, 25% bigger than in the corner; tapping it closes the popup -->

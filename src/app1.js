@@ -1021,8 +1021,8 @@ async function dexPeek(chip){
 // over to the Moves section, scrolled to that move, which flashes so it's easy to spot
 async function dexJumpMove(k){
   await dexShow('moves', true);
-  const row = document.querySelector(`.dexmove[data-move="${k}"]`), scr = $('#scr-dex'); if (!row) return;
-  const y = scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 16;
+  const row = document.querySelector(`.dexmove[data-move="${k}"]`), scr = $('#dex-scroll'); if (!row) return;
+  const y = scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - 16;
   scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
   row.classList.remove('dexflash'); void row.offsetWidth; row.classList.add('dexflash');
 }
@@ -1126,9 +1126,9 @@ async function dexOpen(card, id, toggle = true){
 async function dexJump(id){
   const f = FORM[id]; if (!f) return;
   await dexShow('mons', true);
-  const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#scr-dex'); if (!card) return;
+  const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#dex-scroll'); if (!card) return;
   dexOpen(card, speciesForms(f).at(-1).id, false);       // the species' button stands for all its levels
-  const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - $('.dexhead').offsetHeight - 12;
+  const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - 12;
   scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
 $('#dex-body').addEventListener('click', e => {
@@ -1174,7 +1174,7 @@ function dexTabs(tab){
 // switching sections: the old list slides out toward the side you came from, the page jumps back to the top,
 // and the new list slides in from the other side
 async function dexShow(tab, animate){
-  const body = $('#dex-body'), scr = $('#scr-dex'), html = tab === 'scan' ? DEX_BUILD.scan() : (DEX.html[tab] ||= DEX_BUILD[tab]());
+  const body = $('#dex-body'), scr = $('#dex-scroll'), html = tab === 'scan' ? DEX_BUILD.scan() : (DEX.html[tab] ||= DEX_BUILD[tab]());
   const list = dexTabList(), dir = Math.sign(list.indexOf(tab) - list.indexOf(DEX.tab)) || 1;
   if (animate && tab === DEX.tab) return scr.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
   DEX.tab = tab; dexTabs(tab);
@@ -1196,7 +1196,7 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
    folds back into Rotom, and Rotom hops home to the corner.
    Every hop is aimed centre to centre (the sprite changes size on the way), so Rotom ends exactly where the perched
    sprite is and the hand-over can't jump. Tapping the perched Rotom closes the popup. */
-const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXSHELL = $('.dexpop__shell'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
+const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXSCROLL = $('#dex-scroll'), DEXSHELL = $('.dexpop__shell'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('#dex-rotom');
 // RotomDex timings in ms (the numbers in comments are from before the last 25% speed-up of the panel)
 const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
@@ -1291,7 +1291,7 @@ async function openDex(){
   DEX.open = DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;   // a screen wipe can cut the animation short
   dexShow(DEX.tab, false);
-  DEXPOP.hidden = false; DEXCARD.scrollTop = 0;
+  DEXPOP.hidden = false; DEXSCROLL.scrollTop = 0;
   dexLayout();
   RD_BTN.classList.add('is-out');
   if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
@@ -1451,8 +1451,7 @@ function dexGeom(){
     w = pl.w; down = pl.down;
     // as tall as the Pokémon's info and the buttons need, up to the room there is (then it scrolls)
     frame.style.width = w + 'px';
-    const act = $('#dex-act'), overlap = parseFloat(getComputedStyle(act).marginBottom) || 0;   // the button bar overlaps the top of the info
-    h = Math.min(pl.room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
+    h = Math.min(pl.room, $('#dex-body').scrollHeight + B + 2);     // (the Full RotomDex button floats over the info)
     return { ...pl.at(h), w, h, x: pl.x, down };
   }
   return { w, h, x, down };
@@ -1508,7 +1507,7 @@ async function openScan(slot, mon, opts = {}){
 // bump following Rotom along the edge), and the new info fades up as Rotom comes in to land. If the popup has to flip to the
 // other side of the Pokémon, it folds and reopens instead.
 async function rdGlide(slot, reserve, change){
-  if (REDUCED){ DEX.busy = true; change(); DEXCARD.scrollTop = 0; dexLayout(); DEX.busy = false; return; }
+  if (REDUCED){ DEX.busy = true; change(); DEXSCROLL.scrollTop = 0; dexLayout(); DEX.busy = false; return; }
   DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   const frame = $('.dexpop__frame'), fr = frame.getBoundingClientRect(), spot = rdSpot();
@@ -1526,10 +1525,10 @@ async function rdGlide(slot, reserve, change){
   const swap = () => {
     const o = +getComputedStyle(body).opacity, ghost = body.cloneNode(true);
     ghost.removeAttribute('id');
-    Object.assign(ghost.style, { position: 'absolute', left: 0, right: 0, top: (body.offsetTop - DEXCARD.scrollTop) + 'px', pointerEvents: 'none' });
-    change(); DEXCARD.scrollTop = 0;
+    Object.assign(ghost.style, { position: 'absolute', left: 0, right: 0, top: (body.offsetTop - DEXSCROLL.scrollTop) + 'px', pointerEvents: 'none' });
+    change(); DEXSCROLL.scrollTop = 0;
     g1 = dexGeom();
-    DEXCARD.appendChild(ghost);
+    DEXSCROLL.appendChild(ghost);
     ghost.animate([{ opacity: o }, { opacity: 0 }], { duration: 90 * o + 1, easing: 'ease-out', fill: 'forwards' }).finished.then(() => ghost.remove());
   };
   const early = pl.down;
@@ -1595,7 +1594,7 @@ async function rdRelocate(change, dip){
   const pose = rdPose(rdSpot()); rdStill(true);
   const spot = rdSpot(), from = spot.getBoundingClientRect(), fl = REDUCED ? null : rdFlyer(from);
   spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden';
-  change(); DEXCARD.scrollTop = 0; dexLayout();
+  change(); DEXSCROLL.scrollTop = 0; dexLayout();
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
