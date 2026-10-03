@@ -1531,36 +1531,46 @@ async function rdGlide(slot, reserve, change){
   // a short hop (to the next Pokémon along) just moves across, staying on the glass; only a long way dives in
   const depth = Math.min(1, Math.max(0, (d - 220) / 220));
   const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease, depth }), { duration: dur, fill: 'forwards' });
-  // The popup moves with Rotom without redrawing anything as it goes: it jumps to its new place and slides there
-  // (transform) from where it was, its body stretching from the old height to the new; the bump is drawn separately
-  // and slides along the edge under Rotom. Its big soft shadow would be redrawn every frame as it stretches, so it is
-  // off until Rotom has landed. All on the GPU, on Rotom's own timing curve.
-  const shell = frame.querySelector('.dexpop__shell'), steps = Array.from({ length: 25 }, (_, i) => i / 24);
+  // The popup: while Rotom flies, the bump sinks back into the popup's edge, and it rises out again right under Rotom
+  // as it lands. Meanwhile the popup's body is a plain box (border, background and shadow, drawn once) that slides
+  // to its new place and stretches to its new height with transforms only, which every browser runs smoothly.
+  const shell = frame.querySelector('.dexpop__shell'), { bump: B } = SCAN, steps = Array.from({ length: 25 }, (_, i) => i / 24);
   const timing = { duration: dur, easing: 'linear', fill: 'backwards' };
   const track = f => steps.map(k => ({ transform: f(1 - ease(k)), offset: k }));            // f(1) at the start, f(0) at the end
-  let bump = null, glide = [];
+  const box = document.createElement('div'); box.className = 'dexglidebox';
+  shell.insertBefore(box, svg.nextSibling);
+  const oldBump = scanBump({ ...g0 });                                                             // the bump where it was, sinking
+  shell.insertBefore(oldBump, box.nextSibling);
+  let newBump = null, glide = [];
+  const place = el => el.style.transformOrigin = `50% ${g1.down ? '100%' : '0%'}`;            // bumps grow from the popup's edge
   const stage = () => {                                  // (re)builds the popup's motion for g1, caught up to Rotom
     const now = flight.currentTime || 0;
-    glide.forEach(x => x.cancel()); bump?.remove();
+    glide.forEach(x => x.cancel());
     dexApply(g1);
-    svg.firstElementChild.setAttribute('d', scanOutline(g1.w, g1.h, null, g1.down));        // the body, no bump
-    bump = scanBump(g1); shell.insertBefore(bump, svg.nextSibling);
-    svg.style.transformOrigin = `50% ${g1.down ? SCAN.bump : g1.h - SCAN.bump}px`;
+    // the box's outline is the popup's own (the same path, fill and stroke, minus the bump), so the hand-over back
+    // to the real outline after landing is pixel-exact
+    const y0 = g1.down ? B - 1 : -1, bh = g1.h - B + 2;
+    Object.assign(box.style, { top: y0 + 'px', width: g1.w + 'px', height: bh + 'px', transformOrigin: `50% ${g1.down ? '1px' : `${bh - 1}px`}` });
+    box.innerHTML = `<svg width="${g1.w}" height="${bh}" viewBox="0 ${y0} ${g1.w} ${bh}" aria-hidden="true"><path d="${scanOutline(g1.w, g1.h, null, g1.down)}"/></svg>`;
+    const old = (g0.h - B) / (g1.h - B);
     glide = [
       frame.animate(track(v => `translate(${(g0.left - g1.left) * v}px, ${(g0.top - g1.top) * v}px)`), timing),
-      svg.animate(track(v => `scaleY(${1 + (g0.h / g1.h - 1) * v})`), timing),
-      bump.animate(track(v => `translateX(${(g0.x - g1.x) * v}px)`), timing)];
+      box.animate(track(v => `scaleY(${1 + (old - 1) * v})`), timing)];
     glide.forEach(x => x.currentTime = now);
+    // the old bump stays where it was on the popup's edge (riding along with it) as it sinks
+    Object.assign(oldBump.style, { left: (g0.x - SCAN.top / 2 - SCAN.slope - 2) + 'px', top: (g1.down ? 0 : g1.h - (B + 4)) + 'px' });
   };
-  svg.style.filter = 'none';
+  svg.style.visibility = 'hidden';
   stage();
+  place(oldBump);
+  const sunk = oldBump.animate([{ transform: 'scaleY(1)' }, { transform: `scaleY(0)` }], { duration: 160, easing: 'cubic-bezier(.4,0,.7,.4)', fill: 'forwards' });
   // The info: a plain cover (cheap to draw, unlike the info itself) slides over the old info, the new info is built
   // under it while it is opaque, and it fades away as Rotom comes in, so nothing heavy is drawn while things move.
   const cover = document.createElement('div'); cover.className = 'dexcover';
   Object.assign(cover.style, { top: DEXSCROLL.scrollTop + 'px', height: DEXSCROLL.clientHeight + 'px' });
   DEXSCROLL.appendChild(cover);
   await cover.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 70, easing: 'ease-out', fill: 'forwards' }).finished;
-  if (!live()){ cover.remove(); return; }
+  if (!live()){ cover.remove(); box.remove(); oldBump.remove(); svg.style.visibility = ''; return; }
   change(); DEXSCROLL.scrollTop = 0;
   g1 = dexGeom();
   stage();                                               // now at its real height
@@ -1568,13 +1578,18 @@ async function rdGlide(slot, reserve, change){
   cover.getAnimations().forEach(x => x.cancel());
   const lift = cover.animate([{ opacity: 1 }, { opacity: 0 }],
     { duration: RD_MS.item + 80, delay: Math.max(0, dur * .5 - (flight.currentTime || 0)), easing: 'ease-in-out', fill: 'both' });
-  const tidy = () => { lift.cancel(); cover.remove(); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = svg.style.filter = ''; };
+  // the new bump rises out of the edge under Rotom as it comes in to land
+  newBump = scanBump(g1); place(newBump); shell.insertBefore(newBump, box.nextSibling);
+  const rise = newBump.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.08)', offset: .75 }, { transform: 'scaleY(1)' }],
+    { duration: 260, delay: Math.max(0, dur - 170 - (flight.currentTime || 0)), easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' });
+  const tidy = () => { [lift, rise, sunk, ...glide].forEach(x => x.cancel()); [cover, box, oldBump, newBump].forEach(x => x?.remove());
+    svg.style.visibility = svg.style.filter = ''; };
   await flight.finished;
   if (!live()) return tidy();
-  await rdLand(fl, b.x - a.x, b.y - a.y, sc);
+  await Promise.all([rdLand(fl, b.x - a.x, b.y - a.y, sc), rise.finished.catch(() => {})]);
   if (!live()) return tidy();
   // landed: back to the one whole outline, bump, shadow and all
-  glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = svg.style.filter = ''; cover.remove();
+  tidy();
   dexApply(g1);
   spot.style.visibility = ''; fl.remove();
   DEX.busy = false; rdStill(false);
