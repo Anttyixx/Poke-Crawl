@@ -5,6 +5,7 @@ const CANDY_SPR = '__CANDY__';
 const ROTOMDEX_SPR = '__ROTOMDEX__';                      // Rotom Pokédex, the Pokédex's icon
 const TR_SPR = __TRS__;                                   // Technical Record sprite per move type
 const VERSION = '__VERSION__';                            // from the VERSION file; dev builds add "-dev (commit)"
+const CHANGELOG = __CHANGELOG__;                          // CHANGELOG.md as HTML, for the title screen's release notes
 
 /* ================= data ================= */
 const FORMS = DATA.forms, MOVES = DATA.moves, SPRITES = DATA.sprites;
@@ -1468,6 +1469,20 @@ function buildTitle(){
   }).join('');
 }
 $('#title-start').addEventListener('click', () => wipeTo('scr-starter', openStarter, { mark: markHTML('🚩', 'New run') }));
+// release notes: a popup over the title screen listing what changed in each version, newest first
+const NOTES = $('#notes');
+function openNotes(){
+  if (wiping || !NOTES.hidden) return;
+  $('#notes-body').innerHTML = CHANGELOG; $('#notes-body').scrollTop = 0;
+  NOTES.hidden = false; $('#notes-close').focus({ preventScroll: true });
+  if (!REDUCED) NOTES.querySelector('.notes__card').animate([{ opacity: 0, transform: 'translateY(14px) scale(.97)' }, { opacity: 1, transform: 'none' }],
+    { duration: 220, easing: 'cubic-bezier(.2,.8,.2,1)' });
+}
+function closeNotes(){ if (NOTES.hidden) return; NOTES.hidden = true; $('#title-notes').focus({ preventScroll: true }); }
+$('#title-notes').addEventListener('click', openNotes);
+$('#notes-close').addEventListener('click', closeNotes);
+NOTES.querySelector('.notes__veil').addEventListener('click', closeNotes);
+addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 
 /* ================= starter ================= */
 // three starters across the middle of the screen. Tapping one sends Rotom to scan it (openScan): the RotomDex opens

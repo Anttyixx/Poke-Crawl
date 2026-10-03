@@ -1081,3 +1081,27 @@ button{ font:inherit; color:inherit; }
 .pageact{ position:fixed; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:2450; display:flex; justify-content:center; pointer-events:none; }
 .pageact[hidden]{ display:none; }
 .pageact .btn{ pointer-events:auto; min-width:min(320px, calc(100vw - 32px)); }
+
+/* ---------- title screen: release notes button and popup ---------- */
+.tversion{ display:flex; align-items:center; gap:10px; }
+.tnotes{ padding:3px 9px; border:1px solid var(--line); border-radius:999px; background:color-mix(in srgb, var(--panel) 80%, transparent);
+  font:inherit; letter-spacing:.04em; color:var(--ink-dim); cursor:pointer; transition:color .15s ease, border-color .15s ease; }
+.tnotes:hover, .tnotes:focus-visible{ color:var(--ink); border-color:color-mix(in srgb, var(--glow-selected) 55%, var(--line)); }
+.notes{ position:fixed; inset:0; z-index:2700; display:grid; place-items:center; padding:16px; }
+.notes[hidden]{ display:none; }
+.notes__veil{ position:absolute; inset:0; background:rgba(5,6,10,.72); }
+.notes__card{ position:relative; display:flex; flex-direction:column; width:min(620px, 100%); max-height:min(760px, 100%);
+  background:var(--bg); border:1.5px solid color-mix(in srgb, var(--glow-selected) 30%, var(--line)); border-radius:18px;
+  box-shadow:0 18px 40px rgba(0,0,0,.55); overflow:hidden; }
+.notes__head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px 12px; border-bottom:1px solid var(--line); }
+.notes__head .title{ margin:0; font-size:22px; }
+.notes__head .btn{ padding:7px 13px; font-size:13px; }
+.notes__body{ overflow-y:auto; overscroll-behavior:contain; padding:4px 18px 18px; font-size:14px; line-height:1.5; color:var(--ink-dim); }
+.notes__ver h3{ margin:18px 0 4px; font-family:var(--display); font-size:18px; color:var(--ink); }
+.notes__ver:first-child h3{ color:color-mix(in srgb, var(--glow-selected) 75%, var(--ink)); }
+.notes__ver h4{ margin:12px 0 4px; font-family:var(--display); font-size:12px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-faint); }
+.notes__ver ul{ margin:0; padding-left:20px; }
+.notes__ver ul ul{ margin:2px 0 2px; }
+.notes__ver li{ margin:4px 0; }
+.notes__ver b{ color:var(--ink); }
+.notes__ver code{ font-size:12px; padding:1px 5px; border-radius:5px; background:var(--panel-2); }

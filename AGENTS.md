@@ -33,13 +33,31 @@ Rules:
 1. **Never push directly to `main`.** Update `main` only by merging `dev` into it, and only when the user says the work is ready.
 2. Start each new change on a feature branch cut from the latest `dev`, named `feature/<short-name>`. If the user names a branch, use that one.
 3. To let the user play-test, merge the feature branch into `dev` and push `dev`. Then tell them to refresh the experimental link.
-   End every reply that pushes `dev` with the link to that exact build as its very last line, so it is easy to tap. Every dev deploy is also published at `/dev/<short hash>/` (the `dev` merge commit), a new address that is never cached, so use that form and say which version the title screen should show:
+   End every reply that pushes `dev` with the link to that exact build as its very last line, so it is easy to tap (see Reply format below). Every dev deploy is also published at `/dev/<short hash>/` (the `dev` merge commit), a new address that is never cached, so use that form and say which version the title screen should show:
    `Play-test: https://anttyixx.github.io/Poke-Crawl/dev/a1b2c3d/` (title screen shows `0.3.0-dev (a1b2c3d)`)
    It goes live when the deploy run finishes, a minute or two after the push. The plain `/dev/` link can lag behind by several minutes.
 4. For each round of tweaks, commit on the same feature branch, merge it into `dev` again, and push.
 5. Another agent may be working in this repo too. Always fetch and merge the latest `dev` before merging into it, and never force-push `dev` or `main`.
 6. Run `python build.py` before every push and make sure it succeeds.
 7. When you merge a change into `dev`, add a line for it to the upcoming version's section of `CHANGELOG.md` (under Added, Changed, Removed or Fixed), written for players.
+
+## Reply format
+
+The user reads replies from the bottom up: the end gives the gist, the top has the detail for when they want more.
+
+- Put the full explanation first: what you did, how it works, what you tested, anything to watch out for.
+- End every reply that changes something with a short **Summary** section: 2 to 5 bullets, one line each, saying in plain words what changed for the player (or in the repo). No file names or code unless the change is about them.
+- If the reply pushes `dev`, the play-test link goes after the summary, as the very last line.
+
+```
+…details…
+
+**Summary**
+- Rotom hops between starters faster, with flatter curves on short hops
+- The scan window opens and closes 25% faster
+
+Play-test: https://anttyixx.github.io/Poke-Crawl/dev/a1b2c3d/ (title screen shows `0.4.0-dev (a1b2c3d)`)
+```
 
 ## Versions and releases
 
@@ -50,10 +68,14 @@ Versions are `0.MINOR.PATCH` while the game is in development. Only a release to
 
 To release, only when the user says the work on `dev` is ready:
 
-1. On `dev`, check `VERSION` is right for what is being released (MINOR or PATCH, as above), and in `CHANGELOG.md` change the heading `## X.Y.Z (upcoming, on dev)` to `## X.Y.Z (YYYY-MM-DD)`. Commit and push `dev`.
-2. Merge `dev` into `main` and push `main`.
-3. Nothing to do for the tag: the deploy workflow tags `main` as `vX.Y.Z` (from `VERSION`) on every push to `main`, if that tag doesn't exist yet. Check the run's `tag` job succeeded.
-4. Back on `dev`, set `VERSION` to the next minor version (e.g. `0.3.0`), add an empty `## 0.3.0 (upcoming, on dev)` section to the top of `CHANGELOG.md`, commit and push.
+1. On `dev`, check `VERSION` is right for what is being released (MINOR or PATCH, as above).
+2. Write the release notes: the version's section of `CHANGELOG.md` is the release notes. Check it covers every change merged into `dev` since the last release (compare with `git log vX.Y.Z..dev`, using the last release's tag), with nothing missing, outdated or repeated: when a later change reworked an earlier one, keep one line describing the final result. Lead each group with the biggest changes. Then change its heading `## X.Y.Z (upcoming, on dev)` to `## X.Y.Z (YYYY-MM-DD)`. Commit and push `dev`.
+3. Merge `dev` into `main` and push `main`.
+4. Nothing to do for the tag: the deploy workflow tags `main` as `vX.Y.Z` (from `VERSION`) on every push to `main`, if that tag doesn't exist yet. Check the run's `tag` job succeeded.
+5. Back on `dev`, set `VERSION` to the next minor version (e.g. `0.3.0`), add an empty `## 0.3.0 (upcoming, on dev)` section to the top of `CHANGELOG.md`, commit and push.
+6. In the reply, include the release notes for the new version (its `CHANGELOG.md` section), then the Summary, then the stable link `https://anttyixx.github.io/Poke-Crawl/` as the last line.
+
+Players read the release notes in the game too: the title screen's "Release notes" button (next to the version, bottom-left) shows `CHANGELOG.md`, newest version first. An empty upcoming section is left out.
 
 ## Layout
 
@@ -72,7 +94,7 @@ To release, only when the user says the work on `dev` is ready:
 | `docs/design/` | Feature and design notes (start at `features_00-index.md`; undecided items are in `features_open-questions.md`) |
 | `build.py` | Stitches everything into `dist/index.html` |
 | `VERSION` | The version `dev` is heading toward; see Versions and releases |
-| `CHANGELOG.md` | What changed in each version, written for players |
+| `CHANGELOG.md` | What changed in each version, written for players; also the in-game release notes |
 | `.github/workflows/pages.yml` | Builds `main` and `dev` and deploys both to GitHub Pages on every push to either; the dev build is also published at `/dev/<commit>/`. The copy on `main` is the one that runs, so changes to it must reach `main` |
 
 ## How the build works
@@ -85,6 +107,7 @@ To release, only when the user says the work on `dev` is ready:
 - `__TRS__` becomes a JSON map of move type to TR sprite data URI
 - `__ROTOMDEX__` becomes the data URI of `assets/rotomdex.png`, the Pokédex's icon
 - `__VERSION__` becomes the version label, e.g. `0.2.0` or `0.2.0-dev (a1b2c3d)`
+- `__CHANGELOG__` becomes `CHANGELOG.md` converted to HTML (a JSON string), shown by the title screen's release notes
 
 The build also joins `slot.css` and `game.css` in that order and inlines them with `body.html` into one HTML page. The page's only external request is Google Fonts (Chakra Petch).
 

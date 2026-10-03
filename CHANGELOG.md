@@ -7,6 +7,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 ## 0.4.0 (upcoming, on dev)
 
 ### Added
+- **Release notes.** A "Release notes" button next to the version number in the title screen's bottom-left corner lists what changed in each version, newest first.
 - **Scanning with the RotomDex.** On the starter screen, the three starters now stand at the top under the title as bare sprites, with no slot boxes around them. Tap a Pokémon and Rotom flies over to scan it: a small RotomDex window opens right next to it with just that Pokémon's stats, EXP, ability, held item and moves, its border rising in a bump to meet Rotom perched by the Pokémon. Tap another starter and Rotom hops over to scan that one; the scan looks just like a Pokémon's entry in the full RotomDex. Choose with the "I Choose You!!" button at the bottom of the screen, or tap "Full RotomDex", pinned to the scan's top-right corner, and Rotom opens the whole RotomDex.
 - **Every Generation 1 Pokémon**, plus the other members of their families from later generations: babies like Pichu, Cleffa and Happiny, and evolutions like Crobat, Scizor, Kleavor, Magnezone, Blissey and all eight Eeveelutions. 78 evolution lines, 184 Pokémon in all.
 - **Branching evolutions.** Eevee, Slowpoke, Tyrogue and Scyther pick their branch when they reach ★2, and Oddish and Poliwag when they reach ★3, then stay on it.

@@ -11,8 +11,18 @@
       <button class="btn btn--go btn--big tstart" id="title-start">Start</button>
       <p class="tfoot">Pick a starter <i>·</i> Climb to 8 gym leaders <i>·</i> 3 lives</p>
     </div>
-    <p class="tversion" id="title-version"></p>
+    <!-- bottom-left corner: the game's version, and its release notes -->
+    <p class="tversion"><span id="title-version"></span><button class="tnotes" id="title-notes" type="button">Release notes</button></p>
   </section>
+
+  <!-- release notes: what changed in each version (CHANGELOG.md), opened from the title screen -->
+  <div class="notes" id="notes" hidden>
+    <div class="notes__veil"></div>
+    <section class="notes__card" role="dialog" aria-modal="true" aria-labelledby="notes-title">
+      <header class="notes__head"><h2 class="title" id="notes-title">Release notes</h2><button class="btn" id="notes-close" type="button">Close</button></header>
+      <div class="notes__body" id="notes-body"></div>
+    </section>
+  </div>
 
   <!-- RotomDex: always in the top-left corner (except during screen wipes); tapping it opens the Pokédex popup -->
   <button class="rotomdex" id="rotomdex" type="button" aria-label="Open the RotomDex" title="RotomDex"><img class="dexicon" alt=""></button>

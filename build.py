@@ -12,8 +12,11 @@ Pokémon and item sprites come from assets/pokesprite (PokéSprite: msikma/pokes
 data/data.json names its file in pokesprite's pokemon-gen8/regular; an item's id names its file in pokesprite's
 items folders. Each sprite is trimmed to the visible pixels, centred on a square canvas with a 1 pixel border,
 scaled up 4x (pixel art stays sharp at any size) and embedded as a data URI.
+
+The release notes button on the title screen shows CHANGELOG.md, converted to HTML here.
 """
-import base64, glob, json, os, struct, subprocess, zlib
+import base64, glob, json, os, re, struct, subprocess, zlib
+from html import escape as html_escape
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 p = lambda *parts: os.path.join(ROOT, *parts)
@@ -105,6 +108,40 @@ trs   = json.dumps({os.path.basename(f)[:-4]: b64(f) for f in sorted(glob.glob(p
 candy = b64(p('assets', 'candy.png'))
 rotomdex = game_sprite(p('assets', 'rotomdex.png'))   # the Pokédex's icon: Rotom Pokédex
 
+def changelog_html(md):
+    """CHANGELOG.md as HTML for the in-game release notes: each version's section (the intro above them is left out,
+    and so is an empty upcoming section), with its headings, bullet lists (one level of nesting), **bold** and `code`."""
+    def inline(t):
+        t = html_escape(t)
+        t = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', t)
+        return re.sub(r'`(.+?)`', r'<code>\1</code>', t)
+    sections, cur = [], None
+    for line in md.splitlines():
+        if line.startswith('## '):
+            cur = {'title': line[3:].strip(), 'lines': []}; sections.append(cur)
+        elif cur is not None and line.strip():
+            cur['lines'].append(line.rstrip())
+    out = []
+    for sec in sections:
+        if not any(l.lstrip().startswith('- ') for l in sec['lines']): continue
+        body, depth = [], 0                       # depth: how many <ul> are open
+        for l in sec['lines']:
+            if l.startswith('### '):
+                body.append('</ul>' * depth); depth = 0
+                body.append(f'<h4>{inline(l[4:].strip())}</h4>')
+            elif l.lstrip().startswith('- '):
+                want = 2 if l.startswith('  ') else 1
+                if want > depth: body.append('<ul>' * (want - depth))
+                elif want < depth: body.append('</ul>' * (depth - want))
+                depth = want
+                body.append(f'<li>{inline(l.lstrip()[2:])}</li>')
+            else:
+                body.append('</ul>' * depth); depth = 0
+                body.append(f'<p>{inline(l.strip())}</p>')
+        body.append('</ul>' * depth)
+        out.append(f'<section class="notes__ver"><h3>{inline(sec["title"])}</h3>{"".join(body)}</section>')
+    return ''.join(out)
+
 def git(*args):
     try:
         return subprocess.run(['git', *args], cwd=ROOT, capture_output=True, text=True, timeout=10).stdout.strip()
@@ -117,7 +154,8 @@ label = version if channel == 'stable' else f"{version}-dev ({git('rev-parse', '
 
 js = (read('src', 'app1.js') + read('src', 'app2.js')) \
     .replace('__DATA__', data, 1).replace('__ITEMS__', items, 1) \
-    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__ROTOMDEX__', rotomdex, 1).replace('__VERSION__', label, 1)
+    .replace('__CANDY__', candy, 1).replace('__TRS__', trs, 1).replace('__ROTOMDEX__', rotomdex, 1).replace('__VERSION__', label, 1) \
+    .replace('__CHANGELOG__', json.dumps(changelog_html(read('CHANGELOG.md')), ensure_ascii=False), 1)
 css = read('src', 'slot.css') + '\n' + read('src', 'game.css')
 
 html = f'''<!DOCTYPE html>
