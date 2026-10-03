@@ -1201,7 +1201,7 @@ const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   open: 205 /* 273 */, item: 160 /* 206 */, stagger: 24 /* 32 */,
   home: 600,                                        // both corner flights take 0.6s
   hop: [240, 400],                                  // a hop between perches: quicker the shorter it is
-  glide: [380, 500] };                              // scan to scan: an arc from one Pokémon to the next
+  glide: [480, 620] };                              // scan to scan: an arc from one Pokémon to the next
 const rdDist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
 // how much a flight of this length bends and dips into the screen: short hops barely curve, long ones fully
 const rdReach = (a, b) => Math.min(1, Math.max(.15, rdDist(a, b) / 520));
@@ -1382,6 +1382,17 @@ function scanOutline(w, h, x, down){
     ? `M${r},${y0} ${bumpPath} L${w - r},${y0} Q${w},${y0} ${w},${y0 + r} L${w},${y1 - r} Q${w},${y1} ${w - r},${y1} L${r},${y1} Q0,${y1} 0,${y1 - r} L0,${y0 + r} Q0,${y0} ${r},${y0} Z`
     : `M${r},${y0} L${w - r},${y0} Q${w},${y0} ${w},${y0 + r} L${w},${y1 - r} Q${w},${y1} ${w - r},${y1} ${bumpPath} L${r},${y1} Q0,${y1} 0,${y1 - r} L0,${y0 + r} Q0,${y0} ${r},${y0} Z`;
 }
+// where a scan popup for the Pokémon at slot goes: which side, its width, the room there is, Rotom's spot along its
+// edge (x, under or over the Pokémon's middle), and at(h) its left and top for a height h
+function dexPlace(slot, reserve = 0){
+  const S = slot.getBoundingClientRect(), { gap, margin } = SCAN, top0 = margin + 6;
+  const edge = SCAN.top / 2 + SCAN.slope + SCAN.r + 4;        // how far the bump's middle must stay from a corner
+  const below = innerHeight - reserve - S.bottom - gap - margin, above = S.top - gap - top0, down = below >= above;
+  const w = Math.min(innerWidth - margin * 2, SCAN.maxW);
+  const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
+  const x = Math.min(w - edge, Math.max(edge, S.left + S.width / 2 - left));
+  return { down, w, x, room: Math.max(200, down ? below : above), at: h => ({ left, top: down ? S.bottom + gap : S.top - gap - h }) };
+}
 // where the popup goes and how big it is: the frame's box (left/top only while scanning), the bump's x along its
 // width, and whether Rotom perches on the top edge (down) or the bottom one
 function dexGeom(){
@@ -1394,21 +1405,13 @@ function dexGeom(){
     frame.removeAttribute('style');
     const fr = frame.getBoundingClientRect(); w = fr.width; h = fr.height; x = edge;
   } else {
-    const S = DEX.scan.slot.getBoundingClientRect(), { gap, margin } = SCAN, top0 = margin + 6;
-    const below = innerHeight - (DEX.scan.reserve || 0) - S.bottom - gap - margin, above = S.top - gap - top0;
-    down = below >= above;
-    const room = Math.max(200, down ? below : above);
-    w = Math.min(innerWidth - margin * 2, SCAN.maxW);
+    const pl = dexPlace(DEX.scan.slot, DEX.scan.reserve);
+    w = pl.w; down = pl.down;
     // as tall as the Pokémon's info and the buttons need, up to the room there is (then it scrolls)
     frame.style.width = w + 'px';
     const act = $('#dex-act'), overlap = parseFloat(getComputedStyle(act).marginBottom) || 0;   // the button bar overlaps the top of the info
-    h = Math.min(room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
-    const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
-    const top = down ? S.bottom + gap : S.top - gap - h;
-    // Rotom: on the edge facing the Pokémon, right under (or over) its middle
-    const cx = S.left + S.width / 2;
-    x = Math.min(w - edge, Math.max(edge, cx - left));
-    return { left, top, w, h, x, down };
+    h = Math.min(pl.room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
+    return { ...pl.at(h), w, h, x: pl.x, down };
   }
   return { w, h, x, down };
 }
@@ -1457,42 +1460,60 @@ async function openScan(slot, mon, opts = {}){
     return openDex();
   }
   // already scanning another Pokémon: the popup stays open and glides along with Rotom to the new one
-  await rdGlide(() => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); });
+  await rdGlide(slot, reserve, () => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); });
 }
 // scan to scan: the old info fades, Rotom hops to its new perch while the popup slides and resizes under it (its
 // bump following Rotom along the edge), and the new info fades up as Rotom comes in to land. If the popup has to flip to the
 // other side of the Pokémon, it folds and reopens instead.
-async function rdGlide(change){
+async function rdGlide(slot, reserve, change){
   if (REDUCED){ DEX.busy = true; change(); DEXCARD.scrollTop = 0; dexLayout(); DEX.busy = false; return; }
   DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   const frame = $('.dexpop__frame'), fr = frame.getBoundingClientRect(), spot = rdSpot();
   const g0 = { left: fr.left, top: fr.top, w: fr.width, h: fr.height, ...dexGeomNow() };
-  // Rotom sets off the moment the new Pokémon is tapped. The old info fades away as a copy laid over the card while
-  // the new info goes in underneath, almost invisible (a fully transparent layer may not be drawn at all), so it is
-  // already drawn and ready when it fades up as Rotom comes in
-  const body = $('#dex-body'), hush = .01, scroll = DEXCARD.scrollTop;
-  const ghost = body.cloneNode(true); ghost.removeAttribute('id');
-  Object.assign(ghost.style, { position: 'absolute', left: 0, right: 0, top: (body.offsetTop - scroll) + 'px', pointerEvents: 'none' });
-  change(); DEXCARD.scrollTop = 0;
-  const g1 = dexGeom();
-  if (g1.down !== g0.down){ dexApply(g0); return rdRelocate(() => {}, .45); }   // flips sides: fold and reopen instead
-  DEXCARD.appendChild(ghost);
-  ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade + 45, easing: 'ease-out', fill: 'forwards' }).finished.then(() => ghost.remove());
+  const pl = dexPlace(slot, reserve);
+  if (pl.down !== g0.down) return rdRelocate(change, .45);    // flips sides: fold and reopen instead
+  // Rotom sets off the moment the new Pokémon is tapped, before anything else. With the popup below the Pokémon its
+  // new perch is known straight away; the new info (the slow part) is built a couple of frames later, while Rotom is
+  // already on its way. (With the popup above, the perch depends on the new info's height, so that goes first.)
+  const body = $('#dex-body'), hush = .01;
+  const fadeOld = body.animate([{ opacity: 1 }, { opacity: hush }], { duration: RD_MS.fade + 45, easing: 'ease-out', fill: 'forwards' });
+  let g1 = null;
+  // the old info carries on fading as a copy laid over the card while the new info goes in underneath, almost
+  // invisible (a fully transparent layer may not be drawn at all), so it is drawn and ready when it fades up
+  const swap = () => {
+    const o = +getComputedStyle(body).opacity, ghost = body.cloneNode(true);
+    ghost.removeAttribute('id');
+    Object.assign(ghost.style, { position: 'absolute', left: 0, right: 0, top: (body.offsetTop - DEXCARD.scrollTop) + 'px', pointerEvents: 'none' });
+    change(); DEXCARD.scrollTop = 0;
+    g1 = dexGeom();
+    DEXCARD.appendChild(ghost);
+    ghost.animate([{ opacity: o }, { opacity: 0 }], { duration: 90 * o + 1, easing: 'ease-out', fill: 'forwards' }).finished.then(() => ghost.remove());
+  };
+  const early = pl.down;
+  if (!early) swap();
   const pose = rdPose(spot); rdStill(true);
   const from = spot.getBoundingClientRect();
-  const r = SCAN.rdp / 2, fl = rdFlyer(from); spot.style.visibility = 'hidden';
-  const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
-  // it flies (no hop) along a concave swoop: down through a shallow dip and back up into its new perch, the dip
-  // deeper the further it goes. It moves off quickly and eases in to land
-  const d = rdDist(a, b), sag = 14 + d * .2, low = Math.max(a.y, b.y) + sag;
-  const dip = [{ x: a.x + (b.x - a.x) * .25, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }];
-  const ease = k => .4 * easeInOut(k) + .6 * (1 - (1 - k) ** 3);
+  const fl = rdFlyer(from); spot.style.visibility = 'hidden';
+  const at = early ? { ...pl.at(0), x: pl.x } : g1;
+  const a = rdMid(from), b = { x: at.left + at.x, y: at.top + (pl.down ? 0 : g1.h) }, sc = 1;
+  // it flies (no hop) along a concave swoop: down through a clear dip and back up into its new perch, the dip
+  // deeper the further it goes. It moves off at once but evenly, so the whole curve reads, and eases in to land
+  const d = rdDist(a, b), sag = 20 + d * .35, low = Math.max(a.y, b.y) + sag;
+  const dip = [{ x: a.x + (b.x - a.x) * .2, y: low }, { x: a.x + (b.x - a.x) * .8, y: low }];
+  const ease = k => .7 * (1 - Math.cos(Math.PI * k)) / 2 + .3 * (1 - (1 - k) ** 3);
   const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400));
   const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease }), { duration: dur, fill: 'forwards' });
+  if (early){
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));   // Rotom is visibly moving first
+    if (!live()){ fadeOld.cancel(); return; }
+    swap();
+  }
+  fadeOld.cancel();
   // The popup moves with Rotom without redrawing anything each frame: it jumps to its new size and place, then
   // slides (transform) from where it was, its body stretching from the old height to the new; the bump is drawn
-  // separately and slides along the edge under Rotom. All on the GPU, on Rotom's own timing curve.
+  // separately and slides along the edge under Rotom. All on the GPU, on Rotom's own timing curve, caught up to
+  // wherever Rotom has got to.
   const svg = $('.dexpop__outline');
   dexApply(g1);
   svg.firstElementChild.setAttribute('d', scanOutline(g1.w, g1.h, null, g1.down));          // the body, no bump
@@ -1503,13 +1524,15 @@ async function rdGlide(change){
     frame.animate(track(v => `translate(${(g0.left - g1.left) * v}px, ${(g0.top - g1.top) * v}px)`), timing),
     svg.animate(track(v => `scaleY(${1 + (g0.h / g1.h - 1) * v})`), timing),
     bump.animate(track(v => `translateX(${(g0.x - g1.x) * v}px)`), timing)];
+  const now = flight.currentTime || 0; glide.forEach(x => x.currentTime = now);
   svg.style.transformOrigin = `50% ${g1.down ? SCAN.bump : g1.h - SCAN.bump}px`;
+  svg.style.filter = 'none';             // its big soft shadow would be redrawn every frame as it stretches: off while it moves
   const fadeIn = body.animate([{ opacity: hush, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
-    { duration: RD_MS.item + 60, delay: dur * .5, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+    { duration: RD_MS.item + 60, delay: Math.max(0, dur * .5 - now), easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
   await flight.finished;
-  const tidy = () => { fadeIn.cancel(); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = ''; };
+  const tidy = () => { fadeIn.cancel(); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = svg.style.filter = ''; };
   if (!live()) return tidy();
-  glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = '';
+  glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = svg.style.filter = '';
   dexApply(g1);                                                  // the whole outline again, bump and all
   await rdLand(fl, b.x - a.x, b.y - a.y, sc);
   if (!live()) return;
