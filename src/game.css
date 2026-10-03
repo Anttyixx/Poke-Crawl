@@ -1126,3 +1126,5 @@ button{ font:inherit; color:inherit; }
 /* the daycare's detail box gives way to the RotomDex, which scans the Pokémon you tap */
 #day-detail{ display:none; }
 #scr-wild [data-area="W.offer"] .slot{ touch-action:manipulation; }
+/* while Rotom flies between scans: a plain cover over the info, so the new info is built and drawn out of sight */
+.dexcover{ position:absolute; left:0; right:0; z-index:3; background:var(--bg); pointer-events:none; will-change:opacity; }
