@@ -1460,16 +1460,43 @@ function dexGeom(){
 function dexLayout(){ const g = dexGeom(); dexApply(g); return g; }
 // just the bump, as its own small svg on the frame's edge at g.x (for sliding it along the edge): its outline, and a
 // fill that covers the body's straight edge where the bump rises from it
-function scanBump(g){
-  const { bump: B, top: T, slope: S } = SCAN, half = T / 2 + S, pad = 3, W = half * 2 + 4, H = B + pad + 1;
-  const a = 2 + S, b = a + T, l = 2, rr = l + half * 2;                       // local x of the bump's parts
-  const base = g.down ? B : pad + 1, e = g.down ? 0 : H, under = g.down ? B + pad : 0;
-  const line = `M${l},${base} C${l + S / 2},${base} ${l + S / 2},${e} ${a},${e} L${b},${e} C${rr - S / 2},${e} ${rr - S / 2},${base} ${rr},${base}`;
+// the bump's outline and fill at height hf (1 = full, 0 = flat into the edge, a little over 1 for an overshoot), in
+// the bump svg's own coordinates. As it sinks its top narrows a touch and its sides soften, so it melts back in
+// rather than just getting squashed; the line keeps its thickness throughout.
+function bumpPaths(g, hf){
+  const { bump: B, top: T, slope: S } = SCAN, half = T / 2 + S, pad = 3, H = B + pad + 1, l = 2, rr = l + half * 2, mid = l + half;
+  const t = T / 2 * (.72 + .28 * Math.min(1, hf)), sl = S * (.75 + .25 * Math.min(1, hf));   // the top's half-width, the sides' width
+  const a = mid - t, b = mid + t;
+  const base = g.down ? B : pad + 1, e = base + (g.down ? -1 : 1) * B * hf, under = g.down ? B + pad : 0;
+  const f = n => +n.toFixed(2);
+  const line = `M${l},${base} C${f(a - sl / 2)},${base} ${f(a - sl / 2)},${f(e)} ${f(a)},${f(e)} L${f(b)},${f(e)} C${f(b + sl / 2)},${f(e)} ${f(b + sl / 2)},${base} ${rr},${base}`;
+  return { line, fill: `${line} L${rr},${under} L${l},${under} Z` };
+}
+// just the bump, as its own small svg on the frame's edge at g.x (for sliding it along the edge, or sinking it and
+// raising it again): its outline, and a fill that covers the body's straight edge where the bump rises from it
+function scanBump(g, hf = 1){
+  const { bump: B, top: T, slope: S } = SCAN, half = T / 2 + S, pad = 3, W = half * 2 + 4, H = B + pad + 1, p = bumpPaths(g, hf);
   const el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   el.setAttribute('class', 'dexpop__bump'); el.setAttribute('width', W); el.setAttribute('height', H); el.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  el.innerHTML = `<path class="fill" d="${line} L${rr},${under} L${l},${under} Z"/><path class="line" d="${line}"/>`;
+  el.innerHTML = `<path class="fill" d="${p.fill}"/><path class="line" d="${p.line}"/>`;
   Object.assign(el.style, { left: (g.x - half - 2) + 'px', top: (g.down ? 0 : g.h - H) + 'px' });
+  el._g = g;
   return el;
+}
+// morph a bump's shape over dur ms after delay ms, its height following hf(k) for k 0..1 (SVG's own animation, so the
+// line stays crisp at every height). Resolves when it is done.
+function morphBump(el, hf, dur, delay = 0){
+  const n = 18, ks = Array.from({ length: n + 1 }, (_, i) => i / n), ps = ks.map(k => bumpPaths(el._g, hf(k)));
+  const [fill, line] = el.querySelectorAll('path'), anims = [];
+  for (const [path, key] of [[fill, 'fill'], [line, 'line']]){
+    const an = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    an.setAttribute('attributeName', 'd'); an.setAttribute('dur', dur + 'ms'); an.setAttribute('fill', 'freeze');
+    an.setAttribute('begin', 'indefinite'); an.setAttribute('values', ps.map(p => p[key]).join(';'));
+    path.setAttribute('d', ps[0][key]); path.appendChild(an); anims.push(an);
+  }
+  return new Promise(done => {
+    el._morph = setTimeout(() => { anims.forEach(an => an.beginElement()); el._morph = setTimeout(done, dur); }, delay);
+  });
 }
 // put the popup, its outline and Rotom's perch at geometry g
 function dexApply(g){
@@ -1542,7 +1569,6 @@ async function rdGlide(slot, reserve, change){
   const oldBump = scanBump({ ...g0 });                                                             // the bump where it was, sinking
   shell.insertBefore(oldBump, box.nextSibling);
   let newBump = null, glide = [];
-  const place = el => el.style.transformOrigin = `50% ${g1.down ? '100%' : '0%'}`;            // bumps grow from the popup's edge
   const stage = () => {                                  // (re)builds the popup's motion for g1, caught up to Rotom
     const now = flight.currentTime || 0;
     glide.forEach(x => x.cancel());
@@ -1562,8 +1588,8 @@ async function rdGlide(slot, reserve, change){
   };
   svg.style.visibility = 'hidden';
   stage();
-  place(oldBump);
-  const sunk = oldBump.animate([{ transform: 'scaleY(1)' }, { transform: `scaleY(0)` }], { duration: 160, easing: 'cubic-bezier(.4,0,.7,.4)', fill: 'forwards' });
+  // the old bump melts back down into the edge as Rotom lifts off
+  morphBump(oldBump, k => (1 + Math.cos(Math.PI * k)) / 2, 200);
   // The info: a plain cover (cheap to draw, unlike the info itself) slides over the old info, the new info is built
   // under it while it is opaque, and it fades away as Rotom comes in, so nothing heavy is drawn while things move.
   const cover = document.createElement('div'); cover.className = 'dexcover';
@@ -1579,14 +1605,16 @@ async function rdGlide(slot, reserve, change){
   const lift = cover.animate([{ opacity: 1 }, { opacity: 0 }],
     { duration: RD_MS.item + 80, delay: Math.max(0, dur * .5 - (flight.currentTime || 0)), easing: 'ease-in-out', fill: 'both' });
   // the new bump rises out of the edge under Rotom as it comes in to land
-  newBump = scanBump(g1); place(newBump); shell.insertBefore(newBump, box.nextSibling);
-  const rise = newBump.animate([{ transform: 'scaleY(0)' }, { transform: 'scaleY(1.08)', offset: .75 }, { transform: 'scaleY(1)' }],
-    { duration: 260, delay: Math.max(0, dur - 170 - (flight.currentTime || 0)), easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'both' });
-  const tidy = () => { [lift, rise, sunk, ...glide].forEach(x => x.cancel()); [cover, box, oldBump, newBump].forEach(x => x?.remove());
+  // the new bump swells up out of the edge under Rotom as it comes in, rising a little too far and settling back
+  newBump = scanBump(g1, 0); shell.insertBefore(newBump, box.nextSibling);
+  const springUp = k => 1 + 2.3 * (k - 1) ** 3 + 1.3 * (k - 1) ** 2;                         // overshoots to about 1.08
+  const rise = morphBump(newBump, springUp, 300, Math.max(0, dur - 190 - (flight.currentTime || 0)));
+  const tidy = () => { [lift, ...glide].forEach(x => x.cancel()); [oldBump, newBump].forEach(x => x && clearTimeout(x._morph));
+    [cover, box, oldBump, newBump].forEach(x => x?.remove());
     svg.style.visibility = svg.style.filter = ''; };
   await flight.finished;
   if (!live()) return tidy();
-  await Promise.all([rdLand(fl, b.x - a.x, b.y - a.y, sc), rise.finished.catch(() => {})]);
+  await Promise.all([rdLand(fl, b.x - a.x, b.y - a.y, sc), rise]);
   if (!live()) return tidy();
   // landed: back to the one whole outline, bump, shadow and all
   tidy();
