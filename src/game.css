@@ -1198,3 +1198,5 @@ button{ font:inherit; color:inherit; }
 .shopcard[aria-pressed="true"]{ background:none; }
 /* the Mart's Sell button, under an item's price in its scan */
 .dexsell{ margin-top:10px; padding:7px 14px; font-size:13.5px; align-self:flex-start; }
+/* a Pokémon's chance to pick each move */
+.mv__pp--pct{ font-family:var(--display); font-weight:700; font-size:14px; color:var(--ink); }

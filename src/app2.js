@@ -103,8 +103,7 @@ function freshBoard(){
       const f = FORM[unit.form], it = unit.item;
       const maxHp = Math.round(f.hp * unit.mul * (it === 'assault-vest' ? 1.25 : 1));
       const u = { ...unit, uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
-        atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), bag: [], st: freshStatus() };
-      u.moves.forEach(m => { for (let i = 0; i < MOVES[m].pp; i++) u.bag.push(m); });
+        atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
       board[side][Math.floor(cell / 3)][cell % 3] = u;
     }
   }
@@ -162,7 +161,7 @@ function modLine(u){
   return out.join(', ');
 }
 function tipHTML(u){
-  const count = k => u.bag.filter(x => x === k).length;
+  const odds = u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item);
   const mods = modLine(u);
   return `<div class="tip__head"><span class="tip__name">${u.name} <span class="dt__stars">${'★'.repeat(u.level)}</span></span>
       <span class="tip__side" style="color:var(--${u.side === 'you' ? 'you' : 'foe'})">${u.side === 'you' ? 'Yours' : 'Opponent'}</span></div>
@@ -170,9 +169,9 @@ function tipHTML(u){
     <div class="tip__stats"><div class="tip__stat"><b>${Math.max(0, u.hp)}/${u.maxHp}</b><span>HP</span></div>
       <div class="tip__stat"><b>${Math.round(effAtk(u))}</b><span>Attack</span></div><div class="tip__stat"><b>${Math.round(effSpd(u))}</b><span>Speed</span></div></div>
     ${mods ? `<div class="tip__mods">${mods}</div>` : ''}
-    <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, count(k))).join('')}</div>
+    <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, odds[i])).join('')}</div>
     ${u.item ? `<div class="dt__item"><img src="${ITEM[u.item].spr}" alt=""><div><b>${ITEM[u.item].name}</b><br>${ITEM[u.item].fx}</div></div>` : ''}
-    <div class="tip__foot">${u.bag.length} PP left${u.bag.length ? '' : ', using Struggle'}</div>`;
+    <div class="tip__foot">${u.st.lock ? `Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}` : 'Each action, it picks a move by these odds'}</div>`;
 }
 function placeTip(el){
   const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pad = 8;
@@ -241,7 +240,7 @@ const mvChip = (m, u) => `<span class="le-mv" style="--c:${typeColor(m.type)}">$
 const status = html => $('#b-status').innerHTML = html;
 
 /* ---------- rules ---------- */
-const staysBack = u => u.item === 'heavy-duty-boots' && u.bag.some(k => MOVES[k].kind === 'sup');
+const staysBack = u => u.item === 'heavy-duty-boots' && u.moves.some(k => MOVES[k].kind === 'sup');
 async function compact(){
   const moves = [];
   for (const side of SIDES) for (let l = 0; l < 3; l++){
@@ -282,12 +281,15 @@ function faint(u, why = ''){
 }
 function checkFaints(list){ for (const t of list) if (t.hp <= 0 && find(t)) faint(t); }
 function lower(t, stat, amt){ if (t.st.mist || sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
+// pick a move at random by its weight (see moveOdds); nothing is used up, so the odds never change
 function draw(u){
-  if (u.st.lock){ const i = u.bag.indexOf(u.st.lock); return i >= 0 ? u.bag.splice(i, 1)[0] : 'struggle'; }
-  if (!u.bag.length) return 'struggle';
-  let idx = [...u.bag.keys()].filter(i => round > 1 || !MOVES[u.bag[i]].charge);     // charging moves can't open a battle
-  if (!idx.length) idx = [...u.bag.keys()];
-  return u.bag.splice(pick(idx), 1)[0];
+  if (u.st.lock) return u.st.lock;
+  let ks = u.moves.filter(k => round > 1 || !MOVES[k].charge);                       // charging moves can't open a battle
+  if (!ks.length) ks = u.moves;
+  const w = ks.map(k => moveWeight(k, u.item));
+  let r = Math.random() * w.reduce((a, b) => a + b, 0);
+  for (let i = 0; i < ks.length; i++) if ((r -= w[i]) < 0) return ks[i];
+  return ks.length ? ks[ks.length - 1] : 'struggle';
 }
 
 /* ---------- support moves ---------- */
@@ -341,7 +343,7 @@ function doSideSupport(u, key){
   if (key === 'wish'){ s.wishes.push(round + 1); return 'heals the lowest-HP ally at end of next round'; }
   return '';
 }
-async function resolveSupport(u, pos, key, m, refund, el){
+async function resolveSupport(u, pos, key, m, el){
   const note = t => `<div class="le-top">${who(u)} ${mvChip(m, u)} <span class="le-note">${t}</span></div>`;
   if (SIDE_MOVES.has(key)){
     await wait(300);
@@ -358,12 +360,12 @@ async function resolveSupport(u, pos, key, m, refund, el){
     floatText(el, 'nothing happens', 'info'); log(note('but nothing happens'), 'le'); await wait(420); return true;
   }
   if (key === 'transform'){
-    // copies the moves of the enemy directly across (or the nearest one), at full PP, for the rest of the battle
+    // copies the moves of the enemy directly across (or the nearest one), with their odds, for the rest of the battle
     const c = center(u.side, pos.lane), t = c >= 0 ? board[foe(u.side)][0][c] : living(foe(u.side))[0];
     status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
-    if (!t){ refund(); flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to copy, PP returned'), 'le fail'); await wait(420); return false; }
+    if (!t){ flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to copy'), 'le fail'); await wait(420); return false; }
     await shoot(elOf(t), el, typeColor(t.type));
-    u.moves = [...t.moves]; u.bag = u.moves.flatMap(k => Array(MOVES[k].pp).fill(k));
+    u.moves = [...t.moves];
     burst(el, typeColor(t.type)); floatText(el, 'transformed', 'buff');
     log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>copies ${who(t)}: ${u.moves.map(k => mvChip(MOVES[k], u)).join(' ')}</div></div>`, 'le');
     await wait(420); return true;
@@ -371,7 +373,7 @@ async function resolveSupport(u, pos, key, m, refund, el){
   const targets = supportTargets(u, pos, key, m);
   status(`${who(u)} ${mvChip(m, u)} ${targets.length ? '→ ' + targets.map(who).join(', ') : ''}`);
   await wait(300);
-  if (!targets.length){ refund(); flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to target, PP returned'), 'le fail'); await wait(420); return false; }
+  if (!targets.length){ flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to target'), 'le fail'); await wait(420); return false; }
   targets.forEach(t => t !== u && setTurn(t, 'ally'));
   await wait(160);
   await Promise.all(targets.filter(t => t !== u).map(t => shoot(el, elOf(t), typeColor(m.type))));
@@ -432,18 +434,18 @@ function guard(t, key, m, dmg, area){
   if (t.st.vuln) dmg *= 1 + t.st.vuln;
   return { dmg: Math.max(dmg > 0 ? 1 : 0, Math.round(dmg)), note:'' };
 }
-async function resolveOffense(u, pos, key, m, refund, el, origKey){
+async function resolveOffense(u, pos, key, m, el, origKey){
   const note = t => `<div class="le-top">${who(u)} ${mvChip(MOVES[origKey], u)}${origKey !== key ? ` → ${mvChip(m, u)}` : ''} <span class="le-note">${t}</span></div>`;
   if (pos.row === 1){
     status(`${who(u)} ${mvChip(m, u)}`); await wait(260);
-    refund(); flash(el, 'fizzle'); floatText(el, 'back row', 'info');
-    log(note('back row, no target, PP returned'), 'le fail'); await wait(420); return false;
+    flash(el, 'fizzle'); floatText(el, 'back row', 'info');
+    log(note('back row, no target'), 'le fail'); await wait(420); return false;
   }
-  if (key === 'counter' && !u.st.lastHit){ await wait(260); refund(); flash(el, 'fizzle'); floatText(el, 'not hit yet', 'info'); log(note("hasn't been hit yet, PP returned"), 'le fail'); await wait(420); return false; }
+  if (key === 'counter' && !u.st.lastHit){ await wait(260); flash(el, 'fizzle'); floatText(el, 'not hit yet', 'info'); log(note("hasn't been hit yet"), 'le fail'); await wait(420); return false; }
   const c = center(u.side, pos.lane);
   const targets = c < 0 ? [] : shapeTargets(u.side, c, m.shape);
   status(`${who(u)} ${mvChip(m, u)} ${targets.length ? '→ ' + targets.map(who).join(', ') : ''}`);
-  if (!targets.length){ await wait(260); floatText(el, 'miss', 'info'); log(note(`${SHAPE_LABEL[m.shape] || 'the move'} hit nothing, PP spent`), 'le fail'); await wait(420); return true; }
+  if (!targets.length){ await wait(260); floatText(el, 'miss', 'info'); log(note(`${SHAPE_LABEL[m.shape] || 'the move'} hit nothing`), 'le fail'); await wait(420); return true; }
   const tEls = targets.map(elOf);
   targets.forEach(t => setTurn(t, 'targeted'));
   await wait(340);
@@ -537,13 +539,12 @@ async function act(u, forced){
   }
   const origKey = forced ? forced.move : (u.st.planned || draw(u));
   u.st.planned = null;
-  const refund = () => { if (!forced?.noPP && origKey !== 'struggle') u.bag.push(origKey); };
   let key = origKey, m = MOVES[key];
   if (key === 'metronome'){ key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k))); m = MOVES[key]; }
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
-  const ok = m.kind === 'sup' ? await resolveSupport(u, pos, key, m, refund, el) : await resolveOffense(u, pos, key, m, refund, el, origKey);
+  const ok = m.kind === 'sup' ? await resolveSupport(u, pos, key, m, el) : await resolveOffense(u, pos, key, m, el, origKey);
   if (ok){
     u.st.used.add(origKey); u.st.lastMove = origKey;
     if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle'){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }

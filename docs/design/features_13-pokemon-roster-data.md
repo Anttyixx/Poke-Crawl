@@ -31,7 +31,7 @@ Species-level data for all of Gen 1 plus the other members of those families (ba
 
 **Damage is a percentage of the user's Attack:** damage = Attack × power% × type multiplier × modifiers, rounded. Heals are a percentage of the target's max HP.
 
-**PP decides which move gets used.** Each action picks a move at random weighted by PP remaining, then spends 1 PP. At 0 PP a move can't be picked; with everything at 0 the Pokémon Struggles. A move that fails for lack of a target refunds its PP. PP refills after every battle. Scale: **10** filler · **8** basic · **6** mainline · **4** strong · **2** finisher.
+**Weight decides which move gets used.** Each action picks a move at random in proportion to the moves' weights; nothing is used up, so the odds never change during a battle. (The move lists below still say "PP": read it as the move's weight, which kept the old PP values.) Scale: **10** filler · **8** basic · **6** mainline · **4** strong · **2** finisher.
 
 **Every Pokémon has one ability**, shared by its whole line.
 

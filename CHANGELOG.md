@@ -16,6 +16,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **Moves are picked by fixed odds instead of PP.** Each move has a weight, and every action a Pokémon picks a move at random in proportion to those weights. Nothing gets used up, so the odds stay the same all battle, and a Pokémon's info (and the battle tooltip) shows each move's chance as a percentage, like 80% / 20%. Pokémon never run out of moves and Struggle, and a move that has no target just costs the turn.
 - Items and moves you can't afford are greyed out and marked "too expensive" (tap one and the label flashes red and shakes), and items are greyed out with "no room" when your bag is full.
 - "Back to map" at the Poké Mart and the Move Tutor is no longer coloured in, so it doesn't look like a buy button.
 - Messages like "Pikachu joined your party." or "Bought the Leftovers." now pop up in a little bubble right above your party or bag, then fade after a few seconds.
@@ -27,7 +28,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - The starter screen no longer moves the tapped Pokémon to a big slot with its stats beside it; the RotomDex scan replaces that.
 - Status moves like Will-O-Wisp and Thunder Wave say "no damage" instead of "0% of Attack".
 - **Moves rebuilt for 2-move Pokémon.** Signature moves are now their own kind of move: learned by leveling and never taught. Most are shared within a type (Ember, Flamethrower, Surf, Earthquake…), and 26 standout Pokémon have one of their own: Charizard's Blast Burn, Raichu's Volt Tackle, Jigglypuff's Sing, Persian's Pay Day (bonus coins), Ditto's Transform, Magikarp's Splash, Mewtwo's Psystrike and more. The Move Tutor teaches everything else.
-- Signature moves have more PP, so a Pokémon's main attack carries more of the fight.
+- Signature moves have a higher weight than taught moves, so a Pokémon uses its main attack most of the time.
 - The RotomDex's Moves tab says which Pokémon can be taught each move, and marks unique signatures.
 - The RotomDex shows each line as how it evolves, with each Pokémon once and no star levels (Raticate no longer appears twice). Eevee's eight evolutions sit in a grid, and a Pokémon whose signature move changes as it levels lists each one.
 - Rotom's flight into the RotomDex is now a short hop and shallow dip, matching its way back (which dips a little less), and opening and closing are 10% quicker.

@@ -18,7 +18,7 @@ Combat resolution (how a center is picked, what each shape hits) lives in [04-ba
 - **Shape** — single, pierce, splash, full front row, back row, or full field.
 - **Power** — a percentage of the user's Attack (heals: a percentage of the target's max HP).
 - **Repeat hits** — optionally strikes 2-5 times in one action, independent of shape.
-- **PP** — how likely the move is to be picked, and how many times it can be used per battle.
+- **Weight** — how likely the move is to be picked, every action (nothing is used up).
 - **Star rating (★1–★3)** — the minimum level a Pokémon must be to learn it.
 - **Who can learn it** — a list of evolution lines, or **all** for a universal move.
 - **Target rule** — support moves each define how they pick among legal teammates.
@@ -85,23 +85,11 @@ The Move Tutor node (see [03-map-exploration.md](03-map-exploration.md)) **teach
 - Price by star makes ★3 moves a real spend, which pairs with their low PP: a strong move is expensive *and* uses up the Pokémon's action budget fast.
 - Re-roll cost that climbs within a visit lets the player dig for one specific move, but not for free.
 
-## PP is the balance dial, and it cuts twice
+## Weight is the balance dial
 
-When a Pokémon acts, it picks one of its moves at random **weighted by PP remaining**, then spends 1 PP. So PP is **both the chance of picking a move and the number of times it can be used**. A 2-PP move fires at most twice per battle and rarely early.
+When a Pokémon acts, it picks one of its moves at random **in proportion to their weights**. Nothing is spent, so weight is **only** the chance of picking a move: a weight-2 move next to a weight-8 signature is used 20% of the time, all battle long. (This replaced PP, where each use spent a point and the total was a Pokémon's action budget before it Struggled.)
 
-There's a second effect that's easy to miss: **the sum of all four moves' PP is the Pokémon's action budget for the fight.** When everything is at 0 PP, it Struggles — small damage, plus damage to itself — every round for the rest of the battle.
-
-So loading up on powerful rare moves has a real cost that needs no extra rules:
-
-| Loadout | Total PP | Actions before Struggle |
-|---|---|---|
-| Four 2-PP finishers | 8 | 8 |
-| Mixed 8 / 6 / 4 / 2 | 20 | 20 |
-| Four 10-PP fillers | 40 | 40 |
-
-A Pokémon built entirely around spike damage runs dry fast and spends the back half of a long fight hurting itself. A Pokémon built on reliable filler keeps swinging. **Power versus endurance, priced in PP** — and it matters most against gym leaders, where a full team of six makes for the longest fights in the game.
-
-This also means PP can't be tuned purely as "how rare is this move." Dropping a strong move to 2 PP makes it rare *and* quietly shortens the carrier's stamina, which may be more of a nerf than intended.
+So a strong move's rarity is now its only cost in weight: there is no stamina cost any more, and long fights (gym leaders) see a Pokémon's rare move about as often per action as short ones. Weights can be changed by held items, and later by single-use items.
 
 ## Design principle: moves that break the default rules must cost something
 
@@ -109,7 +97,7 @@ Moves that hit multiple Pokémon, hit one Pokémon several times, reach past the
 
 ### Levers available
 
-- **Low PP** — rare and few uses, with the stamina cost described above.
+- **Low weight** — picked rarely.
 - **High star rating** — can't be taught until ★3, and costs the most at the tutor.
 - **Signature-only** — tie a powerful shape to one line's ★3 signature so it can't be spread across the team.
 - **Narrow pool** — put it only in a pool few Pokémon qualify for, so getting it depends on who's in the party.

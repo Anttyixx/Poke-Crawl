@@ -26,7 +26,7 @@ for (const m of Object.values(MOVES)) m.learnableBy = [];
 for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Raticate at ★2 and ★3 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, pp:0, fx:'Used when every move is out of PP. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, weight:0, fx:'Used when a Pokémon has no move it can use. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
 // legendaries come only from Legendary nodes: never in wild offers or on trainers' and gym leaders' teams
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
@@ -88,6 +88,26 @@ function formFor(line, star, prev){
   return ((b && opts.find(f => f.branch === b)) || pick(opts)).id;
 }
 const known = m => [FORM[m.form].sig, ...m.taught];
+/* ---------- move odds ----------
+   Every move has a weight. Each time a Pokémon acts it picks one of its moves at random, in proportion to their weights;
+   nothing is used up, so the odds stay the same all battle. A Pokémon's info shows each move's chance as a percentage.
+   A held item can scale the weight of some of its moves: ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
+const ODDS_NAME = 'Weight';                              // what the move's number is called in the game (placeholder)
+function moveWeight(k, item){
+  const m = MOVES[k], o = item && ITEM[item]?.odds;
+  return (m.weight ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1);
+}
+// each move's chance to be picked, in whole percents that add up to 100
+function moveOdds(moves, item){
+  const w = moves.map(k => moveWeight(k, item)), t = w.reduce((a, b) => a + b, 0);
+  if (!t) return moves.map(() => 0);
+  const raw = w.map(x => x / t * 100), out = raw.map(Math.floor);
+  let left = 100 - out.reduce((a, b) => a + b, 0);
+  raw.map((x, i) => [x - out[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0){ out[i]++; left--; } });
+  return out;
+}
+// a party Pokémon's odds for each move it knows, as { move: percent }
+function monOdds(m){ const ks = known(m), o = moveOdds(ks, m.item?.id); return Object.fromEntries(ks.map((k, i) => [k, o[i]])); }
 const nm = m => FORM[m.form].name;
 function learnable(m){
   const have = new Set(known(m));
@@ -740,17 +760,19 @@ function tapSlot(name, i){
 /* ================= detail card ================= */
 // a move's level as three stars, filled up to its star rating
 const moveStars = n => `<span class="mv__stars" aria-label="${n} star move">${'<i class="on">★</i>'.repeat(n)}${'<i>★</i>'.repeat(3 - n)}</span>`;
-function moveRow(k, sig, ppLeft){
+// chance: this Pokémon's percent chance to pick it; without one, the move's weight is shown instead
+function moveRow(k, sig, chance){
   const m = MOVES[k];
   const hits = m.hits ? ` ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : '';
   const head = m.kind === 'sup'
     ? `Support, ${TARGET_NAME[m.target] || ''}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
     : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : `${m.power}% of Attack`}${hits}`;
-  const pp = ppLeft == null ? `${m.pp} PP` : `${ppLeft}/${m.pp}`;
+  const odds = chance == null ? `${ODDS_NAME} ${m.weight}` : `${chance}%`;
+  const title = chance == null ? `${ODDS_NAME}: the higher it is, the more often a Pokémon picks this move` : `Picked ${chance}% of the time`;
   return `<div class="mv${sig ? ' mv--sig' : ''}">
     <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
     <small>${head}</small>${m.fx ? `<small class="mv__fx">${m.fx}</small>` : ''}${moveStars(m.star)}</span>
-    <span class="mv__pp${ppLeft === 0 ? ' out' : ''}">${pp}</span></div>`;
+    <span class="mv__pp${chance === 0 ? ' out' : ''}${chance == null ? '' : ' mv__pp--pct'}" title="${title}">${odds}</span></div>`;
 }
 function moveChip(k, sig){
   const m = MOVES[k];
@@ -767,9 +789,10 @@ function rosterHTML(mons){
 const formationMons = () => R.party.filter(Boolean);   // front row left to right, then back row
 // opts.slots: list every taught slot (empty ones too); opts.pickable: those slots glow and can be tapped (data-slot)
 function taughtSlotsHTML(m, pickable){
+  const odds = monOdds(m);
   return Array.from({ length: TUNE.taughtMax }, (_, j) => {
     const k = m.taught[j];
-    const row = k ? moveRow(k, false) : `<div class="mv mv--empty"><span class="mv__name">Empty move slot<small>Taught at a Move Tutor</small></span><span class="mv__pp"></span></div>`;
+    const row = k ? moveRow(k, false, odds[k]) : `<div class="mv mv--empty"><span class="mv__name">Empty move slot<small>Taught at a Move Tutor</small></span><span class="mv__pp"></span></div>`;
     return pickable ? `<button class="mvslot" data-slot="${j}" aria-label="Slot ${j + 1}: ${k ? 'replace ' + MOVES[k].name : 'empty'}">${row}</button>` : row;
   }).join('');
 }
@@ -779,7 +802,7 @@ function monDetail(m, opts = {}){
   return `<div class="dt__head"><span class="dt__name">${f.name}</span><span class="pill" style="--c:${typeColor(f.type)}">${f.type}</span>
       <span class="dt__stars">${'★'.repeat(m.star)}<i>${'★'.repeat(3 - m.star)}</i></span></div>
     <div class="dt__stats"><div><b>${f.hp}</b><span>HP</span></div><div><b>${f.atk}</b><span>Attack</span></div><div><b>${f.spd}</b><span>Speed</span></div><div><b>${exp}</b><span>EXP</span></div></div>
-    <div class="mvlist${opts.pickable ? ' mvlist--pick' : ''}">${opts.slots ? moveRow(f.sig, true) + taughtSlotsHTML(m, opts.pickable) : known(m).map((k, i) => moveRow(k, i === 0)).join('')}</div>
+    <div class="mvlist${opts.pickable ? ' mvlist--pick' : ''}">${opts.slots ? moveRow(f.sig, true, monOdds(m)[f.sig]) + taughtSlotsHTML(m, opts.pickable) : known(m).map((k, i) => moveRow(k, i === 0, monOdds(m)[k])).join('')}</div>
     ${m.item ? `<div class="dt__item"><img src="${ITEM[m.item.id].spr}" alt=""><div><b>${ITEM[m.item.id].name}</b><br>${ITEM[m.item.id].fx}</div></div>` : ''}
     <div class="dt__ability"><b>${f.ability.name}.</b> ${f.ability.fx} <i>Abilities aren't active in battle yet.</i></div>`;
 }
@@ -974,7 +997,7 @@ function mapMonHTML(m){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
-      <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true)}</div></div>
+      <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true, monOdds(m)[f.sig])}</div></div>
       <div class="dexkv"><span>Moves</span><div class="mvlist">${taughtSlotsHTML(m, false)}</div></div>
     </div>
   </div>`;
@@ -1183,7 +1206,7 @@ const DEX_BUILD = {
             const m = MOVES[k], sigOf = FORMS.filter((f, i, all) => f.sig === k && all.findIndex(x => x.sig === k && x.name === f.name) === i), pools = POOLS.filter(p => p.moves.includes(k));
             const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
               + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
-              + (k === 'struggle' ? `<div class="dexlearn"><span>Used by any Pokémon whose moves are all out of PP</span></div>` : '');
+              ;
             return `<article class="dexmove" data-move="${k}">${moveRow(k, false)}${learn}</article>`;
           }).join('');
       }).join('');
@@ -2321,7 +2344,7 @@ RENDER['scr-tutor'] = () => {
       <div class="trcard__slot"></div>
       <div class="trcard__body">
         <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
-        <span class="mvcard__meta">${moveMeta(mv)}, ${mv.pp} PP${mv.fx ? `. ${mv.fx}` : ''}</span>
+        <span class="mvcard__meta">${moveMeta(mv)}, ${ODDS_NAME.toLowerCase()} ${mv.weight}${mv.fx ? `. ${mv.fx}` : ''}</span>
         <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
       </div>
       <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'too expensive'}</small></span>

@@ -13,7 +13,7 @@ This is the tracker for the game's design docs. Each feature has its own file. S
 | Core Game Loop | [01-core-game-loop.md](01-core-game-loop.md) | 🟡 |
 | Starter Selection | [02-starter-selection.md](02-starter-selection.md) | 🟡 |
 | Map & Exploration | [03-map-exploration.md](03-map-exploration.md) | 🟡 |
-| Battle System | [04-battle-system.md](04-battle-system.md) | 🟡 field, targeting + shapes confirmed; marble weight now PP (see 11 and 13) |
+| Battle System | [04-battle-system.md](04-battle-system.md) | 🟡 field, targeting + shapes confirmed; moves picked by fixed weights, nothing used up (see 11 and 13) |
 | Team Management (party, daycare, moves) | [05-team-management.md](05-team-management.md) | 🟡 |
 | Items | [06-items.md](06-items.md) | 🟡 held-item model drafted in [14-items-data.md](14-items-data.md); TMs removed |
 | Evolution | [07-evolution.md](07-evolution.md) | 🟡 |
@@ -47,7 +47,7 @@ A run is a sequence of branching maps ending in gym leader fights. **Combat is f
 - **Compaction: before every action, everyone pushes as far forward in their lane as possible.** A lane is either occupied at the front or entirely empty.
 - **Nobody slides sideways.** A lane whose front-liner falls with nobody behind is **gone for the rest of the battle**.
 - **Rounds, in Speed order** — everyone acts once per round, fastest first. **The battle ends the instant one side is empty**, mid-round if that's when it happens.
-- **Move selection runs on PP (Power Points)**, which replaced the marble-bag "weight": a Pokémon picks one of its moves at random weighted by **PP remaining**, and using it spends 1 PP. A move at 0 PP can't be picked; all four at 0 means **Struggle** (small damage, self-damage too). A move that fails for lack of a valid target **refunds its PP**. PP refills after every battle.
+- **Move selection runs on weights** (replacing PP, which replaced the marble bag): each move has a **weight** (name not final), and every action a Pokémon picks one of its moves at random in proportion to their weights. **Nothing is used up**: the odds are the same on the first action and the fiftieth, so the game can show each move's chance as a plain percentage on the Pokémon's info. Held items (and later single-use items) can change a move's weight. A move that fails for lack of a valid target just costs the turn. Struggle is no longer reachable.
 - Most Pokémon faint in any given battle; that's normal. **All are fully healed and revived afterward**, so there's no attrition between nodes.
 - All battles are trainer battles; none can be fled.
 
@@ -57,8 +57,8 @@ A run is a sequence of branching maps ending in gym leader fights. **Combat is f
 - **Every move has a star rating (★1–★3); a Pokémon can only be taught moves at or below its own level.** Moves already known are kept on leveling up.
 - **The master move list** defines what every move does; **move pools** define who can learn it. A pool is a list of moves plus a rule: **Universal** (everyone), one pool **per type**, and **stat pools** (Swift, Power, Sturdy) based on ★1 stats. A Pokémon can be taught every move in every pool it qualifies for, minus its own signatures, filtered by star.
 - Goal: teachable moves aren't unique to one line. While a type has only one line in the roster, its type pool is effectively that line's alone.
-- Each move carries a **type**, a **shape**, a **power %**, **PP**, a **star rating**, optional **repeat hits**, and — for support moves — its own **target-selection rule**.
-- **PP is the primary balance dial** and it cuts twice: it's both pick probability and use count, *and* the sum of all four moves' PP is the Pokémon's action budget before it starts Struggling. Scale: 10 filler · 8 basic · 6 mainline · 4 strong · 2 finisher.
+- Each move carries a **type**, a **shape**, a **power %**, a **weight**, a **star rating**, optional **repeat hits**, and — for support moves — its own **target-selection rule**.
+- **Weight is the primary balance dial**: it's only the pick probability now (no use count, no action budget). Scale (the old PP values, kept): 10 filler · 8 basic · 6 mainline · 4 strong · 2 finisher.
 - **Design principle: moves that break the default combat rules need a real drawback or genuine scarcity.**
 - **Roster simplification for the current content pass:** every Pokémon has a single type (it can change on evolution, e.g. Onix → Steelix); dual-typing can come back later.
 

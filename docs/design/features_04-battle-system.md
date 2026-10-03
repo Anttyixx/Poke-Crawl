@@ -103,24 +103,20 @@ The only way to keep a Pokémon in the back row is to **stack it behind a living
 
 **Left is favored.** With a gap ahead and enemies on both sides, the left-hand enemy is always chosen. An arbitrary but fixed convention — it means the enemy's left lane statistically eats the overflow damage.
 
-## Move selection — the marble bag
+## Move selection — weights
 
-Each move has a **weight**. At the start of a battle, every Pokémon builds a bag where each move contributes marbles equal to its weight.
+Each move has a **weight** (the name isn't final). Every time a Pokémon acts, it picks one of its moves at random **in proportion to their weights**.
 
-- When a Pokémon acts, it **draws one marble at random** — that's the move it uses.
-- That marble is **removed for the rest of the battle**, so every use makes the move both less likely and closer to exhausted.
-- When the bag runs empty, the Pokémon uses **Struggle** — small damage that also damages the user.
-- **A move that fails for lack of a valid target returns its marble to the bag**, costing the turn but not the use.
-
-Weight does two jobs with one number: the **probability** of drawing a move and the **number of times** it can be used. Total weight across the 4 slots is a Pokémon's action budget, and Struggle is the clock that guarantees battles terminate.
+- **Nothing is used up.** This replaced the marble bag (and then PP), where every use removed a marble: the odds kept shifting during a fight and were hard to read. Now the odds are fixed for the whole battle.
+- The Pokémon's info shows each move's chance as a **percentage** (its weight divided by the total of its moves' weights).
+- **Held items** can scale a move's weight (an item's `odds: { kind, mul }` multiplies the weight of its offensive or support moves, or all of them). **Single-use items** that change a move's weight are planned.
+- Choice items still lock the Pokémon into its first move, overriding the odds.
+- **A move that fails for lack of a valid target** just costs the turn.
+- Struggle can no longer happen, since a Pokémon never runs out of moves.
 
 ### Worked example
 
-A Pokémon with a signature move (weight 4), Move B (weight 3), Move C (weight 2), Move D (weight 1) starts with a 10-marble bag. First action: 40% chance of the signature. If it draws Move C, the bag becomes 4 / 3 / 1 / 1, and Move C is now half as likely as it was. After ten actions the bag is empty and it Struggles from then on.
-
-### Back-row Pokémon never run dry
-
-Because failed moves are refunded, a back-row Pokémon carrying only offensive moves **never depletes its bag — it does nothing each round until its lane pulls it forward**. The back row's value rests entirely on carrying support moves worth teaching.
+A Pokémon with a signature move (weight 8) and a taught move (weight 2) picks its signature 80% of the time and the taught move 20%, on every action of every battle.
 
 ## What the build layer controls
 
