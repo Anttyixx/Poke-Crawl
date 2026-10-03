@@ -1197,7 +1197,7 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXSHELL = $('.dexpop__shell'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('#dex-rotom');
 // RotomDex timings in ms (the numbers in comments are from before the last 25% speed-up of the panel)
-const RD_MS = { swoop: 600, land: 160 /* 200 */, fade: 75 /* 100 */, fold: 160 /* 209 */,
+const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   open: 205 /* 273 */, item: 160 /* 206 */, stagger: 24 /* 32 */,
   home: 600,                                        // both corner flights take 0.6s
   hop: [240, 400] };                                // a hop between perches: quicker the shorter it is
@@ -1222,6 +1222,9 @@ const rdFx = d => +(1 - .7 * d).toFixed(3);
 // Rotom floats gently while it waits (corner and perch); it holds still at rest while it flies, so every
 // hand-over between the flyer and the real sprite measures and lands on its resting spot
 const rdStill = on => document.body.classList.toggle('rd-flying', on);
+// where the float has Rotom right now (sprite el), so a flight can set off from there rather than snap to rest first
+const rdPose = el => { const cs = getComputedStyle(el), t = cs.translate === 'none' ? [] : cs.translate.split(' ').map(parseFloat);
+  return { y: t[1] || 0, rot: parseFloat(cs.rotate) || 0 }; };
 const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
@@ -1234,7 +1237,7 @@ const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}
 // - carries a little past its spot and drifts back into it
 // - flies each trip slightly differently (depth, flutter and lean vary a little)
 // A short hop has a smaller spring, less curve, depth and flutter.
-function rdSwoop(a, b, c1, c2, sc){
+function rdSwoop(a, b, c1, c2, sc, pose = { y: 0, rot: 0 }){
   const reach = rdReach(a, b), vary = () => .85 + Math.random() * .3;
   const far = .5 * Math.max(.55, reach) * vary();                       // how deep it dives, as a share of its size
   const up = { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
@@ -1243,7 +1246,7 @@ function rdSwoop(a, b, c1, c2, sc){
   const ax = (b.x - c2.x), ay = (b.y - c2.y), al = Math.hypot(ax, ay) || 1;          // the way it comes in to land
   const weave = (2 + 4 * reach) * vary(), phase = Math.random() * Math.PI * 2, over = 7 * reach * vary();
   const lean = -Math.sign(b.x - a.x || 1) * 7 * vary();
-  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), opacity: lit, offset: 0 },
+  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, pose.y, pose.rot, 1), opacity: lit, offset: 0 },
     { transform: rdT(0, 2, lean, 1.12, .86), opacity: lit, offset: .06 },                     // crouch, leaning back
     { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), opacity: lit, offset: hop }];      // and spring up
   let prev = pt(0);
@@ -1263,8 +1266,10 @@ function rdSwoop(a, b, c1, c2, sc){
   return frames;
 }
 // a squash-and-settle on landing, at the flyer's final place and size
-const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }, { transform: rdT(dx, dy, 0, sc * 1.1, sc * .86) },
-  { transform: rdT(dx, dy, 0, sc * .97, sc * 1.04) }, { transform: rdT(dx, dy, 0, sc) }], { duration: RD_MS.land, easing: 'ease-out', fill: 'forwards' }).finished;
+// (eased in and out, so it grows out of the landing rather than kicking in)
+const rdLand = (fl, dx, dy, sc) => fl.animate([{ transform: rdT(dx, dy, 0, sc) }, { transform: rdT(dx, dy, 0, sc * 1.06, sc * .93), offset: .35 },
+  { transform: rdT(dx, dy, 0, sc * .985, sc * 1.02), offset: .7 }, { transform: rdT(dx, dy, 0, sc) }],
+  { duration: RD_MS.land, easing: 'cubic-bezier(.37,0,.63,1)', fill: 'forwards' }).finished;
 // the panel's outline: a Rotom-sized rounded square around its spot, or the whole card
 function dexInset(open){
   const c = DEXSHELL.getBoundingClientRect(), r = rdMid(rdSpot().getBoundingClientRect()), s = 24;
@@ -1285,12 +1290,12 @@ async function openDex(){
   dexLayout();
   RD_BTN.classList.add('is-out');
   if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
-  rdStill(true);
+  const pose = rdPose(rdHome()); rdStill(true);
   const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
   DEXSHELL.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
   const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
   // the path, centre to centre: a small hop straight up, then a shallow dip down and back up into place
-  const frames = rdSwoop(a, b, ...rdDip(a, b, 1), sc);
+  const frames = rdSwoop(a, b, ...rdDip(a, b, 1), sc, pose);
   const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
   // the backdrop dims over the last part of the flight
   DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
@@ -1328,16 +1333,16 @@ async function closeDex(now = false){
   if (!DEX.open || (DEX.busy && !now)) return;
   DEX.busy = true;
   if (!now && !REDUCED){
-    rdStill(true);
-    const spot = rdSpot(), from = spot.getBoundingClientRect();
+    const spot = rdSpot();
     DEXVEIL.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade + RD_MS.fold + RD_MS.home * .5, easing: 'ease-in', fill: 'forwards' });
     const parts = await dexFold();
-    // then Rotom hops home
-    const fl = rdFlyer(from); spot.style.visibility = 'hidden';
+    // then Rotom hops home, setting off from wherever its float has it
+    const pose = rdPose(spot); rdStill(true);
+    const from = spot.getBoundingClientRect(), fl = rdFlyer(from); spot.style.visibility = 'hidden';
     DEXSHELL.style.visibility = 'hidden';
     const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
     // the same hop as on the way out, then a shallower dip down and back up to the corner
-    const home = rdSwoop(a, b, ...rdDip(a, b, .9), sc);              // the way home dips 10% less
+    const home = rdSwoop(a, b, ...rdDip(a, b, .9), sc, pose);              // the way home dips 10% less
     await fl.animate(home, { duration: RD_MS.home, fill: 'forwards' }).finished;
     RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
     await rdLand(fl, dx, dy, sc);
@@ -1456,27 +1461,28 @@ async function openScan(slot, mon, opts = {}){
 // other side of the Pokémon, it folds and reopens instead.
 async function rdGlide(change){
   if (REDUCED){ DEX.busy = true; change(); DEXCARD.scrollTop = 0; dexLayout(); DEX.busy = false; return; }
-  DEX.busy = true; hideTip(); rdStill(true);
+  DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   const frame = $('.dexpop__frame'), fr = frame.getBoundingClientRect(), spot = rdSpot();
   const g0 = { left: fr.left, top: fr.top, w: fr.width, h: fr.height, ...dexGeomNow() };
-  // the old info fades out quickly as Rotom crouches
-  const old = [...$('#dex-body').children];
-  await Promise.all(old.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }).finished));
-  if (!live()) return;
-  const from = spot.getBoundingClientRect();
+  // the old info fades out quickly, all as one layer; the new info is put in while it is (almost) invisible, so it
+  // is already drawn and ready when it fades back up (a fully transparent layer may not be drawn at all)
+  const body = $('#dex-body'), hush = .01;
+  const out = body.animate([{ opacity: 1 }, { opacity: hush }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' });
+  await out.finished;
+  if (!live()){ out.cancel(); return; }
   change(); DEXCARD.scrollTop = 0;
-  const parts = [...$('#dex-body').children];
-  parts.forEach(el => el.style.opacity = 0);
   const g1 = dexGeom();
   if (g1.down !== g0.down){                                   // flips sides: fold and reopen instead
-    dexApply(g0); rdStill(false);
-    return rdRelocate(() => parts.forEach(el => el.style.opacity = ''), .45);
+    out.cancel(); dexApply(g0);
+    return rdRelocate(() => {}, .45);
   }
+  const pose = rdPose(spot); rdStill(true);
+  const from = spot.getBoundingClientRect();
   const r = SCAN.rdp / 2, fl = rdFlyer(from); spot.style.visibility = 'hidden';
   const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
   const dur = rdHopMs(a, b), hop = .18;
-  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, .45), sc), { duration: dur, fill: 'forwards' });
+  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, .45), sc, pose), { duration: dur, fill: 'forwards' });
   // The popup moves with Rotom without redrawing anything each frame: it jumps to its new size and place, then
   // slides (transform) from where it was, its body stretching from the old height to the new; the bump is drawn
   // separately and slides along the edge under Rotom. All on the GPU, timed like the flight: still through the
@@ -1493,11 +1499,11 @@ async function rdGlide(change){
     bump.animate(held(`translateX(${g0.x - g1.x}px)`, 'none'), timing)];
   svg.style.transformOrigin = `50% ${g1.down ? SCAN.bump : g1.h - SCAN.bump}px`;
   // the new info starts fading up while Rotom is still on its way in, so it is there as Rotom lands
-  const showAt = setTimeout(() => parts.forEach((el, i) => { el.style.opacity = '';
-    el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
-      { duration: RD_MS.item, delay: i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); }), dur * .6);
+  const fadeIn = body.animate([{ opacity: hush, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+    { duration: RD_MS.item + 60, delay: dur * .6, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
+  out.cancel();
   await flight.finished;
-  const tidy = () => { clearTimeout(showAt); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = ''; parts.forEach(el => el.style.opacity = ''); };
+  const tidy = () => { fadeIn.cancel(); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = ''; };
   if (!live()) return tidy();
   glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = '';
   dexApply(g1);                                                  // the whole outline again, bump and all
@@ -1517,14 +1523,14 @@ async function rdRelocate(change, dip){
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   if (!REDUCED) await dexFold();
   if (!live()) return;
-  rdStill(true);
+  const pose = rdPose(rdSpot()); rdStill(true);
   const spot = rdSpot(), from = spot.getBoundingClientRect(), fl = REDUCED ? null : rdFlyer(from);
   spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden';
   change(); DEXCARD.scrollTop = 0; dexLayout();
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc), { duration: rdHopMs(a, b), fill: 'forwards' }).finished;
+  await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), { duration: rdHopMs(a, b), fill: 'forwards' }).finished;
   if (!live()) return;
   if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)){ DEX.busy = false; rdStill(false); }
 }
