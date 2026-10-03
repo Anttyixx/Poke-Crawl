@@ -49,6 +49,7 @@ const TUNE = {
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   martStock: 4, martRerollStep: 20,
+  sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
   bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
   itemPrice: { 'choice-band':120, 'choice-specs':100, 'choice-scarf':120, 'life-orb':120, 'weakness-policy':100,
     'leftovers':90, 'focus-sash':90, 'assault-vest':90, 'safety-goggles':90,
@@ -537,8 +538,11 @@ const AREA_CFG = {
   // the party and bag in the bottom corners, on the map and at the Move Tutor (where, with a move picked, tapping a
   // Pokémon teaches it; otherwise both work as on the map)
   'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true,
-    onTap: i => screen === 'scr-tutor' && TU.teaching ? tutorTeachTo(i) : screen === 'scr-wild' ? wildPartyTap(i) : false },
-  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true, onTap: () => { if (screen === 'scr-tutor' && TU.teaching){ TU.teaching = null; refresh(); } return false; } },
+    onTap: i => screen === 'scr-tutor' && TU.teaching ? tutorTeachTo(i) : screen === 'scr-wild' ? wildPartyTap(i)
+      : (screen === 'scr-item' && MT.picked != null && (MT.picked = null), false) },
+  // at the Poké Mart, with an item picked, tapping an empty bag slot buys it into that slot
+  'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true,
+    onTap: i => screen === 'scr-item' && MT.picked != null ? martPlace(i) : (screen === 'scr-tutor' && TU.teaching && (TU.teaching = null, refresh()), false) },
   'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
 };
@@ -951,13 +955,15 @@ function mapMonHTML(m){
     </div>
   </div>`;
 }
-function mapItemHTML(it){
+// sell: at the Poké Mart, a Sell button under the price (on the item you have selected)
+function mapItemHTML(it, sell){
   const d = ITEM[it.id], price = TUNE.itemPrice[it.id];
   return `<div class="dexmon dexmon--item" style="--t:var(--t-held)">
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${spriteURL(d.spr)}" alt=""></div></div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${d.name}</b><span class="pill" style="--c:var(--t-held)">Held item</span></div>
-      ${price != null ? `<div class="dexmon__roles">Sells for ${price} coins at Poké Marts</div>` : ''}
+      ${price != null ? `<div class="dexmon__roles">${price} coins at Poké Marts, which buy it back for ${sellPrice(it.id)}</div>` : ''}
+      ${sell ? `<button class="btn btn--go dexsell" type="button" data-sell>Sell for ${sellPrice(it.id)} coins</button>` : ''}
     </div>
     <div class="dexmon__more"><div class="dexkv"><span>Effect</span><p>${d.fx}</p></div>
       <div class="dexkv"><span>How to use</span><p>Tap it, then tap a Pokémon to have it hold it. Held items work automatically in battle.</p></div></div>
@@ -1161,7 +1167,7 @@ const DEX_BUILD = {
   // everything about the one Pokémon Rotom is scanning: its stars and EXP, stats, ability, held item and moves
   // a scanned Pokémon, or an item (anything without a form)
   scan: () => { const s = DEX.scan?.mon; if (!s) return '';
-    return `<article class="dexline dexscan" data-only="${s.form || ''}"><div class="dexdetail">${s.form ? mapMonHTML(s) : mapItemHTML(s)}</div></article>`; },
+    return `<article class="dexline dexscan" data-only="${s.form || ''}"><div class="dexdetail">${s.form ? mapMonHTML(s) : mapItemHTML(s, DEX.scan.sel && martSellable()?.it === s)}</div></article>`; },
   items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
     + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
       <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
@@ -1188,6 +1194,7 @@ async function dexShow(tab, animate){
   body.getAnimations().forEach(a => a.cancel());
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
+$('#dex-body').addEventListener('click', e => { if (e.target.closest('[data-sell]') && !DEX.busy) sell(); });
 document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
 /* ---------- the RotomDex: a sprite in the top-right corner that opens the Pokédex as a popup ----------
    Opening: Rotom crouches, hops, dips down and back up to its perch on the popup's top edge (overlapping it, a little
@@ -2032,34 +2039,76 @@ RENDER['scr-wild'] = () => {
 };
 
 /* ================= poké mart ================= */
-const MT = { stock: [], sold: new Set(), rerolls: 0 };
+// Tap an item in the stock to pick it: the empty slots in your bag (bottom right) glow, and tapping one buys the item
+// into it. Items you can't afford, or can't fit with a full bag, are greyed out. Tap an item in your bag (or one a
+// Pokémon holds) and its scan has a Sell button: the Mart buys it back for part of its price.
+const MT = { stock: [], sold: new Set(), rerolls: 0, picked: null };
 const itemPrice = id => TUNE.itemPrice[id] ?? 80;
+const sellPrice = id => Math.round(itemPrice(id) * TUNE.sellRate);
+// why an item in the stock can't be bought right now, or '' if it can
+const martBlock = i => MT.sold.has(i) ? 'sold' : R.coins < itemPrice(MT.stock[i]) ? 'poor' : R.bag.indexOf(null) < 0 ? 'full' : '';
 const martRerollFee = () => TUNE.martRerollStep * (MT.rerolls + 1);
 function rollMart(){ MT.stock = shuffle([...ITEM_IDS]).slice(0, TUNE.martStock); MT.sold = new Set(); }
-function openItem(){ MT.rerolls = 0; rollMart(); }
-function buy(i){
-  const id = MT.stock[i], cost = itemPrice(id), slot = R.bag.indexOf(null);
-  if (MT.sold.has(i)) return;
-  if (R.coins < cost){ UI.notice = { text: `You need ${cost} coins for the ${ITEM[id].name}.` }; return refresh(); }
-  if (slot < 0){ UI.notice = { text: 'Your bag is full. Tap an item in your bag, then a Pokémon, to have it hold it first.' }; return refresh(); }
+function openItem(){ MT.rerolls = 0; MT.picked = null; rollMart(); }
+// tap an item in the stock: pick it (or put it back), so the empty bag slots light up
+function martPick(i){
+  if (wiping) return;
+  const id = MT.stock[i], why = martBlock(i);
+  UI.sel = null;
+  if (MT.picked === i || why){ MT.picked = null; }
+  else { MT.picked = i; UI.notice = null; return refresh(); }
+  UI.notice = why === 'poor' ? { text: `You need ${itemPrice(id)} coins for the ${ITEM[id].name}. You have ${R.coins}.` }
+    : why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' }
+    : null;
+  refresh();
+}
+// tap a bag slot with an item picked: buy it into that slot if it's empty
+function martPlace(slot){
+  const i = MT.picked;
+  if (R.bag[slot]){ shake('M.bag', slot); UI.notice = { text: `That slot is taken. Tap a glowing empty slot to buy the ${ITEM[MT.stock[i]].name}.` }; return refresh(); }
+  buy(i, slot);
+}
+function buy(i, slot){
+  const id = MT.stock[i], cost = itemPrice(id);
+  MT.picked = null;
+  if (martBlock(i) || R.bag[slot]) return refresh();
   const src = document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .slot`), img = src?.querySelector('.slot__sprite img');
   const start = src && spriteBox(src);
   UI.sel = null;
   const el = AREAS['M.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
   R.coins -= cost; R.bag[slot] = makeItem(id); MT.sold.add(i);
   UI.notice = { ok: true, text: `Bought the ${ITEM[id].name}. It's in your bag, bottom right.` };
+  const coins = R.coins + cost;
   refresh();
+  countCoins($('#mart-coins'), coins, R.coins);
   if (el && img && !REDUCED){ holdSlot(el, prev.args, prev.label); el.classList.add('arriving'); fly(img.src, start, el, { slide: true }); }
+}
+// sell what's selected: an item in the bag, or one a party Pokémon holds
+function martSellable(){
+  const sel = UI.sel;
+  if (screen !== 'scr-item' || !sel || (sel.area !== 'M.bag' && !(sel.area === 'M.party' && sel.held))) return null;
+  const c = AREAS[sel.area].get()[sel.i], it = sel.held ? c?.item : c;
+  return it ? { sel, it } : null;
+}
+function sell(){
+  const s = martSellable(); if (!s) return;
+  const { sel, it } = s, gain = sellPrice(it.id), coins = R.coins, el = AREAS[sel.area].els[sel.i]?.el;
+  if (sel.held) R.party[sel.i].item = null; else R.bag[sel.i] = null;
+  R.coins += gain; UI.sel = null; MT.picked = null;
+  UI.notice = { ok: true, text: `Sold the ${ITEM[it.id].name} for ${gain} coins.` };
+  refresh();
+  countCoins($('#mart-coins'), coins, R.coins);
+  if (el && !REDUCED){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
 RENDER['scr-item'] = () => {
   $('#mart-coins').textContent = `${R.coins} coins`;
-  const bagFull = R.bag.indexOf(null) < 0;
-  // the Move Tutor's list: each item in a slot, its name and effect, its price; tap it to buy it
+  if (MT.picked != null && martBlock(MT.picked)) MT.picked = null;
+  // the Move Tutor's list: each item in a slot, its name and effect, its price; tap it to pick it, then a bag slot
   const box = $('#mart-stock');
   box.innerHTML = MT.stock.map((id, i) => {
-    const it = ITEM[id], cost = itemPrice(id), sold = MT.sold.has(i);
-    const note = sold ? 'sold' : R.coins < cost ? 'need more' : bagFull ? 'bag full' : 'coins';
-    return `<div class="mvcard trcard shopcard" data-i="${i}" role="button" tabindex="${sold ? -1 : 0}"${sold ? ' data-sold aria-disabled="true"' : ''} aria-label="Buy the ${it.name} for ${cost} coins">
+    const it = ITEM[id], cost = itemPrice(id), why = martBlock(i);
+    const note = { sold: 'sold', poor: 'need more', full: 'no room' }[why] || 'coins';
+    return `<div class="mvcard trcard shopcard" data-i="${i}" role="button" tabindex="${why === 'sold' ? -1 : 0}" aria-pressed="${MT.picked === i}"${why ? ` data-block="${why}" aria-disabled="true"` : ''} aria-label="${it.name}, ${cost} coins${why ? ', ' + note : ''}">
       <div class="trcard__slot"></div>
       <div class="trcard__body">
         <span class="mvcard__name">${it.name}</span>
@@ -2070,13 +2119,14 @@ RENDER['scr-item'] = () => {
   }).join('');
   box.querySelectorAll('.shopcard').forEach(card => {
     const i = +card.dataset.i, it = ITEM[MT.stock[i]], sold = MT.sold.has(i);
-    const slot = createSlot(e => { e.stopPropagation(); buy(i); });
+    const slot = createSlot(e => { e.stopPropagation(); martPick(i); });
     slot.tabIndex = -1; slot.setAttribute('aria-hidden', 'true');
     card.querySelector('.trcard__slot').append(slot);
     renderSlot(slot, PRESET.shop, sold ? null : { key: 'shop-' + i, sprite: it.spr, type: 'held', name: it.name }, { interactive: !sold });
+    slot.toggleAttribute('data-selected', MT.picked === i);
     if (!sold){
-      card.addEventListener('click', () => buy(i));
-      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); buy(i); } });
+      card.addEventListener('click', () => martPick(i));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); martPick(i); } });
     }
   });
   renderNotice('item-notice');
@@ -2086,7 +2136,7 @@ RENDER['scr-item'] = () => {
 };
 $('#mart-reroll').addEventListener('click', () => {
   if (R.coins < martRerollFee()) return;
-  R.coins -= martRerollFee(); MT.rerolls++; rollMart(); UI.notice = null; refresh();
+  R.coins -= martRerollFee(); MT.rerolls++; MT.picked = null; rollMart(); UI.notice = null; refresh();
 });
 $('#mart-leave').addEventListener('click', toMap);
 
@@ -2214,6 +2264,12 @@ function moveMeta(m){
 // the party in the bottom corner lights up where a tap does something: with a move picked at the Move Tutor, who can
 // learn it (the rest dim); placing a wild Pokémon, every slot; feeding a candy, every Pokémon
 function hudMarkParty(){
+  // at the Poké Mart, with an item picked, the empty bag slots glow and the full ones dim
+  const pick = screen === 'scr-item' && MT.picked != null;
+  AREAS['M.bag']?.els.forEach(({ el }, i) => {
+    el.toggleAttribute('data-learn', pick && !R.bag[i]);
+    el.toggleAttribute('data-nolearn', pick && !!R.bag[i]);
+  });
   const k = screen === 'scr-tutor' ? TU.teaching : null, place = screen === 'scr-wild' && W.phase === 'place', feed = screen === 'scr-wild' && W.phase === 'feed';
   AREAS['M.party']?.els.forEach(({ el }, i) => {
     const m = R.party[i], can = k ? !!(m && canLearn(m, k)) : place || (feed && !!m);
@@ -2227,7 +2283,7 @@ RENDER['scr-tutor'] = () => {
   box.innerHTML = TU.offer.length ? TU.offer.map(k => {
     const mv = MOVES[k], afford = R.coins >= price(k), who = party.filter(m => canLearn(m, k)), knows = party.filter(m => known(m).includes(k));
     const none = knows.length ? `${knows.map(nm).join(' and ')} already know${knows.length > 1 ? '' : 's'} it` : 'Nobody in your party can learn it yet';
-    return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}" role="button" tabindex="0">
+    return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}" role="button" tabindex="0"${afford ? '' : ' data-block="poor" aria-disabled="true"'}>
       <div class="trcard__slot"></div>
       <div class="trcard__body">
         <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>

@@ -13,10 +13,11 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **Every Generation 1 Pokémon**, plus the other members of their families from later generations: babies like Pichu, Cleffa and Happiny, and evolutions like Crobat, Scizor, Kleavor, Magnezone, Blissey and all eight Eeveelutions. 78 evolution lines, 184 Pokémon in all.
 - **Branching evolutions.** Eevee, Slowpoke, Tyrogue and Scyther pick their branch when they reach ★2, and Oddish and Poliwag when they reach ★3, then stay on it.
 - **Real legendaries.** Articuno, Zapdos, Moltres, Mewtwo and Mew wait on Legendary nodes. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
+- Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
-- The Poké Mart now looks like the Move Tutor: a tidy list of items in big slots with their prices, and you tap an item to buy it.
-- **Poké Mart with your party and bag at hand.** The Mart shows just what's for sale; the bag box is gone, and your party and bag sit in the bottom corners just like on the map. What you buy flies into your bag, and you can hand it to a Pokémon right there: tap the item, then the Pokémon.
+- Items and moves you can't afford are greyed out, and so are items when your bag has no room.
+- **A cleaner Poké Mart, with your party and bag at hand.** The Mart lists its items like the Move Tutor's moves, each in a big slot with its effect and price, and your party and bag sit in the bottom corners just like on the map. Tap an item and the empty slots in your bag glow; tap one to buy the item into it. You can hand it to a Pokémon right there: tap the item in your bag, then the Pokémon.
 - **Wild Pokémon screen, like the starter screen.** The three wild Pokémon wait at the top: tap one to scan it with the RotomDex, then "I Choose You!!". Your party and bag sit in the bottom corners just like on the map; once you've chosen, your party slots glow, and you tap one to put the new Pokémon there (a Pokémon already there moves over, or to the daycare). Sending it to the daycare, or releasing it for an EXP Candy when everything is full, work as before.
 - In the RotomDex, a Pokémon's type now sits under its picture, and a scan shows the Pokémon's info right from the top of the window.
 - **A simpler Move Tutor.** The tutor's 5 moves are listed down the screen, and your party and bag sit in the bottom corners just like on the map. Tap a move and the Pokémon that can learn it glow (the others dim); tap one of them and the TR flies over and teaches it, replacing its taught move. No more moving a Pokémon into a big slot and picking a move slot. Each move shows who in your party can learn it.

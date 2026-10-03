@@ -1171,5 +1171,13 @@ button{ font:inherit; color:inherit; }
 #scr-item .trcard{ grid-template-columns: 86px 1fr auto; }
 #scr-item .trcard__slot{ width:86px; }
 @media (max-width:520px){ #scr-item .trcard{ grid-template-columns: 68px 1fr auto; } #scr-item .trcard__slot{ width:68px; } }
-.shopcard[data-sold]{ opacity:.4; cursor:default; }
-.shopcard[data-sold] .trcard__slot .slot{ cursor:default; }
+/* greyed out: can't afford it, no room in the bag, or sold */
+.trcard[data-block]{ opacity:.42; filter:grayscale(.85); }
+.trcard[data-block] .mvcard__price{ color:var(--ink-dim); }
+.trcard[data-block] .mvcard__price small{ color:#ff8a80; }
+.shopcard[data-block="sold"]{ opacity:.35; cursor:default; }
+.shopcard[data-block="sold"] .mvcard__price small{ color:var(--ink-dim); }
+.shopcard[data-block="sold"] .trcard__slot .slot{ cursor:default; }
+.shopcard[aria-pressed="true"]{ background:none; }
+/* the Mart's Sell button, under an item's price in its scan */
+.dexsell{ margin-top:10px; padding:7px 14px; font-size:13.5px; align-self:flex-start; }
