@@ -1158,3 +1158,10 @@ button{ font:inherit; color:inherit; }
 #scr-wild .wild__actions{ justify-content:center; }
 #scr-wild .wild__actions .btn{ min-width:min(260px, 100%); }
 @media (max-width:520px){ #scr-wild{ --hud-room: 136px; } }
+
+/* ---------- Poké Mart: the stock, with your party and bag in the bottom corners as on the map ---------- */
+#scr-item .scr{ padding-bottom:calc(var(--hud-room, 156px) + 24px + env(safe-area-inset-bottom, 0px)); }
+@media (max-width:520px){ #scr-item{ --hud-room: 136px; } }
+#item-notice{ margin:0 0 10px; }
+#item-notice:empty{ display:none; }
+.mart__actions{ justify-content:space-between; }

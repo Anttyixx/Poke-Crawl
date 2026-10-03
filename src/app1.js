@@ -533,7 +533,6 @@ const AREAS = {};
 const AREA_CFG = {
   'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => { if (performance.now() - ST.pressed > 700) starterTap(i); } },
   'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => { if (performance.now() - W.pressed > 700) wildTap(i); } },
-  'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
   // the party and bag in the bottom corners, on the map and at the Move Tutor (where, with a move picked, tapping a
   // Pokémon teaches it; otherwise both work as on the map)
   'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true,
@@ -914,7 +913,7 @@ const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mar
    of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
 let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
 function updateMapHud(){
-  const on = (!wiping || mapIntro) && ['scr-map', 'scr-tutor', 'scr-wild'].includes(screen) && !!R.party;
+  const on = (!wiping || mapIntro) && ['scr-map', 'scr-tutor', 'scr-wild', 'scr-item'].includes(screen) && !!R.party;
   $('#mapteam').hidden = $('#mapbag').hidden = !on;
   if (on){ renderArea('M.party'); renderArea('M.bag'); hudMarkParty(); }
   const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
@@ -1433,7 +1432,7 @@ async function closeDex(now = false){
    RotomDex scans whatever is selected, flying over from one to the next, and puts itself away when nothing is.
    Closing the scan (tapping outside it, or Rotom) keeps the selection, so the next tap can still move it, even to a
    slot the scan was covering; it isn't scanned again until something else is selected. */
-const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare', 'scr-tutor', 'scr-wild'];
+const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare', 'scr-tutor', 'scr-wild', 'scr-item'];
 const SELSCAN = { running: false, again: false, dismissed: null };
 const selKey = sel => sel ? `${sel.area}|${sel.i}|${!!sel.held}` : null;
 function selScanWant(){
@@ -2041,12 +2040,13 @@ function buy(i){
   const id = MT.stock[i], cost = itemPrice(id), slot = R.bag.indexOf(null);
   if (MT.sold.has(i)) return;
   if (R.coins < cost){ UI.notice = { text: `You need ${cost} coins for the ${ITEM[id].name}.` }; return refresh(); }
-  if (slot < 0){ UI.notice = { text: 'Your bag is full. Give an item to a Pokémon on the map first.' }; return refresh(); }
+  if (slot < 0){ UI.notice = { text: 'Your bag is full. Tap an item in your bag, then a Pokémon, to have it hold it first.' }; return refresh(); }
   const img = document.querySelector(`#mart-stock .mcard[data-i="${i}"] img`), r = img.getBoundingClientRect();
   const start = { x: r.left, y: r.top, size: r.width };
-  const el = AREAS['I.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
+  UI.sel = null;
+  const el = AREAS['M.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
   R.coins -= cost; R.bag[slot] = makeItem(id); MT.sold.add(i);
-  UI.notice = { ok: true, text: `Bought the ${ITEM[id].name}. It's in your bag.` };
+  UI.notice = { ok: true, text: `Bought the ${ITEM[id].name}. It's in your bag, bottom right.` };
   refresh();
   if (el && !REDUCED){ holdSlot(el, prev.args, prev.label); el.classList.add('arriving'); fly(img.src, start, el, { slide: true }); }
 }
@@ -2063,8 +2063,6 @@ RENDER['scr-item'] = () => {
       <span class="mcard__fx">${it.fx}</span></div>`;
   }).join('');
   $('#mart-stock').querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', () => buy(+b.dataset.buy)));
-  renderArea('I.bag');
-  $('#item-count').textContent = `${R.bag.filter(Boolean).length} of ${TUNE.bagSize}`;
   renderNotice('item-notice');
   const rr = $('#mart-reroll');
   rr.textContent = `New stock for ${martRerollFee()} coins`;

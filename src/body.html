@@ -101,17 +101,16 @@
   </section>
 
   <!-- item -->
-  <section class="screen has-coins" id="scr-item" aria-label="Item">
-    <button class="btn btn--go btn--corner" id="mart-leave">Back to map</button>
+  <!-- Poké Mart: the stock to buy; your party and bag sit in the bottom corners as on the map -->
+  <section class="screen has-coins" id="scr-item" aria-label="Poké Mart">
     <span class="coins screen__coins" id="mart-coins"></span>
-    <div class="scr">
+    <div class="scr mart">
       <div class="scr__head"><span class="nodeicon" data-type="item">🛒</span><h1 class="title">Poké Mart</h1></div>
-      <p class="sub">Held items work automatically in battle. What you buy goes in your bag. On the map, tap an item and then a Pokémon to have it hold the item.</p>
-      <div class="mvcards martcards" id="mart-stock"></div>
-      <h2 class="panel-title">Bag <small id="item-count"></small></h2>
-      <div class="game slotbox"><div class="slots slots--bag" data-area="I.bag"></div></div>
+      <p class="sub">Held items work automatically in battle. What you buy goes in your bag, bottom right. Tap an item in your bag, then a Pokémon, to have it hold it.</p>
       <p class="notice" id="item-notice"></p>
-      <div class="actions"><button class="btn" id="mart-reroll"></button></div>
+      <div class="mvcards martcards" id="mart-stock"></div>
+      <!-- (no corner button here: the party sits in that corner) -->
+      <div class="actions mart__actions"><button class="btn" id="mart-reroll"></button><button class="btn btn--go" id="mart-leave" type="button">Back to map</button></div>
     </div>
   </section>
 
