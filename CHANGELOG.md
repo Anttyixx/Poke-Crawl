@@ -16,7 +16,8 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
-- Items and moves you can't afford are greyed out, and so are items when your bag has no room.
+- Items and moves you can't afford are greyed out and marked "too expensive" (tap one and the label flashes red and shakes), and items are greyed out with "no room" when your bag is full.
+- Messages like "Pikachu joined your party." or "Bought the Leftovers." now pop up in a little bubble right above your party or bag, then fade after a few seconds.
 - **A cleaner Poké Mart, with your party and bag at hand.** The Mart lists its items like the Move Tutor's moves, each in a big slot with its effect and price, and your party and bag sit in the bottom corners just like on the map. Tap an item and the empty slots in your bag glow; tap one to buy the item into it. You can hand it to a Pokémon right there: tap the item in your bag, then the Pokémon.
 - **Wild Pokémon screen, like the starter screen.** The three wild Pokémon wait at the top: tap one to scan it with the RotomDex, then "I Choose You!!". Your party and bag sit in the bottom corners just like on the map; once you've chosen, your party slots glow, and you tap one to put the new Pokémon there (a Pokémon already there moves over, or to the daycare). Sending it to the daycare, or releasing it for an EXP Candy when everything is full, work as before.
 - In the RotomDex, a Pokémon's type now sits under its picture, and a scan shows the Pokémon's info right from the top of the window.

@@ -730,7 +730,11 @@ function tapSlot(name, i){
     }
   }
   UI.sel = null; UI.notice = msg ? { ok: true, text: msg } : null;
+  // on the screens with your party and bag in the corners, the message pops up over where it happened instead
+  const hudToast = msg && (A.name === 'M.party' || A.name === 'M.bag') && !$('#mapteam').hidden;
+  if (hudToast) UI.notice = null;
   refresh(); flip(before);
+  if (hudToast) toast(A.name === 'M.bag' ? 'bag' : 'party', msg);
 }
 
 /* ================= detail card ================= */
@@ -854,6 +858,26 @@ function renderDetail(elId, empty){
   box.innerHTML = sel.held ? itemDetail(c.item) : AREAS[sel.area].holds === 'mon' ? monDetail(c) : itemDetail(c);
 }
 function renderNotice(elId){ const n = $('#' + elId); n.textContent = UI.notice?.text || ''; n.classList.toggle('ok', !!UI.notice?.ok); }
+// a little speech bubble over your party (bottom left) or bag (bottom right) saying what just landed there or left:
+// "Pikachu joined your party.", "Bought the Leftovers." It sits above everything else and fades after a few seconds;
+// a new one in the same corner replaces it.
+const TOASTS = {};
+function toast(where, text){
+  const hud = $(where === 'bag' ? '#mapbag' : '#mapteam');
+  TOASTS[where]?.remove();
+  if (!text || hud.hidden) return;
+  const r = hud.getBoundingClientRect(), t = document.createElement('div');
+  t.className = 'toast toast--' + where; t.setAttribute('role', 'status'); t.textContent = text;
+  t.style.bottom = (innerHeight - r.top + 12) + 'px';
+  if (where === 'bag') t.style.right = (innerWidth - r.right) + 'px'; else t.style.left = r.left + 'px';
+  document.body.append(t); TOASTS[where] = t;
+  const out = () => { if (TOASTS[where] === t) delete TOASTS[where]; t.remove(); };
+  if (REDUCED){ setTimeout(out, 3200); return; }
+  t.animate([{ opacity: 0, transform: 'translateY(8px) scale(.9)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'cubic-bezier(.2,.9,.3,1.2)' });
+  t.animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(-6px)' }], { duration: 400, delay: 3000, easing: 'ease-in', fill: 'forwards' }).finished.then(out, () => {});
+}
+// a price's small label ("too expensive", "no room") grows, turns red and shakes, then settles back
+function nope(el){ if (!el) return; el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); }
 
 /* ================= screens + the wipe ================= */
 let screen = null, wiping = false;
@@ -1947,8 +1971,8 @@ function wildPlace(i){
     else { shake('M.party', i); UI.notice = { text: 'Your party and daycare are both full, so nobody can make room. You can release it instead.' }; return refresh(); }
   }
   R.party[i] = mon; W.offer[W.home] = null; W.phase = 'done'; W.done = true;
-  UI.notice = { ok: true, text: msg };
-  refresh(); flip(before);
+  UI.notice = null;
+  refresh(); flip(before); toast('party', msg);
 }
 function wildToDaycare(){
   const mon = W.offer[W.home], el = wildSlot(W.home);
@@ -1999,9 +2023,9 @@ function feedCandy(i){
       : before !== nm(m) ? `${before} ate the EXP Candy, reached ★${m.star} and evolved into ${nm(m)}!` : `${before} ate the EXP Candy and reached ★${m.star}!`;
     W.leveled = evo.length ? m.uid : null;
   }
-  W.candy = false; W.phase = 'done'; W.done = true; UI.notice = { ok: true, text: msg };
+  W.candy = false; W.phase = 'done'; W.done = true; UI.notice = null;
   from.classList.add('depart'); void from.offsetWidth;
-  refresh();
+  refresh(); toast('party', msg);
   requestAnimationFrame(() => requestAnimationFrame(() => from.classList.remove('depart')));
   crossfadeLeave(from, 'var(--t-held)');
   if (REDUCED) return;
@@ -2057,10 +2081,9 @@ function martPick(i){
   UI.sel = null;
   if (MT.picked === i || why){ MT.picked = null; }
   else { MT.picked = i; UI.notice = null; return refresh(); }
-  UI.notice = why === 'poor' ? { text: `You need ${itemPrice(id)} coins for the ${ITEM[id].name}. You have ${R.coins}.` }
-    : why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' }
-    : null;
+  UI.notice = why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' } : null;
   refresh();
+  if (why === 'poor' || why === 'full') nope(document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .mvcard__price small`));
 }
 // tap a bag slot with an item picked: buy it into that slot if it's empty
 function martPlace(slot){
@@ -2077,9 +2100,9 @@ function buy(i, slot){
   UI.sel = null;
   const el = AREAS['M.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
   R.coins -= cost; R.bag[slot] = makeItem(id); MT.sold.add(i);
-  UI.notice = { ok: true, text: `Bought the ${ITEM[id].name}. It's in your bag, bottom right.` };
+  UI.notice = null;
   const coins = R.coins + cost;
-  refresh();
+  refresh(); toast('bag', `Bought the ${ITEM[id].name}.`);
   countCoins($('#mart-coins'), coins, R.coins);
   if (el && img && !REDUCED){ holdSlot(el, prev.args, prev.label); el.classList.add('arriving'); fly(img.src, start, el, { slide: true }); }
 }
@@ -2095,8 +2118,8 @@ function sell(){
   const { sel, it } = s, gain = sellPrice(it.id), coins = R.coins, el = AREAS[sel.area].els[sel.i]?.el;
   if (sel.held) R.party[sel.i].item = null; else R.bag[sel.i] = null;
   R.coins += gain; UI.sel = null; MT.picked = null;
-  UI.notice = { ok: true, text: `Sold the ${ITEM[it.id].name} for ${gain} coins.` };
-  refresh();
+  UI.notice = null;
+  refresh(); toast(sel.held ? 'party' : 'bag', `Sold the ${ITEM[it.id].name} for ${gain} coins.`);
   countCoins($('#mart-coins'), coins, R.coins);
   if (el && !REDUCED){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
@@ -2107,7 +2130,7 @@ RENDER['scr-item'] = () => {
   const box = $('#mart-stock');
   box.innerHTML = MT.stock.map((id, i) => {
     const it = ITEM[id], cost = itemPrice(id), why = martBlock(i);
-    const note = { sold: 'sold', poor: 'need more', full: 'no room' }[why] || 'coins';
+    const note = { sold: 'sold', poor: 'too expensive', full: 'no room' }[why] || 'coins';
     return `<div class="mvcard trcard shopcard" data-i="${i}" role="button" tabindex="${why === 'sold' ? -1 : 0}" aria-pressed="${MT.picked === i}"${why ? ` data-block="${why}" aria-disabled="true"` : ''} aria-label="${it.name}, ${cost} coins${why ? ', ' + note : ''}">
       <div class="trcard__slot"></div>
       <div class="trcard__body">
@@ -2169,7 +2192,7 @@ function pickTutorMove(k){
   UI.sel = null;
   if (TU.teaching === k){ TU.teaching = null; UI.notice = null; return refresh(); }
   const mv = MOVES[k];
-  if (R.coins < price(k)){ TU.teaching = null; UI.notice = { text: `You need ${price(k)} coins to teach ${mv.name}.` }; return refresh(); }
+  if (R.coins < price(k)){ TU.teaching = null; UI.notice = null; refresh(); return nope(document.querySelector(`#tutor-moves .trcard[data-k="${k}"] .mvcard__price small`)); }
   if (!partyMons().some(m => canLearn(m, k))){ TU.teaching = null; UI.notice = { text: `Nobody in your party can learn ${mv.name} right now.` }; return refresh(); }
   TU.teaching = k; UI.notice = null; refresh();
 }
@@ -2250,9 +2273,9 @@ function teach(m, k, i){
   const coins = R.coins, old = m.taught.length >= TUNE.taughtMax ? m.taught.at(-1) : null;
   R.coins -= price(k);
   if (old) m.taught[m.taught.length - 1] = k; else m.taught.push(k);
-  UI.notice = { ok: true, text: old ? `${nm(m)} forgot ${MOVES[old].name} and learned ${MOVES[k].name}.` : `${nm(m)} learned ${MOVES[k].name}.` };
+  UI.notice = null;
   TU.teaching = null;
-  refresh();
+  refresh(); toast('party', old ? `${nm(m)} forgot ${MOVES[old].name} and learned ${MOVES[k].name}.` : `${nm(m)} learned ${MOVES[k].name}.`);
   countCoins($('#tutor-coins'), coins, R.coins);
   const el = AREAS['M.party'].els[i]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
@@ -2290,7 +2313,7 @@ RENDER['scr-tutor'] = () => {
         <span class="mvcard__meta">${moveMeta(mv)}, ${mv.pp} PP${mv.fx ? `. ${mv.fx}` : ''}</span>
         <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
       </div>
-      <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'need more'}</small></span>
+      <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'too expensive'}</small></span>
     </div>`;
   }).join('') : `<p class="detail__empty">The tutor has nothing new for your party today. Reroll for new moves.</p>`;
   // each move gets a dynamic slot holding its type's TR; tapping it (or the card) picks the move

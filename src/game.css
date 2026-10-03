@@ -1172,11 +1172,28 @@ button{ font:inherit; color:inherit; }
 #scr-item .trcard__slot{ width:86px; }
 @media (max-width:520px){ #scr-item .trcard{ grid-template-columns: 68px 1fr auto; } #scr-item .trcard__slot{ width:68px; } }
 /* greyed out: can't afford it, no room in the bag, or sold */
-.trcard[data-block]{ opacity:.42; filter:grayscale(.85); }
-.trcard[data-block] .mvcard__price{ color:var(--ink-dim); }
-.trcard[data-block] .mvcard__price small{ color:#ff8a80; }
+.trcard[data-block] > :not(.mvcard__price){ opacity:.42; filter:grayscale(.85); }
+.trcard[data-block] .mvcard__price{ color:color-mix(in srgb, var(--ink-dim) 60%, transparent); }
 .shopcard[data-block="sold"]{ opacity:.35; cursor:default; }
-.shopcard[data-block="sold"] .mvcard__price small{ color:var(--ink-dim); }
+/* tapping something too expensive (or with no room): its label grows, turns red and shakes, then settles back */
+.mvcard__price small{ transform-origin:100% 50%; white-space:nowrap; }
+.mvcard__price small.nope{ animation: nope .75s ease both; }
+@keyframes nope{
+  0%{ transform:none; color:var(--ink-dim); }
+  14%{ transform:scale(1.4); color:#ff5a52; }
+  24%{ transform:scale(1.4) translateX(-5px); }  34%{ transform:scale(1.4) translateX(5px); }
+  44%{ transform:scale(1.4) translateX(-4px); }  54%{ transform:scale(1.4) translateX(3px); }
+  64%{ transform:scale(1.4); color:#ff5a52; }
+  100%{ transform:none; color:var(--ink-dim); } }
+@media (prefers-reduced-motion: reduce){ .mvcard__price small.nope{ animation:none; color:#ff5a52; } }
+/* the speech bubble over your party or bag: what just landed there or left */
+.toast{ position:fixed; z-index:2900; max-width:min(300px, calc(100vw - 24px)); padding:9px 13px; border-radius:12px; pointer-events:none;
+  background:#232a38; border:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); color:var(--ink); font-size:13.5px; line-height:1.35;
+  box-shadow:0 8px 22px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.3); }
+.toast::after{ content:""; position:absolute; bottom:-7px; width:12px; height:12px; background:#232a38; transform:rotate(45deg);
+  border-right:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); border-bottom:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); }
+.toast--party::after{ left:24px; }
+.toast--bag::after{ right:24px; }
 .shopcard[data-block="sold"] .trcard__slot .slot{ cursor:default; }
 .shopcard[aria-pressed="true"]{ background:none; }
 /* the Mart's Sell button, under an item's price in its scan */
