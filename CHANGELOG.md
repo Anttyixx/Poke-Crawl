@@ -15,6 +15,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **Real legendaries.** Articuno, Zapdos, Moltres, Mewtwo and Mew wait on Legendary nodes. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
 
 ### Changed
+- In the RotomDex, a Pokémon's type now sits under its picture, and a scan shows the Pokémon's info right from the top of the window.
 - **A simpler Move Tutor.** The tutor's 5 moves are listed down the screen, and your party and bag sit in the bottom corners just like on the map. Tap a move and the Pokémon that can learn it glow (the others dim); tap one of them and the TR flies over and teaches it, replacing its taught move. No more moving a Pokémon into a big slot and picking a move slot. Each move shows who in your party can learn it.
 - **Livelier RotomDex flights.** Rotom now dives away into the screen mid-flight (shrinking, dimming and going a little hazy) and swoops back out to land. It leans back before it takes off, flutters as it flies, carries a little past its spot before settling, and no two flights are quite the same. Short hops curve less, and it floats gently while it waits. Hopping between Pokémon is quicker, and the RotomDex window opens and closes faster. The scan window opens and closes almost twice as fast again, and starts opening just before Rotom lands so the two arrive together.
 - The starter screen no longer moves the tapped Pokémon to a big slot with its stats beside it; the RotomDex scan replaces that.

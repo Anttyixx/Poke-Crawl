@@ -896,7 +896,8 @@ button{ font:inherit; color:inherit; }
 .dexline{ background:var(--panel); border:1px solid var(--line); border-radius:14px; margin-bottom:12px; overflow:hidden; }
 .dexmon{ display:grid; grid-template-columns:76px 1fr; gap:4px 14px; padding:14px; }
 .dexmon + .dexmon{ border-top:1px solid #20242f; }
-.dexmon__pic{ grid-row:span 2; width:76px; height:76px; border-radius:16px; display:grid; place-items:center;
+.dexmon__side{ grid-row:span 2; display:flex; flex-direction:column; align-items:center; gap:7px; }     /* the sprite, its type under it */
+.dexmon__pic{ width:76px; height:76px; border-radius:16px; display:grid; place-items:center;
   background:radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--t) 30%, transparent), transparent 70%), var(--tile);
   border:2px solid color-mix(in srgb, var(--t) 55%, #1b1f29); }
 .dexmon__pic img{ width:86%; height:86%; object-fit:contain; image-rendering:pixelated; }
@@ -916,7 +917,8 @@ button{ font:inherit; color:inherit; }
 .dexkv p b{ color:var(--ink); }
 @media (max-width:520px){
   .dexmon{ grid-template-columns:60px 1fr; gap:4px 12px; padding:12px; }
-  .dexmon__pic{ width:60px; height:60px; border-radius:13px; grid-row:auto; }
+  .dexmon__side{ grid-row:auto; }
+  .dexmon__pic{ width:60px; height:60px; border-radius:13px; }
   .dexmon__more{ grid-column:1 / -1; }
   .dexkv{ grid-template-columns:1fr; gap:5px; }
   .dexkv > span{ padding-top:0; }
@@ -1072,7 +1074,10 @@ button{ font:inherit; color:inherit; }
 .dexact{ position:absolute; top:0; left:0; right:0; z-index:4; height:0; display:flex; justify-content:flex-end; padding:0 12px; pointer-events:none; }
 .dexact .btn{ pointer-events:auto; height:max-content; margin-top:10px; padding:7px 13px; font-size:13px; background:var(--panel-2);
   box-shadow:0 6px 14px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.4); }
-.dexpop--scan .dexbody{ padding-top:48px; }
+/* the scan's info starts right at the top; "Full RotomDex" floats over its top right, and the name row leaves room
+   for it so the button never covers the name */
+.dexpop--scan .dexbody{ padding-top:0; }
+.dexpop--scan .dexscan .dexmon__head{ padding-right:132px; min-height:40px; }
 .dexact[hidden]{ display:none; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }

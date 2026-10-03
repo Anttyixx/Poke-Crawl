@@ -938,9 +938,9 @@ function mapMonHTML(m){
   const exp = `<div class="dstat" data-stat="exp"><span>EXP</span><b>${maxed ? 'Max' : pct(m.exp)}</b><i class="dstat__bar"><i style="width:${maxed ? 100 : Math.max(3, Math.round(m.exp * 100))}%"></i></i></div>`;
   const it = m.item && ITEM[m.item.id];
   return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
-    <div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>
+    <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
-      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}${starRow(m.star)}</div>
+      <div class="dexmon__head"><b>${f.name}</b>${starRow(m.star)}</div>
       ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
       <div class="dstats dstats--4">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}${exp}</div>
     </div>
@@ -955,7 +955,7 @@ function mapMonHTML(m){
 function mapItemHTML(it){
   const d = ITEM[it.id], price = TUNE.itemPrice[it.id];
   return `<div class="dexmon dexmon--item" style="--t:var(--t-held)">
-    <div class="dexmon__pic"><img src="${spriteURL(d.spr)}" alt=""></div>
+    <div class="dexmon__side"><div class="dexmon__pic"><img src="${spriteURL(d.spr)}" alt=""></div></div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${d.name}</b><span class="pill" style="--c:var(--t-held)">Held item</span></div>
       ${price != null ? `<div class="dexmon__roles">Sells for ${price} coins at Poké Marts</div>` : ''}
@@ -1031,9 +1031,9 @@ function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
   const tutor = tutorMoves(f), sigs = [...new Set(speciesForms(f).map(x => x.sig))];
   return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
-    <div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>
+    <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
-      <div class="dexmon__head"><b>${f.name}</b>${typePill(f.type)}</div>
+      <div class="dexmon__head"><b>${f.name}</b></div>
       ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
