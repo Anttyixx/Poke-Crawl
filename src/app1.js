@@ -1195,13 +1195,18 @@ document.querySelectorAll('img.dexicon').forEach(i => i.src = ROTOMDEX_SPR);
    sprite is and the hand-over can't jump. Tapping the perched Rotom closes the popup. */
 const DEXPOP = $('#dexpop'), DEXCARD = $('#scr-dex'), DEXSHELL = $('.dexpop__shell'), DEXVEIL = DEXPOP.firstElementChild, RD_BTN = $('#rotomdex');
 const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('#dex-rotom');
-// RotomDex timings in ms (the numbers in comments are from before the last 10% speed-up)
-const RD_MS = { swoop: 600, land: 200 /* 220 */, fade: 100 /* 110 */, fold: 209 /* 230 */,
-  open: 273 /* 300 */, item: 206 /* 227 */, stagger: 32 /* 35 */,
-  home: 600 };                                      // both flights take 0.6s
-// the dip both hops make between Rotom's corner and the popup header: a shallow curve below both ends
+// RotomDex timings in ms (the numbers in comments are from before the last 25% speed-up of the panel)
+const RD_MS = { swoop: 600, land: 160 /* 200 */, fade: 75 /* 100 */, fold: 160 /* 209 */,
+  open: 205 /* 273 */, item: 160 /* 206 */, stagger: 24 /* 32 */,
+  home: 600,                                        // both corner flights take 0.6s
+  hop: [240, 400] };                                // a hop between perches: quicker the shorter it is
+const rdDist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
+// how much a flight of this length bends and dips into the screen: short hops barely curve, long ones fully
+const rdReach = (a, b) => Math.min(1, Math.max(.15, rdDist(a, b) / 520));
+const rdHopMs = (a, b) => Math.round(RD_MS.hop[0] + (RD_MS.hop[1] - RD_MS.hop[0]) * Math.min(1, rdDist(a, b) / 520));
+// the dip a hop makes: a shallow curve below both ends, flatter the shorter the hop
 const rdDip = (a, b, depth) => {
-  const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170) * depth;
+  const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170) * depth * rdReach(a, b);
   return [{ x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }];
 };
 const rdFlyer = box => {
@@ -1210,23 +1215,30 @@ const rdFlyer = box => {
   Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
   return document.body.appendChild(img);
 };
+// Rotom's shadow and light at depth d (0 on the glass): further in, it is dimmer and its shadow tighter
+const rdFx = d => `drop-shadow(0 ${(3 - 6 * d).toFixed(2)}px ${(8 - 12 * d).toFixed(2)}px rgba(0,0,0,.5)) brightness(${(1 - .5 * d).toFixed(3)})`;
 const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
 // a crouch and a small hop straight up, then one curve (through control points c1 and c2) into place at b, all centre
 // to centre. Rotom leans into the curve and stretches a little at speed, both fading out smoothly as it slows.
+// It also flies a little away into the screen mid-flight (smaller, a touch dimmer) and comes back out to land,
+// further the longer the flight; a short hop has a smaller spring and barely leaves the glass.
 function rdSwoop(a, b, c1, c2, sc){
-  const up = { x: a.x, y: a.y - 22 };
+  const reach = rdReach(a, b), far = .3 * Math.max(.5, reach);
+  const up = { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
   const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
-  const hop = .18, n = 28, frames = [{ transform: rdT(0, 0, 0, 1), offset: 0 },
-    { transform: rdT(0, 2, 0, 1.12, .86), offset: .05 },                                    // crouch
-    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), offset: hop }];                          // and spring up
+  const hop = .18, n = 28, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), filter: lit, offset: 0 },
+    { transform: rdT(0, 2, 0, 1.12, .86), filter: lit, offset: .05 },                        // crouch
+    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), filter: lit, offset: hop }];              // and spring up
   let prev = pt(0);
   for (let i = 1; i <= n; i++){
-    const k = i / n, u = easeInOut(k), p = pt(u), s = 1 + (sc - 1) * u;
+    const k = i / n, u = easeInOut(k), p = pt(u), z = Math.sin(Math.PI * k) ** 1.4;      // z: how deep into the screen
+    const s = (1 + (sc - 1) * u) * (1 - far * z);
     const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
     const st = 1 + .06 * Math.sin(Math.PI * k);
-    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), offset: i === n ? 1 : hop + (1 - hop) * k });
+    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), filter: rdFx(far * z),
+      offset: i === n ? 1 : hop + (1 - hop) * k });
     prev = p;
   }
   return frames;
@@ -1408,7 +1420,7 @@ async function rdRelocate(change, dip){
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc), { duration: RD_MS.home * .75, fill: 'forwards' }).finished;
+  await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc), { duration: rdHopMs(a, b), fill: 'forwards' }).finished;
   if (!live()) return;
   if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)) DEX.busy = false;
 }
