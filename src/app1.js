@@ -1373,14 +1373,16 @@ function scanOutline(w, h, x, down){
     ? `M${r},${y0} ${bumpPath} L${w - r},${y0} Q${w},${y0} ${w},${y0 + r} L${w},${y1 - r} Q${w},${y1} ${w - r},${y1} L${r},${y1} Q0,${y1} 0,${y1 - r} L0,${y0 + r} Q0,${y0} ${r},${y0} Z`
     : `M${r},${y0} L${w - r},${y0} Q${w},${y0} ${w},${y0 + r} L${w},${y1 - r} Q${w},${y1} ${w - r},${y1} ${bumpPath} L${r},${y1} Q0,${y1} 0,${y1 - r} L0,${y0 + r} Q0,${y0} ${r},${y0} Z`;
 }
-function dexLayout(){
-  const frame = $('.dexpop__frame'), spot = rdSpot(), { bump: B } = SCAN, r = SCAN.rdp / 2;
+// where the popup goes and how big it is: the frame's box (left/top only while scanning), the bump's x along its
+// width, and whether Rotom perches on the top edge (down) or the bottom one
+function dexGeom(){
+  const frame = $('.dexpop__frame'), { bump: B } = SCAN;
   const edge = SCAN.top / 2 + SCAN.slope + SCAN.r + 4;        // how far the bump's middle must stay from a corner
   DEXPOP.classList.toggle('dexpop--scan', !!DEX.scan);
   let w, h, x, down = true;
   if (!DEX.scan){
     // the full RotomDex: the screen-filling frame, Rotom on its top edge near the left corner
-    frame.removeAttribute('style'); DEXPOP.classList.remove('dexpop--perch-bottom');
+    frame.removeAttribute('style');
     const fr = frame.getBoundingClientRect(); w = fr.width; h = fr.height; x = edge;
   } else {
     const S = DEX.scan.slot.getBoundingClientRect(), { gap, margin } = SCAN, top0 = margin + 6;
@@ -1394,14 +1396,21 @@ function dexLayout(){
     h = Math.min(room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
     const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
     const top = down ? S.bottom + gap : S.top - gap - h;
-    Object.assign(frame.style, { left: left + 'px', top: top + 'px', width: w + 'px', height: h + 'px' });
     // Rotom: on the edge facing the slot, over the slot's corner nearest the middle of the screen
     const cx = S.left + S.width / 2 < innerWidth / 2 ? S.right - 8 : S.left + 8;
     x = Math.min(w - edge, Math.max(edge, cx - left));
-    DEXPOP.classList.toggle('dexpop--perch-bottom', !down);
+    return { left, top, w, h, x, down };
   }
+  return { w, h, x, down };
+}
+function dexLayout(){ const g = dexGeom(); dexApply(g); return g; }
+// put the popup, its outline and Rotom's perch at geometry g
+function dexApply(g){
+  const { w, h, x, down } = g, frame = $('.dexpop__frame'), { bump: B } = SCAN, r = SCAN.rdp / 2;
+  if (g.left !== undefined) Object.assign(frame.style, { left: g.left + 'px', top: g.top + 'px', width: w + 'px', height: h + 'px' });
+  DEXPOP.classList.toggle('dexpop--perch-bottom', !down);
   Object.assign(DEXCARD.style, { top: (down ? B : 0) + 'px', height: (h - B) + 'px' });
-  Object.assign(spot.style, { left: (x - r) + 'px', top: ((down ? 0 : h) - r) + 'px' });   // keeps its visibility as set
+  Object.assign(rdSpot().style, { left: (x - r) + 'px', top: ((down ? 0 : h) - r) + 'px' });   // keeps its visibility as set
   const svg = $('.dexpop__outline');
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`); svg.setAttribute('width', w); svg.setAttribute('height', h);
   svg.firstElementChild.setAttribute('d', scanOutline(w, h, x, down));
@@ -1425,8 +1434,68 @@ async function openScan(slot, mon, opts = {}){
     dexActions();
     return openDex();
   }
-  // already scanning another Pokémon: fold the panel into Rotom, hop over, open again
-  await rdRelocate(() => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); }, .45);
+  // already scanning another Pokémon: the popup stays open and glides along with Rotom to the new one
+  await rdGlide(() => { DEX.scan = { slot, mon, reserve, onClose }; dexActions(); dexShow('scan', false); });
+}
+// scan to scan: the old info fades, Rotom hops to its new perch while the popup slides and resizes under it (its
+// bump following Rotom along the edge), and the new info fades up as Rotom comes in to land. If the popup has to flip to the
+// other side of the Pokémon, it folds and reopens instead.
+async function rdGlide(change){
+  if (REDUCED){ DEX.busy = true; change(); DEXCARD.scrollTop = 0; dexLayout(); DEX.busy = false; return; }
+  DEX.busy = true; hideTip(); rdStill(true);
+  const tok = ++DEX.anim, live = () => tok === DEX.anim;
+  const frame = $('.dexpop__frame'), fr = frame.getBoundingClientRect(), spot = rdSpot();
+  const g0 = { left: fr.left, top: fr.top, w: fr.width, h: fr.height, ...dexGeomNow() };
+  // the old info fades out quickly as Rotom crouches
+  const old = [...$('#dex-body').children];
+  await Promise.all(old.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }).finished));
+  if (!live()) return;
+  const from = spot.getBoundingClientRect();
+  change(); DEXCARD.scrollTop = 0;
+  const parts = [...$('#dex-body').children];
+  parts.forEach(el => el.style.opacity = 0);
+  const g1 = dexGeom();
+  if (g1.down !== g0.down){                                   // flips sides: fold and reopen instead
+    dexApply(g0); rdStill(false);
+    return rdRelocate(() => parts.forEach(el => el.style.opacity = ''), .45);
+  }
+  const r = SCAN.rdp / 2, fl = rdFlyer(from); spot.style.visibility = 'hidden';
+  const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
+  const dur = rdHopMs(a, b), hop = .18;
+  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, .45), sc), { duration: dur, fill: 'forwards' });
+  // the popup follows the flight's own timing: still through the crouch and spring, then easing across
+  const lerp = (p, q, u) => p + (q - p) * u, t0 = performance.now();
+  // the new info starts fading up while Rotom is still on its way in, so it is there as Rotom lands
+  let shown = false;
+  const show = () => { shown = true; parts.forEach((el, i) => { el.style.opacity = '';
+    el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+      { duration: RD_MS.item, delay: i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); }); };
+  await new Promise(done => {
+    const step = now => {
+      if (!live()) return done();
+      const k = Math.min(1, (now - t0) / dur), u = easeInOut(Math.max(0, (k - hop) / (1 - hop)));
+      const g = { down: g1.down };
+      for (const key of ['left', 'top', 'w', 'h']) g[key] = lerp(g0[key], g1[key], u);
+      g.x = lerp(g0.left + g0.x, g1.left + g1.x, u) - g.left;      // the bump moves across the screen with Rotom
+      dexApply(g);
+      if (!shown && k >= .6) show();
+      if (k < 1) requestAnimationFrame(step); else done();
+    };
+    requestAnimationFrame(step);
+  });
+  await flight.finished;
+  if (!live()) return;
+  dexApply(g1);
+  if (!shown) show();
+  await rdLand(fl, b.x - a.x, b.y - a.y, sc);
+  if (!live()) return;
+  spot.style.visibility = ''; fl.remove();
+  DEX.busy = false; rdStill(false);
+}
+// the popup's current bump position and side, read back from Rotom's perch
+function dexGeomNow(){
+  const frame = $('.dexpop__frame').getBoundingClientRect(), s = rdSpot().getBoundingClientRect();
+  return { x: s.left + s.width / 2 - frame.left, down: !DEXPOP.classList.contains('dexpop--perch-bottom') };
 }
 // fold the panel into Rotom, change what the popup shows (and where), hop Rotom to its new perch, open again
 async function rdRelocate(change, dip){
