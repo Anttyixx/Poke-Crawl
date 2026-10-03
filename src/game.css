@@ -1116,3 +1116,5 @@ button{ font:inherit; color:inherit; }
 .dexpop__bump .fill{ fill:var(--bg); }
 .dexpop__bump .line{ fill:none; stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
 .dexpop__frame, .dexpop__outline{ will-change:transform; }
+/* the starters react on press: no waiting to tell a tap from a double-tap zoom */
+#scr-starter .slot{ touch-action:manipulation; }

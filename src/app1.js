@@ -531,7 +531,7 @@ function fly(src, start, toEl, { disc = false, slide = false, order = 0, dur, ke
 const UI = { sel: null, notice: null };
 const AREAS = {};
 const AREA_CFG = {
-  'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => starterTap(i) },
+  'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => { if (performance.now() - ST.pressed > 700) starterTap(i); } },
   'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => wildTap(i) },
   'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
   'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
@@ -1501,7 +1501,7 @@ async function rdGlide(slot, reserve, change){
   // deeper the further it goes. It moves off at once but evenly, so the whole curve reads, and eases in to land
   const d = rdDist(a, b), sag = 20 + d * .35, low = Math.max(a.y, b.y) + sag;
   const dip = [{ x: a.x + (b.x - a.x) * .2, y: low }, { x: a.x + (b.x - a.x) * .8, y: low }];
-  const ease = k => .7 * (1 - Math.cos(Math.PI * k)) / 2 + .3 * (1 - (1 - k) ** 3);
+  const ease = k => .55 * (1 - Math.cos(Math.PI * k)) / 2 + .45 * (1 - (1 - k) ** 3);   // a quick first push, then even
   const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400));
   const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease }), { duration: dur, fill: 'forwards' });
   if (early){
@@ -1623,7 +1623,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 /* ================= starter ================= */
 // three starters across the middle of the screen. Tapping one sends Rotom to scan it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
-const ST = { offer: [], home: -1, chosen: false };
+const ST = { offer: [], home: -1, chosen: false, pressed: -1e9 };
 function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
@@ -1642,6 +1642,14 @@ async function chooseStarter(){
   startRun();
 }
 $('#starter-go').addEventListener('click', chooseStarter);
+// a starter reacts the moment it is pressed rather than when the finger lifts (a click), so Rotom sets off at once;
+// the click that follows the press is then skipped (keyboard Enter and Space still go through the click path)
+$('[data-area="S.offer"]').addEventListener('pointerdown', e => {
+  if (e.button) return;
+  const i = AREAS['S.offer'].els.findIndex(s => s.el === e.target.closest('.slot'));
+  if (i < 0) return;
+  ST.pressed = performance.now(); starterTap(i);
+});
 RENDER['scr-starter'] = () => renderArea('S.offer');
 
 /* ---------- from the starter screen straight into the first map, no wipe ----------
