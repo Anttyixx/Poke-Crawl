@@ -1165,3 +1165,11 @@ button{ font:inherit; color:inherit; }
 #item-notice{ margin:0 0 10px; }
 #item-notice:empty{ display:none; }
 .mart__actions{ justify-content:space-between; }
+
+/* the Mart's stock looks like the Move Tutor's moves: no boxes, each item in a big slot, its price on the right */
+#mart-stock{ gap:12px; }
+#scr-item .trcard{ grid-template-columns: 86px 1fr auto; }
+#scr-item .trcard__slot{ width:86px; }
+@media (max-width:520px){ #scr-item .trcard{ grid-template-columns: 68px 1fr auto; } #scr-item .trcard__slot{ width:68px; } }
+.shopcard[data-sold]{ opacity:.4; cursor:default; }
+.shopcard[data-sold] .trcard__slot .slot{ cursor:default; }

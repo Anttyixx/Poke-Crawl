@@ -358,6 +358,7 @@ const PRESET = {
   pick:   { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   tpick:  { borderStyle:'type', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'ring' }) },
   tr:     { borderStyle:'type', shade:true, hideEmpty:false, stars:true, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
+  shop:   { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
   bag:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'none', style:'bar' }, { stat:'none', style:'bar' }) },
   hud:    { borderStyle:'type', shade:true, hideEmpty:false, stars:false, selectable:true, corners: CORNERS({ stat:'exp', style:'bar' }, { stat:'held', style:'ring' }) },
   battle: { borderStyle:'battle', shade:true, hideEmpty:true, stars:true, selectable:false, corners: CORNERS({ stat:'hp', style:'bar' }, { stat:'held', style:'ring' }) },
@@ -2041,28 +2042,43 @@ function buy(i){
   if (MT.sold.has(i)) return;
   if (R.coins < cost){ UI.notice = { text: `You need ${cost} coins for the ${ITEM[id].name}.` }; return refresh(); }
   if (slot < 0){ UI.notice = { text: 'Your bag is full. Tap an item in your bag, then a Pokémon, to have it hold it first.' }; return refresh(); }
-  const img = document.querySelector(`#mart-stock .mcard[data-i="${i}"] img`), r = img.getBoundingClientRect();
-  const start = { x: r.left, y: r.top, size: r.width };
+  const src = document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .slot`), img = src?.querySelector('.slot__sprite img');
+  const start = src && spriteBox(src);
   UI.sel = null;
   const el = AREAS['M.bag'].els[slot]?.el, prev = el && { args: el._last, label: slotLabel(el)?.textContent ?? '' };
   R.coins -= cost; R.bag[slot] = makeItem(id); MT.sold.add(i);
   UI.notice = { ok: true, text: `Bought the ${ITEM[id].name}. It's in your bag, bottom right.` };
   refresh();
-  if (el && !REDUCED){ holdSlot(el, prev.args, prev.label); el.classList.add('arriving'); fly(img.src, start, el, { slide: true }); }
+  if (el && img && !REDUCED){ holdSlot(el, prev.args, prev.label); el.classList.add('arriving'); fly(img.src, start, el, { slide: true }); }
 }
 RENDER['scr-item'] = () => {
   $('#mart-coins').textContent = `${R.coins} coins`;
   const bagFull = R.bag.indexOf(null) < 0;
-  $('#mart-stock').innerHTML = MT.stock.map((id, i) => {
+  // the Move Tutor's list: each item in a slot, its name and effect, its price; tap it to buy it
+  const box = $('#mart-stock');
+  box.innerHTML = MT.stock.map((id, i) => {
     const it = ITEM[id], cost = itemPrice(id), sold = MT.sold.has(i);
-    const why = sold ? 'Sold' : R.coins < cost ? 'Not enough coins' : bagFull ? 'Bag full' : '';
-    return `<div class="mvcard mcard" data-i="${i}"${sold ? ' data-sold' : ''}>
-      <img src="${it.spr}" alt="">
-      <span class="mcard__name">${it.name}</span>
-      <span class="mcard__buy"><b>${cost}</b><button class="btn btn--go" data-buy="${i}"${why ? ' disabled' : ''}>${sold ? 'Sold' : 'Buy'}</button></span>
-      <span class="mcard__fx">${it.fx}</span></div>`;
+    const note = sold ? 'sold' : R.coins < cost ? 'need more' : bagFull ? 'bag full' : 'coins';
+    return `<div class="mvcard trcard shopcard" data-i="${i}" role="button" tabindex="${sold ? -1 : 0}"${sold ? ' data-sold aria-disabled="true"' : ''} aria-label="Buy the ${it.name} for ${cost} coins">
+      <div class="trcard__slot"></div>
+      <div class="trcard__body">
+        <span class="mvcard__name">${it.name}</span>
+        <span class="mvcard__meta">${it.fx}</span>
+      </div>
+      <span class="mvcard__price">${cost}<small>${note}</small></span>
+    </div>`;
   }).join('');
-  $('#mart-stock').querySelectorAll('[data-buy]').forEach(b => b.addEventListener('click', () => buy(+b.dataset.buy)));
+  box.querySelectorAll('.shopcard').forEach(card => {
+    const i = +card.dataset.i, it = ITEM[MT.stock[i]], sold = MT.sold.has(i);
+    const slot = createSlot(e => { e.stopPropagation(); buy(i); });
+    slot.tabIndex = -1; slot.setAttribute('aria-hidden', 'true');
+    card.querySelector('.trcard__slot').append(slot);
+    renderSlot(slot, PRESET.shop, sold ? null : { key: 'shop-' + i, sprite: it.spr, type: 'held', name: it.name }, { interactive: !sold });
+    if (!sold){
+      card.addEventListener('click', () => buy(i));
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); buy(i); } });
+    }
+  });
   renderNotice('item-notice');
   const rr = $('#mart-reroll');
   rr.textContent = `New stock for ${martRerollFee()} coins`;
