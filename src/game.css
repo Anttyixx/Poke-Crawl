@@ -1116,20 +1116,8 @@ button{ font:inherit; color:inherit; }
 .rotomdex .dexicon, .dexpop__rotom{ animation:rdIdle 2.8s ease-in-out infinite; }
 .rd-flying .rotomdex .dexicon, .rd-flying .dexpop__rotom{ animation:none; }
 @media (prefers-reduced-motion: reduce){ .rotomdex .dexicon, .dexpop__rotom{ animation:none; } }
-/* the bump on its own, sliding along the edge while the scan popup glides from one Pokémon to the next */
-.dexpop__bump{ position:absolute; overflow:visible; pointer-events:none; will-change:transform; }
-.dexpop__bump .fill{ fill:var(--bg); }
-.dexpop__bump .line{ fill:none; stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
-.dexpop__frame, .dexpop__outline{ will-change:transform; }
 /* the starters react on press: no waiting to tell a tap from a double-tap zoom */
 #scr-starter .slot{ touch-action:manipulation; }
 /* the daycare's detail box gives way to the RotomDex, which scans the Pokémon you tap */
 #day-detail{ display:none; }
 #scr-wild [data-area="W.offer"] .slot{ touch-action:manipulation; }
-/* while Rotom flies between scans: a plain cover over the info, so the new info is built and drawn out of sight */
-.dexcover{ position:absolute; left:0; right:0; z-index:3; background:var(--bg); pointer-events:none; will-change:opacity; }
-/* the popup's body while Rotom flies between scans: a plain box like the outline (border, fill and its soft shadow),
-   drawn once and then only moved and stretched */
-.dexglidebox{ position:absolute; left:0; border-radius:18px; box-shadow:0 18px 40px rgba(0,0,0,.55); pointer-events:none; will-change:transform; }
-.dexglidebox svg{ display:block; overflow:visible; }
-.dexglidebox path{ fill:var(--bg); stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
