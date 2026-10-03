@@ -1204,6 +1204,9 @@ const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   home: 600,                                        // both corner flights take 0.6s
   hop: [240, 400],                                  // a hop between perches: quicker the shorter it is
   glide: [480, 620] };                              // scan to scan: the swoop from one Pokémon to the next
+// the panel's own timings (opening out, folding, its contents fading): the scan popup runs them 80% faster
+const RD_SCAN_SPEED = 1.8;
+const rdPanel = k => RD_MS[k] / (DEX.scan ? RD_SCAN_SPEED : 1);
 const rdDist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
 // how much a flight of this length bends and dips into the screen: short hops barely curve, long ones fully
 const rdReach = (a, b) => Math.min(1, Math.max(.15, rdDist(a, b) / 520));
@@ -1320,8 +1323,8 @@ async function dexUnfold(fl, dx, dy, sc, live){
   const parts = dexParts();
   dexUnfade(); parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));      // clear any fade-out left by a fold
   parts.forEach((el, i) => el.animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
-    { duration: RD_MS.item, delay: RD_MS.open * .7 + i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
-  const opened = DEXSHELL.animate([{ clipPath: dexInset(false) }, { clipPath: dexInset(true) }], { duration: RD_MS.open, easing: 'cubic-bezier(.25,.85,.3,1)' }).finished;
+    { duration: rdPanel('item'), delay: rdPanel('open') * .7 + i * rdPanel('stagger'), easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+  const opened = DEXSHELL.animate([{ clipPath: dexInset(false) }, { clipPath: dexInset(true) }], { duration: rdPanel('open'), easing: 'cubic-bezier(.25,.85,.3,1)' }).finished;
   await Promise.all([landed, opened, ...parts.map(el => el.getAnimations().at(-1)?.finished)]);
   if (!live()) return false;
   DEXSHELL.getAnimations().forEach(x => x.cancel());
@@ -1335,9 +1338,9 @@ const dexUnfade = () => { (DEX.folds || []).forEach(x => x.cancel()); DEX.folds 
 async function dexFold(){
   const parts = dexParts();
   dexUnfade();
-  DEX.folds = parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' }));
+  DEX.folds = parts.map(el => el.animate([{ opacity: 1 }, { opacity: 0 }], { duration: rdPanel('fade'), easing: 'ease-in', fill: 'forwards' }));
   await Promise.all(DEX.folds.map(x => x.finished.catch(() => {})));
-  const shut = DEXSHELL.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: RD_MS.fold, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
+  const shut = DEXSHELL.animate([{ clipPath: dexInset(true) }, { clipPath: dexInset(false) }], { duration: rdPanel('fold'), easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' });
   DEX.folds.push(shut);
   await shut.finished.catch(() => {});
   return parts;
