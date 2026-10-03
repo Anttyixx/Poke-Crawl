@@ -1201,7 +1201,7 @@ const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   open: 205 /* 273 */, item: 160 /* 206 */, stagger: 24 /* 32 */,
   home: 600,                                        // both corner flights take 0.6s
   hop: [240, 400],                                  // a hop between perches: quicker the shorter it is
-  glide: [430, 560] };                              // scan to scan: an arc from one Pokémon to the next
+  glide: [380, 500] };                              // scan to scan: an arc from one Pokémon to the next
 const rdDist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
 // how much a flight of this length bends and dips into the screen: short hops barely curve, long ones fully
 const rdReach = (a, b) => Math.min(1, Math.max(.15, rdDist(a, b) / 520));
@@ -1238,21 +1238,23 @@ const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}
 // - carries a little past its spot and drifts back into it
 // - flies each trip slightly differently (depth, flutter and lean vary a little)
 // A short hop has a smaller spring, less curve, depth and flutter.
-function rdSwoop(a, b, c1, c2, sc, pose = { y: 0, rot: 0 }){
+// With fly set it skips the crouch and spring and sets off at once, easing by fly.ease (k -> progress u).
+function rdSwoop(a, b, c1, c2, sc, pose = { y: 0, rot: 0 }, fly = null){
   const reach = rdReach(a, b), vary = () => .85 + Math.random() * .3;
   const far = .5 * Math.max(.55, reach) * vary();                       // how deep it dives, as a share of its size
-  const up = { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
+  const up = fly ? { x: a.x, y: a.y + pose.y } : { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
+  const ease = fly ? fly.ease : easeInOut;
   const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
   const len = rdDist(a, b) || 1, nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;      // across the path
   const ax = (b.x - c2.x), ay = (b.y - c2.y), al = Math.hypot(ax, ay) || 1;          // the way it comes in to land
   const weave = (2 + 4 * reach) * vary(), phase = Math.random() * Math.PI * 2, over = 7 * reach * vary();
   const lean = -Math.sign(b.x - a.x || 1) * 7 * vary();
-  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, pose.y, pose.rot, 1), opacity: lit, offset: 0 },
-    { transform: rdT(0, 2, lean, 1.12, .86), opacity: lit, offset: .06 },                     // crouch, leaning back
-    { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), opacity: lit, offset: hop }];      // and spring up
+  const hop = fly ? 0 : .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, pose.y, pose.rot, 1), opacity: lit, offset: 0 }];
+  if (!fly) frames.push({ transform: rdT(0, 2, lean, 1.12, .86), opacity: lit, offset: .06 },     // crouch, leaning back
+    { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), opacity: lit, offset: hop });         // and spring up
   let prev = pt(0);
   for (let i = 1; i <= n; i++){
-    const k = i / n, u = easeInOut(k), p = pt(u), arc = Math.sin(Math.PI * k);
+    const k = i / n, u = ease(k), p = pt(u), arc = Math.sin(Math.PI * k);
     const z = Math.sin(Math.PI * k ** .75) ** 1.2;                                  // depth: deepest a little before halfway
     const w = weave * Math.sin(4 * Math.PI * k + phase) * arc;                     // the flutter across its path
     const o = k > .72 ? over * Math.sin(Math.PI * (k - .72) / .28) : 0;              // past the spot and back
@@ -1466,46 +1468,44 @@ async function rdGlide(change){
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   const frame = $('.dexpop__frame'), fr = frame.getBoundingClientRect(), spot = rdSpot();
   const g0 = { left: fr.left, top: fr.top, w: fr.width, h: fr.height, ...dexGeomNow() };
-  // the old info fades out quickly, all as one layer; the new info is put in while it is (almost) invisible, so it
-  // is already drawn and ready when it fades back up (a fully transparent layer may not be drawn at all)
-  const body = $('#dex-body'), hush = .01;
-  const out = body.animate([{ opacity: 1 }, { opacity: hush }], { duration: RD_MS.fade, easing: 'ease-in', fill: 'forwards' });
-  await out.finished;
-  if (!live()){ out.cancel(); return; }
+  // Rotom sets off the moment the new Pokémon is tapped. The old info fades away as a copy laid over the card while
+  // the new info goes in underneath, almost invisible (a fully transparent layer may not be drawn at all), so it is
+  // already drawn and ready when it fades up as Rotom comes in
+  const body = $('#dex-body'), hush = .01, scroll = DEXCARD.scrollTop;
+  const ghost = body.cloneNode(true); ghost.removeAttribute('id');
+  Object.assign(ghost.style, { position: 'absolute', left: 0, right: 0, top: (body.offsetTop - scroll) + 'px', pointerEvents: 'none' });
   change(); DEXCARD.scrollTop = 0;
   const g1 = dexGeom();
-  if (g1.down !== g0.down){                                   // flips sides: fold and reopen instead
-    out.cancel(); dexApply(g0);
-    return rdRelocate(() => {}, .45);
-  }
+  if (g1.down !== g0.down){ dexApply(g0); return rdRelocate(() => {}, .45); }   // flips sides: fold and reopen instead
+  DEXCARD.appendChild(ghost);
+  ghost.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade + 45, easing: 'ease-out', fill: 'forwards' }).finished.then(() => ghost.remove());
   const pose = rdPose(spot); rdStill(true);
   const from = spot.getBoundingClientRect();
   const r = SCAN.rdp / 2, fl = rdFlyer(from); spot.style.visibility = 'hidden';
   const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
-  // an arc up and over from one Pokémon to the next (higher the further it goes), on the side away from the popup
-  const d = rdDist(a, b), lift = (22 + d * .22) * (g1.down ? -1 : 1), top = (g1.down ? Math.min : Math.max)(a.y, b.y) + lift;
-  const arc = [{ x: a.x + (b.x - a.x) * .2, y: top }, { x: a.x + (b.x - a.x) * .8, y: top }];
-  const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400)), hop = .18;
-  const flight = fl.animate(rdSwoop(a, b, ...arc, sc, pose), { duration: dur, fill: 'forwards' });
+  // it flies (no hop) along a concave swoop: down through a shallow dip and back up into its new perch, the dip
+  // deeper the further it goes. It moves off quickly and eases in to land
+  const d = rdDist(a, b), sag = 14 + d * .2, low = Math.max(a.y, b.y) + sag;
+  const dip = [{ x: a.x + (b.x - a.x) * .25, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }];
+  const ease = k => .4 * easeInOut(k) + .6 * (1 - (1 - k) ** 3);
+  const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400));
+  const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease }), { duration: dur, fill: 'forwards' });
   // The popup moves with Rotom without redrawing anything each frame: it jumps to its new size and place, then
   // slides (transform) from where it was, its body stretching from the old height to the new; the bump is drawn
-  // separately and slides along the edge under Rotom. All on the GPU, timed like the flight: still through the
-  // crouch and spring, then easing across.
+  // separately and slides along the edge under Rotom. All on the GPU, on Rotom's own timing curve.
   const svg = $('.dexpop__outline');
   dexApply(g1);
   svg.firstElementChild.setAttribute('d', scanOutline(g1.w, g1.h, null, g1.down));          // the body, no bump
   const bump = scanBump(g1); frame.querySelector('.dexpop__shell').insertBefore(bump, svg.nextSibling);
-  const timing = { duration: dur, easing: 'linear', fill: 'backwards' }, ease = 'cubic-bezier(.455,.03,.515,.955)';
-  const held = (from, to) => [{ transform: from, offset: 0 }, { transform: from, offset: hop, easing: ease }, { transform: to, offset: 1 }];
+  const steps = Array.from({ length: 25 }, (_, i) => i / 24), timing = { duration: dur, easing: 'linear', fill: 'backwards' };
+  const track = f => steps.map(k => ({ transform: f(1 - ease(k)), offset: k }));            // f(1) at the start, f(0) at the end
   const glide = [
-    frame.animate(held(`translate(${g0.left - g1.left}px, ${g0.top - g1.top}px)`, 'none'), timing),
-    svg.animate(held(`scaleY(${g0.h / g1.h})`, 'none'), timing),
-    bump.animate(held(`translateX(${g0.x - g1.x}px)`, 'none'), timing)];
+    frame.animate(track(v => `translate(${(g0.left - g1.left) * v}px, ${(g0.top - g1.top) * v}px)`), timing),
+    svg.animate(track(v => `scaleY(${1 + (g0.h / g1.h - 1) * v})`), timing),
+    bump.animate(track(v => `translateX(${(g0.x - g1.x) * v}px)`), timing)];
   svg.style.transformOrigin = `50% ${g1.down ? SCAN.bump : g1.h - SCAN.bump}px`;
-  // the new info starts fading up while Rotom is still on its way in, so it is there as Rotom lands
   const fadeIn = body.animate([{ opacity: hush, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
-    { duration: RD_MS.item + 60, delay: dur * .6, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
-  out.cancel();
+    { duration: RD_MS.item + 60, delay: dur * .5, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' });
   await flight.finished;
   const tidy = () => { fadeIn.cancel(); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = ''; };
   if (!live()) return tidy();
