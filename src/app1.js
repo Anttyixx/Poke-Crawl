@@ -1200,7 +1200,8 @@ const rdHome = () => RD_BTN.querySelector('img'), rdSpot = () => $('#dex-rotom')
 const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   open: 205 /* 273 */, item: 160 /* 206 */, stagger: 24 /* 32 */,
   home: 600,                                        // both corner flights take 0.6s
-  hop: [240, 400] };                                // a hop between perches: quicker the shorter it is
+  hop: [240, 400],                                  // a hop between perches: quicker the shorter it is
+  glide: [430, 560] };                              // scan to scan: an arc from one Pokémon to the next
 const rdDist = (a, b) => Math.hypot(b.x - a.x, b.y - a.y);
 // how much a flight of this length bends and dips into the screen: short hops barely curve, long ones fully
 const rdReach = (a, b) => Math.min(1, Math.max(.15, rdDist(a, b) / 520));
@@ -1402,8 +1403,8 @@ function dexGeom(){
     h = Math.min(room, $('#dex-body').scrollHeight + act.offsetHeight + overlap + B + 2);
     const left = Math.min(innerWidth - margin - w, Math.max(margin, S.left + S.width / 2 - w / 2));
     const top = down ? S.bottom + gap : S.top - gap - h;
-    // Rotom: on the edge facing the slot, over the slot's corner nearest the middle of the screen
-    const cx = S.left + S.width / 2 < innerWidth / 2 ? S.right - 8 : S.left + 8;
+    // Rotom: on the edge facing the Pokémon, right under (or over) its middle
+    const cx = S.left + S.width / 2;
     x = Math.min(w - edge, Math.max(edge, cx - left));
     return { left, top, w, h, x, down };
   }
@@ -1481,8 +1482,11 @@ async function rdGlide(change){
   const from = spot.getBoundingClientRect();
   const r = SCAN.rdp / 2, fl = rdFlyer(from); spot.style.visibility = 'hidden';
   const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
-  const dur = rdHopMs(a, b), hop = .18;
-  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, .45), sc, pose), { duration: dur, fill: 'forwards' });
+  // an arc up and over from one Pokémon to the next (higher the further it goes), on the side away from the popup
+  const d = rdDist(a, b), lift = (22 + d * .22) * (g1.down ? -1 : 1), top = (g1.down ? Math.min : Math.max)(a.y, b.y) + lift;
+  const arc = [{ x: a.x + (b.x - a.x) * .2, y: top }, { x: a.x + (b.x - a.x) * .8, y: top }];
+  const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400)), hop = .18;
+  const flight = fl.animate(rdSwoop(a, b, ...arc, sc, pose), { duration: dur, fill: 'forwards' });
   // The popup moves with Rotom without redrawing anything each frame: it jumps to its new size and place, then
   // slides (transform) from where it was, its body stretching from the old height to the new; the bump is drawn
   // separately and slides along the edge under Rotom. All on the GPU, timed like the flight: still through the
