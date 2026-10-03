@@ -1105,3 +1105,9 @@ button{ font:inherit; color:inherit; }
 .notes__ver li{ margin:4px 0; }
 .notes__ver b{ color:var(--ink); }
 .notes__ver code{ font-size:12px; padding:1px 5px; border-radius:5px; background:var(--panel-2); }
+
+/* Rotom floats gently while it waits, in the corner and perched on the RotomDex; it holds still at rest while flying */
+@keyframes rdIdle{ 0%,100%{ translate:0 0; rotate:0deg; } 30%{ translate:0 -2.5px; rotate:-2deg; } 65%{ translate:0 1px; rotate:1.5deg; } }
+.rotomdex .dexicon, .dexpop__rotom{ animation:rdIdle 2.8s ease-in-out infinite; }
+.rd-flying .rotomdex .dexicon, .rd-flying .dexpop__rotom{ animation:none; }
+@media (prefers-reduced-motion: reduce){ .rotomdex .dexicon, .dexpop__rotom{ animation:none; } }

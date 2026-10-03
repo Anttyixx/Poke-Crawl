@@ -1216,31 +1216,48 @@ const rdFlyer = box => {
   Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
   return document.body.appendChild(img);
 };
-// Rotom's shadow and light at depth d (0 on the glass): further in, it is dimmer and its shadow tighter
-const rdFx = d => `drop-shadow(0 ${(3 - 6 * d).toFixed(2)}px ${(8 - 12 * d).toFixed(2)}px rgba(0,0,0,.5)) brightness(${(1 - .5 * d).toFixed(3)})`;
+// Rotom's shadow and light at depth d (0 on the glass): further in, it is dimmer, a little hazy and its shadow tighter
+const rdFx = d => `drop-shadow(0 ${(3 - 6 * d).toFixed(2)}px ${(8 - 12 * d).toFixed(2)}px rgba(0,0,0,.5)) brightness(${(1 - .6 * d).toFixed(3)}) blur(${(2.4 * d).toFixed(2)}px)`;
+// Rotom floats gently while it waits (corner and perch); it holds still at rest while it flies, so every
+// hand-over between the flyer and the real sprite measures and lands on its resting spot
+const rdStill = on => document.body.classList.toggle('rd-flying', on);
 const rdMid = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
 const easeInOut = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}deg) scale(${sx}, ${sy})`;
 // a crouch and a small hop straight up, then one curve (through control points c1 and c2) into place at b, all centre
-// to centre. Rotom leans into the curve and stretches a little at speed, both fading out smoothly as it slows.
-// It also flies a little away into the screen mid-flight (smaller, a touch dimmer) and comes back out to land,
-// further the longer the flight; a short hop has a smaller spring and barely leaves the glass.
+// to centre. To feel alive rather than glide on rails, Rotom:
+// - leans back into the crouch, away from where it is heading, then banks into the curve and stretches at speed
+// - dives away into the screen early in the flight (smaller, dimmer, hazier) and swoops back out to land,
+//   deeper the longer the flight
+// - flutters as it flies, a small weave across its path that dies down as it slows
+// - carries a little past its spot and drifts back into it
+// - flies each trip slightly differently (depth, flutter and lean vary a little)
+// A short hop has a smaller spring, less curve, depth and flutter.
 function rdSwoop(a, b, c1, c2, sc){
-  const reach = rdReach(a, b), far = .3 * Math.max(.5, reach);
+  const reach = rdReach(a, b), vary = () => .85 + Math.random() * .3;
+  const far = .5 * Math.max(.55, reach) * vary();                       // how deep it dives, as a share of its size
   const up = { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
   const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
-  const hop = .18, n = 28, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), filter: lit, offset: 0 },
-    { transform: rdT(0, 2, 0, 1.12, .86), filter: lit, offset: .05 },                        // crouch
-    { transform: rdT(0, up.y - a.y, 0, .95, 1.07), filter: lit, offset: hop }];              // and spring up
+  const len = rdDist(a, b) || 1, nx = -(b.y - a.y) / len, ny = (b.x - a.x) / len;      // across the path
+  const ax = (b.x - c2.x), ay = (b.y - c2.y), al = Math.hypot(ax, ay) || 1;          // the way it comes in to land
+  const weave = (2 + 4 * reach) * vary(), phase = Math.random() * Math.PI * 2, over = 7 * reach * vary();
+  const lean = -Math.sign(b.x - a.x || 1) * 7 * vary();
+  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), filter: lit, offset: 0 },
+    { transform: rdT(0, 2, lean, 1.12, .86), filter: lit, offset: .06 },                     // crouch, leaning back
+    { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), filter: lit, offset: hop }];      // and spring up
   let prev = pt(0);
   for (let i = 1; i <= n; i++){
-    const k = i / n, u = easeInOut(k), p = pt(u), z = Math.sin(Math.PI * k) ** 1.4;      // z: how deep into the screen
+    const k = i / n, u = easeInOut(k), p = pt(u), arc = Math.sin(Math.PI * k);
+    const z = Math.sin(Math.PI * k ** .75) ** 1.2;                                  // depth: deepest a little before halfway
+    const w = weave * Math.sin(4 * Math.PI * k + phase) * arc;                     // the flutter across its path
+    const o = k > .72 ? over * Math.sin(Math.PI * (k - .72) / .28) : 0;              // past the spot and back
+    const x = p.x + nx * w + ax / al * o, y = p.y + ny * w + ay / al * o;
     const s = (1 + (sc - 1) * u) * (1 - far * z);
-    const tilt = Math.max(-24, Math.min(24, (p.x - prev.x) * .45)) * Math.sin(Math.PI * k);
-    const st = 1 + .06 * Math.sin(Math.PI * k);
-    frames.push({ transform: rdT(p.x - a.x, p.y - a.y, +tilt.toFixed(2), s / st, s * st), filter: rdFx(far * z),
+    const tilt = Math.max(-26, Math.min(26, (x - prev.x) * .5)) * arc;
+    const st = 1 + .07 * arc;
+    frames.push({ transform: rdT(x - a.x, y - a.y, +tilt.toFixed(2), s / st, s * st), filter: rdFx(far * z),
       offset: i === n ? 1 : hop + (1 - hop) * k });
-    prev = p;
+    prev = { x, y };
   }
   return frames;
 }
@@ -1267,6 +1284,7 @@ async function openDex(){
   dexLayout();
   RD_BTN.classList.add('is-out');
   if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
+  rdStill(true);
   const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
   DEXSHELL.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
   const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
@@ -1279,7 +1297,7 @@ async function openDex(){
   if (!live()) return;
   if (!await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)) return;
   DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
-  DEX.busy = false;
+  DEX.busy = false; rdStill(false);
   $('#dex-close').focus({ preventScroll: true });
 }
 // Rotom lands (the flyer at offset dx, dy and scale sc from where it set off); the panel opens out from it as it
@@ -1309,6 +1327,7 @@ async function closeDex(now = false){
   if (!DEX.open || (DEX.busy && !now)) return;
   DEX.busy = true;
   if (!now && !REDUCED){
+    rdStill(true);
     const spot = rdSpot(), from = spot.getBoundingClientRect();
     DEXVEIL.animate([{ opacity: 1 }, { opacity: 0 }], { duration: RD_MS.fade + RD_MS.fold + RD_MS.home * .5, easing: 'ease-in', fill: 'forwards' });
     const parts = await dexFold();
@@ -1330,7 +1349,7 @@ async function closeDex(now = false){
   DEXSHELL.style.visibility = '';
   DEXSHELL.getAnimations().forEach(x => x.cancel()); DEXVEIL.getAnimations().forEach(x => x.cancel());
   RD_BTN.classList.remove('is-out');
-  DEX.open = DEX.busy = false;
+  DEX.open = DEX.busy = false; rdStill(false);
   if (DEX.scan){ endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexTabs(DEX.tab); dexLayout(); $('#dex-act').hidden = true; }
 }
 /* ---------- scanning one Pokémon ----------
@@ -1415,15 +1434,16 @@ async function rdRelocate(change, dip){
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   if (!REDUCED) await dexFold();
   if (!live()) return;
+  rdStill(true);
   const spot = rdSpot(), from = spot.getBoundingClientRect(), fl = REDUCED ? null : rdFlyer(from);
   spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden';
   change(); DEXCARD.scrollTop = 0; dexLayout();
   DEXSHELL.getAnimations().forEach(x => x.cancel());
-  if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; return; }
+  if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
   await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc), { duration: rdHopMs(a, b), fill: 'forwards' }).finished;
   if (!live()) return;
-  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)) DEX.busy = false;
+  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)){ DEX.busy = false; rdStill(false); }
 }
 // "Full RotomDex": Rotom leaves the Pokémon, the page dims, and it opens the full RotomDex on the Pokémon section
 async function dexToFull(){
