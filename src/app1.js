@@ -1240,10 +1240,11 @@ const rdT = (x, y, rot, sx, sy = sx) => `translate(${x}px, ${y}px) rotate(${rot}
 // - carries a little past its spot and drifts back into it
 // - flies each trip slightly differently (depth, flutter and lean vary a little)
 // A short hop has a smaller spring, less curve, depth and flutter.
-// With fly set it skips the crouch and spring and sets off at once, easing by fly.ease (k -> progress u).
+// With fly set it skips the crouch and spring and sets off at once, easing by fly.ease (k -> progress u), and dives
+// into the screen only fly.depth (0 to 1) as far as usual.
 function rdSwoop(a, b, c1, c2, sc, pose = { y: 0, rot: 0 }, fly = null){
   const reach = rdReach(a, b), vary = () => .85 + Math.random() * .3;
-  const far = .5 * Math.max(.55, reach) * vary();                       // how deep it dives, as a share of its size
+  const far = .5 * Math.max(.55, reach) * vary() * (fly?.depth ?? 1);  // how deep it dives, as a share of its size
   const up = fly ? { x: a.x, y: a.y + pose.y } : { x: a.x, y: a.y - 22 * (.45 + .55 * reach) };
   const ease = fly ? fly.ease : easeInOut;
   const pt = u => { const v = 1 - u; return { x: v*v*v*up.x + 3*v*v*u*c1.x + 3*v*u*u*c2.x + u*u*u*b.x, y: v*v*v*up.y + 3*v*v*u*c1.y + 3*v*u*u*c2.y + u*u*u*b.y }; };
@@ -1544,7 +1545,9 @@ async function rdGlide(slot, reserve, change){
   const dip = [{ x: a.x + (b.x - a.x) * .2, y: low }, { x: a.x + (b.x - a.x) * .8, y: low }];
   const ease = k => .55 * (1 - Math.cos(Math.PI * k)) / 2 + .45 * (1 - (1 - k) ** 3);   // a quick first push, then even
   const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400));
-  const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease }), { duration: dur, fill: 'forwards' });
+  // a short hop (to the next Pokémon along) just moves across, staying on the glass; only a long way dives in
+  const depth = Math.min(1, Math.max(0, (d - 220) / 220));
+  const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease, depth }), { duration: dur, fill: 'forwards' });
   if (early){
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));   // Rotom is visibly moving first
     if (!live()){ fadeOld.cancel(); return; }
