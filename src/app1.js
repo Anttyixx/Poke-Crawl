@@ -1216,8 +1216,9 @@ const rdFlyer = box => {
   Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
   return document.body.appendChild(img);
 };
-// Rotom's shadow and light at depth d (0 on the glass): further in, it is dimmer, a little hazy and its shadow tighter
-const rdFx = d => `drop-shadow(0 ${(3 - 6 * d).toFixed(2)}px ${(8 - 12 * d).toFixed(2)}px rgba(0,0,0,.5)) brightness(${(1 - .6 * d).toFixed(3)}) blur(${(2.4 * d).toFixed(2)}px)`;
+// how solid Rotom looks at depth d (0 on the glass): further in, it fades into the dark behind it. Only transform and
+// opacity are animated in flight, which phones run on the GPU, so the flight stays smooth
+const rdFx = d => +(1 - .7 * d).toFixed(3);
 // Rotom floats gently while it waits (corner and perch); it holds still at rest while it flies, so every
 // hand-over between the flyer and the real sprite measures and lands on its resting spot
 const rdStill = on => document.body.classList.toggle('rd-flying', on);
@@ -1242,9 +1243,9 @@ function rdSwoop(a, b, c1, c2, sc){
   const ax = (b.x - c2.x), ay = (b.y - c2.y), al = Math.hypot(ax, ay) || 1;          // the way it comes in to land
   const weave = (2 + 4 * reach) * vary(), phase = Math.random() * Math.PI * 2, over = 7 * reach * vary();
   const lean = -Math.sign(b.x - a.x || 1) * 7 * vary();
-  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), filter: lit, offset: 0 },
-    { transform: rdT(0, 2, lean, 1.12, .86), filter: lit, offset: .06 },                     // crouch, leaning back
-    { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), filter: lit, offset: hop }];      // and spring up
+  const hop = .18, n = 36, lit = rdFx(0), frames = [{ transform: rdT(0, 0, 0, 1), opacity: lit, offset: 0 },
+    { transform: rdT(0, 2, lean, 1.12, .86), opacity: lit, offset: .06 },                     // crouch, leaning back
+    { transform: rdT(0, up.y - a.y, -lean * .4, .95, 1.07), opacity: lit, offset: hop }];      // and spring up
   let prev = pt(0);
   for (let i = 1; i <= n; i++){
     const k = i / n, u = easeInOut(k), p = pt(u), arc = Math.sin(Math.PI * k);
@@ -1255,7 +1256,7 @@ function rdSwoop(a, b, c1, c2, sc){
     const s = (1 + (sc - 1) * u) * (1 - far * z);
     const tilt = Math.max(-26, Math.min(26, (x - prev.x) * .5)) * arc;
     const st = 1 + .07 * arc;
-    frames.push({ transform: rdT(x - a.x, y - a.y, +tilt.toFixed(2), s / st, s * st), filter: rdFx(far * z),
+    frames.push({ transform: rdT(x - a.x, y - a.y, +tilt.toFixed(2), s / st, s * st), opacity: rdFx(far * z),
       offset: i === n ? 1 : hop + (1 - hop) * k });
     prev = { x, y };
   }
@@ -1366,7 +1367,7 @@ const SCAN = { gap: 22, margin: 10, maxW: 520, rdp: 65, bump: 30, top: 74, slope
 function scanOutline(w, h, x, down){
   const { bump: B, top: T, slope: S, r } = SCAN, a = x - T / 2, b = x + T / 2;
   const y0 = down ? B : 0, y1 = down ? h : h - B, e = down ? 0 : h;          // e: the bump's far edge
-  const bumpPath = down
+  const bumpPath = x === null ? '' : down
     ? `L${a - S},${y0} C${a - S / 2},${y0} ${a - S / 2},${e} ${a},${e} L${b},${e} C${b + S / 2},${e} ${b + S / 2},${y0} ${b + S},${y0}`
     : `L${b + S},${y1} C${b + S / 2},${y1} ${b + S / 2},${e} ${b},${e} L${a},${e} C${a - S / 2},${e} ${a - S / 2},${y1} ${a - S},${y1}`;
   return down
@@ -1404,6 +1405,19 @@ function dexGeom(){
   return { w, h, x, down };
 }
 function dexLayout(){ const g = dexGeom(); dexApply(g); return g; }
+// just the bump, as its own small svg on the frame's edge at g.x (for sliding it along the edge): its outline, and a
+// fill that covers the body's straight edge where the bump rises from it
+function scanBump(g){
+  const { bump: B, top: T, slope: S } = SCAN, half = T / 2 + S, pad = 3, W = half * 2 + 4, H = B + pad + 1;
+  const a = 2 + S, b = a + T, l = 2, rr = l + half * 2;                       // local x of the bump's parts
+  const base = g.down ? B : pad + 1, e = g.down ? 0 : H, under = g.down ? B + pad : 0;
+  const line = `M${l},${base} C${l + S / 2},${base} ${l + S / 2},${e} ${a},${e} L${b},${e} C${rr - S / 2},${e} ${rr - S / 2},${base} ${rr},${base}`;
+  const el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  el.setAttribute('class', 'dexpop__bump'); el.setAttribute('width', W); el.setAttribute('height', H); el.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  el.innerHTML = `<path class="fill" d="${line} L${rr},${under} L${l},${under} Z"/><path class="line" d="${line}"/>`;
+  Object.assign(el.style, { left: (g.x - half - 2) + 'px', top: (g.down ? 0 : g.h - H) + 'px' });
+  return el;
+}
 // put the popup, its outline and Rotom's perch at geometry g
 function dexApply(g){
   const { w, h, x, down } = g, frame = $('.dexpop__frame'), { bump: B } = SCAN, r = SCAN.rdp / 2;
@@ -1463,30 +1477,30 @@ async function rdGlide(change){
   const a = rdMid(from), b = { x: g1.left + g1.x, y: g1.top + (g1.down ? 0 : g1.h) }, sc = 1;
   const dur = rdHopMs(a, b), hop = .18;
   const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, .45), sc), { duration: dur, fill: 'forwards' });
-  // the popup follows the flight's own timing: still through the crouch and spring, then easing across
-  const lerp = (p, q, u) => p + (q - p) * u, t0 = performance.now();
-  // the new info starts fading up while Rotom is still on its way in, so it is there as Rotom lands
-  let shown = false;
-  const show = () => { shown = true; parts.forEach((el, i) => { el.style.opacity = '';
-    el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
-      { duration: RD_MS.item, delay: i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); }); };
-  await new Promise(done => {
-    const step = now => {
-      if (!live()) return done();
-      const k = Math.min(1, (now - t0) / dur), u = easeInOut(Math.max(0, (k - hop) / (1 - hop)));
-      const g = { down: g1.down };
-      for (const key of ['left', 'top', 'w', 'h']) g[key] = lerp(g0[key], g1[key], u);
-      g.x = lerp(g0.left + g0.x, g1.left + g1.x, u) - g.left;      // the bump moves across the screen with Rotom
-      dexApply(g);
-      if (!shown && k >= .6) show();
-      if (k < 1) requestAnimationFrame(step); else done();
-    };
-    requestAnimationFrame(step);
-  });
-  await flight.finished;
-  if (!live()) return;
+  // The popup moves with Rotom without redrawing anything each frame: it jumps to its new size and place, then
+  // slides (transform) from where it was, its body stretching from the old height to the new; the bump is drawn
+  // separately and slides along the edge under Rotom. All on the GPU, timed like the flight: still through the
+  // crouch and spring, then easing across.
+  const svg = $('.dexpop__outline');
   dexApply(g1);
-  if (!shown) show();
+  svg.firstElementChild.setAttribute('d', scanOutline(g1.w, g1.h, null, g1.down));          // the body, no bump
+  const bump = scanBump(g1); frame.querySelector('.dexpop__shell').insertBefore(bump, svg.nextSibling);
+  const timing = { duration: dur, easing: 'linear', fill: 'backwards' }, ease = 'cubic-bezier(.455,.03,.515,.955)';
+  const held = (from, to) => [{ transform: from, offset: 0 }, { transform: from, offset: hop, easing: ease }, { transform: to, offset: 1 }];
+  const glide = [
+    frame.animate(held(`translate(${g0.left - g1.left}px, ${g0.top - g1.top}px)`, 'none'), timing),
+    svg.animate(held(`scaleY(${g0.h / g1.h})`, 'none'), timing),
+    bump.animate(held(`translateX(${g0.x - g1.x}px)`, 'none'), timing)];
+  svg.style.transformOrigin = `50% ${g1.down ? SCAN.bump : g1.h - SCAN.bump}px`;
+  // the new info starts fading up while Rotom is still on its way in, so it is there as Rotom lands
+  const showAt = setTimeout(() => parts.forEach((el, i) => { el.style.opacity = '';
+    el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+      { duration: RD_MS.item, delay: i * RD_MS.stagger, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }); }), dur * .6);
+  await flight.finished;
+  const tidy = () => { clearTimeout(showAt); glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = ''; parts.forEach(el => el.style.opacity = ''); };
+  if (!live()) return tidy();
+  glide.forEach(x => x.cancel()); bump.remove(); svg.style.transformOrigin = '';
+  dexApply(g1);                                                  // the whole outline again, bump and all
   await rdLand(fl, b.x - a.x, b.y - a.y, sc);
   if (!live()) return;
   spot.style.visibility = ''; fl.remove();

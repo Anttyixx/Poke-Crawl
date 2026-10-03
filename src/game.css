@@ -844,7 +844,7 @@ button{ font:inherit; color:inherit; }
 .rotomdex:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; border-radius:12px; }
 .rotomdex.is-out{ opacity:0; pointer-events:none; transition:none; }
 .rotomdex.is-wiping{ opacity:0; pointer-events:none; }
-.rd-fly{ position:fixed; z-index:2600; pointer-events:none; image-rendering:pixelated; transform-origin:50% 50%; filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
+.rd-fly{ position:fixed; z-index:2600; pointer-events:none; image-rendering:pixelated; transform-origin:50% 50%; filter:drop-shadow(0 3px 8px rgba(0,0,0,.5)); will-change:transform, opacity; }
 /* room for it: headers near the screen's right edge stop short of it */
 :root{ --rd-room: 72px; }
 .hud{ padding-right:var(--rd-room); }
@@ -1111,3 +1111,8 @@ button{ font:inherit; color:inherit; }
 .rotomdex .dexicon, .dexpop__rotom{ animation:rdIdle 2.8s ease-in-out infinite; }
 .rd-flying .rotomdex .dexicon, .rd-flying .dexpop__rotom{ animation:none; }
 @media (prefers-reduced-motion: reduce){ .rotomdex .dexicon, .dexpop__rotom{ animation:none; } }
+/* the bump on its own, sliding along the edge while the scan popup glides from one Pokémon to the next */
+.dexpop__bump{ position:absolute; overflow:visible; pointer-events:none; will-change:transform; }
+.dexpop__bump .fill{ fill:var(--bg); }
+.dexpop__bump .line{ fill:none; stroke:color-mix(in srgb, var(--glow-selected) 30%, var(--line)); stroke-width:1.5; }
+.dexpop__frame, .dexpop__outline{ will-change:transform; }
