@@ -2065,7 +2065,9 @@ RENDER['scr-wild'] = () => {
 /* ================= poké mart ================= */
 // Tap an item in the stock to pick it: the empty slots in your bag (bottom right) glow, and tapping one buys the item
 // into it. Items you can't afford, or can't fit with a full bag, are greyed out. Tap an item in your bag (or one a
-// Pokémon holds) and its scan has a Sell button: the Mart buys it back for part of its price.
+// Pokémon holds) and its scan has a Sell button: the Mart buys it back for part of its price. While an item is picked,
+// "Back to map" turns into a Buy button that puts it in the first empty bag slot (greyed out if you can't afford it or
+// have no room); put the item back and it's "Back to map" again.
 const MT = { stock: [], sold: new Set(), rerolls: 0, picked: null };
 const itemPrice = id => TUNE.itemPrice[id] ?? 80;
 const sellPrice = id => Math.round(itemPrice(id) * TUNE.sellRate);
@@ -2074,20 +2076,21 @@ const martBlock = i => MT.sold.has(i) ? 'sold' : R.coins < itemPrice(MT.stock[i]
 const martRerollFee = () => TUNE.martRerollStep * (MT.rerolls + 1);
 function rollMart(){ MT.stock = shuffle([...ITEM_IDS]).slice(0, TUNE.martStock); MT.sold = new Set(); }
 function openItem(){ MT.rerolls = 0; MT.picked = null; rollMart(); }
-// tap an item in the stock: pick it (or put it back), so the empty bag slots light up
+// tap an item in the stock: pick it (or put it back), so the empty bag slots light up and the Buy button shows. An
+// item you can't buy yet can still be picked (its label shakes and the Buy button stays greyed out).
 function martPick(i){
-  if (wiping) return;
-  const id = MT.stock[i], why = martBlock(i);
+  if (wiping || MT.sold.has(i)) return;
+  const why = martBlock(i);
   UI.sel = null;
-  if (MT.picked === i || why){ MT.picked = null; }
-  else { MT.picked = i; UI.notice = null; return refresh(); }
-  UI.notice = why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' } : null;
+  MT.picked = MT.picked === i ? null : i;
+  UI.notice = MT.picked != null && why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' } : null;
   refresh();
-  if (why === 'poor' || why === 'full') nope(document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .mvcard__price small`));
+  if (MT.picked != null && why) nope(document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .mvcard__price small`));
 }
 // tap a bag slot with an item picked: buy it into that slot if it's empty
 function martPlace(slot){
   const i = MT.picked;
+  if (martBlock(i)){ nope(document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .mvcard__price small`)); return; }
   if (R.bag[slot]){ shake('M.bag', slot); UI.notice = { text: `That slot is taken. Tap a glowing empty slot to buy the ${ITEM[MT.stock[i]].name}.` }; return refresh(); }
   buy(i, slot);
 }
@@ -2125,7 +2128,7 @@ function sell(){
 }
 RENDER['scr-item'] = () => {
   $('#mart-coins').textContent = `${R.coins} coins`;
-  if (MT.picked != null && martBlock(MT.picked)) MT.picked = null;
+  if (MT.picked != null && MT.sold.has(MT.picked)) MT.picked = null;
   // the Move Tutor's list: each item in a slot, its name and effect, its price; tap it to pick it, then a bag slot
   const box = $('#mart-stock');
   box.innerHTML = MT.stock.map((id, i) => {
@@ -2156,12 +2159,20 @@ RENDER['scr-item'] = () => {
   const rr = $('#mart-reroll');
   rr.textContent = `New stock for ${martRerollFee()} coins`;
   rr.disabled = R.coins < martRerollFee();
+  // with an item picked, "Back to map" becomes its Buy button
+  const go = $('#mart-leave'), p = MT.picked;
+  go.textContent = p != null ? `Buy for ${itemPrice(MT.stock[p])} coins` : 'Back to map';
+  go.classList.toggle('btn--go', p != null);
+  go.disabled = p != null && !!martBlock(p);
 };
 $('#mart-reroll').addEventListener('click', () => {
   if (R.coins < martRerollFee()) return;
   R.coins -= martRerollFee(); MT.rerolls++; MT.picked = null; rollMart(); UI.notice = null; refresh();
 });
-$('#mart-leave').addEventListener('click', toMap);
+$('#mart-leave').addEventListener('click', () => {
+  if (MT.picked == null) return toMap();
+  if (!martBlock(MT.picked)) buy(MT.picked, R.bag.indexOf(null));
+});
 
 /* ================= move tutor ================= */
 // The tutor offers 5 moves per visit, each learnable by someone in the party, and the offer can be rerolled. Your
@@ -2288,7 +2299,7 @@ function moveMeta(m){
 // learn it (the rest dim); placing a wild Pokémon, every slot; feeding a candy, every Pokémon
 function hudMarkParty(){
   // at the Poké Mart, with an item picked, the empty bag slots glow and the full ones dim
-  const pick = screen === 'scr-item' && MT.picked != null;
+  const pick = screen === 'scr-item' && MT.picked != null && !martBlock(MT.picked);
   AREAS['M.bag']?.els.forEach(({ el }, i) => {
     el.toggleAttribute('data-learn', pick && !R.bag[i]);
     el.toggleAttribute('data-nolearn', pick && !!R.bag[i]);
