@@ -1089,9 +1089,10 @@ button{ font:inherit; color:inherit; }
 .dexpop--scan .dextab small{ display:none; }        /* four tabs in a smaller popup: names only */
 /* the starters sit at the top, under the title, leaving the rest of the screen for Rotom's scan popup.
    Their slots are hidden: no frame, tile, stars or corner gauges, just the Pokémon */
-#starter-line{ position:static; transform:none; padding:0; margin-top:26px; }
-#scr-starter .slot__frame{ border-color:transparent !important; background:none; box-shadow:none !important; }
-#scr-starter .slot__frame::after, #scr-starter .slot .stars, #scr-starter .slot .stars__mask, #scr-starter .slot .g{ display:none; }
+#starter-line, #wild-line{ position:static; transform:none; padding:0; margin-top:26px; }
+#scr-starter .slot__frame, #wild-line .slot__frame{ border-color:transparent !important; background:none; box-shadow:none !important; }
+#scr-starter .slot__frame::after, #scr-starter .slot .stars, #scr-starter .slot .stars__mask, #scr-starter .slot .g,
+#wild-line .slot__frame::after, #wild-line .slot .stars, #wild-line .slot .stars__mask, #wild-line .slot .g{ display:none; }
 /* a page's own button under a scan popup (the starter screen's "I Choose You!!"), pinned to the bottom of the screen */
 .pageact{ position:fixed; left:0; right:0; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); z-index:2450; display:flex; justify-content:center; pointer-events:none; }
 .pageact[hidden]{ display:none; }
@@ -1150,3 +1151,10 @@ button{ font:inherit; color:inherit; }
 @media (prefers-reduced-motion: reduce){ .slot[data-learn] .slot__frame{ animation:none; box-shadow:0 0 0 2px var(--glow-selected), 0 0 14px color-mix(in srgb, var(--glow-selected) 55%, transparent); } }
 .tutor__actions{ justify-content:space-between; }
 #tutor-notice{ margin:0 0 10px; }
+
+/* ---------- wild: the starter screen's layout, with your party and bag in the bottom corners as on the map ---------- */
+#scr-wild .scr{ padding-bottom:calc(var(--hud-room, 156px) + 24px + env(safe-area-inset-bottom, 0px)); }
+#scr-wild .wild__hint{ margin:6px 0 0; }
+#scr-wild .wild__actions{ justify-content:center; }
+#scr-wild .wild__actions .btn{ min-width:min(260px, 100%); }
+@media (max-width:520px){ #scr-wild{ --hud-room: 136px; } }

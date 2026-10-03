@@ -86,29 +86,15 @@
     </div>
   </section>
 
-  <!-- wild: same layout as the starter screen -->
+  <!-- wild: the starter screen's layout. Three wild Pokémon at the top (tap one to scan it, then "I Choose You!!"),
+       your party and bag in the bottom corners as on the map; tap a party slot to put the new Pokémon there -->
   <section class="screen" id="scr-wild" aria-label="Wild Pokémon">
-    <button class="btn btn--go btn--corner" id="wild-leave" hidden>Back to map</button>
-    <div class="midline" id="wild-line"><div class="slots slots--offer" data-area="W.offer"></div></div>
     <div class="scr wild" id="wild-root">
-      <div class="scr__head starter__head"><span class="nodeicon" data-type="wild">🌿</span><h1 class="title">Wild Pokémon</h1></div>
-      <div class="infostage">
-        <div class="info__side info__left wild__detail" id="wild-left" hidden></div>
-        <div class="pickstage">
-          <div class="slots slots--pick" data-area="W.pick"></div>
-        </div>
-        <div class="info__side info__right wild__detail" id="wild-right" hidden></div>
-      </div>
-      <div class="info__moves wild__detail" id="wild-detail" hidden></div>
-      <div class="bigaction"><button class="btn btn--go btn--big" id="wild-go" disabled>I Choose You!!</button></div>
-      <div class="wild__party" id="wild-party" hidden>
-        <h2 class="panel-title">Party <small><span id="wild-count"></span> · <span id="wild-day"></span></small></h2>
-        <div class="partygrid">
-          <div class="slots" data-area="W.party" data-part="front"></div>
-          <div class="slots" data-area="W.party" data-part="back"></div>
-        </div>
-      </div>
+      <div class="scr__head"><span class="nodeicon" data-type="wild">🌿</span><h1 class="title">Wild Pokémon</h1></div>
+      <p class="sub wild__hint" id="wild-hint"></p>
+      <div class="midline" id="wild-line"><div class="slots slots--offer" data-area="W.offer"></div></div>
       <p class="notice" id="wild-notice"></p>
+      <div class="actions wild__actions"><button class="btn" id="wild-go" type="button" hidden></button></div>
     </div>
     <!-- shown while Rotom scans a wild Pokémon, pinned under the scan popup -->
     <div class="pageact" id="wild-act" hidden><button class="btn btn--go btn--big" id="wild-choose" type="button">I Choose You!!</button></div>

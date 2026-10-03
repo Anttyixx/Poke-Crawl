@@ -533,12 +533,11 @@ const AREAS = {};
 const AREA_CFG = {
   'S.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => ST.offer, onTap: i => { if (performance.now() - ST.pressed > 700) starterTap(i); } },
   'W.offer': { holds:'mon', kind:'offer', preset:'offer', get: () => W.offer.map((m, i) => W.arrived[i] ? m : null), onTap: i => { if (performance.now() - W.pressed > 700) wildTap(i); } },
-  'W.pick':  { holds:'mon', kind:'pick', preset:'tpick', get: () => W.pick, onTap: () => wildReturn() },
-  'W.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party, onTap: i => W.phase === 'place' ? wildPlace(i) : W.phase === 'feed' ? feedCandy(i) : false },
   'I.bag':   { holds:'item', kind:'bag', preset:'bag', get: () => R.bag, locked: true },
   // the party and bag in the bottom corners, on the map and at the Move Tutor (where, with a move picked, tapping a
   // Pokémon teaches it; otherwise both work as on the map)
-  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true, onTap: i => screen === 'scr-tutor' && TU.teaching ? tutorTeachTo(i) : false },
+  'M.party': { holds:'mon', kind:'party', preset:'hud', get: () => R.party, equip: true,
+    onTap: i => screen === 'scr-tutor' && TU.teaching ? tutorTeachTo(i) : screen === 'scr-wild' ? wildPartyTap(i) : false },
   'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true, onTap: () => { if (screen === 'scr-tutor' && TU.teaching){ TU.teaching = null; refresh(); } return false; } },
   'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
@@ -779,7 +778,7 @@ function monDetail(m, opts = {}){
 /* ---------- info slot layout: stats left of the big slot, ability right, moves underneath ----------
    no card around it; every metric sits in its own small container */
 const cap = s => s ? s[0].toUpperCase() + s.slice(1) : s;   // types are shown capitalised
-const INFO_AREA = { wild: 'W.pick' };
+const INFO_AREA = {};
 // fade a group of elements out, then hide and clear them; showing them again cancels the fade
 const FADE_OUT_MS = 200, fading = new Map();
 function fadeOutGroup(key, els, clear = true){
@@ -915,9 +914,9 @@ const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mar
    of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
 let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
 function updateMapHud(){
-  const on = (!wiping || mapIntro) && (screen === 'scr-map' || screen === 'scr-tutor') && !!R.party;
+  const on = (!wiping || mapIntro) && ['scr-map', 'scr-tutor', 'scr-wild'].includes(screen) && !!R.party;
   $('#mapteam').hidden = $('#mapbag').hidden = !on;
-  if (on){ renderArea('M.party'); renderArea('M.bag'); tutorMarkParty(); }
+  if (on){ renderArea('M.party'); renderArea('M.bag'); hudMarkParty(); }
   const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
   if (c){
     const it = sel.held ? c.item : AREAS[sel.area].holds === 'item' ? c : null;
@@ -1434,7 +1433,7 @@ async function closeDex(now = false){
    RotomDex scans whatever is selected, flying over from one to the next, and puts itself away when nothing is.
    Closing the scan (tapping outside it, or Rotom) keeps the selection, so the next tap can still move it, even to a
    slot the scan was covering; it isn't scanned again until something else is selected. */
-const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare', 'scr-tutor'];
+const SEL_SCAN_SCREENS = ['scr-map', 'scr-daycare', 'scr-tutor', 'scr-wild'];
 const SELSCAN = { running: false, again: false, dismissed: null };
 const selKey = sel => sel ? `${sel.area}|${sel.i}|${!!sel.held}` : null;
 function selScanWant(){
@@ -1833,28 +1832,24 @@ function openNode(t){
 }
 
 /* ================= wild ================= */
-// same layout as the starter screen: three offers, one big slot, a button under it.
-// pick phase: tap an offer to hop it into the big slot; the button reads Skip until one has landed, then Choose.
-// place phase: the other offers and the info panel fade out, your party fades in where the info was;
-// tap a party slot to put the new Pokémon there, or press Send to daycare.
-const W = { offer: [], pick: [null], home: -1, landed: false, token: 0, phase: 'pick', done: false, arrived: [], entering: false,
-  scanning: -1, direct: false, pressed: -1e9 };
+// The starter screen's layout: three wild Pokémon at the top, and your party and bag in the bottom corners as on the
+// map. Phases:
+//  pick  - tap a wild Pokémon and the RotomDex scans it; "I Choose You!!" (pinned under the scan) chooses it
+//  place - the other two leave; the chosen one waits, glowing, and your party slots glow: tap one to put it there
+//          (a Pokémon already there moves over, or to the daycare). Or send it to the daycare, or (party and
+//          daycare both full) release it for an EXP Candy
+//  feed  - the candy waits where the released Pokémon was; tap a Pokémon in your party to feed it
+//  done  - back to the map
+const W = { offer: [], home: -1, token: 0, phase: 'pick', done: false, arrived: [], entering: false, scanning: -1, pressed: -1e9, candy: false, leveled: null };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
   Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star, star < 3 ? Math.random() * .4 : 1)),
-    pick: [null], home: -1, landed: false, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1, direct: false });
+    home: -1, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1 });
   $('#wild-act').hidden = true;
   const all = REDUCED;                                      // reduced motion: they are simply there
   Object.assign(W, { arrived: W.offer.map(() => all), entering: !all });
 }
-async function wildMove(change){
-  const before = snapshot(), token = ++W.token;
-  change(); W.landed = false; refresh();
-  await flip(before);
-  if (token !== W.token) return;
-  W.landed = !!W.pick[0]; refresh();
-  if (W.landed && !W.direct){ revealInfo('wild'); fitName($('#wild-left')); }
-}
+const wildSlot = i => AREAS['W.offer'].els[i]?.el;
 /* ---------- the wild Pokémon leap in from the edges of the screen ----------
    Once the screen is in, the three slots start empty and the Pokémon leap in from random spots along the edges of
    the top half of the screen (the left edge, the top, the right edge), in a random order and at uneven intervals, so
@@ -1894,25 +1889,32 @@ async function wildEntrance(){
 }
 // tap a wild Pokémon and the RotomDex scans it, as on the starter screen; "I Choose You!!" (pinned under the scan)
 // then sends it to the big slot and straight on to placing it in your party
+// tap a wild Pokémon and the RotomDex scans it, as on the starter screen; "I Choose You!!" (pinned under the scan)
+// chooses it
 function wildTap(i){
   if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i] || DEX.busy) return;
+  UI.sel = null;                                        // (a party Pokémon being scanned gives way to the wild one)
   const act = $('#wild-act'), same = DEX.open && DEX.scan?.mon === W.offer[i];
   W.scanning = same ? -1 : i;
   setShown('wild-act', act, !same);
-  openScan(AREAS['W.offer'].els[i].el, W.offer[i], { reserve: act.offsetHeight + 12 || 88,
-    onClose: () => { if (W.phase === 'pick' && !W.direct) setShown('wild-act', act, false); } });
+  openScan(wildSlot(i), W.offer[i], { reserve: act.offsetHeight + 12 || 88,
+    onClose: () => { if (W.phase === 'pick') setShown('wild-act', act, false); } });
 }
-async function wildPickScanned(){
+// "I Choose You!!": the scan closes, the other two leave, and your party lights up for you to pick a slot
+async function wildChoose(){
   const i = W.scanning;
-  if (W.phase !== 'pick' || i < 0 || !W.offer[i] || DEX.busy || W.direct) return;
-  W.direct = true;                                      // no info panel: the scan has shown it already
+  if (W.phase !== 'pick' || i < 0 || !W.offer[i] || DEX.busy) return;
+  W.phase = 'choosing'; W.home = i; W.scanning = -1;
   setShown('wild-act', $('#wild-act'), false);
   await closeDex();
-  await wildMove(() => { W.pick[0] = W.offer[i]; W.offer[i] = null; W.home = i; });
-  W.scanning = -1;
-  wildChoose();
+  const others = W.offer.map((m, j) => j !== i && m ? wildSlot(j) : null).filter(Boolean);
+  if (!REDUCED) await Promise.all(others.map(el => el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-10px) scale(.9)' }],
+    { duration: 240, easing: 'ease-in', fill: 'forwards' }).finished));
+  W.offer = W.offer.map((m, j) => j === i ? m : null);
+  others.forEach(el => el.getAnimations().forEach(x => x.cancel()));
+  W.phase = 'place'; UI.sel = null; refresh();
 }
-$('#wild-choose').addEventListener('click', wildPickScanned);
+$('#wild-choose').addEventListener('click', wildChoose);
 // like the starters, a wild Pokémon reacts the moment it is pressed (the click that follows is skipped)
 $('[data-area="W.offer"]').addEventListener('pointerdown', e => {
   if (e.button) return;
@@ -1920,37 +1922,38 @@ $('[data-area="W.offer"]').addEventListener('pointerdown', e => {
   if (i < 0) return;
   W.pressed = performance.now(); wildTap(i);
 });
-function wildReturn(){
-  if (W.phase !== 'pick' || wiping || !W.pick[0]) return;
-  $('#scr-wild').scrollTop = 0;
-  wildMove(() => { W.offer[W.home] = W.pick[0]; W.pick[0] = null; W.home = -1; });
+// a tap on your party (bottom left) while the wild Pokémon waits to be placed, or while the candy waits to be eaten
+function wildPartyTap(i){
+  if (W.phase === 'place') return wildPlace(i);
+  if (W.phase === 'feed') return feedCandy(i);
+  return false;
 }
 function wildPlace(i){
-  if (W.phase !== 'place' || wiping || !W.pick[0]) return;
-  const mon = W.pick[0], here = R.party[i], before = snapshot();
+  const mon = W.offer[W.home];
+  if (W.phase !== 'place' || wiping || !mon) return;
+  const here = R.party[i], before = snapshot();
   let msg = `${nm(mon)} joined your party.`;
   if (here){
     const e = firstEmpty(R.party);
     if (e >= 0){ R.party[e] = here; msg += ` ${nm(here)} moved over to make room.`; }
     else if (depositDaycare(here)) msg += ` ${nm(here)} went to the daycare.`;
-    else { shake('W.party', i); UI.notice = { text: 'Your party and daycare are both full, so nobody can make room. You can release it instead.' }; return refresh(); }
+    else { shake('M.party', i); UI.notice = { text: 'Your party and daycare are both full, so nobody can make room. You can release it instead.' }; return refresh(); }
   }
-  R.party[i] = mon; W.pick[0] = null; W.phase = 'done'; W.done = true;
+  R.party[i] = mon; W.offer[W.home] = null; W.phase = 'done'; W.done = true;
   UI.notice = { ok: true, text: msg };
   refresh(); flip(before);
 }
 function wildToDaycare(){
-  const mon = W.pick[0];
+  const mon = W.offer[W.home], el = wildSlot(W.home);
   if (!mon) return;
-  const el = AREAS['W.pick'].els[0]?.el, img = el?.querySelector('.slot__sprite img'), box = el && spriteBox(el);
+  const img = el?.querySelector('.slot__sprite img'), box = el && spriteBox(el);
   if (!depositDaycare(mon)){ UI.notice = { text: `The daycare is full (${TUNE.daycareSize} of ${TUNE.daycareSize}). Tap a party slot instead.` }; return refresh(); }
-  W.pick[0] = null; W.phase = 'leaving'; W.done = true;
+  const src = img?.src;
+  W.offer[W.home] = null; W.phase = 'leaving'; W.done = true;
   UI.notice = { ok: true, text: `${nm(mon)} went to the daycare.` };
-  if (el){ el.classList.add('depart'); requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('depart'))); }
   refresh();
-  if (el) crossfadeLeave(el, `var(--t-${FORM[mon.form].type})`);
   // it jumps off the screen, then it's straight back to the map
-  (el ? jumpOff(img.src, box) : Promise.resolve()).then(() => sleep(REDUCED ? 0 : 120)).then(toMap);
+  (src ? jumpOff(src, box) : Promise.resolve()).then(() => sleep(REDUCED ? 0 : 120)).then(toMap);
 }
 const mustRelease = () => daycareFull() && partyCount() >= 6;
 // the Pokémon jumps up and off the edge of the screen
@@ -1964,21 +1967,19 @@ function jumpOff(src, box){
   return img.animate(frames, { duration: 650, easing: 'cubic-bezier(.45,0,.8,.6)', fill: 'both' }).finished.then(() => img.remove());
 }
 function wildRelease(){
-  const mon = W.pick[0], el = AREAS['W.pick'].els[0]?.el;
+  const mon = W.offer[W.home], el = wildSlot(W.home);
   if (!mon || !el) return;
   const src = el.querySelector('.slot__sprite img').src, box = spriteBox(el);
-  W.pick[0] = null; W.candy = true; W.phase = 'feed';
+  W.offer[W.home] = null; W.candy = true; W.phase = 'feed';
   UI.notice = { ok: true, text: `${nm(mon)} was released. It left an EXP Candy behind: tap a Pokémon to feed it.` };
-  el.classList.add('depart'); void el.offsetWidth;
   refresh();
-  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.remove('depart')));
   el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   jumpOff(src, box);
 }
 function feedCandy(i){
   if (W.phase !== 'feed' || wiping) return;
-  const m = R.party[i], el = AREAS['W.party'].els[i]?.el, from = AREAS['W.pick'].els[0]?.el;
-  if (!m){ shake('W.party', i); UI.notice = { text: 'Tap a Pokémon to feed it the EXP Candy.' }; return refresh(); }
+  const m = R.party[i], el = AREAS['M.party'].els[i]?.el, from = wildSlot(W.home);
+  if (!m){ shake('M.party', i); UI.notice = { text: 'Tap a Pokémon to feed it the EXP Candy.' }; return refresh(); }
   const prev = el._last, label = slotLabel(el)?.textContent ?? '', box = spriteBox(from);
   let msg;
   if (m.star >= 3){ msg = `${nm(m)} ate the EXP Candy, but it's already at ★3.`; }
@@ -2004,52 +2005,30 @@ function feedCandy(i){
     if (W.leveled === m.uid){ el.classList.remove('lvlup', 'pop'); void el.offsetWidth; el.classList.add('lvlup', 'pop'); }
   });
 }
-async function wildChoose(){
-  if (!W.landed || !W.pick[0] || W.phase !== 'pick') return;
-  W.phase = 'fading'; refresh();                       // fade out the info panel and the other offers
-  $('#scr-wild').scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });   // bring the header back into view
-  await sleep(REDUCED ? 0 : 220);
-  if (W.phase !== 'fading') return;
-  W.phase = 'place'; refresh();                        // then the party appears where the info was
-}
-$('#wild-leave').addEventListener('click', toMap);
 $('#wild-go').addEventListener('click', () => {
-  if (W.phase === 'pick') return W.landed && W.pick[0] ? wildChoose() : null;
   if (W.phase === 'place') return mustRelease() ? wildRelease() : wildToDaycare();
-  if (W.phase === 'leaving') return;
   if (W.phase === 'done') return toMap();
 });
 RENDER['scr-wild'] = () => {
-  renderArea('W.offer'); renderArea('W.pick'); renderArea('W.party');
-  if (W.candy){       // the released Pokémon's EXP Candy sits in the big slot until it's fed to someone
-    const el = AREAS['W.pick'].els[0].el;
-    renderSlot(el, PRESET.pick, { key: 'candy', sprite: CANDY_SPR, type: 'held', name: 'EXP Candy' }, { interactive: false });
-    if (!el._hold) slotLabel(el).textContent = 'EXP Candy';
+  renderArea('W.offer');
+  if (W.candy){       // the released Pokémon's EXP Candy waits where it was until it's fed to someone
+    const el = wildSlot(W.home);
+    renderSlot(el, PRESET.offer, { key: 'candy', sprite: CANDY_SPR, type: 'held', name: 'EXP Candy' }, { interactive: false });
   }
-  const root = $('#wild-root'), placing = W.phase !== 'pick';
-  root.classList.toggle('wild--fading', W.phase === 'fading');
-  $('#wild-line').classList.toggle('is-away', !!W.pick[0] || W.phase !== 'pick');   // only the pick phase shows the offers
-  root.classList.toggle('wild--placing', ['place', 'feed', 'done', 'leaving'].includes(W.phase));
-  const c = W.landed ? W.pick[0] : null;
-  if (W.phase === 'pick') renderInfo('wild', W.direct ? null : c);
-  else if (W.phase !== 'fading') renderInfo('wild', null);   // the party takes over once chosen
-  const party = $('#wild-party'), showParty = ['place', 'feed', 'done', 'leaving'].includes(W.phase);
-  if (showParty && party.hidden){ party.hidden = false; party.classList.remove('reveal'); void party.offsetWidth; party.classList.add('reveal'); }
-  if (!showParty) party.hidden = true;
-  if (W.phase === 'place' || W.phase === 'feed') AREAS['W.party'].els.forEach(({ el }, i) => el.toggleAttribute('data-target', W.phase === 'place' || !!R.party[i]));
-  $('#wild-count').textContent = `${partyCount()} of 6`;
-  $('#wild-day').textContent = `Daycare ${daycareCount()} of ${TUNE.daycareSize}`;
+  // the chosen Pokémon glows while it waits for a slot
+  AREAS['W.offer'].els.forEach(({ el }, i) => el.toggleAttribute('data-selected', W.phase === 'place' && i === W.home));
+  const mon = W.offer[W.home];
+  $('#wild-hint').textContent = W.phase === 'pick' || W.phase === 'choosing' ? 'Tap a Pokémon to scan it with the RotomDex.'
+    : W.phase === 'place' ? `Tap a slot in your party to put ${nm(mon)} there.`
+    : W.phase === 'feed' ? 'Tap a Pokémon in your party to feed it the EXP Candy.' : '';
   renderNotice('wild-notice');
   const go = $('#wild-go');
-  go.classList.remove('btn--release');
-  setShown('wild-go', go, W.phase === 'pick' ? !!c && !W.direct : W.phase !== 'done');   // fades in and out like the info boxes
-  if (W.phase === 'pick'){ go.textContent = 'I Choose You!!'; go.disabled = !c; go.classList.add('btn--go'); }
-  else if (W.phase === 'fading'){ go.disabled = true; }
-  else if (W.phase === 'place' && mustRelease()){ go.textContent = 'Release'; go.disabled = false; go.classList.remove('btn--go'); go.classList.add('btn--release'); }
-  else if (W.phase === 'place'){ go.textContent = 'Send to daycare'; go.disabled = daycareFull(); go.classList.remove('btn--go'); }
-  else if (W.phase === 'feed'){ go.textContent = 'Feed a Pokémon'; go.disabled = true; go.classList.remove('btn--go'); }
+  go.hidden = !['place', 'done', 'leaving'].includes(W.phase);
+  go.classList.remove('btn--release', 'btn--go');
+  if (W.phase === 'place' && mustRelease()){ go.textContent = 'Release'; go.disabled = false; go.classList.add('btn--release'); }
+  else if (W.phase === 'place'){ go.textContent = 'Send to daycare'; go.disabled = daycareFull(); }
   else if (W.phase === 'leaving'){ go.disabled = true; }
-  $('#wild-leave').hidden = W.phase !== 'done';
+  else if (W.phase === 'done'){ go.textContent = 'Back to map'; go.disabled = false; go.classList.add('btn--go'); }
 };
 
 /* ================= poké mart ================= */
@@ -2218,12 +2197,14 @@ function moveMeta(m){
     : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : m.power + '% of Attack'}${m.hits ? `, ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : ''}`;
 }
 // the party in the bottom corner, while a move is picked: who can learn it glows, everyone else dims
-function tutorMarkParty(){
-  const k = screen === 'scr-tutor' ? TU.teaching : null;
+// the party in the bottom corner lights up where a tap does something: with a move picked at the Move Tutor, who can
+// learn it (the rest dim); placing a wild Pokémon, every slot; feeding a candy, every Pokémon
+function hudMarkParty(){
+  const k = screen === 'scr-tutor' ? TU.teaching : null, place = screen === 'scr-wild' && W.phase === 'place', feed = screen === 'scr-wild' && W.phase === 'feed';
   AREAS['M.party']?.els.forEach(({ el }, i) => {
-    const m = R.party[i], can = !!(k && m && canLearn(m, k));
+    const m = R.party[i], can = k ? !!(m && canLearn(m, k)) : place || (feed && !!m);
     el.toggleAttribute('data-learn', can);
-    el.toggleAttribute('data-nolearn', !!k && !can);
+    el.toggleAttribute('data-nolearn', (!!k || feed) && !can && !!m);
   });
 }
 RENDER['scr-tutor'] = () => {
