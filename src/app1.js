@@ -1207,7 +1207,7 @@ const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   glide: [480, 620] };                              // scan to scan: the swoop from one Pokémon to the next
 // resolves a little before a flight ends: when the panel, opening out from Rotom's perch, would finish just as Rotom lands
 const rdArrive = flight => {
-  const left = flight.effect.getComputedTiming().duration - (flight.currentTime || 0), lead = Math.min(rdPanel('open') * .9, left * .35);
+  const left = (flight.arrive ?? flight.effect.getComputedTiming().duration) - (flight.currentTime || 0), lead = Math.min(rdPanel('open') * .9, left * .35);
   return new Promise(r => setTimeout(r, Math.max(0, left - lead)));
 };
 // the panel's own timings (opening out, folding, its contents fading): the scan popup runs them 80% faster
@@ -1222,12 +1222,36 @@ const rdDip = (a, b, depth) => {
   const low = Math.max(a.y, b.y) + Math.min(innerHeight * .2, 170) * depth * rdReach(a, b);
   return [{ x: a.x + (b.x - a.x) * .3, y: low }, { x: a.x + (b.x - a.x) * .75, y: low }];
 };
+// The flying Rotom is one image made (and decoded) once and reused for every flight: a fresh image can take a frame
+// or two to show on a phone, which made Rotom blink out as it took off. rdFlyerDone puts it away again.
+let RD_FLY = null;
 const rdFlyer = box => {
-  const img = document.createElement('img');
-  img.className = 'rd-fly'; img.src = ROTOMDEX_SPR; img.alt = '';
-  Object.assign(img.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px' });
-  return document.body.appendChild(img);
+  if (!RD_FLY){
+    RD_FLY = document.createElement('img'); RD_FLY.className = 'rd-fly'; RD_FLY.src = ROTOMDEX_SPR; RD_FLY.alt = '';
+    RD_FLY.style.visibility = 'hidden'; document.body.appendChild(RD_FLY); RD_FLY.decode?.().catch(() => {});
+  }
+  RD_FLY.getAnimations().forEach(x => x.cancel());
+  Object.assign(RD_FLY.style, { left: box.left + 'px', top: box.top + 'px', width: box.width + 'px', height: box.height + 'px', visibility: 'visible' });
+  return RD_FLY;
 };
+const rdFlyerDone = () => { if (!RD_FLY) return; RD_FLY.getAnimations().forEach(x => x.cancel()); RD_FLY.style.visibility = 'hidden'; };
+// the Rotom it took off from goes once the flyer is on screen (the frame its flight starts), so there is never a
+// frame with no Rotom at all
+const rdTakeOff = (flight, hide) => flight.ready.then(hide, () => {});
+// One flight, start to finish, as one animation: the path (frames over dur ms) and then the landing squash at its end
+// point (dx, dy, scale sc), so nothing has to be handed over between them as Rotom touches down. flight.arrive is when
+// it reaches its spot; flight.finished, when it has settled.
+function rdFly(fl, frames, dur, dx, dy, sc){
+  const land = RD_MS.land, total = dur + land, f = dur / total;
+  const kf = frames.map(fr => ({ ...fr, offset: fr.offset * f }));
+  kf[kf.length - 1].easing = 'cubic-bezier(.37,0,.63,1)';
+  kf.push({ transform: rdT(dx, dy, 0, sc * 1.06, sc * .93), opacity: 1, offset: (dur + land * .35) / total, easing: 'cubic-bezier(.37,0,.63,1)' },
+    { transform: rdT(dx, dy, 0, sc * .985, sc * 1.02), opacity: 1, offset: (dur + land * .7) / total, easing: 'cubic-bezier(.37,0,.63,1)' },
+    { transform: rdT(dx, dy, 0, sc), opacity: 1, offset: 1 });
+  const flight = fl.animate(kf, { duration: total, fill: 'forwards' });
+  flight.arrive = dur;
+  return flight;
+}
 // how solid Rotom looks at depth d (0 on the glass): further in, it fades into the dark behind it. Only transform and
 // opacity are animated in flight, which phones run on the GPU, so the flight stays smooth
 const rdFx = d => +(1 - .7 * d).toFixed(3);
@@ -1303,15 +1327,15 @@ async function openDex(){
   dexShow(DEX.tab, false);
   DEXPOP.hidden = false; DEXSCROLL.scrollTop = 0;
   dexLayout();
-  RD_BTN.classList.add('is-out');
-  if (REDUCED){ DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
+  if (REDUCED){ RD_BTN.classList.add('is-out'); DEX.busy = false; return $('#dex-close').focus({ preventScroll: true }); }
   const pose = rdPose(rdHome()); rdStill(true);
   const spot = rdSpot(), from = rdHome().getBoundingClientRect(), to = spot.getBoundingClientRect();
   DEXSHELL.style.visibility = 'hidden'; DEXVEIL.style.opacity = 0; spot.style.visibility = 'hidden';
   const fl = rdFlyer(from), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
   // the path, centre to centre: a small hop straight up, then a shallow dip down and back up into place
   const frames = rdSwoop(a, b, ...rdDip(a, b, 1), sc, pose);
-  const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
+  const flight = rdFly(fl, frames, RD_MS.swoop, b.x - a.x, b.y - a.y, sc);
+  rdTakeOff(flight, () => { if (live()) RD_BTN.classList.add('is-out'); });
   // the backdrop dims over the last part of the flight
   DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
   await rdArrive(flight);
@@ -1323,10 +1347,10 @@ async function openDex(){
 }
 // Rotom lands (the flyer at offset dx, dy and scale sc from where it set off); the panel opens out from it as it
 // settles, then the contents fade up in turn. Resolves false if a screen wipe cut it short.
-// With a flight given, the panel starts opening a little before Rotom gets there (rdArrive), and Rotom's landing
-// squash waits for the flight to finish.
+// With a flight given (rdFly, which ends in Rotom's landing squash), the panel starts opening a little before Rotom
+// gets there (rdArrive).
 async function dexUnfold(fl, dx, dy, sc, live, flight = null){
-  const spot = rdSpot(), landed = flight ? flight.finished.then(() => rdLand(fl, dx, dy, sc), () => {}) : rdLand(fl, dx, dy, sc);
+  const spot = rdSpot(), landed = flight ? flight.finished.catch(() => {}) : rdLand(fl, dx, dy, sc);
   DEXSHELL.style.visibility = '';
   const parts = dexParts();
   dexUnfade(); parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));      // clear any fade-out left by a fold
@@ -1336,7 +1360,7 @@ async function dexUnfold(fl, dx, dy, sc, live, flight = null){
   await Promise.all([landed, opened, ...parts.map(el => el.getAnimations().at(-1)?.finished)]);
   if (!live()) return false;
   DEXSHELL.getAnimations().forEach(x => x.cancel());
-  spot.style.visibility = ''; fl.remove();
+  spot.style.visibility = ''; rdFlyerDone();
   return true;
 }
 // the contents fade, then the panel folds back into Rotom (it stays perched)
@@ -1362,20 +1386,21 @@ async function closeDex(now = false){
     const parts = await dexFold();
     // then Rotom hops home, setting off from wherever its float has it
     const pose = rdPose(spot); rdStill(true);
-    const from = spot.getBoundingClientRect(), fl = rdFlyer(from); spot.style.visibility = 'hidden';
-    DEXSHELL.style.visibility = 'hidden';
+    const from = spot.getBoundingClientRect(), fl = rdFlyer(from);
     const to = rdHome().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), dx = b.x - a.x, dy = b.y - a.y, sc = to.width / from.width;
     // the same hop as on the way out, then a shallower dip down and back up to the corner
     const home = rdSwoop(a, b, ...rdDip(a, b, .9), sc, pose);              // the way home dips 10% less
-    await fl.animate(home, { duration: RD_MS.home, fill: 'forwards' }).finished;
-    RD_BTN.classList.remove('is-out');                                      // the real button is back under the flyer
-    await rdLand(fl, dx, dy, sc);
-    fl.remove(); spot.style.visibility = '';
+    const flight = rdFly(fl, home, RD_MS.home, dx, dy, sc);
+    rdTakeOff(flight, () => { spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden'; });
+    // the real button fades back in under the flyer as it lands, so it is there when the flyer goes
+    setTimeout(() => RD_BTN.classList.remove('is-out'), flight.arrive);
+    await flight.finished.catch(() => {});
+    rdFlyerDone(); spot.style.visibility = '';
     parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));
   }
   dexUnfade();
   DEX.anim++;
-  document.querySelectorAll('.rd-fly').forEach(x => x.remove()); rdSpot().style.visibility = '';
+  rdFlyerDone(); rdSpot().style.visibility = '';
   DEXPOP.hidden = true;
   DEXSHELL.style.visibility = '';
   DEXSHELL.getAnimations().forEach(x => x.cancel()); DEXVEIL.getAnimations().forEach(x => x.cancel());
@@ -1516,7 +1541,7 @@ async function rdHopScan(slot, reserve, change){
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   const spot = rdSpot(), pl = dexPlace(slot, reserve), at = pl.at(0);
   const pose = rdPose(spot); rdStill(true);
-  const from = spot.getBoundingClientRect(), fl = rdFlyer(from); spot.style.visibility = 'hidden';
+  const from = spot.getBoundingClientRect(), fl = rdFlyer(from);
   const a = rdMid(from), b = { x: at.left + pl.x, y: at.top }, sc = 1;
   // a concave swoop: down through a clear dip and back up into its new perch, the dip deeper the further it goes.
   // It moves off at once but evenly, so the whole curve reads, and eases in to land
@@ -1526,7 +1551,8 @@ async function rdHopScan(slot, reserve, change){
   const dur = Math.round(RD_MS.glide[0] + (RD_MS.glide[1] - RD_MS.glide[0]) * Math.min(1, d / 400));
   // a short hop (to the next Pokémon along) just moves across, staying on the glass; only a long way dives in
   const depth = Math.min(1, Math.max(0, (d - 220) / 220));
-  const flight = fl.animate(rdSwoop(a, b, ...dip, sc, pose, { ease, depth }), { duration: dur, fill: 'forwards' });
+  const flight = rdFly(fl, rdSwoop(a, b, ...dip, sc, pose, { ease, depth }), dur, b.x - a.x, b.y - a.y, sc);
+  rdTakeOff(flight, () => { if (live() && RD_FLY.style.visibility !== 'hidden') spot.style.visibility = 'hidden'; });
   await dexFold();
   if (!live()) return;
   DEXSHELL.style.visibility = 'hidden';
@@ -1549,12 +1575,12 @@ async function rdRelocate(change, dip){
   if (!live()) return;
   const pose = rdPose(rdSpot()); rdStill(true);
   const spot = rdSpot(), from = spot.getBoundingClientRect(), fl = REDUCED ? null : rdFlyer(from);
-  spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden';
+  spot.style.visibility = 'hidden'; DEXSHELL.style.visibility = 'hidden';            // (the panel is folded and the flyer on screen already)
   change(); DEXSCROLL.scrollTop = 0; dexLayout();
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), { duration: rdHopMs(a, b), fill: 'forwards' });
+  const flight = rdFly(fl, rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), rdHopMs(a, b), b.x - a.x, b.y - a.y, sc);
   await rdArrive(flight);
   if (!live()) return;
   if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)){ DEX.busy = false; rdStill(false); }
