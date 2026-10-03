@@ -47,9 +47,10 @@
         <button class="dextab" type="button" role="tab" data-tab="items">Items <small id="dex-n-items"></small></button>
       </div>
     </header>
-    <!-- only this part scrolls: the header above stays put -->
+    <!-- the scan's "Full RotomDex" button, pinned to the popup's top right corner over the info -->
+    <div class="dexact" id="dex-act" hidden></div>
+    <!-- only this part scrolls: the header and the button above stay put, even when it bounces -->
     <div class="dexscroll" id="dex-scroll">
-      <div class="dexact" id="dex-act" hidden></div>
       <div class="dexbody" id="dex-body" role="tabpanel"></div>
     </div>
   </section>

@@ -1069,10 +1069,10 @@ button{ font:inherit; color:inherit; }
 .dexscroll{ position:relative; flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; }
 /* "Full RotomDex": just the button, floating in the scan's top right corner over the info as it scrolls, with a
    shadow under it; no bar behind it. The info starts below it. */
-.dexact{ position:sticky; top:0; z-index:4; height:0; display:flex; justify-content:flex-end; padding:0 12px; pointer-events:none; }
+.dexact{ position:absolute; top:0; left:0; right:0; z-index:4; height:0; display:flex; justify-content:flex-end; padding:0 12px; pointer-events:none; }
 .dexact .btn{ pointer-events:auto; height:max-content; margin-top:10px; padding:7px 13px; font-size:13px; background:var(--panel-2);
   box-shadow:0 6px 14px rgba(0,0,0,.55), 0 2px 4px rgba(0,0,0,.4); }
-.dexpop--scan .dexact:not([hidden]) + .dexbody{ padding-top:48px; }
+.dexpop--scan .dexbody{ padding-top:48px; }
 .dexact[hidden]{ display:none; }
 @media (max-width:420px){ .dexpop__card .dextab{ font-size:13px; } }
 .starter__hint{ margin:6px 0 0; }
