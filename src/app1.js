@@ -1204,6 +1204,11 @@ const RD_MS = { swoop: 600, land: 240, fade: 75 /* 100 */, fold: 160 /* 209 */,
   home: 600,                                        // both corner flights take 0.6s
   hop: [240, 400],                                  // a hop between perches: quicker the shorter it is
   glide: [480, 620] };                              // scan to scan: the swoop from one Pokémon to the next
+// resolves a little before a flight ends: when the panel, opening out from Rotom's perch, would finish just as Rotom lands
+const rdArrive = flight => {
+  const left = flight.effect.getComputedTiming().duration - (flight.currentTime || 0), lead = Math.min(rdPanel('open') * .9, left * .35);
+  return new Promise(r => setTimeout(r, Math.max(0, left - lead)));
+};
 // the panel's own timings (opening out, folding, its contents fading): the scan popup runs them 80% faster
 const RD_SCAN_SPEED = 1.8;
 const rdPanel = k => RD_MS[k] / (DEX.scan ? RD_SCAN_SPEED : 1);
@@ -1308,17 +1313,19 @@ async function openDex(){
   const flight = fl.animate(frames, { duration: RD_MS.swoop, fill: 'forwards' });
   // the backdrop dims over the last part of the flight
   DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.swoop * .45, delay: RD_MS.swoop * .55, easing: 'ease-out', fill: 'forwards' });
-  await flight.finished;
+  await rdArrive(flight);
   if (!live()) return;
-  if (!await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)) return;
+  if (!await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)) return;
   DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
   DEX.busy = false; rdStill(false);
   $('#dex-close').focus({ preventScroll: true });
 }
 // Rotom lands (the flyer at offset dx, dy and scale sc from where it set off); the panel opens out from it as it
 // settles, then the contents fade up in turn. Resolves false if a screen wipe cut it short.
-async function dexUnfold(fl, dx, dy, sc, live){
-  const spot = rdSpot(), landed = rdLand(fl, dx, dy, sc);
+// With a flight given, the panel starts opening a little before Rotom gets there (rdArrive), and Rotom's landing
+// squash waits for the flight to finish.
+async function dexUnfold(fl, dx, dy, sc, live, flight = null){
+  const spot = rdSpot(), landed = flight ? flight.finished.then(() => rdLand(fl, dx, dy, sc), () => {}) : rdLand(fl, dx, dy, sc);
   DEXSHELL.style.visibility = '';
   const parts = dexParts();
   dexUnfade(); parts.forEach(el => el.getAnimations().forEach(x => x.cancel()));      // clear any fade-out left by a fold
@@ -1524,9 +1531,9 @@ async function rdHopScan(slot, reserve, change){
   DEXSHELL.style.visibility = 'hidden';
   change(); DEXSCROLL.scrollTop = 0; dexLayout();
   DEXSHELL.getAnimations().forEach(x => x.cancel());
-  await flight.finished;
+  await rdArrive(flight);
   if (!live()) return;
-  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)){ DEX.busy = false; rdStill(false); }
+  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)){ DEX.busy = false; rdStill(false); }
 }
 // the popup's current bump position and side, read back from Rotom's perch
 function dexGeomNow(){
@@ -1546,9 +1553,10 @@ async function rdRelocate(change, dip){
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  await fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), { duration: rdHopMs(a, b), fill: 'forwards' }).finished;
+  const flight = fl.animate(rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), { duration: rdHopMs(a, b), fill: 'forwards' });
+  await rdArrive(flight);
   if (!live()) return;
-  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live)){ DEX.busy = false; rdStill(false); }
+  if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)){ DEX.busy = false; rdStill(false); }
 }
 // "Full RotomDex": Rotom leaves the Pokémon, the page dims, and it opens the full RotomDex on the Pokémon section
 async function dexToFull(){
