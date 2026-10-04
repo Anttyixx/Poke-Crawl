@@ -1246,11 +1246,13 @@ button{ font:inherit; color:inherit; }
 html, body, *{ scrollbar-width:none; }
 ::-webkit-scrollbar{ display:none; }
 
-/* battle slots without borders: just the Pokémon, its HP bar on top, and its stars; the border only shows (as a coloured
-   ring) while it is acting or being targeted */
+/* battle slots without borders: just the Pokémon and its HP bar; the animated border only shows while it is acting
+   (green) or being targeted (red) */
 .bf__game .slot[data-border="battle"] .slot__frame{ border-color:transparent !important; background:transparent !important; box-shadow:none !important; }
 .bf__game .slot[data-border="battle"] :is(.g__mask, .stars__mask){ display:none; }
-.bf__game .slot[data-border="battle"] .g--tr .g__bar{ top:-7cqw; right:auto; left:50%; width:74cqw; margin-left:-37cqw; transform-origin:50% 50%; }
+/* only the HP bar shows, in its usual top-right corner: no stars, no held-item ring, no HP numbers under it */
+.bf__game .slot[data-border="battle"] :is(.stars, .g:not([data-stat="hp"])){ display:none; }
+.bf__game .slotwrap > .slotname{ display:none; }
 /* while running onto the field, the HP bar and stars wait */
 .bf__game .slot.entering :is(.g, .stars){ opacity:0 !important; }
 .bf__game .slot :is(.g, .stars){ transition:opacity .25s ease; }
