@@ -16,7 +16,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
-- **Moves are picked by fixed odds instead of PP.** Each move has a weight, and every action a Pokémon picks a move at random in proportion to those weights. Nothing gets used up, so the odds stay the same all battle, and a Pokémon's info (and the battle tooltip) shows each move's chance as a percentage, like 80% / 20%. Pokémon never run out of moves and Struggle, and a move that has no target just costs the turn.
+- **Moves are picked by fixed odds instead of PP.** Each move has a weight, and every action a Pokémon picks a move at random in proportion to those weights. The odds never change during a battle, and a Pokémon's info (and the battle tooltip) shows each move's chance as a percentage, like 63% / 37%.
+- **Move limit.** Instead of PP, each Pokémon can use 12 moves per battle (14 at ★2, 16 at ★3), then it Struggles. The battle tooltip shows how many it has left.
+- **Smarter move choice.** Pokémon only pick moves that would work from where they stand: in the back row, a Pokémon with a heal and an attack heals instead of wasting its turn. With nothing useful to do, it waits, which doesn't use up its move limit.
 - Items and moves you can't afford are greyed out and marked "too expensive" (tap one and the label flashes red and shakes), and items are greyed out with "no room" when your bag is full.
 - "Back to map" at the Poké Mart and the Move Tutor is no longer coloured in, so it doesn't look like a buy button.
 - Messages like "Pikachu joined your party." or "Bought the Leftovers." now pop up in a little bubble right above your party or bag, then fade after a few seconds.

@@ -26,7 +26,7 @@ for (const m of Object.values(MOVES)) m.learnableBy = [];
 for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Raticate at ★2 and ★3 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, weight:0, fx:'Used when a Pokémon has no move it can use. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, weight:0, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
 // legendaries come only from Legendary nodes: never in wild offers or on trainers' and gym leaders' teams
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
@@ -44,6 +44,7 @@ const TUNE = {
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
   tutorPrice: { 1: 40, 2: 80, 3: 150 }, rerollStep: 20,
+  moveLimit: 12, moveLimitStep: 2,                   // moves a Pokémon can use per battle at ★1, and how much each star adds
   taughtMax: 1,                                      // moves besides its signature: every Pokémon knows 2 moves in all
   daycareSize: 10,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
@@ -93,6 +94,9 @@ const known = m => [FORM[m.form].sig, ...m.taught];
    nothing is used up, so the odds stay the same all battle. A Pokémon's info shows each move's chance as a percentage.
    A held item can scale the weight of some of its moves: ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
 const ODDS_NAME = 'Weight';                              // what the move's number is called in the game (placeholder)
+// how many moves a Pokémon can use in one battle (a move that happens costs one); then it Struggles. Grows with its stars
+const moveLimit = star => TUNE.moveLimit + TUNE.moveLimitStep * (star - 1);
+const limitHTML = star => `<b>${moveLimit(star)} moves per battle</b>, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}.`;
 function moveWeight(k, item){
   const m = MOVES[k], o = item && ITEM[item]?.odds;
   return (m.weight ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1);
@@ -767,7 +771,7 @@ function moveRow(k, sig, chance){
   const head = m.kind === 'sup'
     ? `Support, ${TARGET_NAME[m.target] || ''}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
     : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : `${m.power}% of Attack`}${hits}`;
-  const odds = chance == null ? `${ODDS_NAME} ${m.weight}` : `${chance}%`;
+  const odds = chance == null ? (m.weight ? `${ODDS_NAME} ${m.weight}` : '') : `${chance}%`;
   const title = chance == null ? `${ODDS_NAME}: the higher it is, the more often a Pokémon picks this move` : `Picked ${chance}% of the time`;
   return `<div class="mv${sig ? ' mv--sig' : ''}">
     <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
@@ -997,6 +1001,7 @@ function mapMonHTML(m){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
+      <div class="dexkv"><span>Move limit</span><p>${limitHTML(f.star)}</p></div>
       <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true, monOdds(m)[f.sig])}</div></div>
       <div class="dexkv"><span>Moves</span><div class="mvlist">${taughtSlotsHTML(m, false)}</div></div>
     </div>
@@ -1091,6 +1096,7 @@ function dexMonHTML(f){
     </div>
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
+      <div class="dexkv"><span>Move limit</span><p>${limitHTML(f.star)}</p></div>
       <div class="dexkv"><span>${sigs.length > 1 ? 'Signature moves' : 'Signature move'}</span><div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}</div></div>
       <div class="dexkv"><span>Tutor moves</span><div>${tutor.length
         ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`

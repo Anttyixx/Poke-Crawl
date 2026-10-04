@@ -107,12 +107,12 @@ The only way to keep a Pokémon in the back row is to **stack it behind a living
 
 Each move has a **weight** (the name isn't final). Every time a Pokémon acts, it picks one of its moves at random **in proportion to their weights**.
 
-- **Nothing is used up.** This replaced the marble bag (and then PP), where every use removed a marble: the odds kept shifting during a fight and were hard to read. Now the odds are fixed for the whole battle.
+- **The odds never change.** This replaced the marble bag (and then PP), where every use removed a marble: the odds kept shifting during a fight and were hard to read. Now the odds are fixed for the whole battle.
+- **Only moves that would work are picked.** Before choosing, a Pokémon drops any move that would fail from where it stands: offensive moves from the back row, moves whose shape would hit nobody, Counter before it has been hit, charging moves in round 1. A back-row Pokémon with a heal and an attack always heals. If none of its moves would work, it waits.
+- **Move limit.** Each Pokémon can use a set number of moves per battle: 12 at ★1, +2 per star (14 at ★2, 16 at ★3). Each move that happens uses one (waiting doesn't). At 0 it uses **Struggle** from then on, which hits anything and hurts the user, so stalled fights (healers, immunities) still end. Items will be able to raise the limit.
 - The Pokémon's info shows each move's chance as a **percentage** (its weight divided by the total of its moves' weights).
 - **Held items** can scale a move's weight (an item's `odds: { kind, mul }` multiplies the weight of its offensive or support moves, or all of them). **Single-use items** that change a move's weight are planned.
 - Choice items still lock the Pokémon into its first move, overriding the odds.
-- **A move that fails for lack of a valid target** just costs the turn.
-- Struggle can no longer happen, since a Pokémon never runs out of moves.
 
 ### Worked example
 

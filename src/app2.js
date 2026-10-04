@@ -104,6 +104,7 @@ function freshBoard(){
       const maxHp = Math.round(f.hp * unit.mul * (it === 'assault-vest' ? 1.25 : 1));
       const u = { ...unit, uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
         atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
+      u.limit = u.left = moveLimit(f.star);                // moves it can still use this battle
       board[side][Math.floor(cell / 3)][cell % 3] = u;
     }
   }
@@ -161,7 +162,7 @@ function modLine(u){
   return out.join(', ');
 }
 function tipHTML(u){
-  const odds = u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item);
+  const odds = u.left <= 0 ? u.moves.map(() => 0) : u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item);
   const mods = modLine(u);
   return `<div class="tip__head"><span class="tip__name">${u.name} <span class="dt__stars">${'★'.repeat(u.level)}</span></span>
       <span class="tip__side" style="color:var(--${u.side === 'you' ? 'you' : 'foe'})">${u.side === 'you' ? 'Yours' : 'Opponent'}</span></div>
@@ -171,7 +172,7 @@ function tipHTML(u){
     ${mods ? `<div class="tip__mods">${mods}</div>` : ''}
     <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, odds[i])).join('')}</div>
     ${u.item ? `<div class="dt__item"><img src="${ITEM[u.item].spr}" alt=""><div><b>${ITEM[u.item].name}</b><br>${ITEM[u.item].fx}</div></div>` : ''}
-    <div class="tip__foot">${u.st.lock ? `Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}` : 'Each action, it picks a move by these odds'}</div>`;
+    <div class="tip__foot"><b>${u.left}/${u.limit}</b> moves left${u.left <= 0 ? ': using Struggle' : u.st.lock ? `. Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}` : ''}. It only picks moves that would work from where it stands.</div>`;
 }
 function placeTip(el){
   const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pad = 8;
@@ -281,15 +282,32 @@ function faint(u, why = ''){
 }
 function checkFaints(list){ for (const t of list) if (t.hp <= 0 && find(t)) faint(t); }
 function lower(t, stat, amt){ if (t.st.mist || sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
-// pick a move at random by its weight (see moveOdds); nothing is used up, so the odds never change
+// would this move do something if used right now, from where the Pokémon stands? (moves that would fail are never picked)
+function usable(u, k){
+  const pos = find(u), m = MOVES[k];
+  if (!pos || !m) return false;
+  if (round === 1 && m.charge) return false;                                        // charging moves can't open a battle
+  if (m.kind === 'sup'){
+    if (k === 'transform') return living(foe(u.side)).length > 0;
+    return k === 'splash' || supportTargets(u, pos, k, m).length > 0;
+  }
+  if (pos.row === 1) return false;                                                  // the back row can't reach anyone
+  if (k === 'counter' && !u.st.lastHit) return false;
+  const c = center(u.side, pos.lane);
+  if (c < 0) return false;
+  return k === 'metronome' || shapeTargets(u.side, c, m.shape).length > 0;
+}
+// pick a move: once the move limit is used up, Struggle; otherwise one of the moves that would work, at random by
+// weight (see moveOdds). Nothing changes the odds as moves get used. null: nothing it could use from here
 function draw(u){
-  if (u.st.lock) return u.st.lock;
-  let ks = u.moves.filter(k => round > 1 || !MOVES[k].charge);                       // charging moves can't open a battle
-  if (!ks.length) ks = u.moves;
+  if (u.left <= 0) return usable(u, 'struggle') ? 'struggle' : null;
+  if (u.st.lock) return usable(u, u.st.lock) ? u.st.lock : null;
+  const ks = u.moves.filter(k => usable(u, k));
+  if (!ks.length) return null;
   const w = ks.map(k => moveWeight(k, u.item));
   let r = Math.random() * w.reduce((a, b) => a + b, 0);
   for (let i = 0; i < ks.length; i++) if ((r -= w[i]) < 0) return ks[i];
-  return ks.length ? ks[ks.length - 1] : 'struggle';
+  return ks[ks.length - 1];
 }
 
 /* ---------- support moves ---------- */
@@ -537,16 +555,28 @@ async function act(u, forced){
     status(`${who(u)} is ${why}`);
     await wait(420); setTurn(u, null); return;
   }
-  const origKey = forced ? forced.move : (u.st.planned || draw(u));
+  // the move planned at the start of the round, if it would still work (the field may have changed since); else a new pick
+  const plan = u.st.planned, stillOK = plan && usable(u, plan) && (plan === 'struggle') === (u.left <= 0);
+  const origKey = forced ? forced.move : stillOK ? plan : draw(u);
   u.st.planned = null;
+  if (!origKey){
+    setTurn(u, 'acting'); floatText(el, 'waits', 'info');
+    log(`<div class="le-top">${who(u)} <span class="le-note">has no move it can use from here, so it waits</span></div>`, 'le fail');
+    status(`${who(u)} waits`);
+    await wait(320); setTurn(u, null); return;
+  }
   let key = origKey, m = MOVES[key];
-  if (key === 'metronome'){ key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k))); m = MOVES[key]; }
+  if (key === 'metronome'){
+    const c = center(u.side, pos.lane), hits = k => c >= 0 && shapeTargets(u.side, c, MOVES[k].shape).length > 0;
+    key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k) && hits(k))); m = MOVES[key];
+  }
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
   const ok = m.kind === 'sup' ? await resolveSupport(u, pos, key, m, el) : await resolveOffense(u, pos, key, m, el, origKey);
   if (ok){
     u.st.used.add(origKey); u.st.lastMove = origKey;
+    if (origKey !== 'struggle' && --u.left === 0) log(`⚠ ${who(u)} has used up its ${u.limit} moves and will Struggle from now on`, 'le-sys');
     if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle'){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
   }
   await wait(140);
