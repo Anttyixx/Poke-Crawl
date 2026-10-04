@@ -810,7 +810,7 @@ async function finishBattle(outcome){
   if (won){
     const pay = TUNE.pay[enc.kind] + B.coins; R.coins += pay;
     xp = awardXP(TUNE.xp[enc.kind]);
-    msgs.push(`You beat ${enc.title}! +${pay} coins, and your party gained ${pct(xp.share)} of a level.`);
+    msgs.push(`You beat ${enc.title}! +${pay} coins, and your party gained ${expPts(xp.share)} EXP each.`);
     if (enc.kind === 'legendary'){
       const mon = makeMon(enc.legend.line, enc.legend.star), i = firstEmpty(R.party);
       if (i >= 0){ R.party[i] = mon; msgs.push(`You captured ${nm(mon)}. It joined your party.`); }
@@ -829,7 +829,7 @@ async function finishBattle(outcome){
       if (enc.kind === 'trainer') xp = awardXP(TUNE.xp.trainer * TUNE.loseXP);
       const left = `${R.lives} ${R.lives === 1 ? 'life' : 'lives'} left`;
       msgs.push(`${outcome === 'draw' ? 'Both sides fell' : `You lost to ${enc.title}`}: ${left}.`
-        + (xp ? ` Your party still gained ${pct(xp.share)} of a level.` : enc.kind === 'boss' ? " The gym will still be there when you're ready." : ''));
+        + (xp ? ` Your party still gained ${expPts(xp.share)} EXP each.` : enc.kind === 'boss' ? " The gym will still be there when you're ready." : ''));
     }
   }
   AFTER = { xp, msgs, heart: !won };

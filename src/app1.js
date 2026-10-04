@@ -56,9 +56,10 @@ const ITEM_IDS = ITEMS_DATA.map(i => i.id);
 const TUNE = {
   lives: 3, startCoins: 100,
   pay: { trainer: 60, boss: 150, legendary: 80 },
-  xp: { trainer: .1, boss: .15, legendary: .1 },
-  loseXP: .5,
-  releaseCandy: .6,                                   // a released Pokémon's EXP Candy holds this share of the EXP it had earned                                         // losing a trainer battle still earns this share of the win's EXP   // share of a level EVERY party Pokémon earns per win (not split)
+  expPerLevel: 100,                                 // EXP is kept as a share of a level; messages show it as points out of this
+  xp: { trainer: .1, boss: .15, legendary: .1 },   // share of a level EVERY party Pokémon earns per win (not split)
+  loseXP: .5,                                       // losing a trainer battle still earns this share of the win's EXP
+  releaseCandy: .6,                                 // a released Pokémon's EXP Candy holds this share of the EXP it had earned
   daycareRate: .5,
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
@@ -117,6 +118,8 @@ const pick = a => a[Math.floor(Math.random() * a.length)];
 const shuffle = a => { for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const pct = x => `${Math.round(x * 100)}%`;
+// EXP as points (TUNE.expPerLevel to a level), for messages and scans: "10 EXP", "50/100"
+const expPts = x => Math.round(x * TUNE.expPerLevel);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const typeColor = t => `var(--t-${t === 'none' ? 'normal' : t})`;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -899,7 +902,7 @@ function taughtSlotsHTML(m, pickable){
 }
 function monDetail(m, opts = {}){
   const f = FORM[m.form];
-  const exp = m.star >= 3 ? 'max' : pct(m.exp);
+  const exp = m.star >= 3 ? 'max' : `${expPts(m.exp)}/${TUNE.expPerLevel}`;
   return `<div class="dt__head"><span class="dt__name">${f.name}</span><span class="pill" style="--c:${typeColor(f.type)}">${f.type}</span>
       <span class="dt__stars">${'★'.repeat(m.star)}<i>${'★'.repeat(3 - m.star)}</i></span></div>
     <div class="dt__stats"><div><b>${f.hp}</b><span>HP</span></div><div><b>${f.atk}</b><span>Attack</span></div><div><b>${f.spd}</b><span>Speed</span></div><div><b>${exp}</b><span>EXP</span></div></div>
@@ -938,7 +941,7 @@ function renderInfo(key, m, opts = {}){
   const L = $(`#${key}-left`), Rt = $(`#${key}-right`), M = $(`#${key}-detail`);
   if (!m) return fadeOutGroup(key, [L, Rt, M]);           // stats fade out rather than vanish
   cancelFade(key, [L, Rt, M]);
-  const f = FORM[m.form], exp = m.star >= 3 ? 'max' : pct(m.exp);
+  const f = FORM[m.form], exp = m.star >= 3 ? 'max' : `${expPts(m.exp)}/${TUNE.expPerLevel}`;
   // name + EXP on top, then HP / Attack / Speed as three tall boxes
   // stats on the right: the name + type, then one slim row per stat with its bar (against STAT_MAX)
   const stat = (label, key, v) => `<div class="ibox srow" data-stat="${key}" title="${label} ${v} of ${STAT_MAX[key]} (the natural maximum)">
@@ -1110,7 +1113,7 @@ function releaseMon(m){
   if (amt > 0 && partyMons().some(x => x.star < 3)){
     FEED.amt = amt; FEED.from = name;
     $('#feedbar-candy').src = CANDY_SPR;
-    $('#feedbar-text').textContent = `${name} was released and left an EXP Candy (+${pct(amt)} of a level). Tap a glowing Pokémon to give it.${item}`;
+    $('#feedbar-text').textContent = `${name} was released and left an EXP Candy (${expPts(amt)} EXP). Tap a glowing Pokémon to give it.${item}`;
     $('#feedbar').hidden = false; document.body.classList.add('feeding');
   } else toast('party', `${name} was released.${amt > 0 ? ' Nobody in your party can still level up, so it left nothing behind.' : ''}${item}`);
   refresh();
@@ -1128,7 +1131,7 @@ function feedTap(name, i){
   FEED.amt = 0; $('#feedbar').hidden = true; document.body.classList.remove('feeding');
   const evo = gainExp(m, amt);
   refresh();
-  toast('party', !evo.length ? `${before} ate the EXP Candy and gained ${pct(amt)} of a level.`
+  toast('party', !evo.length ? `${before} ate the EXP Candy and gained ${expPts(amt)} EXP.`
     : before !== nm(m) ? `${before} ate the EXP Candy and evolved into ${nm(m)}!` : `${before} ate the EXP Candy and reached ★${m.star}!`);
   if (el && !REDUCED){
     fly(CANDY_SPR, { x: from.left, y: from.top, size: from.width }, el, { slide: true }).then(() => {
@@ -1167,7 +1170,7 @@ function monMovesHTML(m){
 function mapMonHTML(m){
   const f = FORM[m.form], maxed = m.star >= 3;
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
-  const exp = `<div class="dstat" data-stat="exp"><span>EXP</span><b>${maxed ? 'Max' : pct(m.exp)}</b><i class="dstat__bar"><i style="width:${maxed ? 100 : Math.max(3, Math.round(m.exp * 100))}%"></i></i></div>`;
+  const exp = `<div class="dstat" data-stat="exp"><span>EXP</span><b>${maxed ? 'Max' : `${expPts(m.exp)}/${TUNE.expPerLevel}`}</b><i class="dstat__bar"><i style="width:${maxed ? 100 : Math.max(3, Math.round(m.exp * 100))}%"></i></i></div>`;
   const it = m.item && ITEM[m.item.id];
   return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>${typePill(f.type)}</div>
@@ -2253,7 +2256,7 @@ function feedCandy(i){
   if (m.star >= 3){ msg = `${nm(m)} ate the EXP Candy, but it's already at ★3.`; }
   else {
     const before = nm(m), evo = gainExp(m, TUNE.candyExp);
-    msg = !evo.length ? `${before} ate the EXP Candy and gained ${pct(TUNE.candyExp)} of a level.`
+    msg = !evo.length ? `${before} ate the EXP Candy and gained ${expPts(TUNE.candyExp)} EXP.`
       : before !== nm(m) ? `${before} ate the EXP Candy, reached ★${m.star} and evolved into ${nm(m)}!` : `${before} ate the EXP Candy and reached ★${m.star}!`;
     W.leveled = evo.length ? m.uid : null;
   }

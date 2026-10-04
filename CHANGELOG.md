@@ -19,6 +19,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- EXP is shown in points (100 to a level) instead of percentages: after a battle you'll see "your party gained 10 EXP each", and a Pokémon's scan shows its EXP like 50/100.
 - **Clearer moves.** Every move now leads with what kind of move it is (Attack, Support or Defense) and a plain description of what it does, like "Deals 45% of Attack as damage to the opposing Pokémon in front." The button for switching a move is now a swap icon.
 - **Daycare, like the other screens.** The daycare's slots sit in the middle and your party and bag are in the bottom corners, just like on the map: tap a Pokémon in your party, then a daycare slot, to leave it there (or the other way round). The daycare now holds 8 Pokémon instead of 10.
 - **After a battle.** The winning side's Pokémon do a little victory dance, then you're taken straight back to the map (no more results window). Notices there say what happened and how much EXP your party earned, your Pokémon's EXP bars fill up, and anyone who levels up or evolves flashes and gets a notice of its own ("Bulbasaur evolved into Ivysaur!"). After a gym you go to the daycare as before, and the same happens there.
