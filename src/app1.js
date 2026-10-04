@@ -1305,7 +1305,7 @@ const rdRestFor = r => ({ tx: r.left + r.width / 2 - RD_SIZE / 2, ty: r.top + r.
 // sit Rotom on an anchor (no animation; it is already there, or nothing is moving)
 function rdPlace(anchor){
   const el = rdSprite();
-  el.getAnimations().forEach(x => x.cancel());
+  el.getAnimations().forEach(x => { if (!(x instanceof CSSAnimation || x instanceof CSSTransition)) x.cancel(); });   // flights only, not its dance and glow
   RD.flying = false; RD.base = rdRestFor(anchor.getBoundingClientRect());
   el.style.transform = `translate(${RD.base.tx}px, ${RD.base.ty}px) scale(${RD.base.s})`;
 }
@@ -1670,7 +1670,8 @@ function dexGeomNow(){
   return { x: s.left + s.width / 2 - frame.left, down: !DEXPOP.classList.contains('dexpop--perch-bottom') };
 }
 // fold the panel into Rotom, change what the popup shows (and where), hop Rotom to its new perch, open again
-async function rdRelocate(change, dip){
+// slow: the flight takes this many times its usual time
+async function rdRelocate(change, dip, slow = 1){
   DEX.busy = true; hideTip();
   const tok = ++DEX.anim, live = () => tok === DEX.anim;
   if (!REDUCED) await dexFold();
@@ -1682,7 +1683,7 @@ async function rdRelocate(change, dip){
   DEXSHELL.getAnimations().forEach(x => x.cancel());
   if (REDUCED){ spot.style.visibility = DEXSHELL.style.visibility = ''; DEX.busy = false; rdStill(false); rdSync(); return; }
   const to = rdSpot().getBoundingClientRect(), a = rdMid(from), b = rdMid(to), sc = to.width / from.width;
-  const flight = rdFly(fl, rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), rdHopMs(a, b), b.x - a.x, b.y - a.y, sc);
+  const flight = rdFly(fl, rdSwoop(a, b, ...rdDip(a, b, dip), sc, pose), rdHopMs(a, b) * slow, b.x - a.x, b.y - a.y, sc);
   await rdArrive(flight);
   if (!live()) return;
   if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)){ DEX.busy = false; rdStill(false); }
@@ -1693,7 +1694,7 @@ async function dexToFull(){
   await rdRelocate(() => {
     endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
     DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.home, easing: 'ease-out', fill: 'forwards' });
-  }, .6);
+  }, .6, 1 / .9);                                               // flies there 10% slower than a normal hop
   DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
 }
 // while scanning, a tap outside the popup (that isn't on another Pokémon or item to scan) closes it, and does nothing
