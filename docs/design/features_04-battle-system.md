@@ -103,20 +103,19 @@ The only way to keep a Pokémon in the back row is to **stack it behind a living
 
 **Left is favored.** With a gap ahead and enemies on both sides, the left-hand enemy is always chosen. An arbitrary but fixed convention — it means the enemy's left lane statistically eats the overflow damage.
 
-## Move selection — weights
+## Move selection — signature by default, taught move by chance
 
-Each move has a **weight** (the name isn't final). Every time a Pokémon acts, it picks one of its moves at random **in proportion to their weights**.
+(This replaced the marble bag, and then PP, where every use removed a marble: the odds kept shifting during a fight and were hard to read.)
 
-- **The odds never change.** This replaced the marble bag (and then PP), where every use removed a marble: the odds kept shifting during a fight and were hard to read. Now the odds are fixed for the whole battle.
-- **Only moves that would work are picked.** Before choosing, a Pokémon drops any move that would fail from where it stands: offensive moves from the back row, moves whose shape would hit nobody, Counter before it has been hit, charging moves in round 1. A back-row Pokémon with a heal and an attack always heals. If none of its moves would work, it waits.
-- **Move limit.** Each Pokémon can use a set number of moves per battle: 12 at ★1, +2 per star (14 at ★2, 16 at ★3). Each move that happens uses one (waiting doesn't). At 0 it uses **Struggle** from then on, which hits anything and hurts the user, so stalled fights (healers, immunities) still end. Items will be able to raise the limit.
-- The Pokémon's info shows each move's chance as a **percentage** (its weight divided by the total of its moves' weights).
-- **Held items** can scale a move's weight (an item's `odds: { kind, mul }` multiplies the weight of its offensive or support moves, or all of them). **Single-use items** that change a move's weight are planned.
-- Choice items still lock the Pokémon into its first move, overriding the odds.
+- A Pokémon's **signature move is its default**. Its **taught move** has a **chance** (10–25%, per move): each action, roll it; if it comes up, the Pokémon uses the taught move, otherwise the signature.
+- **Only moves that would work are used.** If the move it lands on would fail from where it stands (an offensive move from the back row, a shape that would hit nobody, Counter before it has been hit, a charging move in round 1), it uses the other move instead. A back-row Pokémon with an attacking signature and a healing taught move always heals. If neither would work, it waits.
+- **The odds never change** during a battle; the Pokémon's info shows them as percentages (signature 80%, taught 20%).
+- **Move limit.** Each Pokémon can use a set number of moves per battle: 12 at ★1, +2 per star (14 at ★2, 16 at ★3). Each move that happens uses one (waiting doesn't). At 0 it uses **Struggle** from then on, which hits anything and hurts the user, so stalled fights (healers, immunities) still end.
+- **Held items** can scale a taught move's chance (an item's `odds: { kind, mul }`). **Single-use items** that raise a move's chance or the move limit are planned. Choice items still lock the Pokémon into its first move.
 
 ### Worked example
 
-A Pokémon with a signature move (weight 8) and a taught move (weight 2) picks its signature 80% of the time and the taught move 20%, on every action of every battle.
+Bulbasaur knows Vine Whip (signature) and Rollout (taught, 20%). Each action it uses Rollout 20% of the time and Vine Whip 80%, all battle. Moved to the back row, both attacks would fail, so it waits. After 12 moves it Struggles.
 
 ## What the build layer controls
 

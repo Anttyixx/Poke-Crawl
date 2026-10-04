@@ -297,17 +297,17 @@ function usable(u, k){
   if (c < 0) return false;
   return k === 'metronome' || shapeTargets(u.side, c, m.shape).length > 0;
 }
-// pick a move: once the move limit is used up, Struggle; otherwise one of the moves that would work, at random by
-// weight (see moveOdds). Nothing changes the odds as moves get used. null: nothing it could use from here
+// pick a move: once the move limit is used up, Struggle. Otherwise roll the taught move's chance (see moveOdds); if
+// it doesn't come up, or it would fail from here, use the signature move; if the signature would fail, the taught move.
+// null: nothing it could use from here
 function draw(u){
   if (u.left <= 0) return usable(u, 'struggle') ? 'struggle' : null;
   if (u.st.lock) return usable(u, u.st.lock) ? u.st.lock : null;
-  const ks = u.moves.filter(k => usable(u, k));
-  if (!ks.length) return null;
-  const w = ks.map(k => moveWeight(k, u.item));
-  let r = Math.random() * w.reduce((a, b) => a + b, 0);
-  for (let i = 0; i < ks.length; i++) if ((r -= w[i]) < 0) return ks[i];
-  return ks[ks.length - 1];
+  const [sig, ...taught] = u.moves;
+  let r = Math.random() * 100;
+  for (const k of taught){ const c = moveChance(k, u.item); if (r < c && usable(u, k)) return k; r -= c; }
+  if (usable(u, sig)) return sig;
+  return taught.find(k => usable(u, k)) || null;
 }
 
 /* ---------- support moves ---------- */

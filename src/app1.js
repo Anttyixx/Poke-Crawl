@@ -26,7 +26,7 @@ for (const m of Object.values(MOVES)) m.learnableBy = [];
 for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Raticate at ★2 and ★3 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, weight:0, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
 // legendaries come only from Legendary nodes: never in wild offers or on trainers' and gym leaders' teams
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
@@ -90,25 +90,23 @@ function formFor(line, star, prev){
 }
 const known = m => [FORM[m.form].sig, ...m.taught];
 /* ---------- move odds ----------
-   Every move has a weight. Each time a Pokémon acts it picks one of its moves at random, in proportion to their weights;
-   nothing is used up, so the odds stay the same all battle. A Pokémon's info shows each move's chance as a percentage.
-   A held item can scale the weight of some of its moves: ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
-const ODDS_NAME = 'Weight';                              // what the move's number is called in the game (placeholder)
+   A Pokémon's signature move is its default. Each taught (tutor) move has a chance: each time the Pokémon acts, it uses
+   its taught move that often, and its signature move otherwise. The odds stay the same all battle, and a Pokémon's
+   info shows them as percentages (e.g. Vine Whip 85%, Rollout 15%). If the move it lands on would fail from where it
+   stands, it uses the other one instead (see draw in the battle engine). A held item can scale a taught move's chance:
+   ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
 // how many moves a Pokémon can use in one battle (a move that happens costs one); then it Struggles. Grows with its stars
 const moveLimit = star => TUNE.moveLimit + TUNE.moveLimitStep * (star - 1);
 const limitHTML = star => `<b>${moveLimit(star)} moves per battle</b>, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}.`;
-function moveWeight(k, item){
+// a taught move's percent chance to be used, with this held item
+function moveChance(k, item){
   const m = MOVES[k], o = item && ITEM[item]?.odds;
-  return (m.weight ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1);
+  return Math.min(100, Math.round((m.chance ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1)));
 }
-// each move's chance to be picked, in whole percents that add up to 100
+// odds for a move list [signature, ...taught]: each taught move its chance, the signature the rest
 function moveOdds(moves, item){
-  const w = moves.map(k => moveWeight(k, item)), t = w.reduce((a, b) => a + b, 0);
-  if (!t) return moves.map(() => 0);
-  const raw = w.map(x => x / t * 100), out = raw.map(Math.floor);
-  let left = 100 - out.reduce((a, b) => a + b, 0);
-  raw.map((x, i) => [x - out[i], i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0){ out[i]++; left--; } });
-  return out;
+  const taught = moves.slice(1).map(k => moveChance(k, item));
+  return [Math.max(0, 100 - taught.reduce((a, b) => a + b, 0)), ...taught];
 }
 // a party Pokémon's odds for each move it knows, as { move: percent }
 function monOdds(m){ const ks = known(m), o = moveOdds(ks, m.item?.id); return Object.fromEntries(ks.map((k, i) => [k, o[i]])); }
@@ -764,15 +762,15 @@ function tapSlot(name, i){
 /* ================= detail card ================= */
 // a move's level as three stars, filled up to its star rating
 const moveStars = n => `<span class="mv__stars" aria-label="${n} star move">${'<i class="on">★</i>'.repeat(n)}${'<i>★</i>'.repeat(3 - n)}</span>`;
-// chance: this Pokémon's percent chance to pick it; without one, the move's weight is shown instead
+// chance: this Pokémon's percent chance to use it; without one, a taught move shows its base chance
 function moveRow(k, sig, chance){
   const m = MOVES[k];
   const hits = m.hits ? ` ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : '';
   const head = m.kind === 'sup'
     ? `Support, ${TARGET_NAME[m.target] || ''}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
     : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : `${m.power}% of Attack`}${hits}`;
-  const odds = chance == null ? (m.weight ? `${ODDS_NAME} ${m.weight}` : '') : `${chance}%`;
-  const title = chance == null ? `${ODDS_NAME}: the higher it is, the more often a Pokémon picks this move` : `Picked ${chance}% of the time`;
+  const odds = chance != null ? `${chance}%` : m.chance ? `${m.chance}% chance` : '';
+  const title = chance != null ? `Used ${chance}% of the time` : m.chance ? `A Pokémon taught it uses it ${m.chance}% of the time, and its signature move otherwise` : '';
   return `<div class="mv${sig ? ' mv--sig' : ''}">
     <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
     <small>${head}</small>${m.fx ? `<small class="mv__fx">${m.fx}</small>` : ''}${moveStars(m.star)}</span>
@@ -2350,7 +2348,7 @@ RENDER['scr-tutor'] = () => {
       <div class="trcard__slot"></div>
       <div class="trcard__body">
         <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
-        <span class="mvcard__meta">${moveMeta(mv)}, ${ODDS_NAME.toLowerCase()} ${mv.weight}${mv.fx ? `. ${mv.fx}` : ''}</span>
+        <span class="mvcard__meta">${moveMeta(mv)}, used ${mv.chance}% of the time${mv.fx ? `. ${mv.fx}` : ''}</span>
         <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
       </div>
       <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'too expensive'}</small></span>

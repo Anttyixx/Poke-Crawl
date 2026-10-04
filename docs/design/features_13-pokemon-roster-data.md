@@ -31,7 +31,7 @@ Species-level data for all of Gen 1 plus the other members of those families (ba
 
 **Damage is a percentage of the user's Attack:** damage = Attack × power% × type multiplier × modifiers, rounded. Heals are a percentage of the target's max HP.
 
-**Weight decides which move gets used.** Each action picks a move at random in proportion to the moves' weights; nothing is used up, so the odds never change during a battle. (The move lists below still say "PP": read it as the move's weight, which kept the old PP values.) Scale: **10** filler · **8** basic · **6** mainline · **4** strong · **2** finisher.
+**The signature move is the default; a taught move has a chance.** Each action, a Pokémon uses its taught move on a roll of that move's chance, and its signature otherwise (see 04). The move lists below still say "PP" (the old system): for tutor moves, 8 PP became a 25% chance, 6 → 20%, 4 → 15%, 2 → 10%; signature moves no longer have a number.
 
 **Every Pokémon has one ability**, shared by its whole line.
 

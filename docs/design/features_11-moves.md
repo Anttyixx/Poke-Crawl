@@ -18,7 +18,7 @@ Combat resolution (how a center is picked, what each shape hits) lives in [04-ba
 - **Shape** — single, pierce, splash, full front row, back row, or full field.
 - **Power** — a percentage of the user's Attack (heals: a percentage of the target's max HP).
 - **Repeat hits** — optionally strikes 2-5 times in one action, independent of shape.
-- **Weight** — how likely the move is to be picked, every action (nothing is used up).
+- **Chance** (tutor moves only) — how often a Pokémon taught it uses it instead of its signature move.
 - **Star rating (★1–★3)** — the minimum level a Pokémon must be to learn it.
 - **Who can learn it** — a list of evolution lines, or **all** for a universal move.
 - **Target rule** — support moves each define how they pick among legal teammates.
@@ -85,11 +85,9 @@ The Move Tutor node (see [03-map-exploration.md](03-map-exploration.md)) **teach
 - Price by star makes ★3 moves a real spend, which pairs with their low PP: a strong move is expensive *and* uses up the Pokémon's action budget fast.
 - Re-roll cost that climbs within a visit lets the player dig for one specific move, but not for free.
 
-## Weight is the balance dial
+## A tutor move's chance is the balance dial
 
-When a Pokémon acts, it picks one of its moves at random **in proportion to their weights**. Nothing is spent, so weight is **only** the chance of picking a move: a weight-2 move next to a weight-8 signature is used 20% of the time, all battle long. (This replaced PP, where each use spent a point and the total was a Pokémon's action budget before it Struggled.)
-
-So a strong move's rarity is now its only cost in weight: there is no stamina cost any more, and long fights (gym leaders) see a Pokémon's rare move about as often per action as short ones. Weights can be changed by held items, and later by single-use items.
+A Pokémon uses its signature move by default; its taught move replaces it on a roll of the move's **chance** (25% filler, 20% mainline, 15% strong, 10% finisher). So a strong taught move is strong but rare, all battle long. Signature moves have no number of their own. (This replaced PP, where each use spent a point and the total was a Pokémon's action budget; that budget is now a per-Pokémon **move limit**, see 04.)
 
 ## Design principle: moves that break the default rules must cost something
 
@@ -97,7 +95,7 @@ Moves that hit multiple Pokémon, hit one Pokémon several times, reach past the
 
 ### Levers available
 
-- **Low weight** — picked rarely.
+- **Low chance** — used rarely.
 - **High star rating** — can't be taught until ★3, and costs the most at the tutor.
 - **Signature-only** — tie a powerful shape to one line's ★3 signature so it can't be spread across the team.
 - **Narrow pool** — put it only in a pool few Pokémon qualify for, so getting it depends on who's in the party.
