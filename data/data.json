@@ -165,6 +165,7 @@
   {
    "id": "caterpie-1",
    "line": "caterpie",
+   "tier": 1,
    "star": 1,
    "name": "Caterpie",
    "type": "bug",
@@ -183,6 +184,7 @@
   {
    "id": "caterpie-2",
    "line": "caterpie",
+   "tier": 1,
    "star": 2,
    "name": "Metapod",
    "type": "bug",
@@ -201,6 +203,7 @@
   {
    "id": "caterpie-3",
    "line": "caterpie",
+   "tier": 1,
    "star": 3,
    "name": "Butterfree",
    "type": "bug",
@@ -219,6 +222,7 @@
   {
    "id": "weedle-1",
    "line": "weedle",
+   "tier": 1,
    "star": 1,
    "name": "Weedle",
    "type": "poison",
@@ -237,6 +241,7 @@
   {
    "id": "weedle-2",
    "line": "weedle",
+   "tier": 1,
    "star": 2,
    "name": "Kakuna",
    "type": "poison",
@@ -255,6 +260,7 @@
   {
    "id": "weedle-3",
    "line": "weedle",
+   "tier": 1,
    "star": 3,
    "name": "Beedrill",
    "type": "poison",
@@ -273,6 +279,7 @@
   {
    "id": "pidgey-1",
    "line": "pidgey",
+   "tier": 1,
    "star": 1,
    "name": "Pidgey",
    "type": "flying",
@@ -291,6 +298,7 @@
   {
    "id": "pidgey-2",
    "line": "pidgey",
+   "tier": 1,
    "star": 2,
    "name": "Pidgeotto",
    "type": "flying",
@@ -309,6 +317,7 @@
   {
    "id": "pidgey-3",
    "line": "pidgey",
+   "tier": 1,
    "star": 3,
    "name": "Pidgeot",
    "type": "flying",
@@ -327,6 +336,7 @@
   {
    "id": "rattata-1",
    "line": "rattata",
+   "tier": 1,
    "star": 1,
    "name": "Rattata",
    "type": "normal",
@@ -345,6 +355,7 @@
   {
    "id": "rattata-2",
    "line": "rattata",
+   "tier": 1,
    "star": 2,
    "name": "Raticate",
    "type": "normal",
@@ -363,6 +374,7 @@
   {
    "id": "rattata-3",
    "line": "rattata",
+   "tier": 1,
    "star": 3,
    "name": "Raticate",
    "type": "normal",
@@ -381,6 +393,7 @@
   {
    "id": "spearow-1",
    "line": "spearow",
+   "tier": 2,
    "star": 1,
    "name": "Spearow",
    "type": "normal",
@@ -399,6 +412,7 @@
   {
    "id": "spearow-2",
    "line": "spearow",
+   "tier": 2,
    "star": 2,
    "name": "Fearow",
    "type": "normal",
@@ -417,6 +431,7 @@
   {
    "id": "spearow-3",
    "line": "spearow",
+   "tier": 2,
    "star": 3,
    "name": "Fearow",
    "type": "normal",
@@ -435,6 +450,7 @@
   {
    "id": "ekans-1",
    "line": "ekans",
+   "tier": 2,
    "star": 1,
    "name": "Ekans",
    "type": "poison",
@@ -453,6 +469,7 @@
   {
    "id": "ekans-2",
    "line": "ekans",
+   "tier": 2,
    "star": 2,
    "name": "Arbok",
    "type": "poison",
@@ -471,6 +488,7 @@
   {
    "id": "ekans-3",
    "line": "ekans",
+   "tier": 2,
    "star": 3,
    "name": "Arbok",
    "type": "poison",
@@ -489,6 +507,7 @@
   {
    "id": "pichu-1",
    "line": "pichu",
+   "tier": 5,
    "star": 1,
    "name": "Pichu",
    "type": "electric",
@@ -507,6 +526,7 @@
   {
    "id": "pichu-2",
    "line": "pichu",
+   "tier": 5,
    "star": 2,
    "name": "Pikachu",
    "type": "electric",
@@ -525,6 +545,7 @@
   {
    "id": "pichu-3",
    "line": "pichu",
+   "tier": 5,
    "star": 3,
    "name": "Raichu",
    "type": "electric",
@@ -543,6 +564,7 @@
   {
    "id": "sandshrew-1",
    "line": "sandshrew",
+   "tier": 3,
    "star": 1,
    "name": "Sandshrew",
    "type": "ground",
@@ -561,6 +583,7 @@
   {
    "id": "sandshrew-2",
    "line": "sandshrew",
+   "tier": 3,
    "star": 2,
    "name": "Sandslash",
    "type": "ground",
@@ -579,6 +602,7 @@
   {
    "id": "sandshrew-3",
    "line": "sandshrew",
+   "tier": 3,
    "star": 3,
    "name": "Sandslash",
    "type": "ground",
@@ -597,6 +621,7 @@
   {
    "id": "nidoranf-1",
    "line": "nidoranf",
+   "tier": 3,
    "star": 1,
    "name": "Nidoran♀",
    "type": "poison",
@@ -615,6 +640,7 @@
   {
    "id": "nidoranf-2",
    "line": "nidoranf",
+   "tier": 3,
    "star": 2,
    "name": "Nidorina",
    "type": "poison",
@@ -633,6 +659,7 @@
   {
    "id": "nidoranf-3",
    "line": "nidoranf",
+   "tier": 3,
    "star": 3,
    "name": "Nidoqueen",
    "type": "poison",
@@ -651,6 +678,7 @@
   {
    "id": "nidoranm-1",
    "line": "nidoranm",
+   "tier": 3,
    "star": 1,
    "name": "Nidoran♂",
    "type": "poison",
@@ -669,6 +697,7 @@
   {
    "id": "nidoranm-2",
    "line": "nidoranm",
+   "tier": 3,
    "star": 2,
    "name": "Nidorino",
    "type": "poison",
@@ -687,6 +716,7 @@
   {
    "id": "nidoranm-3",
    "line": "nidoranm",
+   "tier": 3,
    "star": 3,
    "name": "Nidoking",
    "type": "poison",
@@ -705,6 +735,7 @@
   {
    "id": "cleffa-1",
    "line": "cleffa",
+   "tier": 4,
    "star": 1,
    "name": "Cleffa",
    "type": "fairy",
@@ -723,6 +754,7 @@
   {
    "id": "cleffa-2",
    "line": "cleffa",
+   "tier": 4,
    "star": 2,
    "name": "Clefairy",
    "type": "fairy",
@@ -741,6 +773,7 @@
   {
    "id": "cleffa-3",
    "line": "cleffa",
+   "tier": 4,
    "star": 3,
    "name": "Clefable",
    "type": "fairy",
@@ -759,6 +792,7 @@
   {
    "id": "vulpix-1",
    "line": "vulpix",
+   "tier": 3,
    "star": 1,
    "name": "Vulpix",
    "type": "fire",
@@ -777,6 +811,7 @@
   {
    "id": "vulpix-2",
    "line": "vulpix",
+   "tier": 3,
    "star": 2,
    "name": "Ninetales",
    "type": "fire",
@@ -795,6 +830,7 @@
   {
    "id": "vulpix-3",
    "line": "vulpix",
+   "tier": 3,
    "star": 3,
    "name": "Ninetales",
    "type": "fire",
@@ -813,6 +849,7 @@
   {
    "id": "igglybuff-1",
    "line": "igglybuff",
+   "tier": 3,
    "star": 1,
    "name": "Igglybuff",
    "type": "normal",
@@ -831,6 +868,7 @@
   {
    "id": "igglybuff-2",
    "line": "igglybuff",
+   "tier": 3,
    "star": 2,
    "name": "Jigglypuff",
    "type": "normal",
@@ -849,6 +887,7 @@
   {
    "id": "igglybuff-3",
    "line": "igglybuff",
+   "tier": 3,
    "star": 3,
    "name": "Wigglytuff",
    "type": "normal",
@@ -867,6 +906,7 @@
   {
    "id": "zubat-1",
    "line": "zubat",
+   "tier": 1,
    "star": 1,
    "name": "Zubat",
    "type": "poison",
@@ -885,6 +925,7 @@
   {
    "id": "zubat-2",
    "line": "zubat",
+   "tier": 1,
    "star": 2,
    "name": "Golbat",
    "type": "poison",
@@ -903,6 +944,7 @@
   {
    "id": "zubat-3",
    "line": "zubat",
+   "tier": 1,
    "star": 3,
    "name": "Crobat",
    "type": "poison",
@@ -921,6 +963,7 @@
   {
    "id": "oddish-1",
    "line": "oddish",
+   "tier": 2,
    "star": 1,
    "name": "Oddish",
    "type": "grass",
@@ -939,6 +982,7 @@
   {
    "id": "oddish-2",
    "line": "oddish",
+   "tier": 2,
    "star": 2,
    "name": "Gloom",
    "type": "grass",
@@ -957,6 +1001,7 @@
   {
    "id": "oddish-3-vileplume",
    "line": "oddish",
+   "tier": 2,
    "star": 3,
    "name": "Vileplume",
    "type": "grass",
@@ -976,6 +1021,7 @@
   {
    "id": "oddish-3-bellossom",
    "line": "oddish",
+   "tier": 2,
    "star": 3,
    "name": "Bellossom",
    "type": "grass",
@@ -995,6 +1041,7 @@
   {
    "id": "paras-1",
    "line": "paras",
+   "tier": 2,
    "star": 1,
    "name": "Paras",
    "type": "grass",
@@ -1013,6 +1060,7 @@
   {
    "id": "paras-2",
    "line": "paras",
+   "tier": 2,
    "star": 2,
    "name": "Parasect",
    "type": "grass",
@@ -1031,6 +1079,7 @@
   {
    "id": "paras-3",
    "line": "paras",
+   "tier": 2,
    "star": 3,
    "name": "Parasect",
    "type": "grass",
@@ -1049,6 +1098,7 @@
   {
    "id": "venonat-1",
    "line": "venonat",
+   "tier": 1,
    "star": 1,
    "name": "Venonat",
    "type": "bug",
@@ -1067,6 +1117,7 @@
   {
    "id": "venonat-2",
    "line": "venonat",
+   "tier": 1,
    "star": 2,
    "name": "Venomoth",
    "type": "bug",
@@ -1085,6 +1136,7 @@
   {
    "id": "venonat-3",
    "line": "venonat",
+   "tier": 1,
    "star": 3,
    "name": "Venomoth",
    "type": "bug",
@@ -1103,6 +1155,7 @@
   {
    "id": "diglett-1",
    "line": "diglett",
+   "tier": 2,
    "star": 1,
    "name": "Diglett",
    "type": "ground",
@@ -1121,6 +1174,7 @@
   {
    "id": "diglett-2",
    "line": "diglett",
+   "tier": 2,
    "star": 2,
    "name": "Dugtrio",
    "type": "ground",
@@ -1139,6 +1193,7 @@
   {
    "id": "diglett-3",
    "line": "diglett",
+   "tier": 2,
    "star": 3,
    "name": "Dugtrio",
    "type": "ground",
@@ -1157,6 +1212,7 @@
   {
    "id": "meowth-1",
    "line": "meowth",
+   "tier": 1,
    "star": 1,
    "name": "Meowth",
    "type": "normal",
@@ -1175,6 +1231,7 @@
   {
    "id": "meowth-2",
    "line": "meowth",
+   "tier": 1,
    "star": 2,
    "name": "Persian",
    "type": "normal",
@@ -1193,6 +1250,7 @@
   {
    "id": "meowth-3",
    "line": "meowth",
+   "tier": 1,
    "star": 3,
    "name": "Persian",
    "type": "normal",
@@ -1211,6 +1269,7 @@
   {
    "id": "psyduck-1",
    "line": "psyduck",
+   "tier": 2,
    "star": 1,
    "name": "Psyduck",
    "type": "water",
@@ -1229,6 +1288,7 @@
   {
    "id": "psyduck-2",
    "line": "psyduck",
+   "tier": 2,
    "star": 2,
    "name": "Golduck",
    "type": "water",
@@ -1247,6 +1307,7 @@
   {
    "id": "psyduck-3",
    "line": "psyduck",
+   "tier": 2,
    "star": 3,
    "name": "Golduck",
    "type": "water",
@@ -1265,6 +1326,7 @@
   {
    "id": "mankey-1",
    "line": "mankey",
+   "tier": 5,
    "star": 1,
    "name": "Mankey",
    "type": "fighting",
@@ -1283,6 +1345,7 @@
   {
    "id": "mankey-2",
    "line": "mankey",
+   "tier": 5,
    "star": 2,
    "name": "Primeape",
    "type": "fighting",
@@ -1301,6 +1364,7 @@
   {
    "id": "mankey-3",
    "line": "mankey",
+   "tier": 5,
    "star": 3,
    "name": "Primeape",
    "type": "fighting",
@@ -1319,6 +1383,7 @@
   {
    "id": "growlithe-1",
    "line": "growlithe",
+   "tier": 6,
    "star": 1,
    "name": "Growlithe",
    "type": "fire",
@@ -1337,6 +1402,7 @@
   {
    "id": "growlithe-2",
    "line": "growlithe",
+   "tier": 6,
    "star": 2,
    "name": "Arcanine",
    "type": "fire",
@@ -1355,6 +1421,7 @@
   {
    "id": "growlithe-3",
    "line": "growlithe",
+   "tier": 6,
    "star": 3,
    "name": "Arcanine",
    "type": "fire",
@@ -1373,6 +1440,7 @@
   {
    "id": "poliwag-1",
    "line": "poliwag",
+   "tier": 6,
    "star": 1,
    "name": "Poliwag",
    "type": "water",
@@ -1391,6 +1459,7 @@
   {
    "id": "poliwag-2",
    "line": "poliwag",
+   "tier": 6,
    "star": 2,
    "name": "Poliwhirl",
    "type": "water",
@@ -1409,6 +1478,7 @@
   {
    "id": "poliwag-3-poliwrath",
    "line": "poliwag",
+   "tier": 6,
    "star": 3,
    "name": "Poliwrath",
    "type": "water",
@@ -1428,6 +1498,7 @@
   {
    "id": "poliwag-3-politoed",
    "line": "poliwag",
+   "tier": 6,
    "star": 3,
    "name": "Politoed",
    "type": "water",
@@ -1447,6 +1518,7 @@
   {
    "id": "abra-1",
    "line": "abra",
+   "tier": 6,
    "star": 1,
    "name": "Abra",
    "type": "psychic",
@@ -1465,6 +1537,7 @@
   {
    "id": "abra-2",
    "line": "abra",
+   "tier": 6,
    "star": 2,
    "name": "Kadabra",
    "type": "psychic",
@@ -1483,6 +1556,7 @@
   {
    "id": "abra-3",
    "line": "abra",
+   "tier": 6,
    "star": 3,
    "name": "Alakazam",
    "type": "psychic",
@@ -1501,6 +1575,7 @@
   {
    "id": "machop-1",
    "line": "machop",
+   "tier": 6,
    "star": 1,
    "name": "Machop",
    "type": "fighting",
@@ -1519,6 +1594,7 @@
   {
    "id": "machop-2",
    "line": "machop",
+   "tier": 6,
    "star": 2,
    "name": "Machoke",
    "type": "fighting",
@@ -1537,6 +1613,7 @@
   {
    "id": "machop-3",
    "line": "machop",
+   "tier": 6,
    "star": 3,
    "name": "Machamp",
    "type": "fighting",
@@ -1555,6 +1632,7 @@
   {
    "id": "bellsprout-1",
    "line": "bellsprout",
+   "tier": 3,
    "star": 1,
    "name": "Bellsprout",
    "type": "grass",
@@ -1573,6 +1651,7 @@
   {
    "id": "bellsprout-2",
    "line": "bellsprout",
+   "tier": 3,
    "star": 2,
    "name": "Weepinbell",
    "type": "grass",
@@ -1591,6 +1670,7 @@
   {
    "id": "bellsprout-3",
    "line": "bellsprout",
+   "tier": 3,
    "star": 3,
    "name": "Victreebel",
    "type": "grass",
@@ -1609,6 +1689,7 @@
   {
    "id": "tentacool-1",
    "line": "tentacool",
+   "tier": 2,
    "star": 1,
    "name": "Tentacool",
    "type": "water",
@@ -1627,6 +1708,7 @@
   {
    "id": "tentacool-2",
    "line": "tentacool",
+   "tier": 2,
    "star": 2,
    "name": "Tentacruel",
    "type": "water",
@@ -1645,6 +1727,7 @@
   {
    "id": "tentacool-3",
    "line": "tentacool",
+   "tier": 2,
    "star": 3,
    "name": "Tentacruel",
    "type": "water",
@@ -1663,6 +1746,7 @@
   {
    "id": "geodude-1",
    "line": "geodude",
+   "tier": 4,
    "star": 1,
    "name": "Geodude",
    "type": "rock",
@@ -1681,6 +1765,7 @@
   {
    "id": "geodude-2",
    "line": "geodude",
+   "tier": 4,
    "star": 2,
    "name": "Graveler",
    "type": "rock",
@@ -1699,6 +1784,7 @@
   {
    "id": "geodude-3",
    "line": "geodude",
+   "tier": 4,
    "star": 3,
    "name": "Golem",
    "type": "rock",
@@ -1717,6 +1803,7 @@
   {
    "id": "ponyta-1",
    "line": "ponyta",
+   "tier": 5,
    "star": 1,
    "name": "Ponyta",
    "type": "fire",
@@ -1735,6 +1822,7 @@
   {
    "id": "ponyta-2",
    "line": "ponyta",
+   "tier": 5,
    "star": 2,
    "name": "Rapidash",
    "type": "fire",
@@ -1753,6 +1841,7 @@
   {
    "id": "ponyta-3",
    "line": "ponyta",
+   "tier": 5,
    "star": 3,
    "name": "Rapidash",
    "type": "fire",
@@ -1771,6 +1860,7 @@
   {
    "id": "slowpoke-1",
    "line": "slowpoke",
+   "tier": 5,
    "star": 1,
    "name": "Slowpoke",
    "type": "psychic",
@@ -1789,6 +1879,7 @@
   {
    "id": "slowpoke-2-slowbro",
    "line": "slowpoke",
+   "tier": 5,
    "star": 2,
    "name": "Slowbro",
    "type": "psychic",
@@ -1808,6 +1899,7 @@
   {
    "id": "slowpoke-3-slowbro",
    "line": "slowpoke",
+   "tier": 5,
    "star": 3,
    "name": "Slowbro",
    "type": "psychic",
@@ -1827,6 +1919,7 @@
   {
    "id": "slowpoke-2-slowking",
    "line": "slowpoke",
+   "tier": 5,
    "star": 2,
    "name": "Slowking",
    "type": "psychic",
@@ -1846,6 +1939,7 @@
   {
    "id": "slowpoke-3-slowking",
    "line": "slowpoke",
+   "tier": 5,
    "star": 3,
    "name": "Slowking",
    "type": "psychic",
@@ -1865,6 +1959,7 @@
   {
    "id": "magnemite-1",
    "line": "magnemite",
+   "tier": 5,
    "star": 1,
    "name": "Magnemite",
    "type": "electric",
@@ -1883,6 +1978,7 @@
   {
    "id": "magnemite-2",
    "line": "magnemite",
+   "tier": 5,
    "star": 2,
    "name": "Magneton",
    "type": "electric",
@@ -1901,6 +1997,7 @@
   {
    "id": "magnemite-3",
    "line": "magnemite",
+   "tier": 5,
    "star": 3,
    "name": "Magnezone",
    "type": "steel",
@@ -1919,6 +2016,7 @@
   {
    "id": "farfetchd-1",
    "line": "farfetchd",
+   "tier": 4,
    "star": 1,
    "name": "Farfetch'd",
    "type": "flying",
@@ -1937,6 +2035,7 @@
   {
    "id": "farfetchd-2",
    "line": "farfetchd",
+   "tier": 4,
    "star": 2,
    "name": "Farfetch'd",
    "type": "flying",
@@ -1955,6 +2054,7 @@
   {
    "id": "farfetchd-3",
    "line": "farfetchd",
+   "tier": 4,
    "star": 3,
    "name": "Farfetch'd",
    "type": "flying",
@@ -1973,6 +2073,7 @@
   {
    "id": "doduo-1",
    "line": "doduo",
+   "tier": 4,
    "star": 1,
    "name": "Doduo",
    "type": "flying",
@@ -1991,6 +2092,7 @@
   {
    "id": "doduo-2",
    "line": "doduo",
+   "tier": 4,
    "star": 2,
    "name": "Dodrio",
    "type": "flying",
@@ -2009,6 +2111,7 @@
   {
    "id": "doduo-3",
    "line": "doduo",
+   "tier": 4,
    "star": 3,
    "name": "Dodrio",
    "type": "flying",
@@ -2027,6 +2130,7 @@
   {
    "id": "seel-1",
    "line": "seel",
+   "tier": 3,
    "star": 1,
    "name": "Seel",
    "type": "water",
@@ -2045,6 +2149,7 @@
   {
    "id": "seel-2",
    "line": "seel",
+   "tier": 3,
    "star": 2,
    "name": "Dewgong",
    "type": "ice",
@@ -2063,6 +2168,7 @@
   {
    "id": "seel-3",
    "line": "seel",
+   "tier": 3,
    "star": 3,
    "name": "Dewgong",
    "type": "ice",
@@ -2081,6 +2187,7 @@
   {
    "id": "grimer-1",
    "line": "grimer",
+   "tier": 4,
    "star": 1,
    "name": "Grimer",
    "type": "poison",
@@ -2099,6 +2206,7 @@
   {
    "id": "grimer-2",
    "line": "grimer",
+   "tier": 4,
    "star": 2,
    "name": "Muk",
    "type": "poison",
@@ -2117,6 +2225,7 @@
   {
    "id": "grimer-3",
    "line": "grimer",
+   "tier": 4,
    "star": 3,
    "name": "Muk",
    "type": "poison",
@@ -2135,6 +2244,7 @@
   {
    "id": "shellder-1",
    "line": "shellder",
+   "tier": 5,
    "star": 1,
    "name": "Shellder",
    "type": "water",
@@ -2153,6 +2263,7 @@
   {
    "id": "shellder-2",
    "line": "shellder",
+   "tier": 5,
    "star": 2,
    "name": "Cloyster",
    "type": "ice",
@@ -2171,6 +2282,7 @@
   {
    "id": "shellder-3",
    "line": "shellder",
+   "tier": 5,
    "star": 3,
    "name": "Cloyster",
    "type": "ice",
@@ -2189,6 +2301,7 @@
   {
    "id": "gastly-1",
    "line": "gastly",
+   "tier": 6,
    "star": 1,
    "name": "Gastly",
    "type": "ghost",
@@ -2207,6 +2320,7 @@
   {
    "id": "gastly-2",
    "line": "gastly",
+   "tier": 6,
    "star": 2,
    "name": "Haunter",
    "type": "ghost",
@@ -2225,6 +2339,7 @@
   {
    "id": "gastly-3",
    "line": "gastly",
+   "tier": 6,
    "star": 3,
    "name": "Gengar",
    "type": "ghost",
@@ -2243,6 +2358,7 @@
   {
    "id": "onix-1",
    "line": "onix",
+   "tier": 4,
    "star": 1,
    "name": "Onix",
    "type": "rock",
@@ -2261,6 +2377,7 @@
   {
    "id": "onix-2",
    "line": "onix",
+   "tier": 4,
    "star": 2,
    "name": "Steelix",
    "type": "steel",
@@ -2279,6 +2396,7 @@
   {
    "id": "onix-3",
    "line": "onix",
+   "tier": 4,
    "star": 3,
    "name": "Steelix",
    "type": "steel",
@@ -2297,6 +2415,7 @@
   {
    "id": "drowzee-1",
    "line": "drowzee",
+   "tier": 2,
    "star": 1,
    "name": "Drowzee",
    "type": "psychic",
@@ -2315,6 +2434,7 @@
   {
    "id": "drowzee-2",
    "line": "drowzee",
+   "tier": 2,
    "star": 2,
    "name": "Hypno",
    "type": "psychic",
@@ -2333,6 +2453,7 @@
   {
    "id": "drowzee-3",
    "line": "drowzee",
+   "tier": 2,
    "star": 3,
    "name": "Hypno",
    "type": "psychic",
@@ -2351,6 +2472,7 @@
   {
    "id": "krabby-1",
    "line": "krabby",
+   "tier": 6,
    "star": 1,
    "name": "Krabby",
    "type": "water",
@@ -2369,6 +2491,7 @@
   {
    "id": "krabby-2",
    "line": "krabby",
+   "tier": 6,
    "star": 2,
    "name": "Kingler",
    "type": "water",
@@ -2387,6 +2510,7 @@
   {
    "id": "krabby-3",
    "line": "krabby",
+   "tier": 6,
    "star": 3,
    "name": "Kingler",
    "type": "water",
@@ -2405,6 +2529,7 @@
   {
    "id": "voltorb-1",
    "line": "voltorb",
+   "tier": 1,
    "star": 1,
    "name": "Voltorb",
    "type": "electric",
@@ -2423,6 +2548,7 @@
   {
    "id": "voltorb-2",
    "line": "voltorb",
+   "tier": 1,
    "star": 2,
    "name": "Electrode",
    "type": "electric",
@@ -2441,6 +2567,7 @@
   {
    "id": "voltorb-3",
    "line": "voltorb",
+   "tier": 1,
    "star": 3,
    "name": "Electrode",
    "type": "electric",
@@ -2459,6 +2586,7 @@
   {
    "id": "exeggcute-1",
    "line": "exeggcute",
+   "tier": 5,
    "star": 1,
    "name": "Exeggcute",
    "type": "grass",
@@ -2477,6 +2605,7 @@
   {
    "id": "exeggcute-2",
    "line": "exeggcute",
+   "tier": 5,
    "star": 2,
    "name": "Exeggutor",
    "type": "grass",
@@ -2495,6 +2624,7 @@
   {
    "id": "exeggcute-3",
    "line": "exeggcute",
+   "tier": 5,
    "star": 3,
    "name": "Exeggutor",
    "type": "grass",
@@ -2513,6 +2643,7 @@
   {
    "id": "cubone-1",
    "line": "cubone",
+   "tier": 4,
    "star": 1,
    "name": "Cubone",
    "type": "ground",
@@ -2531,6 +2662,7 @@
   {
    "id": "cubone-2",
    "line": "cubone",
+   "tier": 4,
    "star": 2,
    "name": "Marowak",
    "type": "ground",
@@ -2549,6 +2681,7 @@
   {
    "id": "cubone-3",
    "line": "cubone",
+   "tier": 4,
    "star": 3,
    "name": "Marowak",
    "type": "ground",
@@ -2567,6 +2700,7 @@
   {
    "id": "tyrogue-1",
    "line": "tyrogue",
+   "tier": 6,
    "star": 1,
    "name": "Tyrogue",
    "type": "fighting",
@@ -2585,6 +2719,7 @@
   {
    "id": "tyrogue-2-hitmonlee",
    "line": "tyrogue",
+   "tier": 6,
    "star": 2,
    "name": "Hitmonlee",
    "type": "fighting",
@@ -2604,6 +2739,7 @@
   {
    "id": "tyrogue-3-hitmonlee",
    "line": "tyrogue",
+   "tier": 6,
    "star": 3,
    "name": "Hitmonlee",
    "type": "fighting",
@@ -2623,6 +2759,7 @@
   {
    "id": "tyrogue-2-hitmonchan",
    "line": "tyrogue",
+   "tier": 6,
    "star": 2,
    "name": "Hitmonchan",
    "type": "fighting",
@@ -2642,6 +2779,7 @@
   {
    "id": "tyrogue-3-hitmonchan",
    "line": "tyrogue",
+   "tier": 6,
    "star": 3,
    "name": "Hitmonchan",
    "type": "fighting",
@@ -2661,6 +2799,7 @@
   {
    "id": "tyrogue-2-hitmontop",
    "line": "tyrogue",
+   "tier": 6,
    "star": 2,
    "name": "Hitmontop",
    "type": "fighting",
@@ -2680,6 +2819,7 @@
   {
    "id": "tyrogue-3-hitmontop",
    "line": "tyrogue",
+   "tier": 6,
    "star": 3,
    "name": "Hitmontop",
    "type": "fighting",
@@ -2699,6 +2839,7 @@
   {
    "id": "lickitung-1",
    "line": "lickitung",
+   "tier": 5,
    "star": 1,
    "name": "Lickitung",
    "type": "normal",
@@ -2717,6 +2858,7 @@
   {
    "id": "lickitung-2",
    "line": "lickitung",
+   "tier": 5,
    "star": 2,
    "name": "Lickilicky",
    "type": "normal",
@@ -2735,6 +2877,7 @@
   {
    "id": "lickitung-3",
    "line": "lickitung",
+   "tier": 5,
    "star": 3,
    "name": "Lickilicky",
    "type": "normal",
@@ -2753,6 +2896,7 @@
   {
    "id": "koffing-1",
    "line": "koffing",
+   "tier": 3,
    "star": 1,
    "name": "Koffing",
    "type": "poison",
@@ -2771,6 +2915,7 @@
   {
    "id": "koffing-2",
    "line": "koffing",
+   "tier": 3,
    "star": 2,
    "name": "Weezing",
    "type": "poison",
@@ -2789,6 +2934,7 @@
   {
    "id": "koffing-3",
    "line": "koffing",
+   "tier": 3,
    "star": 3,
    "name": "Weezing",
    "type": "poison",
@@ -2807,6 +2953,7 @@
   {
    "id": "rhyhorn-1",
    "line": "rhyhorn",
+   "tier": 7,
    "star": 1,
    "name": "Rhyhorn",
    "type": "ground",
@@ -2825,6 +2972,7 @@
   {
    "id": "rhyhorn-2",
    "line": "rhyhorn",
+   "tier": 7,
    "star": 2,
    "name": "Rhydon",
    "type": "ground",
@@ -2843,6 +2991,7 @@
   {
    "id": "rhyhorn-3",
    "line": "rhyhorn",
+   "tier": 7,
    "star": 3,
    "name": "Rhyperior",
    "type": "ground",
@@ -2861,6 +3010,7 @@
   {
    "id": "happiny-1",
    "line": "happiny",
+   "tier": 8,
    "star": 1,
    "name": "Happiny",
    "type": "normal",
@@ -2879,6 +3029,7 @@
   {
    "id": "happiny-2",
    "line": "happiny",
+   "tier": 8,
    "star": 2,
    "name": "Chansey",
    "type": "normal",
@@ -2897,6 +3048,7 @@
   {
    "id": "happiny-3",
    "line": "happiny",
+   "tier": 8,
    "star": 3,
    "name": "Blissey",
    "type": "normal",
@@ -2915,6 +3067,7 @@
   {
    "id": "tangela-1",
    "line": "tangela",
+   "tier": 5,
    "star": 1,
    "name": "Tangela",
    "type": "grass",
@@ -2933,6 +3086,7 @@
   {
    "id": "tangela-2",
    "line": "tangela",
+   "tier": 5,
    "star": 2,
    "name": "Tangrowth",
    "type": "grass",
@@ -2951,6 +3105,7 @@
   {
    "id": "tangela-3",
    "line": "tangela",
+   "tier": 5,
    "star": 3,
    "name": "Tangrowth",
    "type": "grass",
@@ -2969,6 +3124,7 @@
   {
    "id": "kangaskhan-1",
    "line": "kangaskhan",
+   "tier": 7,
    "star": 1,
    "name": "Kangaskhan",
    "type": "normal",
@@ -2987,6 +3143,7 @@
   {
    "id": "kangaskhan-2",
    "line": "kangaskhan",
+   "tier": 7,
    "star": 2,
    "name": "Kangaskhan",
    "type": "normal",
@@ -3005,6 +3162,7 @@
   {
    "id": "kangaskhan-3",
    "line": "kangaskhan",
+   "tier": 7,
    "star": 3,
    "name": "Kangaskhan",
    "type": "normal",
@@ -3023,6 +3181,7 @@
   {
    "id": "horsea-1",
    "line": "horsea",
+   "tier": 4,
    "star": 1,
    "name": "Horsea",
    "type": "water",
@@ -3041,6 +3200,7 @@
   {
    "id": "horsea-2",
    "line": "horsea",
+   "tier": 4,
    "star": 2,
    "name": "Seadra",
    "type": "water",
@@ -3059,6 +3219,7 @@
   {
    "id": "horsea-3",
    "line": "horsea",
+   "tier": 4,
    "star": 3,
    "name": "Kingdra",
    "type": "dragon",
@@ -3077,6 +3238,7 @@
   {
    "id": "goldeen-1",
    "line": "goldeen",
+   "tier": 2,
    "star": 1,
    "name": "Goldeen",
    "type": "water",
@@ -3095,6 +3257,7 @@
   {
    "id": "goldeen-2",
    "line": "goldeen",
+   "tier": 2,
    "star": 2,
    "name": "Seaking",
    "type": "water",
@@ -3113,6 +3276,7 @@
   {
    "id": "goldeen-3",
    "line": "goldeen",
+   "tier": 2,
    "star": 3,
    "name": "Seaking",
    "type": "water",
@@ -3131,6 +3295,7 @@
   {
    "id": "staryu-1",
    "line": "staryu",
+   "tier": 6,
    "star": 1,
    "name": "Staryu",
    "type": "water",
@@ -3149,6 +3314,7 @@
   {
    "id": "staryu-2",
    "line": "staryu",
+   "tier": 6,
    "star": 2,
    "name": "Starmie",
    "type": "water",
@@ -3167,6 +3333,7 @@
   {
    "id": "staryu-3",
    "line": "staryu",
+   "tier": 6,
    "star": 3,
    "name": "Starmie",
    "type": "water",
@@ -3185,6 +3352,7 @@
   {
    "id": "mimejr-1",
    "line": "mimejr",
+   "tier": 4,
    "star": 1,
    "name": "Mime Jr.",
    "type": "psychic",
@@ -3203,6 +3371,7 @@
   {
    "id": "mimejr-2",
    "line": "mimejr",
+   "tier": 4,
    "star": 2,
    "name": "Mr. Mime",
    "type": "psychic",
@@ -3221,6 +3390,7 @@
   {
    "id": "mimejr-3",
    "line": "mimejr",
+   "tier": 4,
    "star": 3,
    "name": "Mr. Mime",
    "type": "psychic",
@@ -3239,6 +3409,7 @@
   {
    "id": "scyther-1",
    "line": "scyther",
+   "tier": 8,
    "star": 1,
    "name": "Scyther",
    "type": "bug",
@@ -3257,6 +3428,7 @@
   {
    "id": "scyther-2-scizor",
    "line": "scyther",
+   "tier": 8,
    "star": 2,
    "name": "Scizor",
    "type": "steel",
@@ -3276,6 +3448,7 @@
   {
    "id": "scyther-3-scizor",
    "line": "scyther",
+   "tier": 8,
    "star": 3,
    "name": "Scizor",
    "type": "steel",
@@ -3295,6 +3468,7 @@
   {
    "id": "scyther-2-kleavor",
    "line": "scyther",
+   "tier": 8,
    "star": 2,
    "name": "Kleavor",
    "type": "rock",
@@ -3314,6 +3488,7 @@
   {
    "id": "scyther-3-kleavor",
    "line": "scyther",
+   "tier": 8,
    "star": 3,
    "name": "Kleavor",
    "type": "rock",
@@ -3333,6 +3508,7 @@
   {
    "id": "smoochum-1",
    "line": "smoochum",
+   "tier": 3,
    "star": 1,
    "name": "Smoochum",
    "type": "ice",
@@ -3351,6 +3527,7 @@
   {
    "id": "smoochum-2",
    "line": "smoochum",
+   "tier": 3,
    "star": 2,
    "name": "Jynx",
    "type": "ice",
@@ -3369,6 +3546,7 @@
   {
    "id": "smoochum-3",
    "line": "smoochum",
+   "tier": 3,
    "star": 3,
    "name": "Jynx",
    "type": "ice",
@@ -3387,6 +3565,7 @@
   {
    "id": "elekid-1",
    "line": "elekid",
+   "tier": 7,
    "star": 1,
    "name": "Elekid",
    "type": "electric",
@@ -3405,6 +3584,7 @@
   {
    "id": "elekid-2",
    "line": "elekid",
+   "tier": 7,
    "star": 2,
    "name": "Electabuzz",
    "type": "electric",
@@ -3423,6 +3603,7 @@
   {
    "id": "elekid-3",
    "line": "elekid",
+   "tier": 7,
    "star": 3,
    "name": "Electivire",
    "type": "electric",
@@ -3441,6 +3622,7 @@
   {
    "id": "magby-1",
    "line": "magby",
+   "tier": 7,
    "star": 1,
    "name": "Magby",
    "type": "fire",
@@ -3459,6 +3641,7 @@
   {
    "id": "magby-2",
    "line": "magby",
+   "tier": 7,
    "star": 2,
    "name": "Magmar",
    "type": "fire",
@@ -3477,6 +3660,7 @@
   {
    "id": "magby-3",
    "line": "magby",
+   "tier": 7,
    "star": 3,
    "name": "Magmortar",
    "type": "fire",
@@ -3495,6 +3679,7 @@
   {
    "id": "pinsir-1",
    "line": "pinsir",
+   "tier": 7,
    "star": 1,
    "name": "Pinsir",
    "type": "bug",
@@ -3513,6 +3698,7 @@
   {
    "id": "pinsir-2",
    "line": "pinsir",
+   "tier": 7,
    "star": 2,
    "name": "Pinsir",
    "type": "bug",
@@ -3531,6 +3717,7 @@
   {
    "id": "pinsir-3",
    "line": "pinsir",
+   "tier": 7,
    "star": 3,
    "name": "Pinsir",
    "type": "bug",
@@ -3549,6 +3736,7 @@
   {
    "id": "tauros-1",
    "line": "tauros",
+   "tier": 7,
    "star": 1,
    "name": "Tauros",
    "type": "normal",
@@ -3567,6 +3755,7 @@
   {
    "id": "tauros-2",
    "line": "tauros",
+   "tier": 7,
    "star": 2,
    "name": "Tauros",
    "type": "normal",
@@ -3585,6 +3774,7 @@
   {
    "id": "tauros-3",
    "line": "tauros",
+   "tier": 7,
    "star": 3,
    "name": "Tauros",
    "type": "normal",
@@ -3603,6 +3793,7 @@
   {
    "id": "magikarp-1",
    "line": "magikarp",
+   "tier": 8,
    "star": 1,
    "name": "Magikarp",
    "type": "water",
@@ -3621,6 +3812,7 @@
   {
    "id": "magikarp-2",
    "line": "magikarp",
+   "tier": 8,
    "star": 2,
    "name": "Gyarados",
    "type": "water",
@@ -3639,6 +3831,7 @@
   {
    "id": "magikarp-3",
    "line": "magikarp",
+   "tier": 8,
    "star": 3,
    "name": "Gyarados",
    "type": "water",
@@ -3657,6 +3850,7 @@
   {
    "id": "lapras-1",
    "line": "lapras",
+   "tier": 8,
    "star": 1,
    "name": "Lapras",
    "type": "ice",
@@ -3675,6 +3869,7 @@
   {
    "id": "lapras-2",
    "line": "lapras",
+   "tier": 8,
    "star": 2,
    "name": "Lapras",
    "type": "ice",
@@ -3693,6 +3888,7 @@
   {
    "id": "lapras-3",
    "line": "lapras",
+   "tier": 8,
    "star": 3,
    "name": "Lapras",
    "type": "ice",
@@ -3711,6 +3907,7 @@
   {
    "id": "ditto-1",
    "line": "ditto",
+   "tier": 1,
    "star": 1,
    "name": "Ditto",
    "type": "normal",
@@ -3729,6 +3926,7 @@
   {
    "id": "ditto-2",
    "line": "ditto",
+   "tier": 1,
    "star": 2,
    "name": "Ditto",
    "type": "normal",
@@ -3747,6 +3945,7 @@
   {
    "id": "ditto-3",
    "line": "ditto",
+   "tier": 1,
    "star": 3,
    "name": "Ditto",
    "type": "normal",
@@ -3765,6 +3964,7 @@
   {
    "id": "eevee-1",
    "line": "eevee",
+   "tier": 6,
    "star": 1,
    "name": "Eevee",
    "type": "normal",
@@ -3783,6 +3983,7 @@
   {
    "id": "eevee-2-vaporeon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Vaporeon",
    "type": "water",
@@ -3802,6 +4003,7 @@
   {
    "id": "eevee-3-vaporeon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Vaporeon",
    "type": "water",
@@ -3821,6 +4023,7 @@
   {
    "id": "eevee-2-jolteon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Jolteon",
    "type": "electric",
@@ -3840,6 +4043,7 @@
   {
    "id": "eevee-3-jolteon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Jolteon",
    "type": "electric",
@@ -3859,6 +4063,7 @@
   {
    "id": "eevee-2-flareon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Flareon",
    "type": "fire",
@@ -3878,6 +4083,7 @@
   {
    "id": "eevee-3-flareon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Flareon",
    "type": "fire",
@@ -3897,6 +4103,7 @@
   {
    "id": "eevee-2-espeon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Espeon",
    "type": "psychic",
@@ -3916,6 +4123,7 @@
   {
    "id": "eevee-3-espeon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Espeon",
    "type": "psychic",
@@ -3935,6 +4143,7 @@
   {
    "id": "eevee-2-umbreon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Umbreon",
    "type": "dark",
@@ -3954,6 +4163,7 @@
   {
    "id": "eevee-3-umbreon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Umbreon",
    "type": "dark",
@@ -3973,6 +4183,7 @@
   {
    "id": "eevee-2-leafeon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Leafeon",
    "type": "grass",
@@ -3992,6 +4203,7 @@
   {
    "id": "eevee-3-leafeon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Leafeon",
    "type": "grass",
@@ -4011,6 +4223,7 @@
   {
    "id": "eevee-2-glaceon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Glaceon",
    "type": "ice",
@@ -4030,6 +4243,7 @@
   {
    "id": "eevee-3-glaceon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Glaceon",
    "type": "ice",
@@ -4049,6 +4263,7 @@
   {
    "id": "eevee-2-sylveon",
    "line": "eevee",
+   "tier": 6,
    "star": 2,
    "name": "Sylveon",
    "type": "fairy",
@@ -4068,6 +4283,7 @@
   {
    "id": "eevee-3-sylveon",
    "line": "eevee",
+   "tier": 6,
    "star": 3,
    "name": "Sylveon",
    "type": "fairy",
@@ -4087,6 +4303,7 @@
   {
    "id": "porygon-1",
    "line": "porygon",
+   "tier": 8,
    "star": 1,
    "name": "Porygon",
    "type": "normal",
@@ -4105,6 +4322,7 @@
   {
    "id": "porygon-2",
    "line": "porygon",
+   "tier": 8,
    "star": 2,
    "name": "Porygon2",
    "type": "normal",
@@ -4123,6 +4341,7 @@
   {
    "id": "porygon-3",
    "line": "porygon",
+   "tier": 8,
    "star": 3,
    "name": "Porygon-Z",
    "type": "normal",
@@ -4141,6 +4360,7 @@
   {
    "id": "omanyte-1",
    "line": "omanyte",
+   "tier": 7,
    "star": 1,
    "name": "Omanyte",
    "type": "rock",
@@ -4159,6 +4379,7 @@
   {
    "id": "omanyte-2",
    "line": "omanyte",
+   "tier": 7,
    "star": 2,
    "name": "Omastar",
    "type": "rock",
@@ -4177,6 +4398,7 @@
   {
    "id": "omanyte-3",
    "line": "omanyte",
+   "tier": 7,
    "star": 3,
    "name": "Omastar",
    "type": "rock",
@@ -4195,6 +4417,7 @@
   {
    "id": "kabuto-1",
    "line": "kabuto",
+   "tier": 7,
    "star": 1,
    "name": "Kabuto",
    "type": "rock",
@@ -4213,6 +4436,7 @@
   {
    "id": "kabuto-2",
    "line": "kabuto",
+   "tier": 7,
    "star": 2,
    "name": "Kabutops",
    "type": "rock",
@@ -4231,6 +4455,7 @@
   {
    "id": "kabuto-3",
    "line": "kabuto",
+   "tier": 7,
    "star": 3,
    "name": "Kabutops",
    "type": "rock",
@@ -4249,6 +4474,7 @@
   {
    "id": "aerodactyl-1",
    "line": "aerodactyl",
+   "tier": 8,
    "star": 1,
    "name": "Aerodactyl",
    "type": "rock",
@@ -4267,6 +4493,7 @@
   {
    "id": "aerodactyl-2",
    "line": "aerodactyl",
+   "tier": 8,
    "star": 2,
    "name": "Aerodactyl",
    "type": "rock",
@@ -4285,6 +4512,7 @@
   {
    "id": "aerodactyl-3",
    "line": "aerodactyl",
+   "tier": 8,
    "star": 3,
    "name": "Aerodactyl",
    "type": "rock",
@@ -4303,6 +4531,7 @@
   {
    "id": "munchlax-1",
    "line": "munchlax",
+   "tier": 8,
    "star": 1,
    "name": "Munchlax",
    "type": "normal",
@@ -4321,6 +4550,7 @@
   {
    "id": "munchlax-2",
    "line": "munchlax",
+   "tier": 8,
    "star": 2,
    "name": "Snorlax",
    "type": "normal",
@@ -4339,6 +4569,7 @@
   {
    "id": "munchlax-3",
    "line": "munchlax",
+   "tier": 8,
    "star": 3,
    "name": "Snorlax",
    "type": "normal",
@@ -4528,6 +4759,7 @@
   {
    "id": "dratini-1",
    "line": "dratini",
+   "tier": 8,
    "star": 1,
    "name": "Dratini",
    "type": "dragon",
@@ -4546,6 +4778,7 @@
   {
    "id": "dratini-2",
    "line": "dratini",
+   "tier": 8,
    "star": 2,
    "name": "Dragonair",
    "type": "dragon",
@@ -4564,6 +4797,7 @@
   {
    "id": "dratini-3",
    "line": "dratini",
+   "tier": 8,
    "star": 3,
    "name": "Dragonite",
    "type": "dragon",

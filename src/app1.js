@@ -32,6 +32,21 @@ const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
 const TEAM_LINES = LINE_IDS.filter(l => !LEGEND_LINES.includes(l));
 const WILD_LINES = TEAM_LINES.filter(l => !STARTERS.includes(l));
+// every wild line has a tier, 1 to 8 (data.json, on its forms): the first map it can be found on. Higher tiers end up
+// stronger (stats, abilities), but every tier is worth having
+const lineTier = l => LINES[l][1][0].tier || 1;
+// three different wild lines for this map: each one from this map's tier (TUNE.wildTierChance), or else from any
+// earlier tier, so new Pokémon show up on every map and the earlier ones still turn up
+function wildLinesFor(mapNo){
+  const tier = clamp(mapNo, 1, 8), now = WILD_LINES.filter(l => lineTier(l) === tier), before = WILD_LINES.filter(l => lineTier(l) < tier);
+  const out = [];
+  while (out.length < 3){
+    const fresh = a => a.filter(l => !out.includes(l));
+    const pool = !fresh(before).length || (fresh(now).length && Math.random() < TUNE.wildTierChance) ? fresh(now) : fresh(before);
+    out.push(pick(pool.length ? pool : fresh(WILD_LINES)));
+  }
+  return out;
+}
 const ITEM = Object.fromEntries(ITEMS_DATA.map(i => [i.id, i]));
 const ITEM_IDS = ITEMS_DATA.map(i => i.id);
 
@@ -49,6 +64,7 @@ const TUNE = {
   daycareSize: 10,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
+  wildTierChance: .6,                                // each wild Pokémon is from this map's tier this often; else an earlier tier
   martStock: 4, martRerollStep: 20,
   sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
   bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
@@ -1098,7 +1114,7 @@ function dexMonHTML(f){
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b></div>
-      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
+      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}${f.tier ? ` · <span title="Found at wild nodes from map ${f.tier} on">Wild from map ${f.tier}</span>` : ''}</div>` : ''}
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
     <div class="dexmon__more">
@@ -1927,7 +1943,7 @@ function openNode(t){
 const W = { offer: [], home: -1, token: 0, phase: 'pick', done: false, arrived: [], entering: false, scanning: -1, pressed: -1e9, candy: false, leveled: null };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
-  Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star)),
+  Object.assign(W, { offer: wildLinesFor(R.mapNo).map(l => makeMon(l, star)),
     home: -1, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1 });
   $('#wild-act').hidden = true;
   const all = REDUCED;                                      // reduced motion: they are simply there

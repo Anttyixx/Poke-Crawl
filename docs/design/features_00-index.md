@@ -70,6 +70,7 @@ A run is a sequence of branching maps ending in gym leader fights. **Combat is f
 **Team building**
 - Party cap is **6**. Overflow lives in the **Daycare** (replaces the box/PC).
 - New Pokémon come from **Wild nodes** (no battle, pick 1 of **3 offered** from that map's pool) or from **Legendary nodes** (beat a legendary's team to capture it).
+- **Wild tiers.** Every wild line has a **tier, 1–8** (`tier` on its forms in `data.json`): the first map it can be found on. Each wild Pokémon offered on map N is from tier N 60% of the time (`TUNE.wildTierChance`), otherwise from any earlier tier, so map 1 offers only tier 1. Higher tiers end up stronger (stat totals, abilities: Dratini, Lapras, Snorlax, Scyther at tier 8), but every tier stays worth having; the gap is small on purpose. The RotomDex shows each Pokémon's "Wild from map N".
 - Every map guarantees **at least 2 wild nodes on any path**, ceiling of 3. The generator validates every path against the minimum and regenerates until it passes.
 - Player starts with 1 and reaches the cap around map 3: 3 by gym 1, 5 by gym 2, 6 by gym 3.
 - **Daycare Pokémon gain XP at a reduced rate**; accessed at Daycare nodes and after each boss.
