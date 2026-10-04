@@ -18,6 +18,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **Battle start.** Instead of a 3-2-1 countdown, the Pokémon run onto the field into their places (yours from the left, the opponent's from the right), and the fight starts as soon as they're all in. Skip puts them there at once.
+- **Clearer battle log.** Each round has its own box, every Pokémon is shown with its sprite next to its name, and each entry is tinted blue for your side or red for the opponent's.
+- **Battle slots without borders.** On the battlefield, each Pokémon stands on its own with its HP bar above it; a coloured ring shows only while it's acting or being targeted.
 - **Signature move by default, taught move by chance.** Instead of PP, a Pokémon uses its signature move unless its taught move comes up: each taught move has a chance, from 10% for the strongest to 25% for basic ones. The odds never change during a battle, and a Pokémon's info (and the battle tooltip) shows them, like Vine Whip 80% / Rollout 20%.
 - **Move limit.** Instead of PP, each Pokémon can use 12 moves per battle (14 at ★2, 16 at ★3), then it Struggles. It's shown beside the Moves heading in a Pokémon's entry, and the battle tooltip shows how many it has left.
 - In the RotomDex and scans, a Pokémon's signature and other moves are listed together under one Moves heading.

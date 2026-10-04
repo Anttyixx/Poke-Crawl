@@ -42,7 +42,7 @@ const SIDE_MOVES = new Set(['reflect','light-screen','barrier','wide-guard','saf
 
 const SIDES = ['you','opp'];
 let lineup = null, board = null, sideSt = null, round = 0, ctx = null, running = false, battleToken = 0, uidSeq = 0;
-let speed = 2, speedPref = 2, countAbort = null;
+let speed = 2, speedPref = 2, entranceAbort = null;
 const turnOf = new Map();
 const B = { enc: null, coins: 0, slotEls: { you:[[],[]], opp:[[],[]] } };
 
@@ -232,13 +232,22 @@ function burst(el, color){ if (!animOn() || !el) return; const d = document.crea
 const hopDuration = () => Math.max(300, 560 / speed);
 
 /* ---------- log ---------- */
+// Each round gets its own box in the log ("Round 3"), and each entry is tinted by whose Pokémon it is about (the
+// first one named in it): blue on your side, red on the opponent's. Names show with the Pokémon's sprite.
+let logRound = null;
 function log(html, cls = ''){
   const list = $('#b-log'); list.querySelector('.bf__empty')?.remove();
+  if (cls === 'rnd'){
+    const box = document.createElement('section'); box.className = 'lround';
+    box.innerHTML = `<h4 class="lround__head">${html}</h4><div class="lround__body"></div>`;
+    list.append(box); logRound = box.lastElementChild; list.scrollTop = list.scrollHeight; return;
+  }
   const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html;
-  list.append(d); list.scrollTop = list.scrollHeight;
+  const first = d.querySelector('.lw'); if (first) d.dataset.side = first.classList.contains('you') ? 'you' : 'opp';
+  (logRound && logRound.isConnected ? logRound : list).append(d); list.scrollTop = list.scrollHeight;
 }
-function clearLog(msg){ $('#b-log').innerHTML = `<div class="bf__empty">${msg}</div>`; }
-const who = u => `<span class="lw ${u.side}"><i class="sd ${u.side}"></i>${u.name}</span>`;
+function clearLog(msg){ logRound = null; $('#b-log').innerHTML = `<div class="bf__empty">${msg}</div>`; }
+const who = u => `<span class="lw ${u.side}"><img class="lw__pic" src="${SPRITES[FORM[u.form].spr]}" alt="">${u.name}</span>`;
 const mvChip = (m, u) => `<span class="le-mv" style="--c:${typeColor(m.type)}">${m.name}</span>`;
 const status = html => $('#b-status').innerHTML = html;
 
@@ -691,31 +700,47 @@ function setupBattle(enc){
 function syncBattleButtons(){
   $('#b-speed').textContent = speed === 0 ? 'Skipping' : `${speed}×`;
   $('#b-speed').disabled = speed === 0;
-  $('#b-skip').disabled = speed === 0 || (!running && !countAbort);
+  $('#b-skip').disabled = speed === 0 || (!running && !entranceAbort);
 }
 $('#b-speed').addEventListener('click', () => { if (speed === 0) return; speed = speed === 1 ? 2 : speed === 2 ? 4 : 1; speedPref = speed; syncBattleButtons(); });
 $('#b-skip').addEventListener('click', () => {
-  speed = 0; countAbort?.(); syncBattleButtons();
+  speed = 0; entranceAbort?.(); syncBattleButtons();
   document.querySelectorAll('.movetag, .orb, .burst').forEach(e => e.remove());
 });
-async function countdown(){
-  const box = $('#b-count'), num = $('#b-count-num');
-  box.classList.add('show');
-  let aborted = false;
-  const abortP = new Promise(r => countAbort = () => { aborted = true; r(); });
+// Before the fight, every Pokémon runs onto the field into its slot, a few hops each: yours in from the left, the
+// opponent's from the right, one after another. The battle starts as soon as the last one is in place (Skip, or
+// reduced motion, puts them all there at once).
+async function entrance(){
+  const units = SIDES.flatMap(side => [...living(side)].sort((a, b) => find(a).row - find(b).row || find(a).lane - find(b).lane));
+  const runs = units.map(u => ({ u, el: elOf(u) })).filter(x => x.el);
+  if (!animOn() || REDUCED) return;
+  status('Here they come…');
+  runs.forEach(({ el }) => el.classList.add('entering'));
+  const anims = [];
+  entranceAbort = () => anims.forEach(a => a.finish());
   syncBattleButtons();
-  for (const n of ['3', '2', '1']){
-    if (aborted || speed === 0) break;
-    num.textContent = n; num.classList.remove('tick'); void num.offsetWidth; num.classList.add('tick');
-    await Promise.race([sleep(750), abortP]);
-  }
-  countAbort = null;
-  box.classList.remove('show');
+  const per = { you: 0, opp: 0 };
+  await Promise.all(runs.map(({ u, el }) => {
+    const img = el.querySelector('.slot__sprite img'), r = el.getBoundingClientRect(), you = u.side === 'you';
+    const dx = you ? -(r.right + 30) : innerWidth - r.left + 30, face = you ? -1 : 1;     // sprites face left; yours turn to run right
+    const frames = [], hops = 4;
+    for (let i = 0; i <= 20; i++){
+      const t = i / 20, x = dx * (1 - t), y = -Math.abs(Math.sin(t * Math.PI * hops)) * 7;
+      frames.push({ offset: t * .88, transform: `translate(${x}px, ${y}px) scaleX(${face})` });
+    }
+    frames.push({ offset: .94, transform: `translate(0, 0) scale(${face * 1.08}, .9)` }, { offset: 1, transform: 'none' });   // lands and turns to face the fight
+    const a = img.animate(frames, { duration: 900, delay: (per[u.side]++) * 140, easing: 'linear', fill: 'backwards' });
+    anims.push(a);
+    return a.finished.catch(() => {}).then(() => el.classList.remove('entering'));
+  }));
+  entranceAbort = null; syncBattleButtons();
+  runs.forEach(({ el }) => el.classList.remove('entering'));
+  status('');
 }
 async function enterBattle(kind, opt){
   const enc = buildEncounter(kind);
   await wipeTo('scr-battle', () => setupBattle(enc), opt);
-  await countdown();
+  await entrance();
   const outcome = await runBattle();
   if (outcome) await finishBattle(outcome);
 }

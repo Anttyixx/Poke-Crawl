@@ -1245,3 +1245,22 @@ button{ font:inherit; color:inherit; }
 /* no scroll bars: pages and lists still scroll by touch, wheel and keyboard */
 html, body, *{ scrollbar-width:none; }
 ::-webkit-scrollbar{ display:none; }
+
+/* battle slots without borders: just the Pokémon, its HP bar on top, and its stars; the border only shows (as a coloured
+   ring) while it is acting or being targeted */
+.bf__game .slot[data-border="battle"] .slot__frame{ border-color:transparent !important; background:transparent !important; box-shadow:none !important; }
+.bf__game .slot[data-border="battle"] :is(.g__mask, .stars__mask){ display:none; }
+.bf__game .slot[data-border="battle"] .g--tr .g__bar{ top:-7cqw; right:auto; left:50%; width:74cqw; margin-left:-37cqw; transform-origin:50% 50%; }
+/* while running onto the field, the HP bar and stars wait */
+.bf__game .slot.entering :is(.g, .stars){ opacity:0 !important; }
+.bf__game .slot :is(.g, .stars){ transition:opacity .25s ease; }
+
+/* the battle log: one box per round; each entry tinted by side (yours blue, theirs red), names with sprites */
+.lround{ margin:8px 8px 0; border:1px solid #1e222c; border-radius:10px; background:#12151c; overflow:hidden; }
+.lround__head{ margin:0; padding:5px 10px; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#8b93a6; background:#171b24; border-bottom:1px solid #1e222c; }
+.lround__body > *:last-child{ border-bottom:0; }
+.bloglist [data-side]{ border-left:3px solid transparent; }
+.bloglist [data-side="you"]{ border-left-color:var(--you); background:color-mix(in srgb, var(--you) 7%, transparent); }
+.bloglist [data-side="opp"]{ border-left-color:var(--foe); background:color-mix(in srgb, var(--foe) 7%, transparent); }
+.lw{ display:inline-flex; align-items:center; gap:3px; }
+.lw__pic{ width:22px; height:22px; margin:-5px 0 -5px -3px; image-rendering:pixelated; object-fit:contain; }
