@@ -237,14 +237,17 @@ const hopDuration = () => Math.max(300, 560 / speed);
 let logRound = null;
 function log(html, cls = ''){
   const list = $('#b-log'); list.querySelector('.bf__empty')?.remove();
+  // follow the newest entry, unless you've scrolled up to read something: then new entries just go on the end
+  const follow = list.scrollHeight - list.scrollTop - list.clientHeight < 40;
+  const show = () => { if (follow) list.scrollTop = list.scrollHeight; };
   if (cls === 'rnd'){
     const box = document.createElement('section'); box.className = 'lround';
     box.innerHTML = `<h4 class="lround__head">${html}</h4><div class="lround__body"></div>`;
-    list.append(box); logRound = box.lastElementChild; list.scrollTop = list.scrollHeight; return;
+    list.append(box); logRound = box.lastElementChild; show(); return;
   }
   const d = document.createElement('div'); if (cls) d.className = cls; d.innerHTML = html;
   const first = d.querySelector('.lw'); if (first) d.dataset.side = first.classList.contains('you') ? 'you' : 'opp';
-  (logRound && logRound.isConnected ? logRound : list).append(d); list.scrollTop = list.scrollHeight;
+  (logRound && logRound.isConnected ? logRound : list).append(d); show();
 }
 function clearLog(msg){ logRound = null; $('#b-log').innerHTML = `<div class="bf__empty">${msg}</div>`; }
 const who = u => `<span class="lw ${u.side}"><img class="lw__pic" src="${SPRITES[FORM[u.form].spr]}" alt="">${u.name}</span>`;
@@ -691,6 +694,8 @@ function setupBattle(enc){
     opp: enc.team.map((u, k) => ({ cell: FILL[k], unit: { side:'opp', ...u } })),
   };
   freshBoard(); render(); clearLog('The battle log fills in as the fight plays out.');
+  // the field starts empty: everyone runs on once the screen is in (see entrance)
+  if (entering()) SIDES.forEach(side => living(side).forEach(u => elOf(u)?.classList.add('entering')));
   const icon = $('#b-icon'); icon.dataset.type = enc.kind; icon.textContent = ICON[enc.kind];
   $('#b-title').textContent = enc.title; $('#b-sub').textContent = enc.sub;
   $('#b-foe-label').textContent = enc.title;
@@ -707,35 +712,42 @@ $('#b-skip').addEventListener('click', () => {
   speed = 0; entranceAbort?.(); syncBattleButtons();
   document.querySelectorAll('.movetag, .orb, .burst').forEach(e => e.remove());
 });
-// Before the fight, every Pokémon runs onto the field into its slot, a few hops each: yours in from the left, the
-// opponent's from the right, one after another. The battle starts as soon as the last one is in place (Skip, or
-// reduced motion, puts them all there at once).
+// Before the fight the field starts empty, then every Pokémon runs on from the edge of the battlefield into its slot:
+// yours up from the bottom edge, the opponent's down from the top, the ones nearest the edge first. They bob and waddle
+// as they run, squashing a little at every step, and land with a small squash. The battle starts as soon as the last
+// one is in place (Skip, or reduced motion, puts them all there at once).
+const entering = () => animOn() && !REDUCED;
 async function entrance(){
-  const units = SIDES.flatMap(side => [...living(side)].sort((a, b) => find(a).row - find(b).row || find(a).lane - find(b).lane));
-  const runs = units.map(u => ({ u, el: elOf(u) })).filter(x => x.el);
-  if (!animOn() || REDUCED) return;
+  const game = $('.bf__game'), runs = SIDES.flatMap(side => living(side).map(u => ({ u, el: elOf(u) }))).filter(x => x.el);
+  const done = () => { runs.forEach(({ el }) => el.classList.remove('entering')); game.classList.remove('is-entering'); };
+  if (!entering()) return done();
   status('Here they come…');
-  runs.forEach(({ el }) => el.classList.add('entering'));
-  const anims = [];
+  game.classList.add('is-entering');
+  const box = game.getBoundingClientRect(), anims = [];
   entranceAbort = () => anims.forEach(a => a.finish());
   syncBattleButtons();
-  const per = { you: 0, opp: 0 };
+  const nearEdge = ({ u }) => u.side === 'you' ? find(u).row === 1 : find(u).row === 1;     // the back rows sit by the field's edges
+  runs.sort((a, b) => a.u.side.localeCompare(b.u.side) || nearEdge(b) - nearEdge(a) || find(a.u).lane - find(b.u).lane);
+  const order = { you: 0, opp: 0 };
   await Promise.all(runs.map(({ u, el }) => {
-    const img = el.querySelector('.slot__sprite img'), r = el.getBoundingClientRect(), you = u.side === 'you';
-    const dx = you ? -(r.right + 30) : innerWidth - r.left + 30, face = you ? -1 : 1;     // sprites face left; yours turn to run right
-    const frames = [], hops = 4;
-    for (let i = 0; i <= 20; i++){
-      const t = i / 20, x = dx * (1 - t), y = -Math.abs(Math.sin(t * Math.PI * hops)) * 7;
-      frames.push({ offset: t * .88, transform: `translate(${x}px, ${y}px) scaleX(${face})` });
+    const img = el.querySelector('.slot__sprite img'), r = img.getBoundingClientRect(), you = u.side === 'you';
+    const dy = you ? box.bottom - r.top : box.top - r.bottom;           // starts just past the field's edge, out of sight
+    const steps = 5, frames = [], N = 40, RUN = .86;
+    for (let i = 0; i <= N; i++){
+      const t = i / N, p = 1 - Math.pow(1 - t, 1.35);                      // runs in, easing off at the end
+      const s = Math.abs(Math.sin(t * Math.PI * steps)), fade = 1 - t * .5;
+      const y = dy * (1 - p) - s * 7 * fade, rot = Math.sin(t * Math.PI * steps) * 9 * fade;
+      const sx = 1 + (1 - s) * .07 - s * .03, sy = 1 - (1 - s) * .09 + s * .05;   // squashed on each footfall, stretched in the air
+      frames.push({ offset: t * RUN, opacity: 1, transform: `translate(0, ${y.toFixed(1)}px) rotate(${rot.toFixed(1)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})` });
     }
-    frames.push({ offset: .94, transform: `translate(0, 0) scale(${face * 1.08}, .9)` }, { offset: 1, transform: 'none' });   // lands and turns to face the fight
-    const a = img.animate(frames, { duration: 900, delay: (per[u.side]++) * 140, easing: 'linear', fill: 'backwards' });
+    frames.push({ offset: .93, opacity: 1, transform: 'translate(0, 0) scale(1.12, .86)' }, { offset: 1, opacity: 1, transform: 'none' });
+    img.style.transformOrigin = '50% 85%';
+    const a = img.animate(frames, { duration: 1050, delay: (order[u.side]++) * 130, easing: 'linear', fill: 'backwards' });
     anims.push(a);
-    return a.finished.catch(() => {}).then(() => el.classList.remove('entering'));
+    return a.finished.catch(() => {}).then(() => { el.classList.remove('entering'); img.style.transformOrigin = ''; });
   }));
   entranceAbort = null; syncBattleButtons();
-  runs.forEach(({ el }) => el.classList.remove('entering'));
-  status('');
+  done(); status('');
 }
 async function enterBattle(kind, opt){
   const enc = buildEncounter(kind);

@@ -234,13 +234,14 @@ button{ font:inherit; color:inherit; }
 
 /* log */
 .blog{ flex:0 1 280px; max-width:280px; min-width:0; display:flex; flex-direction:column; margin-top:26px;
-  background:var(--game-bg); border:1px solid var(--game-edge); border-radius:12px; overflow:hidden; height:420px; }
+  background:var(--game-bg); border:1px solid var(--game-edge); border-radius:12px; overflow:hidden; }
 .blog summary{ list-style:none; cursor:pointer; font-size:12.5px; font-weight:600; color:var(--ink-dim); padding:9px 12px; border-bottom:1px solid var(--game-edge); display:flex; justify-content:space-between; }
 .blog summary::-webkit-details-marker{ display:none; }
 .blog summary::after{ content:"Hide"; font-weight:400; }
 .blog:not([open]) summary::after{ content:"Show"; }
 .blog:not([open]){ height:auto; }
-.bloglist{ overflow-y:auto; padding:0 0 10px; font-size:11px; line-height:1.4; color:#aab2c4; flex:1; min-height:0; }
+/* the list itself has the height (a <details> box doesn't lay its contents out as flex items), so it scrolls */
+.bloglist{ overflow-y:auto; overscroll-behavior:contain; padding:0 0 10px; font-size:11px; line-height:1.4; color:#aab2c4; height:380px; }
 .sd{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:4px; vertical-align:1px; }
 .sd.you{ background:var(--you); } .sd.opp{ background:var(--foe); }
 .lw{ font-weight:650; } .lw.you{ color:var(--you); } .lw.opp{ color:var(--foe); }
@@ -261,7 +262,7 @@ button{ font:inherit; color:inherit; }
 .le-fx{ font-size:9.5px; color:#9ecbff; }
 .le-end{ margin:8px 11px 0; padding:7px 9px; border-radius:8px; background:#171a22; color:#e6e9f0; font-weight:650; }
 .bf__empty{ padding:14px 11px; color:#4d5466; font-size:11px; }
-@media (max-width:760px){ .blog{ max-width:none; flex-basis:100%; height:220px; margin-top:0; } }
+@media (max-width:760px){ .blog{ max-width:none; flex-basis:100%; margin-top:0; } .bloglist{ height:240px; } }
 
 /* countdown */
 .bcount{ position:fixed; inset:0; z-index:40; display:none; place-items:center; pointer-events:none; }
@@ -1253,8 +1254,11 @@ html, body, *{ scrollbar-width:none; }
 /* only the HP bar shows, in its usual top-right corner: no stars, no held-item ring, no HP numbers under it */
 .bf__game .slot[data-border="battle"] :is(.stars, .g:not([data-stat="hp"])){ display:none; }
 .bf__game .slotwrap > .slotname{ display:none; }
-/* while running onto the field, the HP bar and stars wait */
+/* before and while running onto the field: the Pokémon is hidden until its run starts (the run's own animation shows it),
+   its HP bar waits, and the field clips everyone to its edges */
 .bf__game .slot.entering :is(.g, .stars){ opacity:0 !important; }
+.bf__game .slot.entering .slot__sprite img{ opacity:0; }
+.bf__game.is-entering{ overflow:hidden; }
 .bf__game .slot :is(.g, .stars){ transition:opacity .25s ease; }
 
 /* the battle log: one box per round; each entry tinted by side (yours blue, theirs red), names with sprites */
