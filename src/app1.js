@@ -722,17 +722,27 @@ function scanTap(name, i, held){
   UI.sel = { area: name, i, ...(held && c.item ? { held: true } : {}) }; UI.focus = 'sel'; UI.notice = null;
   refresh();
 }
+// double tap: two quick taps on the same Pokémon or item select it and have Rotom scan it straight away
+const TAP2 = { key: null, t: 0 };
+function doubleTap(key){
+  const now = performance.now(), d = TAP2.key === key && now - TAP2.t < 380;
+  TAP2.key = d ? null : key; TAP2.t = now;
+  return d;
+}
+function scanNow(){ const t = scanTarget(); if (t && !DEX.open && !DEX.busy) openScan(t.el, t.subject, scanOpts(t)); }
 function tapHeld(name, i){
   const A = AREAS[name], mon = A.get()[i];
+  if (!A.equip || !mon?.item) return tapSlot(name, i);
+  if (doubleTap(`${name}|${i}|held`)){ scanTap(name, i, true); return scanNow(); }
   if (scanMode() && A.kind !== 'offer') return scanTap(name, i, true);
   if (A.onTap && A.onTap(i) !== false) return;           // the area handled it (an onTap that returns false lets it through)
-  if (!A.equip || !mon?.item) return tapSlot(name, i);
   if (!UI.sel){ UI.sel = { area: name, i, held: true }; UI.notice = null; return refresh(); }
   if (UI.sel.area === name && UI.sel.i === i && UI.sel.held){ UI.sel = null; return refresh(); }
   tapSlot(name, i);
 }
 function tapSlot(name, i){
   const A = AREAS[name];
+  if (A.kind !== 'offer' && doubleTap(`${name}|${i}`) && A.get()[i]){ scanTap(name, i, false); return scanNow(); }
   if (scanMode() && A.kind !== 'offer') return scanTap(name, i, false);
   if (A.onTap && A.onTap(i) !== false) return;      // an onTap that returns false falls through to normal tapping
   if (A.locked || wiping) return;
@@ -935,7 +945,7 @@ function renderDetail(elId, empty){
   box.innerHTML = sel.held ? itemDetail(c.item) : AREAS[sel.area].holds === 'mon' ? monDetail(c) : itemDetail(c);
 }
 function renderNotice(elId){ const n = $('#' + elId); n.textContent = UI.notice?.text || ''; n.classList.toggle('ok', !!UI.notice?.ok); }
-// a little speech bubble over your party (bottom left) or bag (bottom right) saying what just landed there or left:
+// a little notice (a rounded box) over your party (bottom left) or bag (bottom right) saying what just landed there or left:
 // "Pikachu joined your party.", "Bought the Leftovers." It sits above everything else and fades after a few seconds;
 // a new one in the same corner replaces it.
 const TOASTS = {};
@@ -1829,9 +1839,11 @@ function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => m
 // tap a starter to pick it ("I Choose You!!" shows, and Rotom lights up to scan it); tap it again to put it back
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
-  ST.home = ST.home === i && !scanMode() ? -1 : i; UI.focus = 'offer';
+  const twice = doubleTap('starter|' + i);
+  ST.home = ST.home === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('starter-act', $('#starter-act'), ST.home >= 0);
   refresh();
+  if (twice) scanNow();
 }
 async function chooseStarter(){
   const i = ST.home;
@@ -2046,9 +2058,11 @@ async function wildEntrance(){
 // chooses it
 function wildTap(i){
   if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i] || DEX.busy) return;
-  W.scanning = W.scanning === i && !scanMode() ? -1 : i; UI.focus = 'offer';
+  const twice = doubleTap('wild|' + i);
+  W.scanning = W.scanning === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('wild-act', $('#wild-act'), W.scanning >= 0);
   refresh();
+  if (twice) scanNow();
 }
 // "I Choose You!!": the scan closes, the other two leave, and your party lights up for you to pick a slot
 async function wildChoose(){
@@ -2202,10 +2216,12 @@ function martPick(i){
   if (wiping || MT.sold.has(i)) return;
   const why = martBlock(i);
   UI.sel = null;
-  MT.picked = MT.picked === i && !scanMode() ? null : i; UI.focus = 'shop';
+  const twice = doubleTap('shop|' + i);
+  MT.picked = MT.picked === i && !scanMode() && !twice ? null : i; UI.focus = 'shop';
   UI.notice = MT.picked != null && why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' } : null;
   refresh();
   if (MT.picked != null && why) nope(document.querySelector(`#mart-stock .shopcard[data-i="${i}"] .mvcard__price small`));
+  if (twice) scanNow();
 }
 // tap a bag slot with an item picked: buy it into that slot if it's empty
 function martPlace(slot){

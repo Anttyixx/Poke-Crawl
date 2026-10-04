@@ -1186,14 +1186,10 @@ button{ font:inherit; color:inherit; }
   64%{ transform:scale(1.4); color:#ff5a52; }
   100%{ transform:none; color:var(--ink-dim); } }
 @media (prefers-reduced-motion: reduce){ .mvcard__price small.nope{ animation:none; color:#ff5a52; } }
-/* the speech bubble over your party or bag: what just landed there or left */
+/* the notice over your party or bag (a rounded box): what just landed there or left */
 .toast{ position:fixed; z-index:2900; max-width:min(300px, calc(100vw - 24px)); padding:9px 13px; border-radius:12px; pointer-events:none;
   background:#232a38; border:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); color:var(--ink); font-size:13.5px; line-height:1.35;
   box-shadow:0 8px 22px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.3); }
-.toast::after{ content:""; position:absolute; bottom:-7px; width:12px; height:12px; background:#232a38; transform:rotate(45deg);
-  border-right:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); border-bottom:1px solid color-mix(in srgb, var(--glow-selected) 55%, #2c3342); }
-.toast--party::after{ left:24px; }
-.toast--bag::after{ right:24px; }
 .shopcard[data-block="sold"] .trcard__slot .slot{ cursor:default; }
 .shopcard[aria-pressed="true"]{ background:none; }
 /* the Mart's Sell button, under an item's price in its scan */
@@ -1246,3 +1242,6 @@ button{ font:inherit; color:inherit; }
 .mvswap__opt{ appearance:none; font:inherit; color:inherit; text-align:left; background:none; border:0; padding:0; cursor:pointer; display:block; width:100%; }
 .mvswap__opt > .mv{ border-style:dashed !important; }
 .mvswap__opt:hover > .mv, .mvswap__opt:focus-visible > .mv{ border-style:solid !important; border-color:var(--accent) !important; background:color-mix(in srgb, var(--accent) 12%, var(--panel-2)) !important; }
+/* no scroll bars: pages and lists still scroll by touch, wheel and keyboard */
+html, body, *{ scrollbar-width:none; }
+::-webkit-scrollbar{ display:none; }
