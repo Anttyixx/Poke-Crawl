@@ -1203,15 +1203,20 @@ button{ font:inherit; color:inherit; }
 /* the move limit, beside the "Moves" heading */
 .dexkv__aside{ font-style:normal; color:var(--ink-dim); white-space:nowrap; }
 .dexnote--tutor{ margin:10px 0 6px; }
-/* something is selected that Rotom could scan: it glows and gives a little hop now and then to say "tap me" */
-@keyframes rdCall{
-  0%, 52%, 100%{ translate:0 0; rotate:0deg; scale:1; filter:drop-shadow(0 0 4px rgba(94,232,255,.7)) drop-shadow(0 0 1px rgba(94,232,255,0)) drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
-  60%{ translate:0 -7px; rotate:-9deg; scale:1.08; }
-  68%{ translate:0 0; rotate:7deg; scale:1; }
-  74%{ translate:0 -3px; rotate:-4deg; }
-  80%{ translate:0 0; rotate:0deg; }
-  26%, 86%{ filter:drop-shadow(0 0 12px rgba(94,232,255,1)) drop-shadow(0 0 4px rgba(94,232,255,1)) drop-shadow(0 3px 8px rgba(0,0,0,.5)); }
+/* something is selected that Rotom could scan: it glows with a slow, even pulse and dances from side to side, to say "tap me".
+   The glow is on the wrapper and the dance on the image, so the two run on their own smooth timings */
+@keyframes rdGlow{
+  from{ filter:drop-shadow(0 0 3px rgba(94,232,255,.45)) drop-shadow(0 0 1px rgba(94,232,255,.3)); }
+  to  { filter:drop-shadow(0 0 11px rgba(94,232,255,.95)) drop-shadow(0 0 3px rgba(94,232,255,.8)); }
 }
-.rd-sprite.rd-ready img{ animation:rdCall 1.8s ease-in-out infinite; }
-.rd-flying .rd-sprite.rd-ready img{ animation:none; }
-@media (prefers-reduced-motion: reduce){ .rd-sprite.rd-ready img{ animation:none; filter:drop-shadow(0 0 10px rgba(94,232,255,1)); } }
+@keyframes rdDance{
+  0%  { translate:-4px 0;    rotate:-9deg; }
+  25% { translate:-1px -4px; rotate:-3deg; }
+  50% { translate:4px 0;     rotate:9deg; }
+  75% { translate:1px -4px;  rotate:3deg; }
+  100%{ translate:-4px 0;    rotate:-9deg; }
+}
+.rd-sprite.rd-ready{ animation:rdGlow 1.1s ease-in-out infinite alternate; }
+.rd-sprite.rd-ready img{ animation:rdDance 1.3s ease-in-out infinite; }
+.rd-flying .rd-sprite.rd-ready, .rd-flying .rd-sprite.rd-ready img{ animation:none; }
+@media (prefers-reduced-motion: reduce){ .rd-sprite.rd-ready, .rd-sprite.rd-ready img{ animation:none; } .rd-sprite.rd-ready{ filter:drop-shadow(0 0 10px rgba(94,232,255,1)); } }
