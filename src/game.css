@@ -1236,3 +1236,13 @@ button{ font:inherit; color:inherit; }
   .rd-sprite, .rd-sprite::before{ animation:none; }
   .rd-sprite.rd-ready{ filter:drop-shadow(0 0 10px rgb(94 232 255)); }
 }
+/* a move's Change button (in a party Pokémon's scan), and the list of moves it learned before to switch to */
+.mv__side{ display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+.mv__swap{ appearance:none; font:inherit; font-size:12px; font-weight:600; color:var(--ink); background:var(--panel); cursor:pointer;
+  border:1px solid color-mix(in srgb, var(--accent) 55%, var(--line)); border-radius:8px; padding:4px 10px; white-space:nowrap; }
+.mv__swap:hover, .mv__swap[aria-expanded="true"]{ background:color-mix(in srgb, var(--accent) 18%, var(--panel)); }
+.mvswap{ margin:-2px 0 4px 14px; padding-left:10px; border-left:2px solid color-mix(in srgb, var(--accent) 45%, transparent); display:grid; gap:6px; }
+.mvswap .dexnote{ margin:2px 0 0; }
+.mvswap__opt{ appearance:none; font:inherit; color:inherit; text-align:left; background:none; border:0; padding:0; cursor:pointer; display:block; width:100%; }
+.mvswap__opt > .mv{ border-style:dashed !important; }
+.mvswap__opt:hover > .mv, .mvswap__opt:focus-visible > .mv{ border-style:solid !important; border-color:var(--accent) !important; background:color-mix(in srgb, var(--accent) 12%, var(--panel-2)) !important; }

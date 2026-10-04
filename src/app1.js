@@ -104,7 +104,26 @@ function formFor(line, star, prev){
   const opts = LINES[line][star], b = prev && FORM[prev].branch;
   return ((b && opts.find(f => f.branch === b)) || pick(opts)).id;
 }
-const known = m => [FORM[m.form].sig, ...m.taught];
+// a Pokémon's signature move: its form's, unless it has switched back to one it had before (m.sig)
+const sigOf = m => m.sig || FORM[m.form].sig;
+const known = m => [sigOf(m), ...m.taught];
+/* ---------- moves it has learned ----------
+   Every move a Pokémon has ever known stays learned (m.learned): its signature moves from each level, and every move
+   it was taught. In its scan, each move has a Change button that swaps it for another learned move of the same kind
+   (a signature for an earlier signature, a taught move for one taught before). A move it never learned can't be put
+   back that way: it has to be taught at a Move Tutor. */
+const learnedOf = m => m.learned ||= [...known(m)];
+function remember(m, ...ks){ const L = learnedOf(m); for (const k of ks) if (k && !L.includes(k)) L.push(k); }
+// what a slot ('sig', or a taught slot's index) can be swapped for
+function swapOptions(m, slot){
+  const have = known(m), sig = slot === 'sig';
+  return learnedOf(m).filter(k => !have.includes(k) && (MOVES[k].cat === 'tutor') !== sig);
+}
+function swapMove(m, slot, k){
+  const old = slot === 'sig' ? sigOf(m) : m.taught[slot];
+  if (slot === 'sig') m.sig = k === FORM[m.form].sig ? null : k; else m.taught[slot] = k;
+  return old;
+}
 /* ---------- move odds ----------
    A Pokémon's signature move is its default. Each taught (tutor) move has a chance: each time the Pokémon acts, it uses
    its taught move that often, and its signature move otherwise. The odds stay the same all battle, and a Pokémon's
@@ -129,21 +148,27 @@ function moveOdds(moves, item){
 function monOdds(m){ const ks = known(m), o = moveOdds(ks, m.item?.id); return Object.fromEntries(ks.map((k, i) => [k, o[i]])); }
 const nm = m => FORM[m.form].name;
 function learnable(m){
-  const have = new Set(known(m));
+  const have = new Set([...known(m), ...(m.learned || [])]);      // (a move it learned before is switched to from its scan)
   return (LEARN[m.form] || []).filter(k => !have.has(k) && MOVES[k].star <= m.star && !(m.item?.id === 'assault-vest' && MOVES[k].kind === 'sup'));
 }
 function makeMon(line, star = 1, exp = 0){
   const m = { uid: 'm' + (++uidN), line, star, form: formFor(line, star), exp: star >= 3 ? 1 : exp, taught: [], item: null };
   const opts = learnable(m), off = opts.filter(k => MOVES[k].kind === 'off');
   if (opts.length) m.taught.push(pick(off.length ? off : opts));       // arrives knowing one move besides its signature
+  // it learned the signature moves of the levels it grew through (on its own branch)
+  const br = FORM[m.form].branch;
+  for (let s2 = 1; s2 < star; s2++) remember(m, ...LINES[line][s2].filter(f => !f.branch || !br || f.branch === br).map(f => f.sig));
+  remember(m, ...known(m));
   return m;
 }
 const makeItem = id => ({ uid: 'i' + (++uidN), id });
 function levelUp(m){
   const from = nm(m);
-  m.star++; m.form = formFor(m.line, m.star, m.form);
+  learnedOf(m);
+  m.star++; m.form = formFor(m.line, m.star, m.form); m.sig = null;          // a new level brings its new signature move
   const sig = FORM[m.form].sig;
   m.taught = m.taught.filter(k => k !== sig);
+  remember(m, sig);
   return { from, to: nm(m) };
 }
 
@@ -789,7 +814,8 @@ function tapSlot(name, i){
 // a move's level as three stars, filled up to its star rating
 const moveStars = n => `<span class="mv__stars" aria-label="${n} star move">${'<i class="on">★</i>'.repeat(n)}${'<i>★</i>'.repeat(3 - n)}</span>`;
 // chance: this Pokémon's percent chance to use it; without one, a taught move shows its base chance
-function moveRow(k, sig, chance){
+// side: extra HTML under the odds on the right (a Change button)
+function moveRow(k, sig, chance, side = ''){
   const m = MOVES[k];
   const hits = m.hits ? ` ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : '';
   const head = m.kind === 'sup'
@@ -800,7 +826,7 @@ function moveRow(k, sig, chance){
   return `<div class="mv${sig ? ' mv--sig' : ''}">
     <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
     <small>${head}</small>${m.fx ? `<small class="mv__fx">${m.fx}</small>` : ''}${moveStars(m.star)}</span>
-    <span class="mv__pp${chance === 0 ? ' out' : ''}${chance == null ? '' : ' mv__pp--pct'}" title="${title}">${odds}</span></div>`;
+    ${side ? '<span class="mv__side">' : ''}<span class="mv__pp${chance === 0 ? ' out' : ''}${chance == null ? '' : ' mv__pp--pct'}" title="${title}">${odds}</span>${side}${side ? '</span>' : ''}</div>`;
 }
 function moveChip(k, sig){
   const m = MOVES[k];
@@ -830,7 +856,7 @@ function monDetail(m, opts = {}){
   return `<div class="dt__head"><span class="dt__name">${f.name}</span><span class="pill" style="--c:${typeColor(f.type)}">${f.type}</span>
       <span class="dt__stars">${'★'.repeat(m.star)}<i>${'★'.repeat(3 - m.star)}</i></span></div>
     <div class="dt__stats"><div><b>${f.hp}</b><span>HP</span></div><div><b>${f.atk}</b><span>Attack</span></div><div><b>${f.spd}</b><span>Speed</span></div><div><b>${exp}</b><span>EXP</span></div></div>
-    <div class="mvlist${opts.pickable ? ' mvlist--pick' : ''}">${opts.slots ? moveRow(f.sig, true, monOdds(m)[f.sig]) + taughtSlotsHTML(m, opts.pickable) : known(m).map((k, i) => moveRow(k, i === 0, monOdds(m)[k])).join('')}</div>
+    <div class="mvlist${opts.pickable ? ' mvlist--pick' : ''}">${opts.slots ? moveRow(sigOf(m), true, monOdds(m)[sigOf(m)]) + taughtSlotsHTML(m, opts.pickable) : known(m).map((k, i) => moveRow(k, i === 0, monOdds(m)[k])).join('')}</div>
     ${m.item ? `<div class="dt__item"><img src="${ITEM[m.item.id].spr}" alt=""><div><b>${ITEM[m.item.id].name}</b><br>${ITEM[m.item.id].fx}</div></div>` : ''}
     <div class="dt__ability"><b>${f.ability.name}.</b> ${f.ability.fx} <i>Abilities aren't active in battle yet.</i></div>`;
 }
@@ -1010,6 +1036,22 @@ function updateMapHud(){
   pop.hidden = true;                                       // the RotomDex scans what you tap instead (syncSelScan)
 }
 // the popup's entries use the Pokédex layout, filled in with this Pokémon's own stars, EXP, held item and moves
+// a Pokémon's moves in its scan; one in your party or daycare gets a Change button on each (see swapOptions)
+function monMovesHTML(m){
+  const odds = monOdds(m), edit = !!(R.party?.includes(m) || R.daycare?.includes(m)) && !!DEX.scan;
+  const btn = slot => edit ? `<button class="mv__swap" type="button" data-swap="${slot}" aria-expanded="${DEX.swap === slot}">${DEX.swap === slot ? 'Cancel' : 'Change'}</button>` : '';
+  const picker = slot => {
+    if (!edit || DEX.swap !== slot) return '';
+    const opts = swapOptions(m, slot), sig = slot === 'sig';
+    return `<div class="mvswap">${opts.length
+      ? `<p class="dexnote">Switch ${MOVES[sig ? sigOf(m) : m.taught[slot]].name} for a ${sig ? 'signature ' : ''}move it learned before:</p>`
+        + opts.map(k => `<button class="mvswap__opt" type="button" data-pick="${slot}|${k}">${moveRow(k, sig)}</button>`).join('')
+      : `<p class="dexnote">${nm(m)} hasn't learned another ${sig ? 'signature move yet: it gets a new one as it levels up' : 'move to switch to yet: teach it more at a Move Tutor'}.</p>`}</div>`;
+  };
+  const row = (k, slot, sig) => moveRow(k, sig, odds[k], btn(slot)) + picker(slot);
+  return row(sigOf(m), 'sig', true) + Array.from({ length: TUNE.taughtMax }, (_, j) => m.taught[j] ? row(m.taught[j], j, false)
+    : `<div class="mv mv--empty"><span class="mv__name">Empty move slot<small>Taught at a Move Tutor</small></span><span class="mv__pp"></span></div>`).join('');
+}
 function mapMonHTML(m){
   const f = FORM[m.form], maxed = m.star >= 3;
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
@@ -1025,7 +1067,7 @@ function mapMonHTML(m){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
-      <div class="dexkv">${movesLabel(f.star)}<div class="mvlist">${moveRow(f.sig, true, monOdds(m)[f.sig])}${taughtSlotsHTML(m, false)}</div></div>
+      <div class="dexkv">${movesLabel(f.star)}<div class="mvlist">${monMovesHTML(m)}</div></div>
     </div>
   </div>`;
 }
@@ -1060,7 +1102,7 @@ $('#scr-map').addEventListener('pointerup', e => {
 // Opened from the map's top bar or the title screen; Close goes back to wherever it was opened from.
 // while Rotom is scanning one Pokémon (see openScan) the popup shows only that Pokémon: tab 'scan', no tab bar
 const dexTabList = () => ['mons', 'moves', 'items'];
-const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false, anim: 0, scan: null };
+const DEX = { tab: 'mons', html: {}, token: 0, open: false, busy: false, anim: 0, scan: null, swap: null };
 // sprites are long data URIs and the Pokédex shows hundreds of them, so each one becomes a short blob URL, once
 const blobURLs = new Map();
 function spriteURL(uri){
@@ -1633,19 +1675,30 @@ function dexActions(){
 }
 $('#dex-act').addEventListener('click', e => { const b = e.target.closest('[data-act]'); if (b && !DEX.busy) $('#dex-act')._acts?.[+b.dataset.act]?.run(); });
 // the scan is over (closed, or turned into the full RotomDex)
-function endScan(){ const s = DEX.scan; DEX.scan = null; s?.onClose?.(); }
+function endScan(){ const s = DEX.scan; DEX.scan = null; DEX.swap = null; s?.onClose?.(); }
+// redraw the scan where it is (after a Change), keeping its scroll
+function dexRescan(){ const y = DEXSCROLL.scrollTop; $('#dex-body').innerHTML = DEX_BUILD.scan(); dexLayout(); DEXSCROLL.scrollTop = y; }
+$('#dex-body').addEventListener('click', e => {
+  const sw = e.target.closest('[data-swap]'), pk = e.target.closest('[data-pick]'), m = DEX.scan?.mon;
+  if (!m || DEX.busy || !(sw || pk)) return;
+  if (sw){ const slot = sw.dataset.swap === 'sig' ? 'sig' : +sw.dataset.swap; DEX.swap = DEX.swap === slot ? null : slot; return dexRescan(); }
+  const [a, k] = pk.dataset.pick.split('|'), slot = a === 'sig' ? 'sig' : +a;
+  const old = swapMove(m, slot, k);
+  DEX.swap = null; dexRescan(); refresh();
+  toast('party', `${nm(m)} switched ${MOVES[old].name} for ${MOVES[k].name}.`);
+});
 async function openScan(slot, mon, opts = {}){
   const { reserve = 0 } = opts;
   if (wiping || DEX.busy) return;
   if (DEX.open && !DEX.scan) return;                          // the full RotomDex is open
   if (DEX.open && DEX.scan.mon === mon) return closeDex();    // tapping the scanned Pokémon again puts Rotom away
   if (!DEX.open){
-    DEX.tabBefore = DEX.tab; DEX.scan = { ...opts, slot, mon, reserve }; DEX.tab = 'scan';
+    DEX.tabBefore = DEX.tab; DEX.scan = { ...opts, slot, mon, reserve }; DEX.swap = null; DEX.tab = 'scan';
     dexActions();
     return openDex();
   }
   // already scanning another Pokémon: the popup folds away, Rotom flies over, and it opens again there
-  await rdHopScan(slot, reserve, () => { DEX.scan = { ...opts, slot, mon, reserve }; dexActions(); dexShow('scan', false); });
+  await rdHopScan(slot, reserve, () => { DEX.scan = { ...opts, slot, mon, reserve }; DEX.swap = null; dexActions(); dexShow('scan', false); });
 }
 // scan to scan: the old info fades, Rotom hops to its new perch while the popup slides and resizes under it (its
 // bump following Rotom along the edge), and the new info fades up as Rotom comes in to land. If the popup has to flip to the
@@ -2351,9 +2404,10 @@ function teach(m, k, i){
   const coins = R.coins, old = m.taught.length >= TUNE.taughtMax ? m.taught.at(-1) : null;
   R.coins -= price(k);
   if (old) m.taught[m.taught.length - 1] = k; else m.taught.push(k);
+  remember(m, old, k);
   UI.notice = null;
   TU.teaching = null;
-  refresh(); toast('party', old ? `${nm(m)} forgot ${MOVES[old].name} and learned ${MOVES[k].name}.` : `${nm(m)} learned ${MOVES[k].name}.`);
+  refresh(); toast('party', old ? `${nm(m)} learned ${MOVES[k].name} in place of ${MOVES[old].name}.` : `${nm(m)} learned ${MOVES[k].name}.`);
   countCoins($('#tutor-coins'), coins, R.coins);
   const el = AREAS['M.party'].els[i]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
@@ -2382,8 +2436,8 @@ RENDER['scr-tutor'] = () => {
   $('#tutor-coins').textContent = `${R.coins} coins`;
   const box = $('#tutor-moves'), party = partyMons();
   box.innerHTML = TU.offer.length ? TU.offer.map(k => {
-    const mv = MOVES[k], afford = R.coins >= price(k), who = party.filter(m => canLearn(m, k)), knows = party.filter(m => known(m).includes(k));
-    const none = knows.length ? `${knows.map(nm).join(' and ')} already know${knows.length > 1 ? '' : 's'} it` : 'Nobody in your party can learn it yet';
+    const mv = MOVES[k], afford = R.coins >= price(k), who = party.filter(m => canLearn(m, k)), knows = party.filter(m => learnedOf(m).includes(k));
+    const none = knows.length ? `${knows.map(nm).join(' and ')} already learned it` : 'Nobody in your party can learn it yet';
     return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}" role="button" tabindex="0"${afford ? '' : ' data-block="poor" aria-disabled="true"'}>
       <div class="trcard__slot"></div>
       <div class="trcard__body">
