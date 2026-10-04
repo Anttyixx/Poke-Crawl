@@ -9,6 +9,7 @@ const CHANGELOG = __CHANGELOG__;                          // CHANGELOG.md as HTM
 
 /* ================= data ================= */
 const FORMS = DATA.forms, MOVES = DATA.moves, SPRITES = DATA.sprites;
+for (const [k, m] of Object.entries(MOVES)) m.key = k;
 const FORM = Object.fromEntries(FORMS.map(f => [f.id, f]));
 const STAT_MAX = { hp: 255, atk: 255, spd: 255 };   // the highest any stat can naturally be; stat bars are drawn against this
 const LINES = {};
@@ -56,7 +57,8 @@ const TUNE = {
   lives: 3, startCoins: 100,
   pay: { trainer: 60, boss: 150, legendary: 80 },
   xp: { trainer: .1, boss: .15, legendary: .1 },
-  loseXP: .5,                                         // losing a trainer battle still earns this share of the win's EXP   // share of a level EVERY party Pokémon earns per win (not split)
+  loseXP: .5,
+  releaseCandy: .6,                                   // a released Pokémon's EXP Candy holds this share of the EXP it had earned                                         // losing a trainer battle still earns this share of the win's EXP   // share of a level EVERY party Pokémon earns per win (not split)
   daycareRate: .5,
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
@@ -85,6 +87,28 @@ const TRAINERS = ['Youngster Pip', 'Lass Mina', 'Camper Theo', 'Bug Catcher Rudi
 const SHAPE_NAME = { single:'Single', pierce:'Pierce', splash:'Splash', row:'Full front row', back:'Back row', field:'Full field' };
 const SHAPE_LABEL = { single:'', pierce:'pierce', splash:'splash', row:'front row', back:'back row', field:'full field' };
 const TARGET_NAME = { self:'self', team:'whole team', lowest:'lowest-HP ally', front:'own front row', ahead:'teammate ahead' };
+/* ---------- how a move is described ----------
+   Every move shows what kind of move it is first (Attack, Support or Defense, a coloured tag) and then one plain
+   sentence saying what it does and to whom ("Deals 45% of Attack as damage to the opposing Pokémon in front."), with
+   any extra effect after it. Defense: support moves that cut or block damage; Support: everything else that helps. */
+const DEFENSE_MOVES = new Set(['protect', 'barrier', 'reflect', 'light-screen', 'wide-guard', 'safeguard', 'mist']);
+// an offensive move that deals no damage is sorted by what it does: damage over time is an Attack, cutting the
+// target's Attack or putting it to sleep is Defense, anything else (slowing it down) is Support
+const moveKind = m => m.kind === 'off'
+  ? (m.power !== 0 || m.dot ? 'attack' : m.atkDrop || m.skipTarget ? 'defense' : 'support')
+  : (m.shield || m.vuln < 0 || DEFENSE_MOVES.has(m.key)) ? 'defense' : 'support';
+const KIND_NAME = { attack: 'Attack', support: 'Support', defense: 'Defense' };
+const SHAPE_WHO = { single: 'the opposing Pokémon in front', pierce: 'the opposing Pokémon in front and the one behind it',
+  splash: 'the opposing Pokémon in front and those beside it', row: 'every opposing Pokémon in the front row',
+  back: 'every opposing Pokémon in the back row', field: 'every opposing Pokémon' };
+function moveDesc(m){
+  if (m.kind === 'sup') return m.fx || '';
+  if (m.power == null) return m.fx || '';
+  if (m.power === 0) return `Aimed at ${SHAPE_WHO[m.shape] || 'its target'}. ${m.fx || ''}`.trim();
+  const hits = m.hits ? (m.hits[0] === m.hits[1] ? ` ${m.hits[0]} times` : ` ${m.hits[0]}–${m.hits[1]} times`) : '';
+  return `Deals ${m.power}% of Attack as damage to ${SHAPE_WHO[m.shape] || 'its target'}${hits}.${m.fx ? ' ' + m.fx : ''}`;
+}
+const kindTag = m => `<span class="mvkind mvkind--${moveKind(m)}">${KIND_NAME[moveKind(m)]}</span>`;
 
 /* ================= utils ================= */
 const $ = s => document.querySelector(s);
@@ -166,6 +190,18 @@ function makeMon(line, star = 1, exp = 0, taught = true){
   return m;
 }
 const makeItem = id => ({ uid: 'i' + (++uidN), id });
+// add EXP (in levels) to a Pokémon, levelling it up as it fills; returns the level-ups. m.gained totals what it has
+// earned since it joined (a released Pokémon leaves an EXP Candy worth part of that)
+function gainExp(m, amt){
+  const evo = [];
+  if (m.star >= 3 || amt <= 0) return evo;
+  const room = 3 - m.star - m.exp;                         // EXP left before ★3
+  m.gained = (m.gained || 0) + Math.min(amt, room);
+  m.exp += amt;
+  while (m.exp >= 1 && m.star < 3){ m.exp -= 1; evo.push(levelUp(m)); }
+  if (m.star >= 3) m.exp = 1;
+  return evo;
+}
 function levelUp(m){
   const from = nm(m);
   learnedOf(m);
@@ -734,6 +770,7 @@ function doubleTap(key){
 }
 function scanNow(){ const t = scanTarget(); if (t && !DEX.open && !DEX.busy) openScan(t.el, t.subject, scanOpts(t)); }
 function tapHeld(name, i){
+  if (FEED.amt) return feedTap(name, i);
   const A = AREAS[name], mon = A.get()[i];
   if (!A.equip || !mon?.item) return tapSlot(name, i);
   if (doubleTap(`${name}|${i}|held`)){ scanTap(name, i, true); return scanNow(); }
@@ -744,6 +781,7 @@ function tapHeld(name, i){
   tapSlot(name, i);
 }
 function tapSlot(name, i){
+  if (FEED.amt) return feedTap(name, i);
   const A = AREAS[name];
   if (A.kind !== 'offer' && doubleTap(`${name}|${i}`) && A.get()[i]){ scanTap(name, i, false); return scanNow(); }
   if (scanMode() && A.kind !== 'offer') return scanTap(name, i, false);
@@ -830,15 +868,11 @@ const moveStars = n => `<span class="mv__stars" aria-label="${n} star move">${'<
 // side: extra HTML under the odds on the right (a Change button)
 function moveRow(k, sig, chance, side = ''){
   const m = MOVES[k];
-  const hits = m.hits ? ` ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : '';
-  const head = m.kind === 'sup'
-    ? `Support, ${TARGET_NAME[m.target] || ''}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
-    : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : `${m.power}% of Attack`}${hits}`;
   const odds = chance != null ? `${chance}%` : m.chance ? `${m.chance}% chance` : '';
   const title = chance != null ? `Used ${chance}% of the time` : m.chance ? `A Pokémon taught it uses it ${m.chance}% of the time, and its signature move otherwise` : '';
   return `<div class="mv${sig ? ' mv--sig' : ''}">
-    <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
-    <small>${head}</small>${m.fx ? `<small class="mv__fx">${m.fx}</small>` : ''}${moveStars(m.star)}</span>
+    <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${kindTag(m)}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
+    <small class="mv__desc">${moveDesc(m)}</small>${moveStars(m.star)}</span>
     ${side ? '<span class="mv__side">' : ''}<span class="mv__pp${chance === 0 ? ' out' : ''}${chance == null ? '' : ' mv__pp--pct'}" title="${title}">${odds}</span>${side}${side ? '</span>' : ''}</div>`;
 }
 function moveChip(k, sig){
@@ -1049,10 +1083,75 @@ function updateMapHud(){
   pop.hidden = true;                                       // the RotomDex scans what you tap instead (syncSelScan)
 }
 // the popup's entries use the Pokédex layout, filled in with this Pokémon's own stars, EXP, held item and moves
-// a Pokémon's moves in its scan; one in your party or daycare gets a Change button on each (see swapOptions)
+/* ---------- releasing a Pokémon ----------
+   A party or daycare Pokémon's scan has a Release button you hold down (so it can't happen by accident). It can't be
+   your last party Pokémon. A released Pokémon leaves an EXP Candy worth TUNE.releaseCandy of the EXP it earned since
+   it joined (m.gained), unless it earned none or nobody left in your party can still level up; then it leaves nothing.
+   The candy must be given to a party Pokémon before you can do anything else: the party glows, everything else waits. */
+const FEED = { amt: 0, from: '' };
+const releasable = m => !!(R.daycare?.includes(m) || (R.party?.includes(m) && partyCount() > 1));
+function releaseHTML(m){
+  if (!DEX.scan || !(R.party?.includes(m) || R.daycare?.includes(m))) return '';
+  const ok = releasable(m);
+  return `<div class="dexrelease"><button class="holdbtn" type="button" data-release ${ok ? '' : 'disabled'}><span class="holdbtn__fill"></span><span class="holdbtn__text">${ok ? `Hold to release ${nm(m)}` : 'Your last Pokémon can\'t be released'}</span></button></div>`;
+}
+function releaseMon(m){
+  if (!releasable(m)) return;
+  const name = nm(m), pi = R.party.indexOf(m), di = R.daycare.indexOf(m);
+  const amt = Math.round((m.gained || 0) * TUNE.releaseCandy * 100) / 100;
+  let item = '';
+  if (m.item){
+    const b = R.bag.indexOf(null), iname = ITEM[m.item.id].name;
+    if (b >= 0){ R.bag[b] = m.item; item = ` Its ${iname} went back in your bag.`; } else item = ` Your bag was full, so its ${iname} went with it.`;
+  }
+  if (pi >= 0) R.party[pi] = null; else R.daycare[di] = null;
+  UI.sel = null; DEX.swap = null;
+  closeDex();
+  if (amt > 0 && partyMons().some(x => x.star < 3)){
+    FEED.amt = amt; FEED.from = name;
+    $('#feedbar-candy').src = CANDY_SPR;
+    $('#feedbar-text').textContent = `${name} was released and left an EXP Candy (+${pct(amt)} of a level). Tap a glowing Pokémon to give it.${item}`;
+    $('#feedbar').hidden = false; document.body.classList.add('feeding');
+  } else toast('party', `${name} was released.${amt > 0 ? ' Nobody in your party can still level up, so it left nothing behind.' : ''}${item}`);
+  refresh();
+}
+// while an EXP Candy waits: tapping a party Pokémon that can level up gives it the candy; anything else just nudges
+function feedTap(name, i){
+  const m = name === 'M.party' ? R.party[i] : null;
+  if (!m || m.star >= 3){
+    if (name === 'M.party') shake('M.party', i);
+    const bar = $('#feedbar'); bar.classList.remove('nudge'); void bar.offsetWidth; bar.classList.add('nudge');
+    return;
+  }
+  const amt = FEED.amt, el = AREAS['M.party'].els[i]?.el, before = nm(m);
+  const from = $('#feedbar-candy').getBoundingClientRect();
+  FEED.amt = 0; $('#feedbar').hidden = true; document.body.classList.remove('feeding');
+  const evo = gainExp(m, amt);
+  refresh();
+  toast('party', !evo.length ? `${before} ate the EXP Candy and gained ${pct(amt)} of a level.`
+    : before !== nm(m) ? `${before} ate the EXP Candy and evolved into ${nm(m)}!` : `${before} ate the EXP Candy and reached ★${m.star}!`);
+  if (el && !REDUCED){
+    fly(CANDY_SPR, { x: from.left, y: from.top, size: from.width }, el, { slide: true }).then(() => {
+      el.classList.remove('pop', 'lvlup'); void el.offsetWidth; el.classList.add('pop'); if (evo.length) el.classList.add('lvlup');
+    });
+  }
+}
+$('#dex-body').addEventListener('pointerdown', e => {
+  const b = e.target.closest('[data-release]'); const m = DEX.scan?.mon;
+  if (!b || b.disabled || !m || DEX.busy) return;
+  e.preventDefault();
+  const fill = b.querySelector('.holdbtn__fill');
+  const a = fill.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: REDUCED ? 600 : 1100, easing: 'linear', fill: 'forwards' });
+  const stop = () => { a.cancel(); b.removeEventListener('pointerup', stop); b.removeEventListener('pointerleave', stop); b.removeEventListener('pointercancel', stop); };
+  b.addEventListener('pointerup', stop); b.addEventListener('pointerleave', stop); b.addEventListener('pointercancel', stop);
+  a.finished.then(() => { stop(); releaseMon(m); }).catch(() => {});
+});
+const ICON_SWAP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h13l-3.5-3.5M20 16H7l3.5 3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const ICON_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+// a Pokémon's moves in its scan; one in your party or daycare gets a swap button on each (see swapOptions)
 function monMovesHTML(m){
   const odds = monOdds(m), edit = !!(R.party?.includes(m) || R.daycare?.includes(m)) && !!DEX.scan;
-  const btn = slot => edit ? `<button class="mv__swap" type="button" data-swap="${slot}" aria-expanded="${DEX.swap === slot}">${DEX.swap === slot ? 'Cancel' : 'Change'}</button>` : '';
+  const btn = slot => edit ? `<button class="mv__swap" type="button" data-swap="${slot}" aria-expanded="${DEX.swap === slot}" aria-label="${DEX.swap === slot ? 'Cancel' : 'Switch this move'}" title="${DEX.swap === slot ? 'Cancel' : 'Switch this move'}">${DEX.swap === slot ? ICON_X : ICON_SWAP}</button>` : '';
   const picker = slot => {
     if (!edit || DEX.swap !== slot) return '';
     const opts = swapOptions(m, slot), sig = slot === 'sig';
@@ -1081,6 +1180,7 @@ function mapMonHTML(m){
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
       <div class="dexkv">${movesLabel(f.star)}<div class="mvlist">${monMovesHTML(m)}</div></div>
+      ${releaseHTML(m)}
     </div>
   </div>`;
 }
@@ -2152,10 +2252,7 @@ function feedCandy(i){
   let msg;
   if (m.star >= 3){ msg = `${nm(m)} ate the EXP Candy, but it's already at ★3.`; }
   else {
-    const before = nm(m), evo = [];
-    m.exp += TUNE.candyExp;
-    while (m.exp >= 1 && m.star < 3){ m.exp -= 1; evo.push(levelUp(m)); }
-    if (m.star >= 3) m.exp = 1;
+    const before = nm(m), evo = gainExp(m, TUNE.candyExp);
     msg = !evo.length ? `${before} ate the EXP Candy and gained ${pct(TUNE.candyExp)} of a level.`
       : before !== nm(m) ? `${before} ate the EXP Candy, reached ★${m.star} and evolved into ${nm(m)}!` : `${before} ate the EXP Candy and reached ★${m.star}!`;
     W.leveled = evo.length ? m.uid : null;
@@ -2431,10 +2528,6 @@ function teach(m, k, i){
   countCoins($('#tutor-coins'), coins, R.coins);
   const el = AREAS['M.party'].els[i]?.el; if (el){ el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
 }
-function moveMeta(m){
-  return m.kind === 'sup' ? `Support, ${TARGET_NAME[m.target]}${m.heal ? `, heals ${pct(m.heal)}` : ''}`
-    : `${SHAPE_NAME[m.shape]}, ${m.power == null ? 'special' : m.power === 0 ? 'no damage' : m.power + '% of Attack'}${m.hits ? `, ×${m.hits[0]}${m.hits[1] !== m.hits[0] ? '–' + m.hits[1] : ''}` : ''}`;
-}
 // the party in the bottom corner, while a move is picked: who can learn it glows, everyone else dims
 // the party in the bottom corner lights up where a tap does something: with a move picked at the Move Tutor, who can
 // learn it (the rest dim); placing a wild Pokémon, every slot; feeding a candy, every Pokémon
@@ -2445,6 +2538,10 @@ function hudMarkParty(){
     el.toggleAttribute('data-learn', pick && !R.bag[i]);
     el.toggleAttribute('data-nolearn', pick && !!R.bag[i]);
   });
+  if (FEED.amt){       // an EXP Candy to give: who can eat it glows, the rest dim
+    AREAS['M.party']?.els.forEach(({ el }, i) => { const m = R.party[i]; el.toggleAttribute('data-learn', !!m && m.star < 3); el.toggleAttribute('data-nolearn', !!m && m.star >= 3); });
+    return;
+  }
   const k = screen === 'scr-tutor' ? TU.teaching : null, place = screen === 'scr-wild' && W.phase === 'place', feed = screen === 'scr-wild' && W.phase === 'feed';
   AREAS['M.party']?.els.forEach(({ el }, i) => {
     const m = R.party[i], can = k ? !!(m && canLearn(m, k)) : place || (feed && !!m);
@@ -2461,8 +2558,8 @@ RENDER['scr-tutor'] = () => {
     return `<div class="mvcard trcard" data-k="${k}" aria-pressed="${TU.teaching === k}" role="button" tabindex="0"${afford ? '' : ' data-block="poor" aria-disabled="true"'}>
       <div class="trcard__slot"></div>
       <div class="trcard__body">
-        <span class="mvcard__name">${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
-        <span class="mvcard__meta">${moveMeta(mv)}, used ${mv.chance}% of the time${mv.fx ? `. ${mv.fx}` : ''}</span>
+        <span class="mvcard__name">${kindTag(mv)}${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
+        <span class="mvcard__meta">${moveDesc(mv)} <span class="mvcard__chance">Used ${mv.chance}% of the time.</span></span>
         <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
       </div>
       <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'too expensive'}</small></span>

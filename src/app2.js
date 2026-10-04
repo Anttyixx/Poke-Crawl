@@ -760,12 +760,7 @@ async function enterBattle(kind, opt){
 function awardXP(share){
   const party = partyMons(), list = [];
   const give = (m, amt, inParty) => {
-    const before = { star: m.star, exp: m.exp, form: m.form }, evo = [];
-    if (m.star < 3){
-      m.exp += amt;
-      while (m.exp >= 1 && m.star < 3){ m.exp -= 1; evo.push(levelUp(m)); }
-      if (m.star >= 3) m.exp = 1;
-    }
+    const before = { star: m.star, exp: m.exp, form: m.form }, evo = gainExp(m, amt);
     list.push({ m, before, after: { star: m.star, exp: m.exp, form: m.form }, evo, inParty });
   };
   party.forEach(m => give(m, share, true));

@@ -1280,3 +1280,34 @@ html, body, *{ scrollbar-width:none; }
   0%  { box-shadow: 0 0 0 0 rgba(255,255,255,.95), 0 0 26px 8px rgba(94,232,255,.95); }
   100%{ box-shadow: 0 0 0 10px rgba(255,255,255,0), 0 0 0 0 rgba(94,232,255,0); }
 }
+/* what kind of move it is, first thing on the line: Attack (red), Support (green), Defense (blue) */
+.mvkind{ display:inline-block; font-style:normal; font-size:9.5px; font-weight:750; letter-spacing:.06em; text-transform:uppercase; line-height:1.5;
+  padding:0 6px; border-radius:5px; margin-right:6px; vertical-align:2px; border:1px solid currentColor; }
+.mvkind--attack{ color:#ff8a72; background:rgba(255,110,90,.12); }
+.mvkind--support{ color:#7fe39a; background:rgba(110,220,140,.12); }
+.mvkind--defense{ color:#79b8ff; background:rgba(110,170,255,.12); }
+.mv__name small.mv__desc{ color:#b7bfd0; font-size:12px; line-height:1.4; margin-top:3px; }
+.mvcard__chance{ color:var(--ink-faint); }
+/* the swap button on each of a party Pokémon's moves: an icon */
+.mv__swap{ display:grid; place-items:center; width:34px; height:30px; padding:0; }
+.mv__swap svg{ width:18px; height:18px; display:block; }
+/* hold-to-release: the bar fills while you hold; let go early and nothing happens */
+.dexrelease{ margin-top:4px; }
+.holdbtn{ position:relative; overflow:hidden; appearance:none; font:inherit; font-size:13px; font-weight:650; color:#ffb3a8; cursor:pointer;
+  background:rgba(255,90,78,.08); border:1px solid rgba(255,110,95,.55); border-radius:10px; padding:9px 14px; width:100%;
+  user-select:none; -webkit-user-select:none; touch-action:none; -webkit-touch-callout:none; }
+.holdbtn__fill{ position:absolute; inset:0; background:rgba(255,90,78,.35); transform:scaleX(0); transform-origin:0 50%; pointer-events:none; }
+.holdbtn__text{ position:relative; }
+.holdbtn:disabled{ cursor:default; color:var(--ink-faint); border-color:var(--line); background:none; }
+/* an EXP Candy waiting to be given: a bar above your party; the rest of the screen waits until it's given */
+.feedbar{ position:fixed; z-index:2950; left:calc(16px + env(safe-area-inset-left, 0px)); right:16px; bottom:calc(150px + env(safe-area-inset-bottom, 0px));
+  max-width:420px; display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px;
+  background:#232a38; border:1px solid color-mix(in srgb, var(--glow-selected) 60%, #2c3342); color:var(--ink); font-size:13.5px; line-height:1.35;
+  box-shadow:0 8px 22px rgba(0,0,0,.55); }
+.feedbar[hidden]{ display:none; }
+.feedbar img{ width:40px; height:40px; image-rendering:pixelated; flex:none; animation: rdCandy 1.4s ease-in-out infinite; }
+@keyframes rdCandy{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-4px); } }
+.feedbar.nudge{ animation: nudge .4s ease; }
+@keyframes nudge{ 20%{ transform:translateX(-6px); } 40%{ transform:translateX(6px); } 60%{ transform:translateX(-4px); } 80%{ transform:translateX(3px); } }
+@media (max-width:520px){ .feedbar{ bottom:calc(132px + env(safe-area-inset-bottom, 0px)); } }
+body.feeding .screen, body.feeding #rotomdex, body.feeding #mapbag{ pointer-events:none; }
