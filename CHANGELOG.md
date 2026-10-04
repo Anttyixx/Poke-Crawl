@@ -39,6 +39,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 ## 0.3.0 (2026-10-02)
 
+- Wild Pokémon join with 0 EXP instead of a random head start.
 ### Changed
 - The Pokédex is now the RotomDex. Rotom Pokédex waits in the top-right corner of every screen; tap it and it hops up, swoops across the screen and opens the RotomDex as a popup over the game, instead of a separate screen.
 - Wild Pokémon now leap onto the screen from different spots along the top half of its edges, at staggered moments, before you choose one.

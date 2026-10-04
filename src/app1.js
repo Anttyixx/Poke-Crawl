@@ -1927,7 +1927,7 @@ function openNode(t){
 const W = { offer: [], home: -1, token: 0, phase: 'pick', done: false, arrived: [], entering: false, scanning: -1, pressed: -1e9, candy: false, leveled: null };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
-  Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star, star < 3 ? Math.random() * .4 : 1)),
+  Object.assign(W, { offer: shuffle([...WILD_LINES]).slice(0, 3).map(l => makeMon(l, star)),
     home: -1, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1 });
   $('#wild-act').hidden = true;
   const all = REDUCED;                                      // reduced motion: they are simply there
