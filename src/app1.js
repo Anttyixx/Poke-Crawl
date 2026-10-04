@@ -63,7 +63,7 @@ const TUNE = {
   tutorPrice: { 1: 40, 2: 80, 3: 150 }, rerollStep: 20,
   moveLimit: 12, moveLimitStep: 2,                   // moves a Pokémon can use per battle at ★1, and how much each star adds
   taughtMax: 1,                                      // moves besides its signature: every Pokémon knows 2 moves in all
-  daycareSize: 10,
+  daycareSize: 8,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   wildTierChance: .6,
@@ -611,7 +611,6 @@ const AREA_CFG = {
   // at the Poké Mart, with an item picked, tapping an empty bag slot buys it into that slot
   'M.bag':   { holds:'item', kind:'bag', preset:'hud', get: () => R.bag, equip: true,
     onTap: i => screen === 'scr-item' && MT.picked != null ? martPlace(i) : (screen === 'scr-tutor' && TU.teaching && (TU.teaching = null, refresh()), false) },
-  'D.party': { holds:'mon', kind:'party', preset:'party', get: () => R.party },
   'D.day':   { holds:'mon', kind:'daycare', preset:'party', get: () => R.daycare },
 };
 function mountAreas(){
@@ -1033,7 +1032,7 @@ const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mar
    of the screen; tap another slot to move, swap or hand over an item. Tap it again, the popup, or the map to close. */
 let mapIntro = false;     // the starter-to-map intro is playing: input stays locked but the party and bag show
 function updateMapHud(){
-  const on = (!wiping || mapIntro) && ['scr-map', 'scr-tutor', 'scr-wild', 'scr-item'].includes(screen) && !!R.party;
+  const on = (!wiping || mapIntro) && ['scr-map', 'scr-tutor', 'scr-wild', 'scr-item', 'scr-daycare'].includes(screen) && !!R.party;
   $('#mapteam').hidden = $('#mapbag').hidden = !on;
   if (on){ renderArea('M.party'); renderArea('M.bag'); hudMarkParty(); }
   const sel = on ? UI.sel : null, c = sel && AREAS[sel.area]?.get()[sel.i], pop = $('#mappop');
@@ -2496,15 +2495,15 @@ const DC = { postGym: false };
 function openDaycare(postGym){ DC.postGym = postGym; padDaycare(); }
 RENDER['scr-daycare'] = () => {
   padDaycare();
-  renderArea('D.party'); renderArea('D.day');
+  renderArea('D.day');
   $('#day-title').textContent = DC.postGym ? `Gym ${R.mapNo} cleared` : 'Daycare';
   $('#day-sub').textContent = (DC.postGym ? 'The daycare is open before you head out. ' : '')
-    + `Tap a Pokémon, then another slot to move or swap it (tap the RotomDex to scan it). The daycare holds ${TUNE.daycareSize}, and its Pokémon earn half as much EXP as your party.`;
-  $('#day-count').textContent = `${partyCount()} of 6`;
+    + `Tap a Pokémon in your party (bottom left), then a daycare slot to leave it here, or the other way round. Daycare Pokémon earn half as much EXP as your party.`;
   $('#day-count2').textContent = `${daycareCount()} of ${TUNE.daycareSize}`;
-  renderDetail('day-detail', 'Tap a Pokémon to see its stats and moves.');
   renderNotice('day-notice');
-  $('#day-go').textContent = DC.postGym ? `Continue to map ${R.mapNo + 1}` : 'Back to map';
+  const go = $('#day-go');
+  go.textContent = DC.postGym ? `Continue to map ${R.mapNo + 1}` : 'Back to map';
+  go.classList.toggle('btn--go', DC.postGym);
 };
 $('#day-go').addEventListener('click', () => {
   if (!DC.postGym) return toMap();

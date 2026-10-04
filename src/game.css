@@ -363,9 +363,13 @@ button{ font:inherit; color:inherit; }
 .pickstage + .detail.reveal{ animation: revealIn .35s ease both; }
 @keyframes revealIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
 
-/* ---------- daycare: 10 slots, five across ---------- */
-.slots--day{ grid-template-columns: repeat(5, minmax(0, 63px)); gap:8px 10px; }
-@media (max-width:520px){ .slots--day{ gap:8px 6px; } }
+/* ---------- daycare: 8 slots, four across; your party and bag sit in the bottom corners ---------- */
+.slots--day{ grid-template-columns: repeat(4, minmax(0, 76px)); gap:12px 14px; justify-content:center; }
+@media (max-width:520px){ .slots--day{ grid-template-columns: repeat(4, minmax(0, 68px)); gap:10px 10px; } }
+#scr-daycare .scr{ padding-bottom:calc(var(--hud-room, 156px) + 24px + env(safe-area-inset-bottom, 0px)); }
+@media (max-width:520px){ #scr-daycare{ --hud-room: 136px; } }
+#day-notice{ margin:0 0 10px; } #day-notice:empty{ display:none; }
+.day__actions{ justify-content:flex-end; margin-top:16px; }
 
 /* ---------- mart ---------- */
 .martcards{ grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }

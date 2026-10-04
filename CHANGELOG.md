@@ -18,6 +18,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **Daycare, like the other screens.** The daycare's slots sit in the middle and your party and bag are in the bottom corners, just like on the map: tap a Pokémon in your party, then a daycare slot, to leave it there (or the other way round). The daycare now holds 8 Pokémon instead of 10.
 - **After a battle.** The winning side's Pokémon do a little victory dance, then you're taken straight back to the map (no more results window). Notices there say what happened and how much EXP your party earned, your Pokémon's EXP bars fill up, and anyone who levels up or evolves flashes and gets a notice of its own ("Bulbasaur evolved into Ivysaur!"). After a gym you go to the daycare as before, and the same happens there.
 - Losing a trainer battle still earns half the EXP a win would have (you still lose a life).
 - Putting a wild Pokémon in your party takes you straight back to the map.

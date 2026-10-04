@@ -130,19 +130,14 @@
 
   <!-- daycare -->
   <section class="screen" id="scr-daycare" aria-label="Daycare">
-    <button class="btn btn--go btn--corner" id="day-go"></button>
-    <div class="scr">
+    <!-- the daycare's slots in the middle; your party and bag sit in the bottom corners, as on the map -->
+    <div class="scr daycare">
       <div class="scr__head"><span class="nodeicon" data-type="daycare">🏡</span><h1 class="title" id="day-title">Daycare</h1></div>
       <p class="sub" id="day-sub"></p>
-      <h2 class="panel-title">Party <small id="day-count"></small></h2>
-      <div class="partygrid">
-        <p class="rowlabel">Front row</p><div class="slots" data-area="D.party" data-part="front"></div>
-        <p class="rowlabel">Back row</p><div class="slots" data-area="D.party" data-part="back"></div>
-      </div>
+      <p class="notice" id="day-notice"></p>
       <h2 class="panel-title">Daycare <small id="day-count2"></small></h2>
       <div class="game slotbox"><div class="slots slots--day" data-area="D.day"></div></div>
-      <div class="detail" id="day-detail"></div>
-      <p class="notice" id="day-notice"></p>
+      <div class="actions day__actions"><button class="btn" id="day-go" type="button"></button></div>
     </div>
   </section>
 

@@ -846,7 +846,7 @@ async function afterBattle(){
   const a = AFTER; AFTER = null;
   if (!a) return;
   if (a.heart) document.querySelectorAll('#hud-hearts .heart')[R.lives]?.classList.add('breaking');
-  const day = screen === 'scr-daycare', A = AREAS[day ? 'D.party' : 'M.party'];
+  const A = AREAS['M.party'];                        // (on the map, or at the daycare after a gym: your party in the corner)
   const notes = [...a.msgs];
   if (a.xp){
     const els = new Map(R.party.map((m, i) => m && [m.uid, A.els[i]?.el]).filter(x => x && x[1]));
