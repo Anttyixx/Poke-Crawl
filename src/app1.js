@@ -97,7 +97,8 @@ const known = m => [FORM[m.form].sig, ...m.taught];
    ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
 // how many moves a Pokémon can use in one battle (a move that happens costs one); then it Struggles. Grows with its stars
 const moveLimit = star => TUNE.moveLimit + TUNE.moveLimitStep * (star - 1);
-const limitHTML = star => `<b>${moveLimit(star)} moves per battle</b>, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}.`;
+// the "Moves" heading in a Pokémon's entry, with its move limit beside it
+const movesLabel = star => `<span>Moves <em class="dexkv__aside" title="It can use ${moveLimit(star)} moves per battle, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}">· ${moveLimit(star)} per battle</em></span>`;
 // a taught move's percent chance to be used, with this held item
 function moveChance(k, item){
   const m = MOVES[k], o = item && ITEM[item]?.odds;
@@ -999,9 +1000,7 @@ function mapMonHTML(m){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
-      <div class="dexkv"><span>Move limit</span><p>${limitHTML(f.star)}</p></div>
-      <div class="dexkv"><span>Signature move</span><div class="mvlist">${moveRow(f.sig, true, monOdds(m)[f.sig])}</div></div>
-      <div class="dexkv"><span>Moves</span><div class="mvlist">${taughtSlotsHTML(m, false)}</div></div>
+      <div class="dexkv">${movesLabel(f.star)}<div class="mvlist">${moveRow(f.sig, true, monOdds(m)[f.sig])}${taughtSlotsHTML(m, false)}</div></div>
     </div>
   </div>`;
 }
@@ -1094,9 +1093,8 @@ function dexMonHTML(f){
     </div>
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
-      <div class="dexkv"><span>Move limit</span><p>${limitHTML(f.star)}</p></div>
-      <div class="dexkv"><span>${sigs.length > 1 ? 'Signature moves' : 'Signature move'}</span><div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}</div></div>
-      <div class="dexkv"><span>Tutor moves</span><div>${tutor.length
+      <div class="dexkv">${movesLabel(f.star)}<div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}
+        <p class="dexnote dexnote--tutor">Can be taught:</p>${tutor.length
         ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
         : '<i class="dexnone">None</i>'}</div></div>
     </div>

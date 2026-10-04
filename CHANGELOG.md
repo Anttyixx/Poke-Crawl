@@ -17,7 +17,8 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 ### Changed
 - **Signature move by default, taught move by chance.** Instead of PP, a Pokémon uses its signature move unless its taught move comes up: each taught move has a chance, from 10% for the strongest to 25% for basic ones. The odds never change during a battle, and a Pokémon's info (and the battle tooltip) shows them, like Vine Whip 80% / Rollout 20%.
-- **Move limit.** Instead of PP, each Pokémon can use 12 moves per battle (14 at ★2, 16 at ★3), then it Struggles. The battle tooltip shows how many it has left.
+- **Move limit.** Instead of PP, each Pokémon can use 12 moves per battle (14 at ★2, 16 at ★3), then it Struggles. It's shown beside the Moves heading in a Pokémon's entry, and the battle tooltip shows how many it has left.
+- In the RotomDex and scans, a Pokémon's signature and other moves are listed together under one Moves heading.
 - **Smarter move choice.** If the move a Pokémon lands on would fail from where it stands, it uses its other move: in the back row, a Pokémon with an attack and a heal heals instead of wasting its turn. With nothing useful to do, it waits, which doesn't use up its move limit.
 - Items and moves you can't afford are greyed out and marked "too expensive" (tap one and the label flashes red and shakes), and items are greyed out with "no room" when your bag is full.
 - "Back to map" at the Poké Mart and the Move Tutor is no longer coloured in, so it doesn't look like a buy button.

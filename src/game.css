@@ -1200,3 +1200,6 @@ button{ font:inherit; color:inherit; }
 .dexsell{ margin-top:10px; padding:7px 14px; font-size:13.5px; align-self:flex-start; }
 /* a Pokémon's chance to pick each move */
 .mv__pp--pct{ font-family:var(--display); font-weight:700; font-size:14px; color:var(--ink); }
+/* the move limit, beside the "Moves" heading */
+.dexkv__aside{ font-style:normal; color:var(--ink-dim); white-space:nowrap; }
+.dexnote--tutor{ margin:10px 0 6px; }
