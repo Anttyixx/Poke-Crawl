@@ -37,6 +37,7 @@ const WILD_LINES = TEAM_LINES.filter(l => !STARTERS.includes(l));
 const lineTier = l => LINES[l][1][0].tier || 1;
 // three different wild lines for this map: each one from this map's tier (TUNE.wildTierChance), or else from any
 // earlier tier, so new Pokémon show up on every map and the earlier ones still turn up
+const wildMoveChance = () => Math.min(1, TUNE.wildMove.base + TUNE.wildMove.perMap * (R.mapNo - 1));
 function wildLinesFor(mapNo){
   const tier = clamp(mapNo, 1, 8), now = WILD_LINES.filter(l => lineTier(l) === tier), before = WILD_LINES.filter(l => lineTier(l) < tier);
   const out = [];
@@ -64,7 +65,8 @@ const TUNE = {
   daycareSize: 10,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
-  wildTierChance: .6,                                // each wild Pokémon is from this map's tier this often; else an earlier tier
+  wildTierChance: .6,
+  wildMove: { base: .10, perMap: .07 },              // chance a wild Pokémon knows a move besides its signature: 10% on map 1, +7% a map                                // each wild Pokémon is from this map's tier this often; else an earlier tier
   martStock: 4, martRerollStep: 20,
   sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
   bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
@@ -151,10 +153,11 @@ function learnable(m){
   const have = new Set([...known(m), ...(m.learned || [])]);      // (a move it learned before is switched to from its scan)
   return (LEARN[m.form] || []).filter(k => !have.has(k) && MOVES[k].star <= m.star && !(m.item?.id === 'assault-vest' && MOVES[k].kind === 'sup'));
 }
-function makeMon(line, star = 1, exp = 0){
+// taught: whether it arrives knowing a move besides its signature (starters don't; wild ones sometimes, see wildMoveChance)
+function makeMon(line, star = 1, exp = 0, taught = true){
   const m = { uid: 'm' + (++uidN), line, star, form: formFor(line, star), exp: star >= 3 ? 1 : exp, taught: [], item: null };
   const opts = learnable(m), off = opts.filter(k => MOVES[k].kind === 'off');
-  if (opts.length) m.taught.push(pick(off.length ? off : opts));       // arrives knowing one move besides its signature
+  if (taught && opts.length) m.taught.push(pick(off.length ? off : opts));
   // it learned the signature moves of the levels it grew through (on its own branch)
   const br = FORM[m.form].branch;
   for (let s2 = 1; s2 < star; s2++) remember(m, ...LINES[line][s2].filter(f => !f.branch || !br || f.branch === br).map(f => f.sig));
@@ -1835,7 +1838,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 // three starters across the middle of the screen. Tapping one picks it; tapping Rotom then scans it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
 const ST = { offer: [], home: -1, chosen: false, pressed: -1e9 };
-function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
+function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
 // tap a starter to pick it ("I Choose You!!" shows, and Rotom lights up to scan it); tap it again to put it back
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
@@ -2008,7 +2011,7 @@ function openNode(t){
 const W = { offer: [], home: -1, token: 0, phase: 'pick', done: false, arrived: [], entering: false, scanning: -1, pressed: -1e9, candy: false, leveled: null };
 function openWild(){
   const star = clamp(Math.floor(partyLevel() + .25), 1, 3);   // deliberately at or a touch behind your party
-  Object.assign(W, { offer: wildLinesFor(R.mapNo).map(l => makeMon(l, star)),
+  Object.assign(W, { offer: wildLinesFor(R.mapNo).map(l => makeMon(l, star, 0, Math.random() < wildMoveChance())),
     home: -1, phase: 'pick', done: false, candy: false, leveled: null, scanning: -1 });
   $('#wild-act').hidden = true;
   const all = REDUCED;                                      // reduced motion: they are simply there

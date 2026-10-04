@@ -58,7 +58,9 @@ function enemyUnit(line, star, mul, nMoves, item, formId){
 function buildEncounter(kind){
   // each opponent mirrors one of your Pokémon's levels, so a mixed-level party meets a mixed-level team
   const mons = partyMons(), n = mons.length, bonus = TUNE.perMap * (R.mapNo - 1);
-  const stars = mons.map(m => m.star).sort((a, b) => b - a);
+  const mirror = [...mons].sort((a, b) => b.star - a.star), stars = mirror.map(m => m.star);
+  // a trainer's Pokémon knows a second move only if the one of yours it mirrors does
+  const mirrorMoves = k => clamp(mirror[k]?.taught.length ?? 0, 0, TUNE.taughtMax);
   const nMoves = extra => clamp(1 + Math.floor((R.mapNo - 1) / 3) + extra, 1, TUNE.taughtMax);
   const item = p => Math.random() < p ? pick(ITEM_IDS) : null;
   // on maps 1-2, trainers skip lines that hit your Pokémon super-effectively, so an unlucky
@@ -71,7 +73,7 @@ function buildEncounter(kind){
     enc.title = pick(TRAINERS); enc.sub = `Sends out ${n} Pokémon to match yours.`;
     for (let k = 0; k < n; k++){
       const s = Math.max(1, stars[k] - (Math.random() < TUNE.trainerDrop ? 1 : 0));
-      enc.team.push(enemyUnit(trainerLine(), s, TUNE.enemyMul.trainer + bonus, nMoves(0), item(R.mapNo >= 3 ? .2 : 0)));
+      enc.team.push(enemyUnit(trainerLine(), s, TUNE.enemyMul.trainer + bonus, mirrorMoves(k), item(R.mapNo >= 3 ? .2 : 0)));
     }
   } else if (kind === 'boss'){
     const g = GYMS[R.mapNo - 1], typed = TEAM_LINES.filter(l => LINES[l][1][0].type === g.type);

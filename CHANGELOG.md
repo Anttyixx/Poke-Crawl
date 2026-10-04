@@ -43,6 +43,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 - Wild Pokémon join with 0 EXP instead of a random head start.
 - Scroll bars are hidden; pages and lists still scroll as before.
+- Starters now know just their signature move. Wild Pokémon usually do too, with a chance of a second move that grows on later maps (10% on map 1, up to about 60% on map 8). Trainers' Pokémon know a second move only when the Pokémon of yours they mirror does.
 ### Changed
 - The Pokédex is now the RotomDex. Rotom Pokédex waits in the top-right corner of every screen; tap it and it hops up, swoops across the screen and opens the RotomDex as a popup over the game, instead of a separate screen.
 - Wild Pokémon now leap onto the screen from different spots along the top half of its edges, at staggered moments, before you choose one.
