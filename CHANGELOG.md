@@ -18,6 +18,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **After a battle.** The winning side's Pokémon do a little victory dance, then you're taken straight back to the map (no more results window). Notices there say what happened and how much EXP your party earned, your Pokémon's EXP bars fill up, and anyone who levels up or evolves flashes and gets a notice of its own ("Bulbasaur evolved into Ivysaur!"). After a gym you go to the daycare as before, and the same happens there.
+- Losing a trainer battle still earns half the EXP a win would have (you still lose a life).
+- Putting a wild Pokémon in your party takes you straight back to the map.
 - **Battle start.** Instead of a 3-2-1 countdown, the field starts empty and the Pokémon run onto it into their places, bobbing and waddling as they go: yours up from the bottom edge of the battlefield, the opponent's down from the top. The fight starts as soon as they're all in. Skip puts them there at once.
 - **Clearer battle log.** Each round has its own box, every Pokémon is shown with its sprite next to its name, and each entry is tinted blue for your side or red for the opponent's. The log scrolls, and keeps the latest move in view unless you've scrolled up to read earlier ones.
 - **Battle slots without borders.** On the battlefield, each Pokémon stands on its own with just its HP bar in the top-right corner; the animated border shows only while it's acting (green) or being targeted (red). Tap a Pokémon for its stars, held item and moves.

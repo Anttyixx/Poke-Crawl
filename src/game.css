@@ -1270,3 +1270,9 @@ html, body, *{ scrollbar-width:none; }
 .bloglist [data-side="opp"]{ border-left-color:var(--foe); background:color-mix(in srgb, var(--foe) 7%, transparent); }
 .lw{ display:inline-flex; align-items:center; gap:3px; }
 .lw__pic{ width:22px; height:22px; margin:-5px 0 -5px -3px; image-rendering:pixelated; object-fit:contain; }
+/* a party Pokémon levelling up or evolving after a battle: a bright flash round its slot as the new sprite pops in */
+.slot.lvlup .slot__frame{ animation: lvlflash 1s ease-out; }
+@keyframes lvlflash{
+  0%  { box-shadow: 0 0 0 0 rgba(255,255,255,.95), 0 0 26px 8px rgba(94,232,255,.95); }
+  100%{ box-shadow: 0 0 0 10px rgba(255,255,255,0), 0 0 0 0 rgba(94,232,255,0); }
+}

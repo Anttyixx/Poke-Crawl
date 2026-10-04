@@ -699,7 +699,6 @@ function setupBattle(enc){
   const icon = $('#b-icon'); icon.dataset.type = enc.kind; icon.textContent = ICON[enc.kind];
   $('#b-title').textContent = enc.title; $('#b-sub').textContent = enc.sub;
   $('#b-foe-label').textContent = enc.title;
-  $('#b-result').classList.remove('show');
   speed = speedPref; syncBattleButtons(); status('');
 }
 function syncBattleButtons(){
@@ -773,9 +772,9 @@ function awardXP(share){
   R.daycare.filter(Boolean).forEach(m => give(m, share * TUNE.daycareRate, false));
   return { share, list };
 }
-async function animateXP(xp, els){
+async function animateXP(xp, els, preset = PRESET.result){
   const party = xp.list.filter(x => x.inParty), ov = new Map(party.map(x => [x.m.uid, { ...x.before }]));
-  const paint = () => { for (const x of party){ const el = els.get(x.m.uid); if (el) renderSlot(el, PRESET.result, monView(x.m, ov.get(x.m.uid))); } };
+  const paint = () => { for (const x of party){ const el = els.get(x.m.uid); if (el) renderSlot(el, preset, monView(x.m, ov.get(x.m.uid))); } };
   paint(); await sleep(500);
   for (const x of party) ov.set(x.m.uid, x.evo.length ? { ...x.before, exp: 1 } : x.after);
   paint(); await sleep(560);
@@ -788,78 +787,77 @@ async function animateXP(xp, els){
   ups.forEach(x => ov.set(x.m.uid, x.after));
   paint();
 }
-function resultParty(){
-  const wrap = document.createElement('div'); wrap.className = 'game slotbox';
-  const els = new Map();
-  for (const part of [[0, 1, 2], [3, 4, 5]]){
-    if (part[0] === 3 && !part.some(i => R.party[i])) continue;
-    const grid = document.createElement('div'); grid.className = 'slots';
-    for (const i of part){
-      const w = document.createElement('div'); w.className = 'slotwrap';
-      const el = createSlot(), m = R.party[i];
-      const name = document.createElement('div'); name.className = 'slotname'; name.textContent = m ? nm(m) : '';
-      renderSlot(el, PRESET.result, monView(m));
-      w.append(el, name); grid.append(w);
-      if (m) els.set(m.uid, el);
+// The battle's over: the winning side's Pokémon still standing dance for a moment, then it's straight back to the map
+// (or the daycare after a gym, or the end of the run). What the battle earned is shown there (see afterBattle).
+async function victoryDance(side){
+  const els = side ? living(side).map(elOf).filter(Boolean) : [];
+  status(side === 'you' ? 'You won!' : side === 'opp' ? `${B.enc.title} won.` : 'Both sides fell.');
+  if (instant() || REDUCED || !els.length) return sleep(instant() ? 150 : 700);
+  await Promise.all(els.map((el, k) => {
+    const img = el.querySelector('.slot__sprite img'), f = [];
+    for (let i = 0; i <= 32; i++){
+      const t = i / 32, s = Math.abs(Math.sin(t * Math.PI * 4));
+      f.push({ transform: `translateY(${(-s * 10).toFixed(1)}px) rotate(${(Math.sin(t * Math.PI * 4 + Math.PI / 2) * 10 * (t < .9 ? 1 : (1 - t) * 10)).toFixed(1)}deg) scale(${(1 + s * .06).toFixed(3)}, ${(1 - (1 - s) * .06).toFixed(3)})` });
     }
-    wrap.append(grid);
-  }
-  return { wrap, els };
+    f[f.length - 1] = { transform: 'none' };
+    img.style.transformOrigin = '50% 85%';
+    return img.animate(f, { duration: 2000, delay: k * 90, easing: 'linear' }).finished.catch(() => {}).then(() => { img.style.transformOrigin = ''; });
+  }));
 }
+// what the last battle earned, shown once you're back on the map or at the daycare
+let AFTER = null;
 async function finishBattle(outcome){
-  await sleep(speed === 0 ? 200 : 800);
   hideTip();
-  const enc = B.enc, won = outcome === 'win', card = $('#b-rcard');
-  let button = null, action = null, xp = null, els = null;
+  const enc = B.enc, won = outcome === 'win';
+  await victoryDance(won ? 'you' : outcome === 'lose' ? 'opp' : null);
+  const msgs = [];
+  let xp = null, next = toMap;
   if (won){
     const pay = TUNE.pay[enc.kind] + B.coins; R.coins += pay;
     xp = awardXP(TUNE.xp[enc.kind]);
-    let captured = '';
+    msgs.push(`You beat ${enc.title}! +${pay} coins, and your party gained ${pct(xp.share)} of a level.`);
     if (enc.kind === 'legendary'){
       const mon = makeMon(enc.legend.line, enc.legend.star), i = firstEmpty(R.party);
-      if (i >= 0){ R.party[i] = mon; captured = `You captured ${nm(mon)}. It joined your party.`; }
-      else if (depositDaycare(mon)) captured = `You captured ${nm(mon)}. Your party is full, so it went to the daycare.`;
-      else captured = `${nm(mon)} got away: your party and daycare are both full.`;
+      if (i >= 0){ R.party[i] = mon; msgs.push(`You captured ${nm(mon)}. It joined your party.`); }
+      else if (depositDaycare(mon)) msgs.push(`You captured ${nm(mon)}. Your party is full, so it went to the daycare.`);
+      else msgs.push(`${nm(mon)} got away: your party and daycare are both full.`);
     }
-    if (enc.kind === 'boss') R.gymsBeaten++;
-    const n = xp.list.filter(x => x.inParty).length;
-    const notes = xp.list.filter(x => x.evo.length).map(x => {
-      const from = x.evo[0].from, to = x.evo[x.evo.length - 1].to, where = x.inParty ? '' : ' in the daycare';
-      return from !== to ? `<div><b>${from}</b> reached ★${x.m.star} and evolved into <b>${to}</b>${where}.</div>`
-        : `<div><b>${to}</b> reached ★${x.m.star}${where}.</div>`;
-    });
-    if (captured) notes.push(`<div>${captured}</div>`);
-    if (R.daycare.some(Boolean)) notes.push('<div>Daycare Pokémon earned half as much EXP.</div>');
-    const title = enc.kind === 'boss' ? `Gym ${R.mapNo} cleared` : 'You won';
-    card.innerHTML = `<h2 class="title win">${title}</h2>
-      <p class="sub">+${pay} coins. ${n === 1 ? 'Your Pokémon earned' : `Each of your ${n} Pokémon earned`} ${pct(xp.share)} of a level.</p>
-      <div id="r-party"></div><div class="rnotes">${notes.join('')}</div><div class="actions" id="r-actions"></div>`;
-    const rp = resultParty(); els = rp.els;
-    // start the tiles at their pre-battle values; animateXP fills them
-    xp.list.filter(x => x.inParty).forEach(x => { const el = els.get(x.m.uid); if (el) renderSlot(el, PRESET.result, monView(x.m, x.before)); });
-    card.querySelector('#r-party').append(rp.wrap);
-    if (enc.kind === 'boss' && R.mapNo >= 8){ button = 'Finish the run'; action = () => openEnd(true); }
-    else if (enc.kind === 'boss'){ button = 'Go to the daycare'; action = () => wipeTo('scr-daycare', () => openDaycare(true), { color: NODE_COLOR('daycare'), mark: markHTML(ICON.daycare, 'Daycare') }); }
-    else { button = 'Back to map'; action = toMap; }
+    if (enc.kind === 'boss'){
+      R.gymsBeaten++;
+      next = R.mapNo >= 8 ? () => openEnd(true) : () => wipeTo('scr-daycare', () => openDaycare(true), { color: NODE_COLOR('daycare'), mark: markHTML(ICON.daycare, 'Daycare'), after: afterBattle });
+    }
   } else {
-    const before = R.lives; R.lives = Math.max(0, R.lives - 1);
+    R.lives = Math.max(0, R.lives - 1);
     if (enc.kind === 'boss'){ R.trail.pop(); R.at = R.trail[R.trail.length - 1]; }
-    const hearts = Array.from({ length: TUNE.lives }, (_, i) => HEART.replace('class="heart"', `class="heart${i < R.lives ? '' : i === before - 1 ? ' breaking' : ' lost'}"`)).join('');
-    const out = R.lives === 0;
-    const title = out ? 'Out of lives' : outcome === 'draw' ? 'Both sides fell' : 'You lost';
-    const sub = out ? 'That was your last life, so the run ends here.'
-      : `${R.lives} ${R.lives === 1 ? 'life' : 'lives'} left. No EXP or coins from this fight.` + (enc.kind === 'boss' ? " The gym will still be there when you're ready to try again." : '');
-    card.innerHTML = `<h2 class="title lose">${title}</h2><div class="hearts">${hearts}</div><p class="sub">${sub}</p><div class="actions" id="r-actions"></div>`;
-    if (out){ button = 'See how the run went'; action = () => openEnd(false); }
-    else { button = 'Back to map'; action = toMap; }
+    if (R.lives === 0) next = () => openEnd(false);
+    else {
+      if (enc.kind === 'trainer') xp = awardXP(TUNE.xp.trainer * TUNE.loseXP);
+      const left = `${R.lives} ${R.lives === 1 ? 'life' : 'lives'} left`;
+      msgs.push(`${outcome === 'draw' ? 'Both sides fell' : `You lost to ${enc.title}`}: ${left}.`
+        + (xp ? ` Your party still gained ${pct(xp.share)} of a level.` : enc.kind === 'boss' ? " The gym will still be there when you're ready." : ''));
+    }
   }
-  const acts = card.querySelector('#r-actions');
-  acts.innerHTML = `<button class="btn btn--go">${button}</button>`;
-  acts.querySelector('button').addEventListener('click', e => { e.currentTarget.disabled = true; action(); });
-  $('#b-result').classList.add('show');
-  if (xp && els) animateXP(xp, els);
+  AFTER = { xp, msgs, heart: !won };
+  next();
 }
-
+// back from a battle: the hearts and the notices, then your party's EXP bars fill (and anyone who levels up pops and
+// gets a notice of its own)
+async function afterBattle(){
+  const a = AFTER; AFTER = null;
+  if (!a) return;
+  if (a.heart) document.querySelectorAll('#hud-hearts .heart')[R.lives]?.classList.add('breaking');
+  const day = screen === 'scr-daycare', A = AREAS[day ? 'D.party' : 'M.party'];
+  const notes = [...a.msgs];
+  if (a.xp){
+    const els = new Map(R.party.map((m, i) => m && [m.uid, A.els[i]?.el]).filter(x => x && x[1]));
+    animateXP(a.xp, els, PRESET[A.preset]);
+    for (const x of a.xp.list.filter(x => x.evo.length)){
+      const from = x.evo[0].from, to = x.evo[x.evo.length - 1].to, where = x.inParty ? '' : ' in the daycare';
+      notes.push(from !== to ? `${from} evolved into ${to}!${where ? ` (${where.trim()})` : ''}` : `${to} reached ★${x.m.star}${where}!`);
+    }
+  }
+  for (const [k, text] of notes.entries()) setTimeout(() => toast('party', text), k * 2600);
+}
 /* ================= init ================= */
 mountAreas();
 buildField();

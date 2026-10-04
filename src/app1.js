@@ -55,7 +55,8 @@ const ITEM_IDS = ITEMS_DATA.map(i => i.id);
 const TUNE = {
   lives: 3, startCoins: 100,
   pay: { trainer: 60, boss: 150, legendary: 80 },
-  xp: { trainer: .1, boss: .15, legendary: .1 },   // share of a level EVERY party Pokémon earns per win (not split)
+  xp: { trainer: .1, boss: .15, legendary: .1 },
+  loseXP: .5,                                         // losing a trainer battle still earns this share of the win's EXP   // share of a level EVERY party Pokémon earns per win (not split)
   daycareRate: .5,
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
@@ -1025,7 +1026,7 @@ async function wipeTo(id, prepare, opt = {}){
   RD_BTN.classList.remove('is-wiping'); rdSync();
   opt.after?.();
 }
-const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: scrollMapToCurrent });
+const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: () => { scrollMapToCurrent(); afterBattle(); } });
 
 /* ---------- your team and bag on the map ----------
    the party sits bottom-left and the bag 2 by 2 bottom-right. Tap a slot to see it in a popup in the middle
@@ -2109,6 +2110,7 @@ function wildPlace(i){
   R.party[i] = mon; W.offer[W.home] = null; W.phase = 'done'; W.done = true;
   UI.notice = null;
   refresh(); flip(before); toast('party', msg);
+  setTimeout(() => { if (screen === 'scr-wild' && W.phase === 'done' && !wiping) toMap(); }, REDUCED ? 500 : 1300);   // then straight back to the map
 }
 function wildToDaycare(){
   const mon = W.offer[W.home], el = wildSlot(W.home);
