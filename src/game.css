@@ -1209,14 +1209,14 @@ button{ font:inherit; color:inherit; }
    which add to the wrapper's own transform) and run all the time, scaled by --dance. */
 @property --dance{ syntax:'<number>'; inherits:true; initial-value:0; }
 .rd-sprite{ --dance:0; transition:opacity .18s ease, --dance .55s ease-in-out;
-  animation:rdDance 1.3s ease-in-out infinite, rdGlow 1.1s ease-in-out infinite alternate; }
+  animation:rdDance .9s ease-in-out infinite, rdGlow 1.1s ease-in-out infinite alternate; }
 .rd-sprite.rd-ready{ --dance:1; }
 .rd-flying .rd-sprite{ --dance:0; transition:opacity .18s ease, --dance .25s ease-in; }
-@keyframes rdDance{
-  0%, 100%{ translate:calc(var(--dance) * -4px) 0;                         rotate:calc(var(--dance) * -9deg); }
-  25%     { translate:calc(var(--dance) * -1px) calc(var(--dance) * -4px); rotate:calc(var(--dance) * -3deg); }
-  50%     { translate:calc(var(--dance) * 4px) 0;                          rotate:calc(var(--dance) * 9deg); }
-  75%     { translate:calc(var(--dance) * 1px) calc(var(--dance) * -4px);  rotate:calc(var(--dance) * 3deg); }
+@keyframes rdDance{                                          /* a small jiggle: a light tilt each way and a tiny bob */
+  0%, 100%{ translate:calc(var(--dance) * -1px) 0;                           rotate:calc(var(--dance) * -4deg); }
+  25%     { translate:0 calc(var(--dance) * -1.5px);                         rotate:0deg; }
+  50%     { translate:calc(var(--dance) * 1px) 0;                            rotate:calc(var(--dance) * 4deg); }
+  75%     { translate:0 calc(var(--dance) * -1.5px);                         rotate:0deg; }
 }
 @keyframes rdGlow{
   from{ filter:drop-shadow(0 0 3px rgb(94 232 255 / calc(var(--dance) * .5))) drop-shadow(0 0 1px rgb(94 232 255 / calc(var(--dance) * .4))); }
