@@ -758,9 +758,12 @@ function rejectOrSwitch(name, i, why){
   shake(name, i); UI.notice = { text: why }; refresh();
 }
 // in scan mode a tap only picks what Rotom scans next: nothing moves (close the scan first)
+// tapping the very Pokémon or item being scanned closes the scan (the selection stays)
+const isScanned = subject => !!subject && scanMode() && DEX.scan.mon === subject;
 function scanTap(name, i, held){
   const A = AREAS[name], c = A.get()[i];
   if (!c || A.locked || wiping) return;
+  if (isScanned(held && c.item ? c.item : c)) return closeDex();
   UI.sel = { area: name, i, ...(held && c.item ? { held: true } : {}) }; UI.focus = 'sel'; UI.notice = null;
   refresh();
 }
@@ -1946,6 +1949,7 @@ function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => m
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
   const twice = doubleTap('starter|' + i);
+  if (!twice && isScanned(ST.offer[i])) return closeDex();
   ST.home = ST.home === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('starter-act', $('#starter-act'), ST.home >= 0);
   refresh();
@@ -2165,6 +2169,7 @@ async function wildEntrance(){
 function wildTap(i){
   if (W.phase !== 'pick' || wiping || W.entering || !W.offer[i] || DEX.busy) return;
   const twice = doubleTap('wild|' + i);
+  if (!twice && isScanned(W.offer[i])) return closeDex();
   W.scanning = W.scanning === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('wild-act', $('#wild-act'), W.scanning >= 0);
   refresh();
@@ -2321,6 +2326,7 @@ function martPick(i){
   const why = martBlock(i);
   UI.sel = null;
   const twice = doubleTap('shop|' + i);
+  if (!twice && isScanned(MT.look[i])) return closeDex();
   MT.picked = MT.picked === i && !scanMode() && !twice ? null : i; UI.focus = 'shop';
   UI.notice = MT.picked != null && why === 'full' ? { text: 'No room: your bag is full. Give an item to a Pokémon, or sell one (tap it in your bag), first.' } : null;
   refresh();
