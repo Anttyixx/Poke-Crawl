@@ -24,7 +24,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
-- **Roles.** Every Pokémon has one role (Striker, Tank, Support or All-Rounder), shown in its scan and RotomDex entry, and you can search the RotomDex by role. In the RotomDex, only a line's first Pokémon says where it's found (like "Wild from map 3"); its evolutions say what they evolve from.
+- **Roles.** Every Pokémon has a role (Striker, Tank, Support or All-Rounder) and a sub-role that says how it plays it, like Healer Support, Splash Striker or Bulky Tank, shown in its scan and RotomDex entry (hover it for what it means). You can search the RotomDex by role or sub-role. In the RotomDex, only a line's first Pokémon says where it's found (like "Wild from map 3"); its evolutions say what they evolve from.
 - **Abilities speak this game's language.** Every ability now describes what it does with HP, Attack and Speed, rows and lanes, and damage over time, instead of Defense, Special Attack, accuracy, weather or status conditions (abilities still aren't active in battle).
 - **New sprites.** Every Pokémon and item has a new sprite, from a set that goes up to Generation 9.
 - EXP is shown in points (100 to a level) instead of percentages: after a battle you'll see "your party gained 10 EXP each", and a Pokémon's scan shows its EXP like 50/100.

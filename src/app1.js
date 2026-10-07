@@ -53,8 +53,18 @@ function pickWeighted(a, w){
   for (const x of a) if ((r -= w(x)) < 0) return x;
   return a[a.length - 1];
 }
-// a Pokémon's role (data.json "role": Striker, Tank, Support or All-Rounder), shown in the RotomDex and scans
-const roleHTML = f => f.role ? `<b class="dexrole">${f.role}</b>` : '';
+// a Pokémon's role (data.json "role": Striker, Tank, Support or All-Rounder) and its sub-role ("sub"), shown together
+// in the RotomDex and scans as "Healer Support" or "Splash Striker"; hovering it says what that means
+const SUB_HELP = {
+  Heavy: 'hits one target hard', Splash: 'hits several enemies at once', 'Multi-hit': 'hits several times in one move',
+  Fast: 'acts early with high Speed', Draining: 'heals itself from the damage it deals', Debuffing: 'weakens enemies as it fights',
+  Bulky: 'has lots of HP to soak up hits', Sustain: 'heals itself to stay in the fight', Healer: 'heals its teammates',
+  Buffer: 'makes its teammates stronger or faster', Debuffer: 'lowers enemies\' Attack and Speed', Utility: 'helps the team in many small ways',
+  Balanced: 'a bit of everything',
+};
+const ROLE_HELP = { Striker: 'deals damage', Tank: 'takes hits for the team', Support: 'helps the team', 'All-Rounder': 'fits anywhere' };
+const roleName = f => f.role ? (f.sub ? `${f.sub} ${f.role}` : f.role) : '';
+const roleHTML = f => f.role ? `<b class="dexrole" title="${f.role}: ${ROLE_HELP[f.role] || ''}. ${f.sub ? `${f.sub}: ${SUB_HELP[f.sub] || ''}.` : ''}">${roleName(f)}</b>` : '';
 // the species a form evolves from (on its own branch), or null for a line's first Pokémon
 function evolvesFrom(f){
   const own = FORMS.filter(x => x.line === f.line && x.name === f.name), first = Math.min(...own.map(x => x.star));
@@ -1542,7 +1552,7 @@ const DEX_BUILD = {
   mons: () => `<p class="dexintro">${SPECIES_N} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
-      const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...new Set(fs.map(f => f.role)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
+      const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...new Set(fs.map(roleName)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
       return `<article class="dexline" data-line="${l}" data-only="" data-q="${searchText(q)}">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {
