@@ -690,10 +690,12 @@ async function megaEvolve(side){
   const u = living(side).map(u => ({ u, m: megaFor(u.form, u.item), p: find(u) })).filter(x => x.m)
     .sort((a, b) => b.u.spd - a.u.spd || a.p.row - b.p.row || a.p.lane - b.p.lane)[0];
   if (!u) return;
-  const { u: x, m } = u, was = x.name, b = TUNE.mega, hp = x.maxHp;
-  x.mega = m; x.name = m.name;
-  x.maxHp = Math.round(x.maxHp * (1 + b.hp)); x.hp += x.maxHp - hp; x.atk *= 1 + b.atk; x.spd *= 1 + b.spd;
-  log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(HP +${pct(b.hp)}, Atk +${pct(b.atk)}, Spd +${pct(b.spd)})</small>`);
+  const { u: x, m } = u, was = x.name, b = m.boost, hp = x.maxHp;
+  // it becomes the Mega: its own type and stat boosts, and its signature move is the Mega's (its taught move stays)
+  x.mega = m; x.name = m.name; x.type = m.type || x.type; x.moves[0] = m.sig;
+  x.maxHp = Math.round(x.maxHp * b.hp); x.hp += x.maxHp - hp; x.atk *= b.atk; x.spd *= b.spd;
+  const chg = (k, v) => v === 1 ? '' : `${k} ${v > 1 ? '+' : '−'}${pct(Math.abs(v - 1))}`;
+  log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(${[chg('HP', b.hp), chg('Atk', b.atk), chg('Spd', b.spd)].filter(Boolean).join(', ')})</small>`);
   render();
   const el = elOf(x);
   if (el && !instant()) el.animate([{ filter: 'none' }, { filter: 'brightness(2.6) drop-shadow(0 0 14px #e9b6ff)', offset: .35 }, { filter: 'none' }], { duration: 900 / speed, easing: 'ease-out' });

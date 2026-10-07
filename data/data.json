@@ -25616,6 +25616,1356 @@
    "hits": null,
    "fx": "",
    "cat": "sig"
+  },
+  "flare-blitz": {
+   "name": "Flare Blitz",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 33% of the damage dealt.",
+   "cat": "mega",
+   "recoil": 0.33
+  },
+  "overheat": {
+   "name": "Overheat",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 150,
+   "heal": null,
+   "hits": null,
+   "fx": "User loses 20% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": -0.2
+  },
+  "water-pulse": {
+   "name": "Water Pulse",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "pierce",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets lose 10% Speed for the battle.",
+   "cat": "mega",
+   "spdDrop": 0.1
+  },
+  "twineedle": {
+   "name": "Twineedle",
+   "star": 3,
+   "type": "bug",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 55,
+   "heal": null,
+   "hits": [
+    2,
+    2
+   ],
+   "fx": "Target loses 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "hurricane": {
+   "name": "Hurricane",
+   "star": 3,
+   "type": "flying",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 85,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "zing-zap": {
+   "name": "Zing Zap",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "thunder": {
+   "name": "Thunder",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "lunar-dance": {
+   "name": "Lunar Dance",
+   "star": 3,
+   "type": "fairy",
+   "kind": "sup",
+   "shape": null,
+   "target": "team",
+   "power": null,
+   "heal": 0.3,
+   "hits": null,
+   "fx": "Heals every teammate 30% of its max HP.",
+   "cat": "mega"
+  },
+  "psycho-boost": {
+   "name": "Psycho Boost",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User loses 20% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": -0.2
+  },
+  "gunk-shot": {
+   "name": "Gunk Shot",
+   "star": 3,
+   "type": "poison",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 135,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "slack-off": {
+   "name": "Slack Off",
+   "star": 3,
+   "type": "normal",
+   "kind": "sup",
+   "shape": null,
+   "target": "self",
+   "power": null,
+   "heal": 0.5,
+   "hits": null,
+   "fx": "User heals 50% of its max HP.",
+   "cat": "mega"
+  },
+  "phantom-force": {
+   "name": "Phantom Force",
+   "star": 3,
+   "type": "ghost",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "cat": "mega",
+   "ignoreGuard": true
+  },
+  "mega-punch": {
+   "name": "Mega Punch",
+   "star": 3,
+   "type": "normal",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 60,
+   "heal": null,
+   "hits": [
+    2,
+    2
+   ],
+   "fx": "",
+   "cat": "mega"
+  },
+  "hydro-steam": {
+   "name": "Hydro Steam",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "vise-crush": {
+   "name": "Vise Crush",
+   "star": 3,
+   "type": "bug",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "waterfall": {
+   "name": "Waterfall",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 10% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.1
+  },
+  "outrage": {
+   "name": "Outrage",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 15% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.15
+  },
+  "focus-blast": {
+   "name": "Focus Blast",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 150,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "photon-geyser": {
+   "name": "Photon Geyser",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "floral-healing": {
+   "name": "Floral Healing",
+   "star": 3,
+   "type": "grass",
+   "kind": "sup",
+   "shape": null,
+   "target": "lowest",
+   "power": null,
+   "heal": 0.5,
+   "hits": null,
+   "fx": "Heals the lowest-HP teammate 50% of its max HP.",
+   "cat": "mega"
+  },
+  "liquidation": {
+   "name": "Liquidation",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 125,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 10% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.1
+  },
+  "electro-shot": {
+   "name": "Electro Shot",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "pierce",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "Can't be picked in round 1 (it's charging).",
+   "cat": "mega",
+   "charge": true
+  },
+  "gyro-ball": {
+   "name": "Gyro Ball",
+   "star": 3,
+   "type": "steel",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "steel-beam": {
+   "name": "Steel Beam",
+   "star": 3,
+   "type": "steel",
+   "kind": "off",
+   "shape": "pierce",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 30% of the damage dealt.",
+   "cat": "mega",
+   "recoil": 0.3
+  },
+  "arm-thrust": {
+   "name": "Arm Thrust",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 30,
+   "heal": null,
+   "hits": [
+    5,
+    5
+   ],
+   "fx": "",
+   "cat": "mega"
+  },
+  "spikes": {
+   "name": "Spikes",
+   "star": 3,
+   "type": "ground",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 0,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets lose 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "inferno": {
+   "name": "Inferno",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "rock-wrecker": {
+   "name": "Rock Wrecker",
+   "star": 3,
+   "type": "rock",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 160,
+   "heal": null,
+   "hits": null,
+   "fx": "The user skips its next action to recharge.",
+   "cat": "mega",
+   "recharge": true
+  },
+  "leaf-storm": {
+   "name": "Leaf Storm",
+   "star": 3,
+   "type": "grass",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 150,
+   "heal": null,
+   "hits": null,
+   "fx": "User loses 20% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": -0.2
+  },
+  "blaze-kick": {
+   "name": "Blaze Kick",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "User gains 10% Speed for the battle.",
+   "cat": "mega",
+   "selfSpd": 0.1
+  },
+  "muddy-water": {
+   "name": "Muddy Water",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 90,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets lose 10% Speed for the battle.",
+   "cat": "mega",
+   "spdDrop": 0.1
+  },
+  "strange-steam": {
+   "name": "Strange Steam",
+   "star": 3,
+   "type": "fairy",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "foul-play": {
+   "name": "Foul Play",
+   "star": 3,
+   "type": "dark",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "spirit-break": {
+   "name": "Spirit Break",
+   "star": 3,
+   "type": "fairy",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 15% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.15
+  },
+  "steel-roller": {
+   "name": "Steel Roller",
+   "star": 3,
+   "type": "steel",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "zen-headbutt": {
+   "name": "Zen Headbutt",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "supercell-slam": {
+   "name": "Supercell Slam",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 125,
+   "heal": null,
+   "hits": null,
+   "fx": "If it has no effect, the user loses 20% of its max HP.",
+   "cat": "mega",
+   "crash": 0.2
+  },
+  "fishious-rend": {
+   "name": "Fishious Rend",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "eruption": {
+   "name": "Eruption",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "alluring-voice": {
+   "name": "Alluring Voice",
+   "star": 3,
+   "type": "fairy",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 90,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "spirit-shackle": {
+   "name": "Spirit Shackle",
+   "star": 3,
+   "type": "ghost",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 15% Speed for the battle.",
+   "cat": "mega",
+   "spdDrop": 0.15
+  },
+  "psychic-noise": {
+   "name": "Psychic Noise",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 85,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "ceaseless-edge": {
+   "name": "Ceaseless Edge",
+   "star": 3,
+   "type": "dark",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "kowtow-cleave": {
+   "name": "Kowtow Cleave",
+   "star": 3,
+   "type": "dark",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "cat": "mega",
+   "ignoreGuard": true
+  },
+  "mountain-gale": {
+   "name": "Mountain Gale",
+   "star": 3,
+   "type": "ice",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 135,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "meteor-assault": {
+   "name": "Meteor Assault",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 160,
+   "heal": null,
+   "hits": null,
+   "fx": "The user skips its next action to recharge.",
+   "cat": "mega",
+   "recharge": true
+  },
+  "mist-ball": {
+   "name": "Mist Ball",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 15% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.15
+  },
+  "luster-purge": {
+   "name": "Luster Purge",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "cat": "mega",
+   "ignoreGuard": true
+  },
+  "origin-pulse": {
+   "name": "Origin Pulse",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "precipice-blades": {
+   "name": "Precipice Blades",
+   "star": 3,
+   "type": "ground",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "dragon-ascent": {
+   "name": "Dragon Ascent",
+   "star": 3,
+   "type": "flying",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 150,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 20% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.2
+  },
+  "dual-wingbeat": {
+   "name": "Dual Wingbeat",
+   "star": 3,
+   "type": "flying",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 70,
+   "heal": null,
+   "hits": [
+    2,
+    2
+   ],
+   "fx": "",
+   "cat": "mega"
+  },
+  "axe-kick": {
+   "name": "Axe Kick",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "If it has no effect, the user loses 20% of its max HP.",
+   "cat": "mega",
+   "crash": 0.2
+  },
+  "scale-shot": {
+   "name": "Scale Shot",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 30,
+   "heal": null,
+   "hits": [
+    3,
+    4
+   ],
+   "fx": "User gains 10% Speed for the battle.",
+   "cat": "mega",
+   "selfSpd": 0.1
+  },
+  "clanging-scales": {
+   "name": "Clanging Scales",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 15% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.15
+  },
+  "aura-sphere": {
+   "name": "Aura Sphere",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "cat": "mega",
+   "ignoreGuard": true
+  },
+  "drain-punch": {
+   "name": "Drain Punch",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "User heals 50% of the damage dealt.",
+   "cat": "mega",
+   "drain": 0.5
+  },
+  "wood-hammer": {
+   "name": "Wood Hammer",
+   "star": 3,
+   "type": "grass",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 33% of the damage dealt.",
+   "cat": "mega",
+   "recoil": 0.33
+  },
+  "sacred-sword": {
+   "name": "Sacred Sword",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "cat": "mega",
+   "ignoreGuard": true
+  },
+  "triple-axel": {
+   "name": "Triple Axel",
+   "star": 3,
+   "type": "ice",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 25,
+   "heal": null,
+   "hits": [
+    3,
+    3
+   ],
+   "fx": "The 3 hits rise in power: 25%, then 50%, then 75% ATK.",
+   "cat": "mega",
+   "rising": [
+    25,
+    50,
+    75
+   ]
+  },
+  "magma-storm": {
+   "name": "Magma Storm",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets lose 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "dark-void": {
+   "name": "Dark Void",
+   "star": 3,
+   "type": "dark",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 0,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets skip their next action.",
+   "cat": "mega",
+   "skipTarget": 1
+  },
+  "heat-crash": {
+   "name": "Heat Crash",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "healing-wish": {
+   "name": "Healing Wish",
+   "star": 3,
+   "type": "normal",
+   "kind": "sup",
+   "shape": null,
+   "target": "lowest",
+   "power": null,
+   "heal": 0.6,
+   "hits": null,
+   "fx": "Heals the lowest-HP teammate 60% of its max HP.",
+   "cat": "mega"
+  },
+  "barb-barrage": {
+   "name": "Barb Barrage",
+   "star": 3,
+   "type": "poison",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 5% max HP at the end of each of the next 3 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5,
+    5
+   ]
+  },
+  "wicked-blow": {
+   "name": "Wicked Blow",
+   "star": 3,
+   "type": "dark",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "electro-drift": {
+   "name": "Electro Drift",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 125,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "infernal-parade": {
+   "name": "Infernal Parade",
+   "star": 3,
+   "type": "ghost",
+   "kind": "off",
+   "shape": "splash",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "Double power against targets already losing HP each round.",
+   "cat": "mega",
+   "vsDot": true
+  },
+  "headlong-rush": {
+   "name": "Headlong Rush",
+   "star": 3,
+   "type": "ground",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 15% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.15
+  },
+  "spiky-shield": {
+   "name": "Spiky Shield",
+   "star": 3,
+   "type": "grass",
+   "kind": "sup",
+   "shape": null,
+   "target": "self",
+   "power": null,
+   "heal": null,
+   "hits": null,
+   "fx": "The next 3 hits on the user deal 50% less damage.",
+   "cat": "mega",
+   "shield": {
+    "n": 3,
+    "p": 0.5
+   }
+  },
+  "mystical-fire": {
+   "name": "Mystical Fire",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 15% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.15
+  },
+  "water-shuriken": {
+   "name": "Water Shuriken",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 30,
+   "heal": null,
+   "hits": [
+    2,
+    5
+   ],
+   "fx": "Always acts first in its round, before Speed order.",
+   "cat": "mega",
+   "first": "always"
+  },
+  "torch-song": {
+   "name": "Torch Song",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 85,
+   "heal": null,
+   "hits": null,
+   "fx": "User gains 10% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": 0.1
+  },
+  "light-of-ruin": {
+   "name": "Light of Ruin",
+   "star": 3,
+   "type": "fairy",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 150,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 50% of the damage dealt.",
+   "cat": "mega",
+   "recoil": 0.5
+  },
+  "psyblade": {
+   "name": "Psyblade",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 115,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "psycho-cut": {
+   "name": "Psycho Cut",
+   "star": 3,
+   "type": "psychic",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "razor-shell": {
+   "name": "Razor Shell",
+   "star": 3,
+   "type": "water",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 115,
+   "heal": null,
+   "hits": null,
+   "fx": "Target loses 10% Attack for the battle.",
+   "cat": "mega",
+   "atkDrop": 0.1
+  },
+  "core-enforcer": {
+   "name": "Core Enforcer",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "flying-press": {
+   "name": "Flying Press",
+   "star": 3,
+   "type": "fighting",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "thousand-arrows": {
+   "name": "Thousand Arrows",
+   "star": 3,
+   "type": "ground",
+   "kind": "off",
+   "shape": "field",
+   "target": null,
+   "power": 75,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "diamond-storm": {
+   "name": "Diamond Storm",
+   "star": 3,
+   "type": "rock",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 100,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 25% less damage from the next hit.",
+   "cat": "mega",
+   "selfShield": {
+    "n": 1,
+    "p": 0.25
+   }
+  },
+  "ice-hammer": {
+   "name": "Ice Hammer",
+   "star": 3,
+   "type": "ice",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User loses 10% Speed for the battle.",
+   "cat": "mega",
+   "selfSpd": -0.1
+  },
+  "first-impression": {
+   "name": "First Impression",
+   "star": 3,
+   "type": "bug",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "On the first round of a battle, acts before anyone without a first-round move.",
+   "cat": "mega",
+   "first": "round1"
+  },
+  "dragon-energy": {
+   "name": "Dragon Energy",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "fleur-cannon": {
+   "name": "Fleur Cannon",
+   "star": 3,
+   "type": "fairy",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User loses 20% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": -0.2
+  },
+  "plasma-fists": {
+   "name": "Plasma Fists",
+   "star": 3,
+   "type": "electric",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 125,
+   "heal": null,
+   "hits": null,
+   "fx": "",
+   "cat": "mega"
+  },
+  "no-retreat": {
+   "name": "No Retreat",
+   "star": 3,
+   "type": "fighting",
+   "kind": "sup",
+   "shape": null,
+   "target": "self",
+   "power": null,
+   "heal": null,
+   "hits": null,
+   "fx": "User gains 30% Attack and 30% Speed for the battle.",
+   "cat": "mega",
+   "buff": {
+    "atk": 0.3,
+    "spd": 0.3
+   }
+  },
+  "raging-fury": {
+   "name": "Raging Fury",
+   "star": 3,
+   "type": "fire",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 15% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.15
+  },
+  "mortal-spin": {
+   "name": "Mortal Spin",
+   "star": 3,
+   "type": "poison",
+   "kind": "off",
+   "shape": "row",
+   "target": null,
+   "power": 80,
+   "heal": null,
+   "hits": null,
+   "fx": "Targets lose 5% max HP at the end of each of the next 2 rounds.",
+   "cat": "mega",
+   "dot": [
+    5,
+    5
+   ]
+  },
+  "order-up": {
+   "name": "Order Up",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 110,
+   "heal": null,
+   "hits": null,
+   "fx": "User gains 10% Attack for the battle.",
+   "cat": "mega",
+   "selfAtk": 0.1
+  },
+  "glaive-rush": {
+   "name": "Glaive Rush",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 140,
+   "heal": null,
+   "hits": null,
+   "fx": "User takes 20% more damage for the rest of the battle.",
+   "cat": "mega",
+   "selfVuln": 0.2
+  },
+  "sappy-seed": {
+   "name": "Sappy Seed",
+   "star": 3,
+   "type": "grass",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 120,
+   "heal": null,
+   "fx": "User heals 30% of the damage dealt.",
+   "cat": "mega",
+   "hits": null,
+   "drain": 0.3
+  },
+  "sky-drop": {
+   "name": "Sky Drop",
+   "star": 3,
+   "type": "flying",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 130,
+   "heal": null,
+   "fx": "On the first round of a battle, acts before anyone without a first-round move.",
+   "cat": "mega",
+   "hits": null,
+   "first": "round1"
+  },
+  "dragon-darts": {
+   "name": "Dragon Darts",
+   "star": 3,
+   "type": "dragon",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 60,
+   "heal": null,
+   "fx": "",
+   "cat": "mega",
+   "hits": [
+    2,
+    2
+   ]
+  },
+  "high-horsepower": {
+   "name": "High Horsepower",
+   "star": 3,
+   "type": "ground",
+   "kind": "off",
+   "shape": "single",
+   "target": null,
+   "power": 125,
+   "heal": null,
+   "fx": "",
+   "cat": "mega",
+   "hits": null
   }
  },
  "pools": [
@@ -25945,571 +27295,1592 @@
    "name": "Mega Venusaur",
    "of": "Venusaur",
    "spr": "venusaur_1",
-   "stone": "venusaurite"
+   "stone": "venusaurite",
+   "type": "grass",
+   "sig": "sappy-seed",
+   "boost": {
+    "hp": 1.17,
+    "atk": 1.22,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Thick Fat",
+    "fx": "Takes 50% less damage from Fire and Ice moves."
+   }
   },
   {
    "name": "Mega Charizard X",
    "of": "Charizard",
    "spr": "charizard_1",
-   "stone": "charizardite-x"
+   "stone": "charizardite-x",
+   "type": "fire",
+   "sig": "flare-blitz",
+   "boost": {
+    "hp": 1.1,
+    "atk": 1.25,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Charizard Y",
    "of": "Charizard",
    "spr": "charizard_2",
-   "stone": "charizardite-y"
+   "stone": "charizardite-y",
+   "type": "fire",
+   "sig": "overheat",
+   "boost": {
+    "hp": 1.09,
+    "atk": 1.42,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Drought",
+    "fx": "Fire moves on its side deal 20% more damage for the first 3 rounds."
+   }
   },
   {
    "name": "Mega Blastoise",
    "of": "Blastoise",
    "spr": "blastoise_1",
-   "stone": "blastoisinite"
+   "stone": "blastoisinite",
+   "type": "water",
+   "sig": "water-pulse",
+   "boost": {
+    "hp": 1.08,
+    "atk": 1.52,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Mega Launcher",
+    "fx": "Its Pierce and Splash moves deal 30% more damage."
+   }
   },
   {
    "name": "Mega Beedrill",
    "of": "Beedrill",
    "spr": "beedrill_1",
-   "stone": "beedrillite"
+   "stone": "beedrillite",
+   "type": "bug",
+   "sig": "twineedle",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.52,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Adaptability",
+    "fx": "Moves that match its current type deal 25% more damage."
+   }
   },
   {
    "name": "Mega Pidgeot",
    "of": "Pidgeot",
    "spr": "pidgeot_1",
-   "stone": "pidgeotite"
+   "stone": "pidgeotite",
+   "type": "flying",
+   "sig": "hurricane",
+   "boost": {
+    "hp": 1.05,
+    "atk": 1.59,
+    "spd": 1.2
+   },
+   "ability": {
+    "name": "No Guard",
+    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+   }
   },
   {
    "name": "Mega Raichu X",
    "of": "Raichu",
    "spr": "raichu_2",
-   "stone": "raichunite-x"
+   "stone": "raichunite-x",
+   "type": "electric",
+   "sig": "zing-zap",
+   "boost": {
+    "hp": 1.22,
+    "atk": 1.4,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Electric Surge",
+    "fx": "Electric moves on its side deal 20% more damage for the first 3 rounds."
+   }
   },
   {
    "name": "Mega Raichu Y",
    "of": "Raichu",
    "spr": "raichu_3",
-   "stone": "raichunite-y"
+   "stone": "raichunite-y",
+   "type": "electric",
+   "sig": "thunder",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.6,
+    "spd": 1.18
+   },
+   "ability": {
+    "name": "No Guard",
+    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+   }
   },
   {
    "name": "Mega Clefable",
    "of": "Clefable",
    "spr": "clefable_1",
-   "stone": "clefablite"
+   "stone": "clefablite",
+   "type": "fairy",
+   "sig": "lunar-dance",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.38,
+    "spd": 1.17
+   },
+   "ability": {
+    "name": "Magic Bounce",
+    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+   }
   },
   {
    "name": "Mega Alakazam",
    "of": "Alakazam",
    "spr": "alakazam_1",
-   "stone": "alakazite"
+   "stone": "alakazite",
+   "type": "psychic",
+   "sig": "psycho-boost",
+   "boost": {
+    "hp": 1.12,
+    "atk": 1.27,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Trace",
+    "fx": "At the start of battle, copies the ability of the enemy directly across."
+   }
   },
   {
    "name": "Mega Victreebel",
    "of": "Victreebel",
    "spr": "victreebel_1",
-   "stone": "victreebelite"
+   "stone": "victreebelite",
+   "type": "grass",
+   "sig": "gunk-shot",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.28,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Innards Out",
+    "fx": "When knocked out, the enemy that did it loses HP equal to the damage of the final hit."
+   }
   },
   {
    "name": "Mega Slowbro",
    "of": "Slowbro",
    "spr": "slowbro_1",
-   "stone": "slowbronite"
+   "stone": "slowbronite",
+   "type": "water",
+   "sig": "slack-off",
+   "boost": {
+    "hp": 1.18,
+    "atk": 1.25,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Shell Armor",
+    "fx": "Takes 15% less damage from Single moves."
+   }
   },
   {
    "name": "Mega Gengar",
    "of": "Gengar",
    "spr": "gengar_1",
-   "stone": "gengarite"
+   "stone": "gengarite",
+   "type": "ghost",
+   "sig": "phantom-force",
+   "boost": {
+    "hp": 1.16,
+    "atk": 1.27,
+    "spd": 1.18
+   },
+   "ability": {
+    "name": "Shadow Tag",
+    "fx": "The enemy directly across from it can't use its taught move."
+   }
   },
   {
    "name": "Mega Kangaskhan",
    "of": "Kangaskhan",
    "spr": "kangaskhan_1",
-   "stone": "kangaskhanite"
+   "stone": "kangaskhanite",
+   "type": "normal",
+   "sig": "mega-punch",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.33,
+    "spd": 1.11
+   },
+   "ability": {
+    "name": "Parental Bond",
+    "fx": "Its Single moves hit a second time, at 25% of the power."
+   }
   },
   {
    "name": "Mega Starmie",
    "of": "Starmie",
    "spr": "starmie_1",
-   "stone": "starminite"
+   "stone": "starminite",
+   "type": "water",
+   "sig": "hydro-steam",
+   "boost": {
+    "hp": 1.14,
+    "atk": 1.31,
+    "spd": 1.04
+   },
+   "ability": {
+    "name": "Huge Power",
+    "fx": "Has 50% more Attack."
+   }
   },
   {
    "name": "Mega Pinsir",
    "of": "Pinsir",
    "spr": "pinsir_1",
-   "stone": "pinsirite"
+   "stone": "pinsirite",
+   "type": "bug",
+   "sig": "vise-crush",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.23,
+    "spd": 1.24
+   },
+   "ability": {
+    "name": "Aerilate",
+    "fx": "Its Normal moves become Flying moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Gyarados",
    "of": "Gyarados",
    "spr": "gyarados_1",
-   "stone": "gyaradosite"
+   "stone": "gyaradosite",
+   "type": "water",
+   "sig": "waterfall",
+   "boost": {
+    "hp": 1.16,
+    "atk": 1.23,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Mold Breaker",
+    "fx": "Its moves ignore the target's ability."
+   }
   },
   {
    "name": "Mega Aerodactyl",
    "of": "Aerodactyl",
    "spr": "aerodactyl_1",
-   "stone": "aerodactylite"
+   "stone": "aerodactylite",
+   "type": "rock",
+   "sig": "sky-drop",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.27,
+    "spd": 1.15
+   },
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Dragonite",
    "of": "Dragonite",
    "spr": "dragonite_1",
-   "stone": "dragoninite"
+   "stone": "dragoninite",
+   "type": "dragon",
+   "sig": "outrage",
+   "boost": {
+    "hp": 1.12,
+    "atk": 1.11,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Multiscale",
+    "fx": "At full HP, takes 50% less damage from the first hit."
+   }
   },
   {
    "name": "Mega Mewtwo X",
    "of": "Mewtwo",
    "spr": "mewtwo_1",
-   "stone": "mewtwonite-x"
+   "stone": "mewtwonite-x",
+   "type": "psychic",
+   "sig": "focus-blast",
+   "boost": {
+    "hp": 1.05,
+    "atk": 1.26,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Steadfast",
+    "fx": "Gains 10% Speed each time it's hit (max +40%)."
+   }
   },
   {
    "name": "Mega Mewtwo Y",
    "of": "Mewtwo",
    "spr": "mewtwo_2",
-   "stone": "mewtwonite-y"
+   "stone": "mewtwonite-y",
+   "type": "psychic",
+   "sig": "photon-geyser",
+   "boost": {
+    "hp": 1.03,
+    "atk": 1.28,
+    "spd": 1.08
+   },
+   "ability": {
+    "name": "Insomnia",
+    "fx": "Can't be made to skip actions by enemy moves."
+   }
   },
   {
    "name": "Mega Meganium",
    "of": "Meganium",
    "spr": "meganium_1",
-   "stone": "meganiumite"
+   "stone": "meganiumite",
+   "type": "grass",
+   "sig": "floral-healing",
+   "boost": {
+    "hp": 1.08,
+    "atk": 1.6,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Mega Sol",
+    "fx": "Its Fire and Grass moves deal 30% more damage."
+   }
   },
   {
    "name": "Mega Feraligatr",
    "of": "Feraligatr",
    "spr": "feraligatr_1",
-   "stone": "feraligite"
+   "stone": "feraligite",
+   "type": "water",
+   "sig": "liquidation",
+   "boost": {
+    "hp": 1.1,
+    "atk": 1.46,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Dragonize",
+    "fx": "Its Normal moves become Dragon moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Ampharos",
    "of": "Ampharos",
    "spr": "ampharos_1",
-   "stone": "ampharosite"
+   "stone": "ampharosite",
+   "type": "electric",
+   "sig": "electro-shot",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.41,
+    "spd": 0.82
+   },
+   "ability": {
+    "name": "Mold Breaker",
+    "fx": "Its moves ignore the target's ability."
+   }
   },
   {
    "name": "Mega Steelix",
    "of": "Steelix",
    "spr": "steelix_1",
-   "stone": "steelixite"
+   "stone": "steelixite",
+   "type": "steel",
+   "sig": "gyro-ball",
+   "boost": {
+    "hp": 1.14,
+    "atk": 1.41,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Sand Force",
+    "fx": "Its Rock, Ground and Steel moves deal 30% more damage for the first 3 rounds."
+   }
   },
   {
    "name": "Mega Scizor",
    "of": "Scizor",
    "spr": "scizor_1",
-   "stone": "scizorite"
+   "stone": "scizorite",
+   "type": "bug",
+   "sig": "steel-beam",
+   "boost": {
+    "hp": 1.19,
+    "atk": 1.16,
+    "spd": 1.15
+   },
+   "ability": {
+    "name": "Technician",
+    "fx": "Moves with 60% power or less deal 50% more damage."
+   }
   },
   {
    "name": "Mega Heracross",
    "of": "Heracross",
    "spr": "heracross_1",
-   "stone": "heracronite"
+   "stone": "heracronite",
+   "type": "bug",
+   "sig": "arm-thrust",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.44,
+    "spd": 0.88
+   },
+   "ability": {
+    "name": "Skill Link",
+    "fx": "Moves that hit several times always hit the most times."
+   }
   },
   {
    "name": "Mega Skarmory",
    "of": "Skarmory",
    "spr": "skarmory_1",
-   "stone": "skarmorite"
+   "stone": "skarmorite",
+   "type": "steel",
+   "sig": "spikes",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.6,
+    "spd": 1.57
+   },
+   "ability": {
+    "name": "Stalwart",
+    "fx": "Its moves ignore moves that draw attacks away (like Follow Me)."
+   }
   },
   {
    "name": "Mega Houndoom",
    "of": "Houndoom",
    "spr": "houndoom_1",
-   "stone": "houndoominite"
+   "stone": "houndoominite",
+   "type": "dark",
+   "sig": "inferno",
+   "boost": {
+    "hp": 1.18,
+    "atk": 1.23,
+    "spd": 1.21
+   },
+   "ability": {
+    "name": "Solar Power",
+    "fx": "Its Fire moves deal 30% more damage, but it loses 5% of its max HP at the end of each round."
+   }
   },
   {
    "name": "Mega Tyranitar",
    "of": "Tyranitar",
    "spr": "tyranitar_1",
-   "stone": "tyranitarite"
+   "stone": "tyranitarite",
+   "type": "rock",
+   "sig": "rock-wrecker",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.19,
+    "spd": 1.16
+   },
+   "ability": {
+    "name": "Sand Stream",
+    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+   }
   },
   {
    "name": "Mega Sceptile",
    "of": "Sceptile",
    "spr": "sceptile_1",
-   "stone": "sceptilite"
+   "stone": "sceptilite",
+   "type": "grass",
+   "sig": "leaf-storm",
+   "boost": {
+    "hp": 1.03,
+    "atk": 1.37,
+    "spd": 1.21
+   },
+   "ability": {
+    "name": "Lightning Rod",
+    "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
+   }
   },
   {
    "name": "Mega Blaziken",
    "of": "Blaziken",
    "spr": "blaziken_1",
-   "stone": "blazikenite"
+   "stone": "blazikenite",
+   "type": "fire",
+   "sig": "blaze-kick",
+   "boost": {
+    "hp": 1.07,
+    "atk": 1.31,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Speed Boost",
+    "fx": "Gains 10% Speed at the end of each round."
+   }
   },
   {
    "name": "Mega Swampert",
    "of": "Swampert",
    "spr": "swampert_1",
-   "stone": "swampertite"
+   "stone": "swampertite",
+   "type": "water",
+   "sig": "muddy-water",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.32,
+    "spd": 1.17
+   },
+   "ability": {
+    "name": "Swift Swim",
+    "fx": "Gains 25% Speed for the first 2 rounds of every battle."
+   }
   },
   {
    "name": "Mega Gardevoir",
    "of": "Gardevoir",
    "spr": "gardevoir_1",
-   "stone": "gardevoirite"
+   "stone": "gardevoirite",
+   "type": "psychic",
+   "sig": "strange-steam",
+   "boost": {
+    "hp": 1.06,
+    "atk": 1.32,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Pixilate",
+    "fx": "Its Normal moves become Fairy moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Sableye",
    "of": "Sableye",
    "spr": "sableye_1",
-   "stone": "sablenite"
+   "stone": "sablenite",
+   "type": "dark",
+   "sig": "foul-play",
+   "boost": {
+    "hp": 1.42,
+    "atk": 1.16,
+    "spd": 0.6
+   },
+   "ability": {
+    "name": "Magic Bounce",
+    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+   }
   },
   {
    "name": "Mega Mawile",
    "of": "Mawile",
    "spr": "mawile_1",
-   "stone": "mawilite"
+   "stone": "mawilite",
+   "type": "steel",
+   "sig": "spirit-break",
+   "boost": {
+    "hp": 1.33,
+    "atk": 1.2,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Huge Power",
+    "fx": "Has 50% more Attack."
+   }
   },
   {
    "name": "Mega Aggron",
    "of": "Aggron",
    "spr": "aggron_1",
-   "stone": "aggronite"
+   "stone": "aggronite",
+   "type": "steel",
+   "sig": "steel-roller",
+   "boost": {
+    "hp": 1.18,
+    "atk": 1.24,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Filter",
+    "fx": "Takes 25% less damage from super-effective moves."
+   }
   },
   {
    "name": "Mega Medicham",
    "of": "Medicham",
    "spr": "medicham_1",
-   "stone": "medichamite"
+   "stone": "medichamite",
+   "type": "fighting",
+   "sig": "zen-headbutt",
+   "boost": {
+    "hp": 1.07,
+    "atk": 1.6,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Pure Power",
+    "fx": "Has 50% more Attack."
+   }
   },
   {
    "name": "Mega Manectric",
    "of": "Manectric",
    "spr": "manectric_1",
-   "stone": "manectite"
+   "stone": "manectite",
+   "type": "electric",
+   "sig": "supercell-slam",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.24,
+    "spd": 1.29
+   },
+   "ability": {
+    "name": "Intimidate",
+    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
+   }
   },
   {
    "name": "Mega Sharpedo",
    "of": "Sharpedo",
    "spr": "sharpedo_1",
-   "stone": "sharpedonite"
+   "stone": "sharpedonite",
+   "type": "water",
+   "sig": "fishious-rend",
+   "boost": {
+    "hp": 1.25,
+    "atk": 1.17,
+    "spd": 1.11
+   },
+   "ability": {
+    "name": "Strong Jaw",
+    "fx": "Its Dark moves deal 30% more damage."
+   }
   },
   {
    "name": "Mega Camerupt",
    "of": "Camerupt",
    "spr": "camerupt_1",
-   "stone": "cameruptite"
+   "stone": "cameruptite",
+   "type": "fire",
+   "sig": "eruption",
+   "boost": {
+    "hp": 1.21,
+    "atk": 1.35,
+    "spd": 0.6
+   },
+   "ability": {
+    "name": "Sheer Force",
+    "fx": "Moves with extra effects deal 30% more damage, but lose their extra effects."
+   }
   },
   {
    "name": "Mega Altaria",
    "of": "Altaria",
    "spr": "altaria_1",
-   "stone": "altarianite"
+   "stone": "altarianite",
+   "type": "dragon",
+   "sig": "alluring-voice",
+   "boost": {
+    "hp": 1.06,
+    "atk": 1.57,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Pixilate",
+    "fx": "Its Normal moves become Fairy moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Banette",
    "of": "Banette",
    "spr": "banette_1",
-   "stone": "banettite"
+   "stone": "banettite",
+   "type": "ghost",
+   "sig": "spirit-shackle",
+   "boost": {
+    "hp": 1.12,
+    "atk": 1.39,
+    "spd": 1.15
+   },
+   "ability": {
+    "name": "Prankster",
+    "fx": "Its Support moves act before anyone else's in the round."
+   }
   },
   {
    "name": "Mega Chimecho",
    "of": "Chimecho",
    "spr": "chimecho_1",
-   "stone": "chimechite"
+   "stone": "chimechite",
+   "type": "psychic",
+   "sig": "psychic-noise",
+   "boost": {
+    "hp": 1.19,
+    "atk": 1.37,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Levitate",
+    "fx": "Immune to Ground moves."
+   }
   },
   {
    "name": "Mega Absol",
    "of": "Absol",
    "spr": "absol_1",
-   "stone": "absolite"
+   "stone": "absolite",
+   "type": "dark",
+   "sig": "ceaseless-edge",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.2,
+    "spd": 1.53
+   },
+   "ability": {
+    "name": "Magic Bounce",
+    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+   }
   },
   {
    "name": "Mega Absol Z",
    "of": "Absol",
    "spr": "absol_2",
-   "stone": "absolite-z"
+   "stone": "absolite-z",
+   "type": "dark",
+   "sig": "kowtow-cleave",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.16,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Sharpness",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Glalie",
    "of": "Glalie",
    "spr": "glalie_1",
-   "stone": "glalitite"
+   "stone": "glalitite",
+   "type": "ice",
+   "sig": "mountain-gale",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.5,
+    "spd": 1.25
+   },
+   "ability": {
+    "name": "Refrigerate",
+    "fx": "Its Normal moves become Ice moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Salamence",
    "of": "Salamence",
    "spr": "salamence_1",
-   "stone": "salamencite"
+   "stone": "salamencite",
+   "type": "dragon",
+   "sig": "dragon-darts",
+   "boost": {
+    "hp": 1.17,
+    "atk": 1.08,
+    "spd": 1.2
+   },
+   "ability": {
+    "name": "Aerilate",
+    "fx": "Its Normal moves become Flying moves and deal 20% more damage."
+   }
   },
   {
    "name": "Mega Metagross",
    "of": "Metagross",
    "spr": "metagross_1",
-   "stone": "metagrossite"
+   "stone": "metagrossite",
+   "type": "steel",
+   "sig": "meteor-assault",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.08,
+    "spd": 1.57
+   },
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Latias",
    "of": "Latias",
    "spr": "latias_1",
-   "stone": "latiasite"
+   "stone": "latiasite",
+   "type": "dragon",
+   "sig": "mist-ball",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.27,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Levitate",
+    "fx": "Immune to Ground moves."
+   }
   },
   {
    "name": "Mega Latios",
    "of": "Latios",
    "spr": "latios_1",
-   "stone": "latiosite"
+   "stone": "latiosite",
+   "type": "dragon",
+   "sig": "luster-purge",
+   "boost": {
+    "hp": 1.09,
+    "atk": 1.26,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Levitate",
+    "fx": "Immune to Ground moves."
+   }
   },
   {
    "name": "Primal Kyogre",
    "of": "Kyogre",
    "spr": "kyogre_1",
-   "stone": "blue-orb"
+   "stone": "blue-orb",
+   "type": "water",
+   "sig": "origin-pulse",
+   "boost": {
+    "hp": 1.05,
+    "atk": 1.24,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Primordial Sea",
+    "fx": "Enemy Fire moves deal no damage, and Water moves on its side deal 30% more damage."
+   }
   },
   {
    "name": "Primal Groudon",
    "of": "Groudon",
    "spr": "groudon_1",
-   "stone": "red-orb"
+   "stone": "red-orb",
+   "type": "ground",
+   "sig": "precipice-blades",
+   "boost": {
+    "hp": 1.05,
+    "atk": 1.24,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Desolate Land",
+    "fx": "Enemy Water moves deal no damage, and Fire moves on its side deal 30% more damage."
+   }
   },
   {
    "name": "Mega Rayquaza",
    "of": "Rayquaza",
    "spr": "rayquaza_1",
-   "stone": null
+   "stone": null,
+   "type": "dragon",
+   "sig": "dragon-ascent",
+   "boost": {
+    "hp": 1.05,
+    "atk": 1.2,
+    "spd": 1.21
+   },
+   "ability": {
+    "name": "Delta Stream",
+    "fx": "Moves that are super effective against Flying types deal normal damage to its side."
+   }
   },
   {
    "name": "Mega Staraptor",
    "of": "Staraptor",
    "spr": "staraptor_1",
-   "stone": "staraptite"
+   "stone": "staraptite",
+   "type": "fighting",
+   "sig": "dual-wingbeat",
+   "boost": {
+    "hp": 1.2,
+    "atk": 1.17,
+    "spd": 1.1
+   },
+   "ability": {
+    "name": "Contrary",
+    "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
+   }
   },
   {
    "name": "Mega Lopunny",
    "of": "Lopunny",
    "spr": "lopunny_1",
-   "stone": "lopunnite"
+   "stone": "lopunnite",
+   "type": "fighting",
+   "sig": "axe-kick",
+   "boost": {
+    "hp": 1.03,
+    "atk": 1.6,
+    "spd": 1.29
+   },
+   "ability": {
+    "name": "Scrappy",
+    "fx": "Its Normal and Fighting moves can hit Ghost types."
+   }
   },
   {
    "name": "Mega Garchomp",
    "of": "Garchomp",
    "spr": "garchomp_1",
-   "stone": "garchompite"
+   "stone": "garchompite",
+   "type": "dragon",
+   "sig": "scale-shot",
+   "boost": {
+    "hp": 1.08,
+    "atk": 1.33,
+    "spd": 0.9
+   },
+   "ability": {
+    "name": "Sand Force",
+    "fx": "Its Rock, Ground and Steel moves deal 30% more damage for the first 3 rounds."
+   }
   },
   {
    "name": "Mega Garchomp Z",
    "of": "Garchomp",
    "spr": "garchomp_2",
-   "stone": "garchompite-z"
+   "stone": "garchompite-z",
+   "type": "dragon",
+   "sig": "clanging-scales",
+   "boost": {
+    "hp": 0.97,
+    "atk": 1.16,
+    "spd": 1.48
+   },
+   "ability": {
+    "name": "Levitate",
+    "fx": "Immune to Ground moves."
+   }
   },
   {
    "name": "Mega Lucario",
    "of": "Lucario",
    "spr": "lucario_1",
-   "stone": "lucarionite"
+   "stone": "lucarionite",
+   "type": "fighting",
+   "sig": "aura-sphere",
+   "boost": {
+    "hp": 1.06,
+    "atk": 1.26,
+    "spd": 1.24
+   },
+   "ability": {
+    "name": "Adaptability",
+    "fx": "Moves that match its current type deal 25% more damage."
+   }
   },
   {
    "name": "Mega Lucario Z",
    "of": "Lucario",
    "spr": "lucario_2",
-   "stone": "lucarionite-z"
+   "stone": "lucarionite-z",
+   "type": "fighting",
+   "sig": "drain-punch",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.33,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Aura Guard",
+    "fx": "Teammates beside it take 15% less damage."
+   }
   },
   {
    "name": "Mega Abomasnow",
    "of": "Abomasnow",
    "spr": "abomasnow_1",
-   "stone": "abomasite"
+   "stone": "abomasite",
+   "type": "grass",
+   "sig": "wood-hammer",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.43,
+    "spd": 0.6
+   },
+   "ability": {
+    "name": "Snow Warning",
+    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+   }
   },
   {
    "name": "Mega Gallade",
    "of": "Gallade",
    "spr": "gallade_1",
-   "stone": "galladite"
+   "stone": "galladite",
+   "type": "psychic",
+   "sig": "sacred-sword",
+   "boost": {
+    "hp": 1.09,
+    "atk": 1.28,
+    "spd": 1.38
+   },
+   "ability": {
+    "name": "Inner Focus",
+    "fx": "Can't be made to skip actions by enemy moves."
+   }
   },
   {
    "name": "Mega Froslass",
    "of": "Froslass",
    "spr": "froslass_1",
-   "stone": "froslassite"
+   "stone": "froslassite",
+   "type": "ice",
+   "sig": "triple-axel",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.6,
+    "spd": 1.09
+   },
+   "ability": {
+    "name": "Snow Warning",
+    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+   }
   },
   {
    "name": "Mega Heatran",
    "of": "Heatran",
    "spr": "heatran_1",
-   "stone": "heatranite"
+   "stone": "heatranite",
+   "type": "fire",
+   "sig": "magma-storm",
+   "boost": {
+    "hp": 1.09,
+    "atk": 1.34,
+    "spd": 0.87
+   }
   },
   {
    "name": "Mega Darkrai",
    "of": "Darkrai",
    "spr": "darkrai_1",
-   "stone": "darkranite"
+   "stone": "darkranite",
+   "type": "dark",
+   "sig": "dark-void",
+   "boost": {
+    "hp": 1.25,
+    "atk": 1.24,
+    "spd": 0.68
+   }
   },
   {
    "name": "Mega Emboar",
    "of": "Emboar",
    "spr": "emboar_1",
-   "stone": "emboarite"
+   "stone": "emboarite",
+   "type": "fire",
+   "sig": "heat-crash",
+   "boost": {
+    "hp": 1.16,
+    "atk": 1.19,
+    "spd": 1.15
+   },
+   "ability": {
+    "name": "Mold Breaker",
+    "fx": "Its moves ignore the target's ability."
+   }
   },
   {
    "name": "Mega Excadrill",
    "of": "Excadrill",
    "spr": "excadrill_1",
-   "stone": "excadrite"
+   "stone": "excadrite",
+   "type": "ground",
+   "sig": "high-horsepower",
+   "boost": {
+    "hp": 1.12,
+    "atk": 1.23,
+    "spd": 1.17
+   },
+   "ability": {
+    "name": "Piercing Drill",
+    "fx": "Its Ground moves ignore damage reduction from Reflect and shielding moves."
+   }
   },
   {
    "name": "Mega Audino",
    "of": "Audino",
    "spr": "audino_1",
-   "stone": "audinite"
+   "stone": "audinite",
+   "type": "fairy",
+   "sig": "healing-wish",
+   "boost": {
+    "hp": 1.21,
+    "atk": 1.27,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Healer",
+    "fx": "At the end of each round, 30% chance to clear damage-over-time effects from the teammates beside it."
+   }
   },
   {
    "name": "Mega Scolipede",
    "of": "Scolipede",
    "spr": "scolipede_1",
-   "stone": "scolipite"
+   "stone": "scolipite",
+   "type": "bug",
+   "sig": "barb-barrage",
+   "boost": {
+    "hp": 1.32,
+    "atk": 1.4,
+    "spd": 0.6
+   },
+   "ability": {
+    "name": "Shell Armor",
+    "fx": "Takes 15% less damage from Single moves."
+   }
   },
   {
    "name": "Mega Scrafty",
    "of": "Scrafty",
    "spr": "scrafty_1",
-   "stone": "scraftinite"
+   "stone": "scraftinite",
+   "type": "dark",
+   "sig": "wicked-blow",
+   "boost": {
+    "hp": 1.11,
+    "atk": 1.42,
+    "spd": 1.17
+   },
+   "ability": {
+    "name": "Intimidate",
+    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
+   }
   },
   {
    "name": "Mega Eelektross",
    "of": "Eelektross",
    "spr": "eelektross_1",
-   "stone": "eelektrossite"
+   "stone": "eelektrossite",
+   "type": "electric",
+   "sig": "electro-drift",
+   "boost": {
+    "hp": 1.03,
+    "atk": 1.27,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Eelevate",
+    "fx": "Immune to Ground moves, and gains 10% Speed at the start of each round it was hit."
+   }
   },
   {
    "name": "Mega Chandelure",
    "of": "Chandelure",
    "spr": "chandelure_1",
-   "stone": "chandelurite"
+   "stone": "chandelurite",
+   "type": "ghost",
+   "sig": "infernal-parade",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.22,
+    "spd": 1.12
+   },
+   "ability": {
+    "name": "Infiltrator",
+    "fx": "Its moves ignore damage reduction from Reflect and shielding moves."
+   }
   },
   {
    "name": "Mega Golurk",
    "of": "Golurk",
    "spr": "golurk_1",
-   "stone": "golurkite"
+   "stone": "golurkite",
+   "type": "ground",
+   "sig": "headlong-rush",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.28,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Unseen Fist",
+    "fx": "Its Single moves go through Protect, Detect and shields."
+   }
   },
   {
    "name": "Mega Chesnaught",
    "of": "Chesnaught",
    "spr": "chesnaught_1",
-   "stone": "chesnaughtite"
+   "stone": "chesnaughtite",
+   "type": "grass",
+   "sig": "spiky-shield",
+   "boost": {
+    "hp": 1.24,
+    "atk": 1.24,
+    "spd": 0.69
+   },
+   "ability": {
+    "name": "Bulletproof",
+    "fx": "Takes 30% less damage from Splash moves."
+   }
   },
   {
    "name": "Mega Delphox",
    "of": "Delphox",
    "spr": "delphox_1",
-   "stone": "delphoxite"
+   "stone": "delphoxite",
+   "type": "fire",
+   "sig": "mystical-fire",
+   "boost": {
+    "hp": 1.08,
+    "atk": 1.34,
+    "spd": 1.29
+   },
+   "ability": {
+    "name": "Levitate",
+    "fx": "Immune to Ground moves."
+   }
   },
   {
    "name": "Mega Greninja",
    "of": "Greninja",
    "spr": "greninja_3",
-   "stone": "greninjite"
+   "stone": "greninjite",
+   "type": "water",
+   "sig": "water-shuriken",
+   "boost": {
+    "hp": 1.07,
+    "atk": 1.3,
+    "spd": 1.16
+   },
+   "ability": {
+    "name": "Protean",
+    "fx": "Before each move, it changes its type to match the move."
+   }
   },
   {
    "name": "Mega Pyroar",
    "of": "Pyroar",
    "spr": "pyroar_1",
-   "stone": "pyroarite"
+   "stone": "pyroarite",
+   "type": "fire",
+   "sig": "torch-song",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.2,
+    "spd": 1.19
+   },
+   "ability": {
+    "name": "Fire Mane",
+    "fx": "Its Fire moves deal 30% more damage, and it takes 25% less damage from Ice moves."
+   }
   },
   {
    "name": "Mega Floette",
    "of": "Floette",
    "spr": "floette_6",
-   "stone": "floettite"
+   "stone": "floettite",
+   "type": "fairy",
+   "sig": "light-of-ruin",
+   "boost": {
+    "hp": 1.51,
+    "atk": 1.6,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Fairy Aura",
+    "fx": "Every Fairy move in the battle deals 25% more damage, on both sides."
+   }
   },
   {
    "name": "Mega Meowstic",
    "of": "Meowstic",
    "spr": "meowstic_2",
-   "stone": "meowsticite"
+   "stone": "meowsticite",
+   "type": "psychic",
+   "sig": "psyblade",
+   "boost": {
+    "hp": 1.07,
+    "atk": 1.6,
+    "spd": 1.19
+   },
+   "ability": {
+    "name": "Trace",
+    "fx": "At the start of battle, copies the ability of the enemy directly across."
+   }
   },
   {
    "name": "Mega Malamar",
    "of": "Malamar",
    "spr": "malamar_1",
-   "stone": "malamarite"
+   "stone": "malamarite",
+   "type": "dark",
+   "sig": "psycho-cut",
+   "boost": {
+    "hp": 1.13,
+    "atk": 1.16,
+    "spd": 1.21
+   },
+   "ability": {
+    "name": "Contrary",
+    "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
+   }
   },
   {
    "name": "Mega Barbaracle",
    "of": "Barbaracle",
    "spr": "barbaracle_1",
-   "stone": "barbaracite"
+   "stone": "barbaracite",
+   "type": "rock",
+   "sig": "razor-shell",
+   "boost": {
+    "hp": 1.1,
+    "atk": 1.32,
+    "spd": 1.29
+   },
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Dragalge",
    "of": "Dragalge",
    "spr": "dragalge_1",
-   "stone": "dragalgite"
+   "stone": "dragalgite",
+   "type": "poison",
+   "sig": "core-enforcer",
+   "boost": {
+    "hp": 1.16,
+    "atk": 1.32,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Regenerator",
+    "fx": "Heals 5% of its max HP at the end of each round."
+   }
   },
   {
    "name": "Mega Hawlucha",
    "of": "Hawlucha",
    "spr": "hawlucha_1",
-   "stone": "hawluchanite"
+   "stone": "hawluchanite",
+   "type": "fighting",
+   "sig": "flying-press",
+   "boost": {
+    "hp": 1.19,
+    "atk": 1.41,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "No Guard",
+    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+   }
   },
   {
    "name": "Mega Zygarde",
    "of": "Zygarde",
    "spr": "zygarde_5",
-   "stone": "zygardite"
+   "stone": "zygardite",
+   "type": "dragon",
+   "sig": "thousand-arrows",
+   "boost": {
+    "hp": 1.41,
+    "atk": 1.6,
+    "spd": 1.05
+   }
   },
   {
    "name": "Mega Diancie",
    "of": "Diancie",
    "spr": "diancie_1",
-   "stone": "diancite"
+   "stone": "diancite",
+   "type": "rock",
+   "sig": "diamond-storm",
+   "boost": {
+    "hp": 0.8,
+    "atk": 1.6,
+    "spd": 1.6
+   },
+   "ability": {
+    "name": "Magic Bounce",
+    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+   }
   },
   {
    "name": "Mega Crabominable",
    "of": "Crabominable",
    "spr": "crabominable_1",
-   "stone": "crabominite"
+   "stone": "crabominite",
+   "type": "fighting",
+   "sig": "ice-hammer",
+   "boost": {
+    "hp": 1.25,
+    "atk": 1.17,
+    "spd": 0.77
+   },
+   "ability": {
+    "name": "Iron Fist",
+    "fx": "Its Fighting moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Golisopod",
    "of": "Golisopod",
    "spr": "golisopod_1",
-   "stone": "golisopite"
+   "stone": "golisopite",
+   "type": "bug",
+   "sig": "first-impression",
+   "boost": {
+    "hp": 1.17,
+    "atk": 1.2,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Its Single moves deal 20% more damage."
+   }
   },
   {
    "name": "Mega Drampa",
    "of": "Drampa",
    "spr": "drampa_1",
-   "stone": "drampanite"
+   "stone": "drampanite",
+   "type": "dragon",
+   "sig": "dragon-energy",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.21,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Berserk",
+    "fx": "The first time its HP drops below half, it gains 20% Attack for the battle."
+   }
   },
   {
    "name": "Mega Magearna",
    "of": "Magearna",
    "spr": "magearna_2",
-   "stone": "magearnite"
+   "stone": "magearnite",
+   "type": "steel",
+   "sig": "fleur-cannon",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.31,
+    "spd": 1.46
+   }
   },
   {
    "name": "Mega Zeraora",
    "of": "Zeraora",
    "spr": "zeraora_1",
-   "stone": "zeraorite"
+   "stone": "zeraorite",
+   "type": "electric",
+   "sig": "plasma-fists",
+   "boost": {
+    "hp": 1.0,
+    "atk": 1.41,
+    "spd": 1.07
+   }
   },
   {
    "name": "Mega Falinks",
    "of": "Falinks",
    "spr": "falinks_1",
-   "stone": "falinksite"
+   "stone": "falinksite",
+   "type": "fighting",
+   "sig": "no-retreat",
+   "boost": {
+    "hp": 1.14,
+    "atk": 1.3,
+    "spd": 1.33
+   },
+   "ability": {
+    "name": "Defiant",
+    "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
+   }
   },
   {
    "name": "Mega Scovillain",
    "of": "Scovillain",
    "spr": "scovillain_1",
-   "stone": "scovillainite"
+   "stone": "scovillainite",
+   "type": "grass",
+   "sig": "raging-fury",
+   "boost": {
+    "hp": 1.15,
+    "atk": 1.28,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Spicy Spray",
+    "fx": "When hit by a Single move, the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
+   }
   },
   {
    "name": "Mega Glimmora",
    "of": "Glimmora",
    "spr": "glimmora_1",
-   "stone": "glimmoranite"
+   "stone": "glimmoranite",
+   "type": "rock",
+   "sig": "mortal-spin",
+   "boost": {
+    "hp": 1.09,
+    "atk": 1.2,
+    "spd": 1.17
+   },
+   "ability": {
+    "name": "Adaptability",
+    "fx": "Moves that match its current type deal 25% more damage."
+   }
   },
   {
    "name": "Mega Tatsugiri",
    "of": "Tatsugiri",
    "spr": "tatsugiri_3",
-   "stone": "tatsugirinite"
+   "stone": "tatsugirinite",
+   "type": "dragon",
+   "sig": "order-up",
+   "boost": {
+    "hp": 1.21,
+    "atk": 1.14,
+    "spd": 1.12
+   }
   },
   {
    "name": "Mega Baxcalibur",
    "of": "Baxcalibur",
    "spr": "baxcalibur_1",
-   "stone": "baxcalibrite"
+   "stone": "baxcalibrite",
+   "type": "dragon",
+   "sig": "glaive-rush",
+   "boost": {
+    "hp": 1.1,
+    "atk": 1.23,
+    "spd": 1.0
+   },
+   "ability": {
+    "name": "Thermal Exchange",
+    "fx": "Gains 20% Attack each time it's hit by a Fire move, and can't be made to lose HP each round."
+   }
   }
  ]
 }

@@ -62,6 +62,10 @@ function evolvesFrom(f){
 // the line under a Pokémon's name in the RotomDex: its role, then where it turns up. Only a line's first Pokémon
 // is found anywhere; its evolutions say what they evolve from
 function dexWhere(f){
+  if (f.mega){
+    const st = f.mega.stone && ITEM[f.mega.stone];
+    return [roleHTML(f), `Mega Evolves from ${f.mega.of} ${st ? `holding <img class="dexmega__stone" src="${spriteURL(st.spr)}" alt="">${st.name}` : '(no stone needed)'}`].filter(Boolean).join(' · ');
+  }
   const from = evolvesFrom(f);
   return [roleHTML(f), from ? `Evolves from ${from}` : foundAt(f.line)].filter(Boolean).join(' · ');
 }
@@ -96,6 +100,16 @@ const STONE_IDS = ITEM_IDS.filter(id => ITEM[id].mega), BASE_ITEM_IDS = ITEM_IDS
 const MEGAS_OF = {};
 for (const m of MEGAS) for (const f of DATA.forms) if (f.name === m.of && !(MEGAS_OF[f.line] ||= []).includes(m)) MEGAS_OF[f.line].push(m);
 // the Mega a Pokémon of this form, holding this item, turns into (or none)
+/* Each Mega is also a RotomDex entry, one more stage at the end of its line: the form it Mega Evolves from (its
+   most-leveled one) with the Mega's own sprite, type, ability, signature move and stat boosts (data.json megas[].boost).
+   These go in FORM, so the RotomDex can open them, but not in FORMS: nothing else treats them as a form you can have. */
+for (const m of MEGAS){
+  const base = DATA.forms.filter(f => f.name === m.of).sort((a, b) => b.star - a.star)[0];
+  const f = { ...base, id: `${base.line}-mega-${m.sig}`, name: m.name, spr: m.spr, type: m.type || base.type, sig: m.sig, ability: m.ability || base.ability,
+    hp: Math.round(base.hp * m.boost.hp), atk: Math.round(base.atk * m.boost.atk), spd: Math.round(base.spd * m.boost.spd), mega: m };
+  delete f.branch;
+  FORM[f.id] = f; m.form = f.id;
+}
 const megaFor = (form, item) => MEGAS.find(m => m.of === FORM[form].name && (m.stone ? m.stone === item : true));
 
 /* every balance number for the prototype lives here */
@@ -120,7 +134,6 @@ const TUNE = {
   martStock: 4, martRerollStep: 20,
   sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
   bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
-  mega: { hp: .15, atk: .25, spd: .1 },                // a Mega Evolution's boost (a placeholder: each Mega will get its own)
   megaStonePrice: 150, megaStoneChance: .5,           // a Mart offers a stone for your party (when one fits) this often
   itemPrice: { 'choice-band':120, 'choice-specs':100, 'choice-scarf':120, 'life-orb':120, 'weakness-policy':100,
     'leftovers':90, 'focus-sash':90, 'assault-vest':90, 'safety-goggles':90,
@@ -1334,7 +1347,7 @@ async function dexJumpMove(k){
 }
 function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
-  const tutor = tutorMoves(f), sigs = [...new Set(speciesForms(f).map(x => x.sig))];
+  const tutor = f.mega ? [] : tutorMoves(f), sigs = f.mega ? [f.sig] : [...new Set(speciesForms(f).map(x => x.sig))];
   return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
@@ -1345,9 +1358,9 @@ function dexMonHTML(f){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       <div class="dexkv">${movesLabel(f.star)}<div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}
-        <p class="dexnote dexnote--tutor">Can be taught:</p>${tutor.length
+        ${f.mega ? `<p class="dexnote dexnote--tutor">Mega Evolving always swaps its signature move for ${MOVES[f.sig].name}; it keeps the move it was taught.</p>` : `<p class="dexnote dexnote--tutor">Can be taught:</p>${tutor.length
         ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
-        : '<i class="dexnone">None</i>'}</div></div>
+        : '<i class="dexnone">None</i>'}`}</div></div>
     </div>
   </div>`;
 }
@@ -1368,10 +1381,14 @@ function dexStages(fs){
     chain.branch = b;
     return chain;
   });
+  // a Mega is one more step after the species it comes from (Floette's comes off the middle of its line)
+  for (const c of [...chains]) c.forEach((sp, i) => MEGAS.filter(m => m.of === sp.name).forEach(m => {
+    const e = [...c.slice(0, i + 1), FORM[m.form]]; e.branch = c.branch; chains.push(e);
+  }));
   // one column per evolution step; a species shared by several branches shows once. When only some branches
   // evolve again (Applin: Dipplin into Hydrapple), each branch keeps its own row, with gaps (null) for the others
   const cols = [];
-  for (let d = 0; d < 3; d++){
+  for (let d = 0; d < 4; d++){
     const col = [], keyOf = c => c.slice(0, d + 1).map(f => f.name).join('>');
     const seen = new Set();
     for (const c of chains) if (c[d] && !seen.has(keyOf(c))){ seen.add(keyOf(c)); col.push(c); }
@@ -1384,23 +1401,18 @@ function dexStages(fs){
     const pad = prev && prev.length > 1 && col.length < prev.length && prev.every(p => kids(p).length <= 1);
     // each species stands for its most-leveled form on its branch (its full stats)
     return (pad ? prev.map(p => kids(p)[0] || null) : col)
-      .map(c => c && fs.filter(x => x.name === c[d].name && (!x.branch || !c.branch || x.branch === c.branch)).sort((a, b) => a.star - b.star).at(-1));
+      .map(c => c && (c[d].mega ? c[d] : fs.filter(x => x.name === c[d].name && (!x.branch || !c.branch || x.branch === c.branch)).sort((a, b) => a.star - b.star).at(-1)));
   });
 }
-// under the evolution path: the line's Mega Evolutions, each with the Pokémon and stone it takes
-function dexMegaHTML(l){
-  const ms = MEGAS_OF[l]; if (!ms) return '';
-  return `<div class="dexmega"><span class="dexmega__label">Mega Evolution</span>${ms.map(m => `<div class="dexmega__row">
-    <span class="dexmega__pic"><img src="${SPRITES[m.spr]}" alt="" loading="lazy"></span>
-    <div class="dexmega__text"><b>${m.name}</b><span>${m.stone ? `${m.of} holding <img class="dexmega__stone" src="${spriteURL(ITEM[m.stone].spr)}" alt="">${ITEM[m.stone].name}` : `${m.of}, no stone needed`}</span></div></div>`).join('')}</div>`;
-}
+// a Mega's label in the path drops the species it comes from, which sits right before it: "Mega X", "Primal"
+const evoLabel = f => f.mega ? f.name.replace(` ${f.mega.of}`, '') : f.name;
 function dexEvoHTML(fs){
   const cols = dexStages(fs);
   return `<div class="dexevo">
     <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
-    <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
+    <div class="dexevo__path${cols.length > 3 ? ' dexevo__path--long' : ''}" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
       + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map((f, j) => f ? `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
-          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span></button>`
+          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${evoLabel(f)}</span></button>`
           : `<span class="dexevo__mon dexevo__gap" aria-hidden="true"><span class="dexevo__pic"></span><span class="dexevo__name">${cols[i - 1][j].name}</span></span>`).join('')}</div>`).join('')}</div>
   </div>`;
 }
@@ -1463,7 +1475,7 @@ async function dexJump(id){
   dexSearchClear();
   await dexShow('mons', true);
   const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#dex-scroll'); if (!card) return;
-  dexOpen(card, speciesForms(f).at(-1).id, false);       // the species' button stands for all its levels
+  dexOpen(card, f.mega ? f.id : speciesForms(f).at(-1).id, false);       // the species' button stands for all its levels
   const y = scr.scrollTop + card.getBoundingClientRect().top - scr.getBoundingClientRect().top - 12;
   scr.scrollTo({ top: y, behavior: REDUCED ? 'auto' : 'smooth' });
 }
@@ -1478,7 +1490,7 @@ const DEX_BUILD = {
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
       const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...new Set(fs.map(f => f.role)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
-      return `<article class="dexline" data-line="${l}" data-only="" data-q="${searchText(q)}">${dexEvoHTML(fs)}${dexMegaHTML(l)}<div class="dexdetail" hidden></div></article>`;
+      return `<article class="dexline" data-line="${l}" data-only="" data-q="${searchText(q)}">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
@@ -1488,7 +1500,9 @@ const DEX_BUILD = {
         return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
           + ks.map(k => {
             const m = MOVES[k], sigOf = FORMS.filter((f, i, all) => f.sig === k && all.findIndex(x => x.sig === k && x.name === f.name) === i), pools = POOLS.filter(p => p.moves.includes(k));
+            const megaOf = MEGAS.filter(g => g.sig === k).map(g => FORM[g.form]);
             const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
+              + (megaOf.length ? `<div class="dexlearn"><span>Mega signature of</span><div class="dexminis">${megaOf.map(dexMini).join('')}</div></div>` : '')
               + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
               ;
             return `<article class="dexmove" data-move="${k}" data-q="${searchText(m.name + ' ' + m.type)}">${moveRow(k, false)}${learn}</article>`;
