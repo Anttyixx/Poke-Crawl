@@ -28,7 +28,8 @@ for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learn
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 and ★2 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
-// the starters, three to a generation (Grass, Fire, Water); a new run offers one generation's three, at random
+// the starters, three to a generation (Grass, Fire, Water); a new run offers one Grass, one Fire and one Water starter,
+// each from a different generation, at random
 const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],
   ['turtwig', 'chimchar', 'piplup'], ['snivy', 'tepig', 'oshawott'], ['chespin', 'fennekin', 'froakie'], ['rowlet', 'litten', 'popplio'],
   ['grookey', 'scorbunny', 'sobble'], ['sprigatito', 'fuecoco', 'quaxly']];
@@ -1098,6 +1099,20 @@ async function wipeTo(id, prepare, opt = {}){
   RD_BTN.classList.remove('is-wiping'); rdSync();
   opt.after?.();
 }
+// a plain cross-fade, for going from the title screen to the starters: the old screen fades out, the new one fades in
+async function fadeTo(id, prepare){
+  if (wiping) return;
+  wiping = true; hideTip();
+  if (DEX.open) closeDex(true);
+  const old = document.querySelector('.screen.is-active');
+  if (!REDUCED && old) await old.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 180, easing: 'ease-in', fill: 'forwards' }).finished;
+  UI.sel = null; UI.notice = null;
+  prepare?.();
+  show(id); refresh();
+  old?.getAnimations().forEach(a => a.cancel());
+  if (!REDUCED) await $('#' + id).animate([{ opacity: 0 }, { opacity: 1 }], { duration: 240, easing: 'ease-out' }).finished;
+  wiping = false; updateMapHud();
+}
 const toMap = () => wipeTo('scr-map', null, { color: 'var(--glow-selected)', mark: markHTML('🗺️', `Map ${R.mapNo}`), after: () => { scrollMapToCurrent(); afterBattle(); } });
 
 /* ---------- your team and bag on the map ----------
@@ -2010,7 +2025,7 @@ function buildTitle(){
     return `<div class="tmon" style="--t:var(--t-${f.type}); --i:${i}"><img src="${SPRITES[f.spr]}" alt="${f.name}"></div>`;
   }).join('');
 }
-$('#title-start').addEventListener('click', () => wipeTo('scr-starter', openStarter, { mark: markHTML('🚩', 'New run') }));
+$('#title-start').addEventListener('click', () => fadeTo('scr-starter', openStarter));
 // release notes: a popup over the title screen listing what changed in each version, newest first
 const NOTES = $('#notes');
 function openNotes(){
@@ -2030,7 +2045,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 // three starters across the middle of the screen. Tapping one picks it; tapping Rotom then scans it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
 const ST = { offer: [], home: -1, chosen: false, pressed: -1e9 };
-function openStarter(){ newRun(); Object.assign(ST, { offer: pick(STARTER_GENS).map(l => makeMon(l, 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
+function openStarter(){ newRun(); Object.assign(ST, { offer: shuffle([...STARTER_GENS]).slice(0, 3).map((g, i) => makeMon(g[i], 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
 // tap a starter to pick it ("I Choose You!!" shows, and Rotom lights up to scan it); tap it again to put it back
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
@@ -2716,6 +2731,6 @@ function openEnd(won){
     $('#end-body').innerHTML = won
       ? `<h1 class="title">All eight gyms cleared</h1><p class="sub">You finished the run with ${R.lives} ${R.lives === 1 ? 'life' : 'lives'} to spare.</p><div class="endparty">${party}</div><div class="actions"><button class="btn btn--go" id="end-new">Start a new run</button></div>`
       : `<h1 class="title">Out of lives</h1><p class="sub">You made it to map ${R.mapNo} and cleared ${R.gymsBeaten} ${R.gymsBeaten === 1 ? 'gym' : 'gyms'}. Nothing carries over, so the next run starts fresh.</p><div class="endparty">${party}</div><div class="actions"><button class="btn btn--go" id="end-new">Start a new run</button></div>`;
-    $('#end-new').addEventListener('click', () => wipeTo('scr-starter', openStarter, { mark: markHTML('🚩', 'New run') }));
+    $('#end-new').addEventListener('click', () => fadeTo('scr-starter', openStarter));
   }, { color: won ? 'var(--star-gold)' : 'var(--hp-red)', mark: markHTML(won ? '🏆' : '💔', won ? 'Run complete' : 'Run over') });
 }
