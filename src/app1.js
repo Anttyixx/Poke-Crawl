@@ -15,8 +15,10 @@ const STAT_MAX = { hp: 255, atk: 255, spd: 255 };   // the highest any stat can 
 const LINES = {};
 for (const f of FORMS) ((LINES[f.line] ||= {})[f.star] ||= []).push(f);
 const LINE_IDS = Object.keys(LINES);
-/* Moves come in three kinds (MOVES[k].cat): 'sig', a shared signature move, learned by leveling and never taught;
-   'unique', a signature only one line has; 'tutor', taught at the Move Tutor. Who can be taught what comes from move
+/* Moves come in four kinds (MOVES[k].cat): 'sig', a shared signature move, learned by leveling; 'unique', a signature
+   only one line has; 'mega', a Mega Evolution's signature; 'tutor', taught at the Move Tutor. A few tutor moves are
+   also some lines' signatures (Bite, Harden): what a Pokémon can put in its signature slot is any signature of its
+   line, and in its taught slot any move with a pick chance (a tutor move). Who can be taught what comes from move
    pools: each pool is a list of tutor moves plus a rule (every Pokémon, one type, or a ★1 stat at or above a bar).
    Type pools follow the current species' type; stat pools check the line's ★1 stats so they never change. */
 const POOLS = DATA.pools;
@@ -197,7 +199,7 @@ const TARGET_NAME = { self:'self', team:'whole team', lowest:'lowest-HP ally', f
    Every move shows what kind of move it is first (Attack, Support or Defense, a coloured tag) and then one plain
    sentence saying what it does and to whom ("Deals 45% of Attack as damage to the opposing Pokémon in front."), with
    any extra effect after it. Defense: support moves that cut or block damage; Support: everything else that helps. */
-const DEFENSE_MOVES = new Set(['protect', 'barrier', 'reflect', 'light-screen', 'wide-guard', 'safeguard', 'mist']);
+const DEFENSE_MOVES = new Set(['protect', 'reflect', 'wide-guard', 'safeguard']);
 // an offensive move that deals no damage is sorted by what it does: damage over time is an Attack, cutting the
 // target's Attack or putting it to sleep is Defense, anything else (slowing it down) is Support
 const moveKind = m => m.kind === 'off'
@@ -252,7 +254,8 @@ function remember(m, ...ks){ const L = learnedOf(m); for (const k of ks) if (k &
 // what a slot ('sig', or a taught slot's index) can be swapped for
 function swapOptions(m, slot){
   const have = known(m), sig = slot === 'sig';
-  return learnedOf(m).filter(k => !have.includes(k) && (MOVES[k].cat === 'tutor') !== sig);
+  const lineSigs = new Set(FORMS.filter(f => f.line === FORM[m.form].line).map(f => f.sig));
+  return learnedOf(m).filter(k => !have.includes(k) && (sig ? lineSigs.has(k) : MOVES[k].chance != null));
 }
 function swapMove(m, slot, k){
   const old = slot === 'sig' ? sigOf(m) : m.taught[slot];
