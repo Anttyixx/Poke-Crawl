@@ -523,7 +523,7 @@ async function resolveOffense(u, pos, key, m, el, origKey){
   const selfHurt = (frac, why, base = u.maxHp) => { const a = Math.max(1, Math.round(base * frac)); u.hp -= a; flash(el, 'hit'); floatText(el, `-${a}`, 'dmg'); selfNotes.push(`${why} <b class="d">−${a}</b>`); };
   if (DRAIN[key] && dealt){ const a = Math.min(Math.round(dealt * DRAIN[key]), u.maxHp - u.hp); u.hp += a; if (a){ floatText(el, `+${a}`, 'heal'); selfNotes.push(`drains <b class="h">+${a}</b>`); } }
   if (RECOIL[key] && dealt) selfHurt(RECOIL[key], 'recoil', dealt);
-  if (u.item !== 'protective-pads') targets.forEach((t, i) => { if (t.item === 'rocky-helmet' && tot[i].dmg > 0) selfHurt(.12, `${t.name}'s Rocky Helmet`); });
+  if (m.contact && u.item !== 'protective-pads') targets.forEach((t, i) => { if (t.item === 'rocky-helmet' && tot[i].dmg > 0) selfHurt(.12, `${t.name}'s Rocky Helmet`); });
   if (u.item === 'life-orb' && damaging) selfHurt(.1, 'Life Orb');
   if (m.selfAtk || m.selfSpd){
     const sign = x => x > 0 ? '+' : '−';

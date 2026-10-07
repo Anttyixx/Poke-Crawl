@@ -15,21 +15,19 @@ const STAT_MAX = { hp: 255, atk: 255, spd: 255 };   // the highest any stat can 
 const LINES = {};
 for (const f of FORMS) ((LINES[f.line] ||= {})[f.star] ||= []).push(f);
 const LINE_IDS = Object.keys(LINES);
-/* Moves come in four kinds (MOVES[k].cat): 'sig', a shared signature move, learned by leveling; 'unique', a signature
-   only one line has; 'mega', a Mega Evolution's signature; 'tutor', taught at the Move Tutor. A few tutor moves are
-   also some lines' signatures (Bite, Harden): what a Pokémon can put in its signature slot is any signature of its
-   line, and in its taught slot any move with a pick chance (a tutor move). Who can be taught what comes from move
-   pools: each pool is a list of tutor moves plus a rule (every Pokémon, one type, or a ★1 stat at or above a bar).
-   Type pools follow the current species' type; stat pools check the line's ★1 stats so they never change. */
-const POOLS = DATA.pools;
-const poolFits = (p, f) => p.rule.all || p.rule.type === f.type || (p.rule.stat && LINES[f.line][1][0][p.rule.stat] >= p.rule.min);
+/* Moves come in two groups. Signature moves (MOVES[k].cat 'sig', shared by a few lines; 'unique', one line's own;
+   'mega', a Mega Evolution's) are learned by leveling, one per ★, and define how a Pokémon plays. Teachable moves
+   ('tutor') are taught at the Move Tutor; each one lists the lines that can learn it (MOVES[k].learnBy, a whitelist:
+   add a new Pokémon's line there to let it learn the move). Every move also says whether it makes contact with its
+   target (MOVES[k].contact), which is what Rocky Helmet and contact abilities react to. */
+const TEACHABLE = Object.keys(MOVES).filter(k => MOVES[k].learnBy);
+const LEARN_BY = Object.fromEntries(TEACHABLE.map(k => [k, new Set(MOVES[k].learnBy)]));
 const LEARN = {};
-for (const f of FORMS) LEARN[f.id] = [...new Set(POOLS.filter(p => poolFits(p, f)).flatMap(p => p.moves))].filter(k => k !== f.sig);
-for (const m of Object.values(MOVES)) m.learnableBy = [];
-for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
+for (const f of FORMS) LEARN[f.id] = TEACHABLE.filter(k => LEARN_BY[k].has(f.line) && k !== f.sig);
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 and ★2 is one Pokémon
-const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
+// teachables nearly every line can learn (Protect, Rest, Facade…): the Move Tutor offers at most one of them at a time
+const UNIVERSAL = new Set(TEACHABLE.filter(k => LEARN_BY[k].size >= LINE_IDS.length * .75));
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', contact:true };
 // the starters, three to a generation (Grass, Fire, Water); a new run offers one Grass, one Fire and one Water starter,
 // each from a different generation, at random
 const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],
@@ -216,7 +214,8 @@ function moveDesc(m){
   const hits = m.hits ? (m.hits[0] === m.hits[1] ? ` ${m.hits[0]} times` : ` ${m.hits[0]}–${m.hits[1]} times`) : '';
   return `Deals ${m.power}% of Attack as damage to ${SHAPE_WHO[m.shape] || 'its target'}${hits}.${m.fx ? ' ' + m.fx : ''}`;
 }
-const kindTag = m => `<span class="mvkind mvkind--${moveKind(m)}">${KIND_NAME[moveKind(m)]}</span>`;
+const kindTag = m => `<span class="mvkind mvkind--${moveKind(m)}">${KIND_NAME[moveKind(m)]}</span>`
+  + (m.kind === 'off' && m.power !== 0 ? `<span class="mvkind mvkind--touch" title="${m.contact ? 'Touches its target: sets off Rocky Helmet and contact abilities' : 'Hits from a distance: never sets off Rocky Helmet'}">${m.contact ? 'Contact' : 'Non-contact'}</span>` : '');
 
 /* ================= utils ================= */
 const $ = s => document.querySelector(s);
@@ -1381,7 +1380,6 @@ const starRow = n => `<span class="dt__stars" aria-label="${n} star">${'★'.rep
 // what a form can actually be taught: tutor moves at or below its star level, not counting its signature move
 const tutorMoves = f => (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= f.star)
   .sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
-const poolText = p => p.rule.all ? 'Every Pokémon' : p.rule.type ? `${cap(p.rule.type)}-type Pokémon` : `Pokémon with ${p.rule.min}+ ${{ hp:'HP', atk:'Attack', spd:'Speed' }[p.rule.stat]} at ★1`;
 const dexMini = f => `<button class="dexmini" type="button" data-form="${f.id}" title="${f.name}" aria-label="${f.name}: show its Pokédex entry"><img src="${formSprite(f)}" alt="" loading="lazy"></button>`;
 
 // tutor moves in an entry are buttons: tapping one opens its details under the chips, with a link to the Moves section
@@ -1560,16 +1558,16 @@ const DEX_BUILD = {
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
-    return `<p class="dexintro">${ids.length} moves. Every Pokémon knows 2: its signature move, which it learns by leveling and changes as it evolves, and one move taught at a Move Tutor. Signature moves are never taught; a few are unique to one Pokémon.</p>`
+    return `<p class="dexintro">${ids.length} moves in two groups. <b>Signature moves</b> are learned by leveling, one at each ★, and define how a Pokémon plays. <b>Teachable moves</b> are taught at a Move Tutor; each one lists the Pokémon that can learn it. Every Pokémon knows 2: its signature move and one teachable move. Attacks also say whether they make <b>contact</b>, which sets off Rocky Helmet and some abilities.</p>`
       + types.map(t => {
         const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
         return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
           + ks.map(k => {
-            const m = MOVES[k], sigOf = FORMS.filter((f, i, all) => f.sig === k && all.findIndex(x => x.sig === k && x.name === f.name) === i), pools = POOLS.filter(p => p.moves.includes(k));
+            const m = MOVES[k], sigOf = FORMS.filter((f, i, all) => f.sig === k && all.findIndex(x => x.sig === k && x.name === f.name) === i), who = m.learnBy ? m.learnBy.map(l => LINES[l][1][0]) : [];
             const megaOf = MEGAS.filter(g => g.sig === k).map(g => FORM[g.form]);
             const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
               + (megaOf.length ? `<div class="dexlearn"><span>Mega signature of</span><div class="dexminis">${megaOf.map(dexMini).join('')}</div></div>` : '')
-              + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
+              + (who.length ? `<div class="dexlearn"><span>Taught to ${who.length} line${who.length > 1 ? 's' : ''} <small>(★${m.star} and up)</small></span><div class="dexminis">${who.slice(0, 12).map(dexMini).join('')}${who.length > 12 ? `<small class="dexmore">+${who.length - 12} more</small>` : ''}</div></div>` : '')
               ;
             return `<article class="dexmove" data-move="${k}" data-q="${searchText(m.name + ' ' + m.type)}">${moveRow(k, false)}${learn}</article>`;
           }).join('');

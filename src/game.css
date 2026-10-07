@@ -1339,3 +1339,5 @@ body.feeding .screen, body.feeding #rotomdex, body.feeding #mapbag{ pointer-even
 .dexevo__mon--mega[aria-pressed="true"] .dexevo__pic::before{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 45%, transparent); }
 .dexevo__mon--mega .dexevo__name{ color:#e2b8ff; }
 .dexmon--mega .dexmon__pic::before{ inset:13%; }
+.mvkind--touch{ color:#c9b8ff; background:rgba(180,160,255,.12); }
+.dexmore{ align-self:center; color:var(--ink-dim); font-size:11.5px; margin-left:4px; }
