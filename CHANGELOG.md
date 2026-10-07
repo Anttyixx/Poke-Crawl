@@ -24,6 +24,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **Abilities speak this game's language.** Every ability now describes what it does with HP, Attack and Speed, rows and lanes, and damage over time, instead of Defense, Special Attack, accuracy, weather or status conditions (abilities still aren't active in battle).
 - **New sprites.** Every Pokémon and item has a new sprite, from a set that goes up to Generation 9.
 - EXP is shown in points (100 to a level) instead of percentages: after a battle you'll see "your party gained 10 EXP each", and a Pokémon's scan shows its EXP like 50/100.
 - **Clearer moves.** Every move now leads with what kind of move it is (Attack, Support or Defense) and a plain description of what it does, like "Deals 45% of Attack as damage to the opposing Pokémon in front." The button for switching a move is now a swap icon.
