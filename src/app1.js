@@ -96,7 +96,10 @@ const wildMoveChance = () => Math.min(1, TUNE.wildMove.base + TUNE.wildMove.perM
    The first time a map needs a wild Pokémon, TUNE.mapPool.size lines from its tier become that map's wild Pokémon for
    this run: 1 or 2 with a gimmick, a few at random, and the rest picked to fit with your team and the ones already
    picked (a role nobody has, a new type, types that resist what hits the team hardest). Each wild node on the map
-   offers three of them, ones not offered yet first. */
+   offers three of them, ones not offered yet first. Every copy of a line you have (party or daycare) makes it less
+   likely to be picked or offered again (TUNE.mapPool.owned). */
+const ownedCopies = l => [...(R.party || []), ...(R.daycare || [])].filter(m => m && m.line === l).length;
+const ownedOdds = l => TUNE.mapPool.owned ** ownedCopies(l);
 const TYPES = [...new Set(FORMS.map(f => f.type))];
 const lineTraits = l => { const f = LINES[l][3][0]; return { type: f.type, role: f.role }; };
 function synergy(l, team){
@@ -111,10 +114,10 @@ function buildMapPool(mapNo){
   if (cands.length <= c.size) return shuffle([...cands]);
   const pool = shuffle(cands.filter(isGimmick)).slice(0, c.gimmick[0] + Math.floor(Math.random() * (c.gimmick[1] - c.gimmick[0] + 1)));
   const rest = () => cands.filter(l => !pool.includes(l) && !isGimmick(l));
-  for (let k = 0; k < c.random; k++) pool.push(pickWeighted(rest(), lineWeight));
+  for (let k = 0; k < c.random; k++) pool.push(pickWeighted(rest(), l => lineWeight(l) * ownedOdds(l)));
   while (pool.length < c.size){
     const team = [...partyMons().map(m => FORM[m.form]), ...pool.map(lineTraits)];
-    const scored = rest().map(l => ({ l, s: synergy(l, team) + Math.random() * c.luck + Math.log(lineWeight(l) / 100) }));
+    const scored = rest().map(l => ({ l, s: synergy(l, team) + Math.random() * c.luck + Math.log(lineWeight(l) / 100 * ownedOdds(l)) }));
     pool.push(scored.reduce((a, b) => b.s > a.s ? b : a).l);
   }
   return pool;
@@ -123,8 +126,9 @@ function buildMapPool(mapNo){
 // where a Mythical Pokémon spawned (R.mythicalHere, see newMap), the first wild node also offers it
 function wildLinesFor(mapNo){
   const pool = (R.pools ||= {})[mapNo] ||= buildMapPool(mapNo), seen = R.offered ||= [];
-  const out = shuffle(pool.filter(l => !seen.includes(l))).slice(0, 3);
-  for (const l of shuffle(pool.filter(l => !out.includes(l)))) if (out.length < 3) out.push(l);
+  const out = [];
+  for (const left of [() => pool.filter(l => !seen.includes(l) && !out.includes(l)), () => pool.filter(l => !out.includes(l))])
+    while (out.length < 3 && left().length) out.push(pickWeighted(left(), ownedOdds));
   if (R.mythicalHere && MYTHICAL_LINES.length){ R.mythicalHere = false; out[Math.floor(Math.random() * out.length)] = pick(MYTHICAL_LINES); }
   seen.push(...out);
   return out;
@@ -168,8 +172,9 @@ const TUNE = {
   daycareSize: 8,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
-  mapPool: { size: 12, gimmick: [1, 2], random: 4, luck: 1.5 },   // each map's wild Pokémon: how many, how many with a gimmick, how many
-                                                    // at random (the rest fit your team), and how much chance mixes into that fit
+  mapPool: { size: 8, gimmick: [1, 2], random: 3, luck: 1.5, owned: .5 },   // each map's wild Pokémon: how many, how many with a gimmick, how many
+                                                    // at random (the rest fit your team), and how much chance mixes into that fit;
+                                                    // owned: a line's odds of being offered are multiplied by this for each one you have
   legendaryNode: [0, 0, 0, 0, 0, 1, .1, .1],       // chance a map (1 to 8) has a Legendary node; at most one per map
   mythical: { from: 2, chance: .01 },               // from this map on, a map with no Legendary node has this chance of a
                                                     // Mythical Pokémon (offered at its first wild node), doubling every map
