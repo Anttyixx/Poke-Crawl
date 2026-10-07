@@ -175,6 +175,11 @@ const TUNE = {
                                                     // at random (the rest fit your team), and how much chance mixes into that fit;
                                                     // owned: a line's odds of being offered are multiplied by this for each one you have
   legendaryNode: [0, 0, 0, 0, 0, 1, .1, .1],       // chance a map (1 to 8) has a Legendary node; at most one per map
+  // the first maps have more wild and trainer nodes, so a new run builds its team and levels it up: wild nodes per route
+  // (fewest, most), extra wild nodes off the main routes, the weights of the other nodes (normally trainer 52, item 13,
+  // tutor 12: see GEN), and node types that can sit side by side at a fork (normally every choice there is different)
+  earlyMaps: [{ wildMin: 3, wildMax: 4, extraWilds: 5, weights: { trainer: 85, item: 6, tutor: 4 }, repeatKids: ['trainer'] },
+              { wildMin: 3, wildMax: 3, extraWilds: 3, weights: { trainer: 60, item: 11, tutor: 10 }, repeatKids: ['trainer'] }],
   mythical: { from: 2, chance: .01 },               // from this map on, a map with no Legendary node has this chance of a
                                                     // Mythical Pokémon (offered at its first wild node), doubling every map
   wildMove: { base: .10, perMap: .07 },              // chance a wild Pokémon knows a move besides its signature: 10% on map 1, +7% a map                                // each wild Pokémon is from this map's tier this often; else an earlier tier
@@ -449,7 +454,7 @@ function setPrefix(map, n){
 }
 function isLegal(map, n, t, siblings){
   const cfg = map.cfg, fx = fixedFloors(cfg), frac = n.r / (cfg.floors - 1);
-  if (siblings.has(t)) return false;
+  if (siblings.has(t) && !cfg.repeatKids?.includes(t)) return false;
   if (n.r === fx.daycare) return false;
   if (t === 'legendary' && frac < cfg.legendaryUnlock) return false;
   if (t === 'tutor' && n.r + 1 < cfg.tutorUnlockFloor) return false;
@@ -535,7 +540,8 @@ function validateMap(map){
       if (pt === 'wild' && n.type === 'wild') errors.push('wild chain');
     }
     const kids = n.id === 'D' ? [] : [...n.kids].map(k => map.nodes.get(k)).filter(k => k.r < cfg.floors && k.r !== fx.daycare);
-    if (new Set(kids.map(k => k.type)).size !== kids.length) errors.push('dup branch');
+    const once = kids.filter(k => !cfg.repeatKids?.includes(k.type));
+    if (new Set(once.map(k => k.type)).size !== once.length) errors.push('dup branch');
   }
   const st = pathStats(map).B;
   if (st.min < cfg.wildMin || st.max > cfg.wildMax) errors.push('wild per path');
@@ -568,8 +574,13 @@ function placeLegendary(map){
 }
 const legendaryRoll = mapNo => Math.random() < (TUNE.legendaryNode[mapNo - 1] ?? 0);
 // a new map: maybe a Legendary node; if not, maybe a Mythical Pokémon (1% on map 2, 2% on map 3, 4%, 8%…)
+// map 1 and 2 use TUNE.earlyMaps (more wild and trainer nodes); map 3 on, the normal GEN settings
+function mapCfg(mapNo){
+  const e = TUNE.earlyMaps[mapNo - 1];
+  return e ? { ...GEN, ...e } : GEN;
+}
 function newMap(mapNo){
-  const map = generateMap(randomSeed(), GEN, legendaryRoll(mapNo)), m = TUNE.mythical;
+  const map = generateMap(randomSeed(), mapCfg(mapNo), legendaryRoll(mapNo)), m = TUNE.mythical;
   const legendary = [...map.nodes.values()].some(n => n.type === 'legendary');
   R.mythicalHere = !legendary && mapNo >= m.from && Math.random() < m.chance * 2 ** (mapNo - m.from);
   R.offered = [];
@@ -578,7 +589,7 @@ function newMap(mapNo){
 function generateMap(seed, cfg = GEN, legendary = false){
   const found = [];
   for (let attempt = 0; attempt < 600 && found.length < cfg.candidates; attempt++){ const m = buildValidMap(seed, attempt, cfg); if (m) found.push(m); }
-  if (!found.length) return generateMap(seed + 1, cfg);
+  if (!found.length) return generateMap(seed + 1, cfg, legendary);
   const map = found.reduce((best, m) => scoreMap(m) > scoreMap(best) ? m : best);
   map.seed = seed; map.gen = ++genN;
   if (legendary) placeLegendary(map);
