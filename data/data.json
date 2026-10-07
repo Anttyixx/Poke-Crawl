@@ -319,13 +319,13 @@
    "line": "sandshrew",
    "tier": 3,
    "star": 2,
-   "name": "Sandslash",
+   "name": "Sandshrew",
    "type": "ground",
    "sig": "dig",
    "hp": 108,
    "atk": 48,
    "spd": 29,
-   "spr": "sandslash",
+   "spr": "sandshrew",
    "ability": {
     "name": "Sand Veil",
     "fx": "15% chance to take no damage from any hit."
@@ -369,13 +369,13 @@
    "id": "sandshrewalola-2",
    "line": "sandshrewalola",
    "star": 2,
-   "name": "Alolan Sandslash",
+   "name": "Alolan Sandshrew",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 100,
-   "atk": 49,
-   "spd": 33,
-   "spr": "sandslash_1",
+   "hp": 99,
+   "atk": 51,
+   "spd": 31,
+   "spr": "sandshrew_1",
    "ability": {
     "name": "Snow Cloak",
     "fx": "Increases evasion to 1.25× during hail.  Protects against hail damage."
@@ -472,13 +472,13 @@
    "line": "vulpix",
    "tier": 3,
    "star": 2,
-   "name": "Ninetales",
+   "name": "Vulpix",
    "type": "fire",
    "sig": "fire-spin",
    "hp": 81,
    "atk": 45,
    "spd": 54,
-   "spr": "ninetales",
+   "spr": "vulpix",
    "ability": {
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
@@ -522,13 +522,13 @@
    "id": "vulpixalola-2",
    "line": "vulpixalola",
    "star": 2,
-   "name": "Alolan Ninetales",
+   "name": "Alolan Vulpix",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 95,
-   "atk": 45,
-   "spd": 45,
-   "spr": "ninetales_1",
+   "hp": 91,
+   "atk": 46,
+   "spd": 46,
+   "spr": "vulpix_1",
    "ability": {
     "name": "Snow Cloak",
     "fx": "Increases evasion to 1.25× during hail.  Protects against hail damage."
@@ -695,13 +695,13 @@
    "line": "meowth",
    "tier": 1,
    "star": 2,
-   "name": "Persian",
+   "name": "Meowth",
    "type": "normal",
    "sig": "pay-day",
    "hp": 78,
    "atk": 42,
    "spd": 59,
-   "spr": "persian",
+   "spr": "meowth",
    "ability": {
     "name": "Pickup",
     "fx": "Earns 10% more currency from battles it takes part in. Doesn't affect battle."
@@ -745,16 +745,16 @@
    "id": "meowthgalar-2",
    "line": "meowthgalar",
    "star": 2,
-   "name": "Perrserker",
+   "name": "Galarian Meowth",
    "type": "steel",
    "sig": "steel-wing",
-   "hp": 96,
-   "atk": 56,
-   "spd": 29,
-   "spr": "perrserker",
+   "hp": 95,
+   "atk": 52,
+   "spd": 32,
+   "spr": "meowth_2",
    "ability": {
-    "name": "Battle Armor",
-    "fx": "Protects against critical hits."
+    "name": "Pickup",
+    "fx": "Picks up other Pokémon's used and Flung held items.  May also pick up an item after battle."
    },
    "tier": 1
   },
@@ -848,13 +848,13 @@
    "line": "growlithe",
    "tier": 6,
    "star": 2,
-   "name": "Arcanine",
+   "name": "Growlithe",
    "type": "fire",
    "sig": "fire-fang",
    "hp": 87,
    "atk": 60,
    "spd": 38,
-   "spr": "arcanine",
+   "spr": "growlithe",
    "ability": {
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
@@ -1118,22 +1118,21 @@
    }
   },
   {
-   "id": "slowpoke-2-slowbro",
+   "id": "slowpoke-2",
    "line": "slowpoke",
    "tier": 5,
    "star": 2,
-   "name": "Slowbro",
+   "name": "Slowpoke",
    "type": "psychic",
    "sig": "amnesia",
    "hp": 133,
    "atk": 36,
    "spd": 19,
-   "spr": "slowbro",
+   "spr": "slowpoke",
    "ability": {
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   },
-   "branch": "slowbro"
+   }
   },
   {
    "id": "slowpoke-3-slowbro",
@@ -1152,24 +1151,6 @@
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
    "branch": "slowbro"
-  },
-  {
-   "id": "slowpoke-2-slowking",
-   "line": "slowpoke",
-   "tier": 5,
-   "star": 2,
-   "name": "Slowking",
-   "type": "psychic",
-   "sig": "calm-mind",
-   "hp": 93,
-   "atk": 51,
-   "spd": 31,
-   "spr": "slowking",
-   "ability": {
-    "name": "Oblivious",
-    "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   },
-   "branch": "slowking"
   },
   {
    "id": "slowpoke-3-slowking",
@@ -1313,13 +1294,13 @@
    "line": "onix",
    "tier": 4,
    "star": 2,
-   "name": "Steelix",
-   "type": "steel",
-   "sig": "steel-wing",
+   "name": "Onix",
+   "type": "rock",
+   "sig": "ancient-power",
    "hp": 105,
    "atk": 39,
    "spd": 36,
-   "spr": "steelix",
+   "spr": "onix",
    "ability": {
     "name": "Rock Head",
     "fx": "Takes no recoil damage from its own moves."
@@ -1364,13 +1345,13 @@
    "line": "drowzee",
    "tier": 2,
    "star": 2,
-   "name": "Hypno",
+   "name": "Drowzee",
    "type": "psychic",
    "sig": "psybeam",
    "hp": 112,
    "atk": 39,
    "spd": 26,
-   "spr": "hypno",
+   "spr": "drowzee",
    "ability": {
     "name": "Insomnia",
     "fx": "Can't be made to skip actions by enemy moves."
@@ -1415,13 +1396,13 @@
    "line": "voltorb",
    "tier": 1,
    "star": 2,
-   "name": "Electrode",
+   "name": "Voltorb",
    "type": "electric",
    "sig": "discharge",
    "hp": 71,
    "atk": 39,
    "spd": 68,
-   "spr": "electrode",
+   "spr": "voltorb",
    "ability": {
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
@@ -1466,13 +1447,13 @@
    "line": "cubone",
    "tier": 4,
    "star": 2,
-   "name": "Marowak",
+   "name": "Cubone",
    "type": "ground",
    "sig": "bonemerang",
    "hp": 105,
    "atk": 45,
    "spd": 26,
-   "spr": "marowak",
+   "spr": "cubone",
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
@@ -1564,22 +1545,21 @@
    }
   },
   {
-   "id": "tyrogue-2-hitmonlee",
+   "id": "tyrogue-2",
    "line": "tyrogue",
    "tier": 6,
    "star": 2,
-   "name": "Hitmonlee",
+   "name": "Tyrogue",
    "type": "fighting",
    "sig": "double-kick",
    "hp": 81,
    "atk": 57,
    "spd": 36,
-   "spr": "hitmonlee",
+   "spr": "tyrogue",
    "ability": {
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
-   },
-   "branch": "hitmonlee"
+   }
   },
   {
    "id": "tyrogue-3-hitmonlee",
@@ -1600,24 +1580,6 @@
    "branch": "hitmonlee"
   },
   {
-   "id": "tyrogue-2-hitmonchan",
-   "line": "tyrogue",
-   "tier": 6,
-   "star": 2,
-   "name": "Hitmonchan",
-   "type": "fighting",
-   "sig": "mach-punch",
-   "hp": 93,
-   "atk": 45,
-   "spd": 36,
-   "spr": "hitmonchan",
-   "ability": {
-    "name": "Steadfast",
-    "fx": "Gains 10% Speed each time it's hit (max +40%)."
-   },
-   "branch": "hitmonchan"
-  },
-  {
    "id": "tyrogue-3-hitmonchan",
    "line": "tyrogue",
    "tier": 6,
@@ -1634,24 +1596,6 @@
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
    "branch": "hitmonchan"
-  },
-  {
-   "id": "tyrogue-2-hitmontop",
-   "line": "tyrogue",
-   "tier": 6,
-   "star": 2,
-   "name": "Hitmontop",
-   "type": "fighting",
-   "sig": "rock-smash",
-   "hp": 112,
-   "atk": 39,
-   "spd": 26,
-   "spr": "hitmontop",
-   "ability": {
-    "name": "Steadfast",
-    "fx": "Gains 10% Speed each time it's hit (max +40%)."
-   },
-   "branch": "hitmontop"
   },
   {
    "id": "tyrogue-3-hitmontop",
@@ -1693,13 +1637,13 @@
    "line": "lickitung",
    "tier": 5,
    "star": 2,
-   "name": "Lickilicky",
+   "name": "Lickitung",
    "type": "normal",
    "sig": "body-slam",
    "hp": 133,
    "atk": 36,
    "spd": 24,
-   "spr": "lickilicky",
+   "spr": "lickitung",
    "ability": {
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
@@ -1897,13 +1841,13 @@
    "line": "staryu",
    "tier": 6,
    "star": 2,
-   "name": "Starmie",
+   "name": "Staryu",
    "type": "water",
    "sig": "bubble-beam",
    "hp": 78,
    "atk": 45,
    "spd": 59,
-   "spr": "starmie",
+   "spr": "staryu",
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
@@ -1944,22 +1888,21 @@
    }
   },
   {
-   "id": "scyther-2-scizor",
+   "id": "scyther-2",
    "line": "scyther",
    "tier": 8,
    "star": 2,
-   "name": "Scizor",
-   "type": "steel",
-   "sig": "steel-wing",
+   "name": "Scyther",
+   "type": "bug",
+   "sig": "signal-beam",
    "hp": 81,
    "atk": 63,
    "spd": 46,
-   "spr": "scizor",
+   "spr": "scyther",
    "ability": {
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
-   },
-   "branch": "scizor"
+   }
   },
   {
    "id": "scyther-3-scizor",
@@ -1978,24 +1921,6 @@
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
    "branch": "scizor"
-  },
-  {
-   "id": "scyther-2-kleavor",
-   "line": "scyther",
-   "tier": 8,
-   "star": 2,
-   "name": "Kleavor",
-   "type": "rock",
-   "sig": "rock-tomb",
-   "hp": 78,
-   "atk": 66,
-   "spd": 48,
-   "spr": "kleavor",
-   "ability": {
-    "name": "Technician",
-    "fx": "Moves with 60% power or less deal 50% more damage."
-   },
-   "branch": "kleavor"
   },
   {
    "id": "scyther-3-kleavor",
@@ -2190,13 +2115,13 @@
    "line": "magikarp",
    "tier": 8,
    "star": 2,
-   "name": "Gyarados",
+   "name": "Magikarp",
    "type": "water",
-   "sig": "crunch",
-   "hp": 90,
-   "atk": 63,
-   "spd": 36,
-   "spr": "gyarados",
+   "sig": "bubble-beam",
+   "hp": 59,
+   "atk": 40,
+   "spd": 24,
+   "spr": "magikarp",
    "ability": {
     "name": "Moxie",
     "fx": "Gains 20% Attack each time it knocks out an enemy."
@@ -2339,22 +2264,21 @@
    }
   },
   {
-   "id": "eevee-2-vaporeon",
+   "id": "eevee-2",
    "line": "eevee",
    "tier": 6,
    "star": 2,
-   "name": "Vaporeon",
-   "type": "water",
-   "sig": "bubble-beam",
-   "hp": 133,
-   "atk": 30,
-   "spd": 24,
-   "spr": "vaporeon",
+   "name": "Eevee",
+   "type": "normal",
+   "sig": "harden",
+   "hp": 93,
+   "atk": 45,
+   "spd": 36,
+   "spr": "eevee",
    "ability": {
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "vaporeon"
+   }
   },
   {
    "id": "eevee-3-vaporeon",
@@ -2375,24 +2299,6 @@
    "branch": "vaporeon"
   },
   {
-   "id": "eevee-2-jolteon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Jolteon",
-   "type": "electric",
-   "sig": "electro-ball",
-   "hp": 78,
-   "atk": 42,
-   "spd": 54,
-   "spr": "jolteon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "jolteon"
-  },
-  {
    "id": "eevee-3-jolteon",
    "line": "eevee",
    "tier": 6,
@@ -2409,24 +2315,6 @@
     "fx": "Moves that match its current type deal 25% more damage."
    },
    "branch": "jolteon"
-  },
-  {
-   "id": "eevee-2-flareon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Flareon",
-   "type": "fire",
-   "sig": "fire-fang",
-   "hp": 81,
-   "atk": 57,
-   "spd": 36,
-   "spr": "flareon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "flareon"
   },
   {
    "id": "eevee-3-flareon",
@@ -2447,24 +2335,6 @@
    "branch": "flareon"
   },
   {
-   "id": "eevee-2-espeon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Espeon",
-   "type": "psychic",
-   "sig": "psybeam",
-   "hp": 78,
-   "atk": 42,
-   "spd": 54,
-   "spr": "espeon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "espeon"
-  },
-  {
    "id": "eevee-3-espeon",
    "line": "eevee",
    "tier": 6,
@@ -2481,24 +2351,6 @@
     "fx": "Moves that match its current type deal 25% more damage."
    },
    "branch": "espeon"
-  },
-  {
-   "id": "eevee-2-umbreon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Umbreon",
-   "type": "dark",
-   "sig": "feint-attack",
-   "hp": 112,
-   "atk": 39,
-   "spd": 26,
-   "spr": "umbreon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "umbreon"
   },
   {
    "id": "eevee-3-umbreon",
@@ -2519,24 +2371,6 @@
    "branch": "umbreon"
   },
   {
-   "id": "eevee-2-leafeon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Leafeon",
-   "type": "grass",
-   "sig": "razor-leaf",
-   "hp": 81,
-   "atk": 57,
-   "spd": 36,
-   "spr": "leafeon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "leafeon"
-  },
-  {
    "id": "eevee-3-leafeon",
    "line": "eevee",
    "tier": 6,
@@ -2555,24 +2389,6 @@
    "branch": "leafeon"
   },
   {
-   "id": "eevee-2-glaceon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Glaceon",
-   "type": "ice",
-   "sig": "aurora-beam",
-   "hp": 81,
-   "atk": 57,
-   "spd": 36,
-   "spr": "glaceon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "glaceon"
-  },
-  {
    "id": "eevee-3-glaceon",
    "line": "eevee",
    "tier": 6,
@@ -2589,24 +2405,6 @@
     "fx": "Moves that match its current type deal 25% more damage."
    },
    "branch": "glaceon"
-  },
-  {
-   "id": "eevee-2-sylveon",
-   "line": "eevee",
-   "tier": 6,
-   "star": 2,
-   "name": "Sylveon",
-   "type": "fairy",
-   "sig": "draining-kiss",
-   "hp": 112,
-   "atk": 39,
-   "spd": 26,
-   "spr": "sylveon",
-   "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
-   },
-   "branch": "sylveon"
   },
   {
    "id": "eevee-3-sylveon",
@@ -2699,13 +2497,13 @@
    "line": "omanyte",
    "tier": 7,
    "star": 2,
-   "name": "Omastar",
+   "name": "Omanyte",
    "type": "rock",
    "sig": "ancient-power",
    "hp": 105,
    "atk": 48,
    "spd": 24,
-   "spr": "omastar",
+   "spr": "omanyte",
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
@@ -2801,13 +2599,13 @@
    "line": "munchlax",
    "tier": 8,
    "star": 2,
-   "name": "Snorlax",
+   "name": "Munchlax",
    "type": "normal",
    "sig": "body-slam",
    "hp": 149,
    "atk": 39,
    "spd": 17,
-   "spr": "snorlax",
+   "spr": "munchlax",
    "ability": {
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
@@ -3472,13 +3270,13 @@
    "id": "spinarak-2",
    "line": "spinarak",
    "star": 2,
-   "name": "Ariados",
+   "name": "Spinarak",
    "type": "bug",
    "sig": "signal-beam",
-   "hp": 100,
-   "atk": 55,
-   "spd": 28,
-   "spr": "ariados",
+   "hp": 91,
+   "atk": 56,
+   "spd": 30,
+   "spr": "spinarak",
    "ability": {
     "name": "Swarm",
     "fx": "Strengthens Bug moves to inflict 1.5× damage at 1/3 max HP or less."
@@ -3676,13 +3474,13 @@
    "id": "bonsly-2",
    "line": "bonsly",
    "star": 2,
-   "name": "Sudowoodo",
+   "name": "Bonsly",
    "type": "rock",
    "sig": "rock-tomb",
-   "hp": 109,
-   "atk": 55,
-   "spd": 24,
-   "spr": "sudowoodo",
+   "hp": 115,
+   "atk": 60,
+   "spd": 18,
+   "spr": "bonsly",
    "ability": {
     "name": "Sturdy",
     "fx": "Prevents being KOed from full HP, leaving 1 HP instead.  Protects against the one-hit KO moves regardless of HP."
@@ -3778,13 +3576,13 @@
    "id": "sunkern-2",
    "line": "sunkern",
    "star": 2,
-   "name": "Sunflora",
+   "name": "Sunkern",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 100,
-   "atk": 60,
-   "spd": 24,
-   "spr": "sunflora",
+   "hp": 95,
+   "atk": 46,
+   "spd": 37,
+   "spr": "sunkern",
    "ability": {
     "name": "Chlorophyll",
     "fx": "Doubles Speed during strong sunlight."
@@ -3826,21 +3624,20 @@
    "tier": 1
   },
   {
-   "id": "wooper-2-quagsire",
+   "id": "wooper-2",
    "line": "wooper",
    "star": 2,
-   "name": "Quagsire",
+   "name": "Wooper",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 112,
+   "hp": 116,
    "atk": 52,
-   "spd": 25,
-   "spr": "quagsire",
+   "spd": 24,
+   "spr": "wooper",
    "ability": {
     "name": "Damp",
     "fx": "Prevents Self-Destruct, Explosion, and Aftermath from working while the Pokémon is in battle."
    },
-   "branch": "quagsire",
    "tier": 1
   },
   {
@@ -3859,24 +3656,6 @@
     "fx": "Prevents Self-Destruct, Explosion, and Aftermath from working while the Pokémon is in battle."
    },
    "branch": "quagsire",
-   "tier": 1
-  },
-  {
-   "id": "wooper-2-clodsire",
-   "line": "wooper",
-   "star": 2,
-   "name": "Clodsire",
-   "type": "poison",
-   "sig": "acid",
-   "hp": 131,
-   "atk": 49,
-   "spd": 21,
-   "spr": "clodsire",
-   "ability": {
-    "name": "Poison Point",
-    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
-   },
-   "branch": "clodsire",
    "tier": 1
   },
   {
@@ -3918,13 +3697,13 @@
    "id": "misdreavus-2",
    "line": "misdreavus",
    "star": 2,
-   "name": "Mismagius",
+   "name": "Misdreavus",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 86,
+   "hp": 90,
    "atk": 50,
-   "spd": 43,
-   "spr": "mismagius",
+   "spd": 41,
+   "spr": "misdreavus",
    "ability": {
     "name": "Levitate",
     "fx": "Evades Ground moves."
@@ -4020,13 +3799,13 @@
    "id": "wynaut-2",
    "line": "wynaut",
    "star": 2,
-   "name": "Wobbuffet",
+   "name": "Wynaut",
    "type": "psychic",
    "sig": "amnesia",
-   "hp": 131,
-   "atk": 37,
+   "hp": 132,
+   "atk": 38,
    "spd": 30,
-   "spr": "wobbuffet",
+   "spr": "wynaut",
    "ability": {
     "name": "Shadow Tag",
     "fx": "Prevents opponents from fleeing or switching out."
@@ -4071,16 +3850,16 @@
    "id": "girafarig-2",
    "line": "girafarig",
    "star": 2,
-   "name": "Farigiraf",
+   "name": "Girafarig",
    "type": "psychic",
    "sig": "calm-mind",
-   "hp": 109,
-   "atk": 57,
-   "spd": 32,
-   "spr": "farigiraf",
+   "hp": 93,
+   "atk": 52,
+   "spd": 41,
+   "spr": "girafarig",
    "ability": {
-    "name": "Cud Chew",
-    "fx": "Causes the Pokémon to reuse an already consumed Berry at the end of the next turn."
+    "name": "Inner Focus",
+    "fx": "Prevents flinching."
    },
    "tier": 6
   },
@@ -4122,13 +3901,13 @@
    "id": "dunsparce-2",
    "line": "dunsparce",
    "star": 2,
-   "name": "Dudunsparce",
+   "name": "Dunsparce",
    "type": "normal",
    "sig": "self-destruct",
-   "hp": 116,
-   "atk": 55,
+   "hp": 121,
+   "atk": 51,
    "spd": 31,
-   "spr": "dudunsparce",
+   "spr": "dunsparce",
    "ability": {
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its signature is doubled"
@@ -4173,13 +3952,13 @@
    "id": "gligar-2",
    "line": "gligar",
    "star": 2,
-   "name": "Gliscor",
+   "name": "Gligar",
    "type": "ground",
    "sig": "dig",
-   "hp": 100,
-   "atk": 48,
-   "spd": 41,
-   "spr": "gliscor",
+   "hp": 101,
+   "atk": 45,
+   "spd": 42,
+   "spr": "gligar",
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Prevents Attack from being lowered by other Pokémon."
@@ -4224,13 +4003,13 @@
    "id": "snubbull-2",
    "line": "snubbull",
    "star": 2,
-   "name": "Granbull",
+   "name": "Snubbull",
    "type": "fairy",
    "sig": "play-rough",
    "hp": 96,
    "atk": 58,
-   "spd": 27,
-   "spr": "granbull",
+   "spd": 26,
+   "spr": "snubbull",
    "ability": {
     "name": "Intimidate",
     "fx": "Lowers opponents' Attack one stage upon entering battle."
@@ -4275,13 +4054,13 @@
    "id": "qwilfishhisui-2",
    "line": "qwilfishhisui",
    "star": 2,
-   "name": "Overqwil",
+   "name": "Hisuian Qwilfish",
    "type": "dark",
    "sig": "feint-attack",
-   "hp": 95,
-   "atk": 54,
-   "spd": 38,
-   "spr": "overqwil",
+   "hp": 91,
+   "atk": 52,
+   "spd": 41,
+   "spr": "qwilfish_1",
    "ability": {
     "name": "Poison Point",
     "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
@@ -4428,16 +4207,16 @@
    "id": "sneasel-2",
    "line": "sneasel",
    "star": 2,
-   "name": "Weavile",
+   "name": "Sneasel",
    "type": "dark",
    "sig": "feint-attack",
-   "hp": 83,
-   "atk": 50,
-   "spd": 45,
-   "spr": "weavile",
+   "hp": 81,
+   "atk": 48,
+   "spd": 48,
+   "spr": "sneasel",
    "ability": {
-    "name": "Pressure",
-    "fx": "Increases the PP cost of moves targetting the Pokémon by one."
+    "name": "Inner Focus",
+    "fx": "Prevents flinching."
    },
    "tier": 5
   },
@@ -4479,16 +4258,16 @@
    "id": "sneaselhisui-2",
    "line": "sneaselhisui",
    "star": 2,
-   "name": "Sneasler",
+   "name": "Hisuian Sneasel",
    "type": "fighting",
    "sig": "double-kick",
-   "hp": 84,
-   "atk": 52,
-   "spd": 44,
-   "spr": "sneasler",
+   "hp": 81,
+   "atk": 48,
+   "spd": 48,
+   "spr": "sneasel_1",
    "ability": {
-    "name": "Pressure",
-    "fx": "Increases the PP cost of moves targetting the Pokémon by one."
+    "name": "Inner Focus",
+    "fx": "Prevents flinching."
    },
    "tier": 5
   },
@@ -4683,13 +4462,13 @@
    "id": "corsolagalar-2",
    "line": "corsolagalar",
    "star": 2,
-   "name": "Cursola",
+   "name": "Galarian Corsola",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 97,
-   "atk": 71,
-   "spd": 23,
-   "spr": "cursola",
+   "hp": 127,
+   "atk": 52,
+   "spd": 26,
+   "spr": "corsola_1",
    "ability": {
     "name": "Weak Armor",
     "fx": "Raises Speed and lowers Defense by one stage each upon being hit by a physical move."
@@ -4734,16 +4513,16 @@
    "id": "remoraid-2",
    "line": "remoraid",
    "star": 2,
-   "name": "Octillery",
+   "name": "Remoraid",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 98,
-   "atk": 60,
-   "spd": 28,
-   "spr": "octillery",
+   "hp": 74,
+   "atk": 52,
+   "spd": 42,
+   "spr": "remoraid",
    "ability": {
-    "name": "Suction Cups",
-    "fx": "Prevents being forced out of battle by other Pokémon's moves."
+    "name": "Hustle",
+    "fx": "Strengthens physical moves to inflict 1.5× damage, but decreases their accuracy to 0.8×."
    },
    "tier": 3
   },
@@ -4836,13 +4615,13 @@
    "id": "mantyke-2",
    "line": "mantyke",
    "star": 2,
-   "name": "Mantine",
+   "name": "Mantyke",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 111,
+   "hp": 108,
    "atk": 45,
-   "spd": 35,
-   "spr": "mantine",
+   "spd": 36,
+   "spr": "mantyke",
    "ability": {
     "name": "Swift Swim",
     "fx": "Doubles Speed during rain."
@@ -4938,13 +4717,13 @@
    "id": "houndour-2",
    "line": "houndour",
    "star": 2,
-   "name": "Houndoom",
+   "name": "Houndour",
    "type": "dark",
    "sig": "feint-attack",
-   "hp": 86,
-   "atk": 55,
+   "hp": 81,
+   "atk": 57,
    "spd": 41,
-   "spr": "houndoom",
+   "spr": "houndour",
    "ability": {
     "name": "Early Bird",
     "fx": "Makes sleep pass twice as quickly."
@@ -5805,13 +5584,13 @@
    "id": "shroomish-2",
    "line": "shroomish",
    "star": 2,
-   "name": "Breloom",
+   "name": "Shroomish",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 83,
-   "atk": 58,
-   "spd": 33,
-   "spr": "breloom",
+   "hp": 118,
+   "atk": 44,
+   "spd": 32,
+   "spr": "shroomish",
    "ability": {
     "name": "Effect Spore",
     "fx": "Has a 30% chance of inflcting either paralysis, poison, or sleep on attacking Pokémon on contact."
@@ -5904,21 +5683,20 @@
    "tier": 2
   },
   {
-   "id": "nincada-2-ninjask",
+   "id": "nincada-2",
    "line": "nincada",
    "star": 2,
-   "name": "Ninjask",
+   "name": "Nincada",
    "type": "bug",
    "sig": "signal-beam",
-   "hp": 68,
-   "atk": 42,
-   "spd": 52,
-   "spr": "ninjask",
+   "hp": 101,
+   "atk": 46,
+   "spd": 36,
+   "spr": "nincada",
    "ability": {
-    "name": "Speed Boost",
-    "fx": "Raises Speed one stage after each turn."
+    "name": "Compound Eyes",
+    "fx": "Increases moves' accuracy to 1.3×."
    },
-   "branch": "ninjask",
    "tier": 2
   },
   {
@@ -5937,24 +5715,6 @@
     "fx": "Raises Speed one stage after each turn."
    },
    "branch": "ninjask",
-   "tier": 2
-  },
-  {
-   "id": "nincada-2-shedinja",
-   "line": "nincada",
-   "star": 2,
-   "name": "Shedinja",
-   "type": "bug",
-   "sig": "pin-missile",
-   "hp": 60,
-   "atk": 68,
-   "spd": 34,
-   "spr": "shedinja",
-   "ability": {
-    "name": "Wonder Guard",
-    "fx": "only super-effective moves damage it"
-   },
-   "branch": "shedinja",
    "tier": 2
   },
   {
@@ -6200,13 +5960,13 @@
    "id": "meditite-2",
    "line": "meditite",
    "star": 2,
-   "name": "Medicham",
+   "name": "Meditite",
    "type": "fighting",
    "sig": "submission",
-   "hp": 94,
+   "hp": 88,
    "atk": 42,
-   "spd": 41,
-   "spr": "medicham",
+   "spd": 43,
+   "spr": "meditite",
    "ability": {
     "name": "Pure Power",
     "fx": "Doubles Attack in battle."
@@ -6251,13 +6011,13 @@
    "id": "electrike-2",
    "line": "electrike",
    "star": 2,
-   "name": "Manectric",
+   "name": "Electrike",
    "type": "electric",
    "sig": "electro-ball",
    "hp": 79,
    "atk": 50,
    "spd": 42,
-   "spr": "manectric",
+   "spr": "electrike",
    "ability": {
     "name": "Static",
     "fx": "Has a 30% chance of paralyzing attacking Pokémon on contact."
@@ -6404,13 +6164,13 @@
    "id": "carvanha-2",
    "line": "carvanha",
    "star": 2,
-   "name": "Sharpedo",
+   "name": "Carvanha",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 73,
-   "atk": 56,
-   "spd": 39,
-   "spr": "sharpedo",
+   "hp": 67,
+   "atk": 58,
+   "spd": 40,
+   "spr": "carvanha",
    "ability": {
     "name": "Rough Skin",
     "fx": "Damages attacking Pokémon for 1/8 their max HP on contact."
@@ -6455,13 +6215,13 @@
    "id": "wailmer-2",
    "line": "wailmer",
    "star": 2,
-   "name": "Wailord",
+   "name": "Wailmer",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 118,
-   "atk": 51,
-   "spd": 32,
-   "spr": "wailord",
+   "hp": 112,
+   "atk": 48,
+   "spd": 35,
+   "spr": "wailmer",
    "ability": {
     "name": "Water Veil",
     "fx": "Prevents burns."
@@ -6506,16 +6266,16 @@
    "id": "numel-2",
    "line": "numel",
    "star": 2,
-   "name": "Camerupt",
+   "name": "Numel",
    "type": "fire",
    "sig": "fire-fang",
-   "hp": 96,
-   "atk": 60,
-   "spd": 27,
-   "spr": "camerupt",
+   "hp": 98,
+   "atk": 56,
+   "spd": 30,
+   "spr": "numel",
    "ability": {
-    "name": "Magma Armor",
-    "fx": "Prevents freezing."
+    "name": "Oblivious",
+    "fx": "Prevents infatuation and protects against Captivate."
    },
    "tier": 2
   },
@@ -6659,13 +6419,13 @@
    "id": "swablu-2",
    "line": "swablu",
    "star": 2,
-   "name": "Altaria",
-   "type": "dragon",
-   "sig": "dragon-claw",
-   "hp": 106,
-   "atk": 45,
-   "spd": 39,
-   "spr": "altaria",
+   "name": "Swablu",
+   "type": "flying",
+   "sig": "air-slash",
+   "hp": 110,
+   "atk": 42,
+   "spd": 40,
+   "spr": "swablu",
    "ability": {
     "name": "Natural Cure",
     "fx": "Cures any major status ailment upon switching out."
@@ -6812,13 +6572,13 @@
    "id": "lileep-2",
    "line": "lileep",
    "star": 2,
-   "name": "Cradily",
+   "name": "Lileep",
    "type": "rock",
    "sig": "rock-tomb",
-   "hp": 119,
-   "atk": 52,
-   "spd": 28,
-   "spr": "cradily",
+   "hp": 129,
+   "atk": 51,
+   "spd": 25,
+   "spr": "lileep",
    "ability": {
     "name": "Suction Cups",
     "fx": "Prevents being forced out of battle by other Pokémon's moves."
@@ -6863,16 +6623,16 @@
    "id": "feebas-2",
    "line": "feebas",
    "star": 2,
-   "name": "Milotic",
+   "name": "Feebas",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 109,
-   "atk": 50,
-   "spd": 37,
-   "spr": "milotic",
+   "hp": 84,
+   "atk": 28,
+   "spd": 65,
+   "spr": "feebas",
    "ability": {
-    "name": "Marvel Scale",
-    "fx": "Increases Defense to 1.5× with a major status ailment."
+    "name": "Swift Swim",
+    "fx": "Doubles Speed during rain."
    },
    "tier": 6
   },
@@ -6965,13 +6725,13 @@
    "id": "shuppet-2",
    "line": "shuppet",
    "star": 2,
-   "name": "Banette",
+   "name": "Shuppet",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 85,
+   "hp": 81,
    "atk": 58,
-   "spd": 33,
-   "spr": "banette",
+   "spd": 34,
+   "spr": "shuppet",
    "ability": {
     "name": "Insomnia",
     "fx": "Prevents sleep."
@@ -7067,13 +6827,13 @@
    "id": "chingling-2",
    "line": "chingling",
    "star": 2,
-   "name": "Chimecho",
+   "name": "Chingling",
    "type": "psychic",
    "sig": "calm-mind",
-   "hp": 99,
-   "atk": 50,
-   "spd": 34,
-   "spr": "chimecho",
+   "hp": 93,
+   "atk": 51,
+   "spd": 35,
+   "spr": "chingling",
    "ability": {
     "name": "Levitate",
     "fx": "Evades Ground moves."
@@ -7166,21 +6926,20 @@
    "tier": 3
   },
   {
-   "id": "snorunt-2-glalie",
+   "id": "snorunt-2",
    "line": "snorunt",
    "star": 2,
-   "name": "Glalie",
+   "name": "Snorunt",
    "type": "ice",
    "sig": "aurora-beam",
    "hp": 98,
    "atk": 48,
    "spd": 38,
-   "spr": "glalie",
+   "spr": "snorunt",
    "ability": {
     "name": "Inner Focus",
     "fx": "Prevents flinching."
    },
-   "branch": "glalie",
    "tier": 3
   },
   {
@@ -7199,24 +6958,6 @@
     "fx": "Prevents flinching."
    },
    "branch": "glalie",
-   "tier": 3
-  },
-  {
-   "id": "snorunt-2-froslass",
-   "line": "snorunt",
-   "star": 2,
-   "name": "Froslass",
-   "type": "ice",
-   "sig": "aurora-beam",
-   "hp": 86,
-   "atk": 45,
-   "spd": 45,
-   "spr": "froslass",
-   "ability": {
-    "name": "Snow Cloak",
-    "fx": "Increases evasion to 1.25× during hail.  Protects against hail damage."
-   },
-   "branch": "froslass",
    "tier": 3
   },
   {
@@ -7255,21 +6996,20 @@
    "tier": 3
   },
   {
-   "id": "clamperl-2-huntail",
+   "id": "clamperl-2",
    "line": "clamperl",
    "star": 2,
-   "name": "Huntail",
+   "name": "Clamperl",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 96,
+   "hp": 99,
    "atk": 58,
-   "spd": 30,
-   "spr": "huntail",
+   "spd": 29,
+   "spr": "clamperl",
    "ability": {
-    "name": "Swift Swim",
-    "fx": "Doubles Speed during rain."
+    "name": "Shell Armor",
+    "fx": "Protects against critical hits."
    },
-   "branch": "huntail",
    "tier": 3
   },
   {
@@ -7288,24 +7028,6 @@
     "fx": "Doubles Speed during rain."
    },
    "branch": "huntail",
-   "tier": 3
-  },
-  {
-   "id": "clamperl-2-gorebyss",
-   "line": "clamperl",
-   "star": 2,
-   "name": "Gorebyss",
-   "type": "water",
-   "sig": "aqua-tail",
-   "hp": 94,
-   "atk": 60,
-   "spd": 30,
-   "spr": "gorebyss",
-   "ability": {
-    "name": "Swift Swim",
-    "fx": "Doubles Speed during rain."
-   },
-   "branch": "gorebyss",
    "tier": 3
   },
   {
@@ -8259,13 +7981,13 @@
    "id": "cranidos-2",
    "line": "cranidos",
    "star": 2,
-   "name": "Rampardos",
+   "name": "Cranidos",
    "type": "rock",
    "sig": "ancient-power",
-   "hp": 88,
-   "atk": 66,
-   "spd": 29,
-   "spr": "rampardos",
+   "hp": 81,
+   "atk": 63,
+   "spd": 34,
+   "spr": "cranidos",
    "ability": {
     "name": "Mold Breaker",
     "fx": "Bypasses targets' abilities if they could hinder or prevent a move."
@@ -8310,13 +8032,13 @@
    "id": "shieldon-2",
    "line": "shieldon",
    "star": 2,
-   "name": "Bastiodon",
+   "name": "Shieldon",
    "type": "rock",
    "sig": "ancient-power",
-   "hp": 138,
+   "hp": 129,
    "atk": 45,
-   "spd": 27,
-   "spr": "bastiodon",
+   "spd": 30,
+   "spr": "shieldon",
    "ability": {
     "name": "Sturdy",
     "fx": "Prevents being KOed from full HP, leaving 1 HP instead.  Protects against the one-hit KO moves regardless of HP."
@@ -8361,16 +8083,16 @@
    "id": "combee-2",
    "line": "combee",
    "star": 2,
-   "name": "Vespiquen",
+   "name": "Combee",
    "type": "bug",
    "sig": "pin-missile",
-   "hp": 112,
-   "atk": 52,
-   "spd": 27,
-   "spr": "vespiquen",
+   "hp": 84,
+   "atk": 36,
+   "spd": 50,
+   "spr": "combee",
    "ability": {
-    "name": "Pressure",
-    "fx": "Increases the PP cost of moves targetting the Pokémon by one."
+    "name": "Honey Gather",
+    "fx": "The Pokémon may pick up Honey after battle."
    },
    "tier": 2
   },
@@ -8463,16 +8185,16 @@
    "id": "cherubi-2",
    "line": "cherubi",
    "star": 2,
-   "name": "Cherrim",
+   "name": "Cherubi",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 89,
-   "atk": 47,
-   "spd": 38,
-   "spr": "cherrim",
+   "hp": 96,
+   "atk": 52,
+   "spd": 31,
+   "spr": "cherubi",
    "ability": {
-    "name": "Flower Gift",
-    "fx": "Increases friendly Pokémon's Attack and Special Defense to 1.5× during strong sunlight."
+    "name": "Chlorophyll",
+    "fx": "Doubles Speed during strong sunlight."
    },
    "tier": 1
   },
@@ -8514,13 +8236,13 @@
    "id": "shellos-2",
    "line": "shellos",
    "star": 2,
-   "name": "Gastrodon",
+   "name": "Shellos",
    "type": "water",
    "sig": "bubble-beam",
    "hp": 113,
-   "atk": 53,
-   "spd": 26,
-   "spr": "gastrodon",
+   "atk": 50,
+   "spd": 29,
+   "spr": "shellos",
    "ability": {
     "name": "Sticky Hold",
     "fx": "Prevents a held item from being removed by other Pokémon."
@@ -8565,13 +8287,13 @@
    "id": "drifloon-2",
    "line": "drifloon",
    "star": 2,
-   "name": "Drifblim",
+   "name": "Drifloon",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 107,
-   "atk": 48,
-   "spd": 36,
-   "spr": "drifblim",
+   "hp": 101,
+   "atk": 45,
+   "spd": 41,
+   "spr": "drifloon",
    "ability": {
     "name": "Aftermath",
     "fx": "Damages the attacker for 1/4 its max HP when knocked out by a contact move."
@@ -8616,16 +8338,16 @@
    "id": "buneary-2",
    "line": "buneary",
    "star": 2,
-   "name": "Lopunny",
+   "name": "Buneary",
    "type": "normal",
    "sig": "fury-attack",
-   "hp": 93,
-   "atk": 43,
+   "hp": 85,
+   "atk": 45,
    "spd": 44,
-   "spr": "lopunny",
+   "spr": "buneary",
    "ability": {
-    "name": "Cute Charm",
-    "fx": "Has a 30% chance of infatuating attacking Pokémon on contact."
+    "name": "Run Away",
+    "fx": "Ensures success fleeing from wild battles."
    },
    "tier": 3
   },
@@ -8667,13 +8389,13 @@
    "id": "bronzor-2",
    "line": "bronzor",
    "star": 2,
-   "name": "Bronzong",
+   "name": "Bronzor",
    "type": "steel",
    "sig": "steel-wing",
-   "hp": 121,
-   "atk": 56,
-   "spd": 26,
-   "spr": "bronzong",
+   "hp": 140,
+   "atk": 40,
+   "spd": 31,
+   "spr": "bronzor",
    "ability": {
     "name": "Levitate",
     "fx": "Evades Ground moves."
@@ -8820,13 +8542,13 @@
    "id": "riolu-2",
    "line": "riolu",
    "star": 2,
-   "name": "Lucario",
+   "name": "Riolu",
    "type": "fighting",
    "sig": "double-kick",
-   "hp": 87,
-   "atk": 58,
-   "spd": 39,
-   "spr": "lucario",
+   "hp": 85,
+   "atk": 56,
+   "spd": 42,
+   "spr": "riolu",
    "ability": {
     "name": "Steadfast",
     "fx": "Raises Speed one stage upon flinching."
@@ -8871,13 +8593,13 @@
    "id": "hippopotas-2",
    "line": "hippopotas",
    "star": 2,
-   "name": "Hippowdon",
+   "name": "Hippopotas",
    "type": "ground",
    "sig": "dig",
-   "hp": 117,
+   "hp": 116,
    "atk": 57,
-   "spd": 28,
-   "spr": "hippowdon",
+   "spd": 29,
+   "spr": "hippopotas",
    "ability": {
     "name": "Sand Stream",
     "fx": "Summons a sandstorm that lasts indefinitely upon entering battle."
@@ -8922,13 +8644,13 @@
    "id": "skorupi-2",
    "line": "skorupi",
    "star": 2,
-   "name": "Drapion",
+   "name": "Skorupi",
    "type": "poison",
    "sig": "acid",
-   "hp": 97,
-   "atk": 48,
-   "spd": 42,
-   "spr": "drapion",
+   "hp": 102,
+   "atk": 44,
+   "spd": 43,
+   "spr": "skorupi",
    "ability": {
     "name": "Battle Armor",
     "fx": "Protects against critical hits."
@@ -8973,13 +8695,13 @@
    "id": "croagunk-2",
    "line": "croagunk",
    "star": 2,
-   "name": "Toxicroak",
+   "name": "Croagunk",
    "type": "poison",
    "sig": "acid",
    "hp": 90,
    "atk": 54,
-   "spd": 38,
-   "spr": "toxicroak",
+   "spd": 37,
+   "spr": "croagunk",
    "ability": {
     "name": "Anticipation",
     "fx": "Notifies all trainers upon entering battle if an opponent has a super-effective move, Self-Destruct, Explosion, or a one-hit KO move."
@@ -9024,13 +8746,13 @@
    "id": "snover-2",
    "line": "snover",
    "star": 2,
-   "name": "Abomasnow",
+   "name": "Snover",
    "type": "grass",
    "sig": "mega-drain",
    "hp": 105,
-   "atk": 53,
-   "spd": 33,
-   "spr": "abomasnow",
+   "atk": 54,
+   "spd": 32,
+   "spr": "snover",
    "ability": {
     "name": "Snow Warning",
     "fx": "Summons hail that lasts indefinitely upon entering battle."
@@ -10053,13 +9775,13 @@
    "id": "pansage-2",
    "line": "pansage",
    "star": 2,
-   "name": "Simisage",
+   "name": "Pansage",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 85,
-   "atk": 51,
+   "hp": 93,
+   "atk": 46,
    "spd": 42,
-   "spr": "simisage",
+   "spr": "pansage",
    "ability": {
     "name": "Gluttony",
     "fx": "Makes the Pokémon eat any held Berry triggered by low HP below 1/2 its max HP."
@@ -10104,13 +9826,13 @@
    "id": "pansear-2",
    "line": "pansear",
    "star": 2,
-   "name": "Simisear",
+   "name": "Pansear",
    "type": "fire",
    "sig": "flame-wheel",
-   "hp": 85,
-   "atk": 51,
+   "hp": 93,
+   "atk": 46,
    "spd": 42,
-   "spr": "simisear",
+   "spr": "pansear",
    "ability": {
     "name": "Gluttony",
     "fx": "Makes the Pokémon eat any held Berry triggered by low HP below 1/2 its max HP."
@@ -10155,13 +9877,13 @@
    "id": "panpour-2",
    "line": "panpour",
    "star": 2,
-   "name": "Simipour",
+   "name": "Panpour",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 85,
-   "atk": 51,
+   "hp": 93,
+   "atk": 46,
    "spd": 42,
-   "spr": "simipour",
+   "spr": "panpour",
    "ability": {
     "name": "Gluttony",
     "fx": "Makes the Pokémon eat any held Berry triggered by low HP below 1/2 its max HP."
@@ -10206,13 +9928,13 @@
    "id": "munna-2",
    "line": "munna",
    "star": 2,
-   "name": "Musharna",
+   "name": "Munna",
    "type": "psychic",
    "sig": "calm-mind",
-   "hp": 123,
-   "atk": 57,
-   "spd": 23,
-   "spr": "musharna",
+   "hp": 119,
+   "atk": 56,
+   "spd": 26,
+   "spr": "munna",
    "ability": {
     "name": "Forewarn",
     "fx": "Reveals the opponents' strongest move upon entering battle."
@@ -10308,13 +10030,13 @@
    "id": "woobat-2",
    "line": "woobat",
    "star": 2,
-   "name": "Swoobat",
+   "name": "Woobat",
    "type": "psychic",
    "sig": "calm-mind",
-   "hp": 79,
-   "atk": 43,
-   "spd": 46,
-   "spr": "swoobat",
+   "hp": 90,
+   "atk": 42,
+   "spd": 42,
+   "spr": "woobat",
    "ability": {
     "name": "Unaware",
     "fx": "Ignores other Pokémon's stat modifiers for damage and accuracy calculation."
@@ -10359,13 +10081,13 @@
    "id": "drilbur-2",
    "line": "drilbur",
    "star": 2,
-   "name": "Excadrill",
+   "name": "Drilbur",
    "type": "ground",
    "sig": "dig",
-   "hp": 94,
-   "atk": 56,
-   "spd": 37,
-   "spr": "excadrill",
+   "hp": 88,
+   "atk": 54,
+   "spd": 41,
+   "spr": "drilbur",
    "ability": {
     "name": "Sand Rush",
     "fx": "Doubles Speed during a sandstorm.  Protects against sandstorm damage."
@@ -10645,6 +10367,57 @@
    "tier": 5
   },
   {
+   "id": "venipede-1",
+   "line": "venipede",
+   "star": 1,
+   "name": "Venipede",
+   "type": "bug",
+   "sig": "leech-life",
+   "hp": 58,
+   "atk": 30,
+   "spd": 37,
+   "spr": "venipede",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 4
+  },
+  {
+   "id": "venipede-2",
+   "line": "venipede",
+   "star": 2,
+   "name": "Whirlipede",
+   "type": "bug",
+   "sig": "signal-beam",
+   "hp": 112,
+   "atk": 47,
+   "spd": 35,
+   "spr": "whirlipede",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 4
+  },
+  {
+   "id": "venipede-3",
+   "line": "venipede",
+   "star": 3,
+   "name": "Scolipede",
+   "type": "bug",
+   "sig": "bug-buzz",
+   "hp": 120,
+   "atk": 68,
+   "spd": 52,
+   "spr": "scolipede",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 4
+  },
+  {
    "id": "cottonee-1",
    "line": "cottonee",
    "star": 1,
@@ -10665,13 +10438,13 @@
    "id": "cottonee-2",
    "line": "cottonee",
    "star": 2,
-   "name": "Whimsicott",
+   "name": "Cottonee",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 86,
-   "atk": 43,
-   "spd": 46,
-   "spr": "whimsicott",
+   "hp": 96,
+   "atk": 39,
+   "spd": 47,
+   "spr": "cottonee",
    "ability": {
     "name": "Prankster",
     "fx": "Raises non-damaging moves' priority by one stage."
@@ -10713,21 +10486,20 @@
    "tier": 3
   },
   {
-   "id": "petilil-2-lilligant",
+   "id": "petilil-2",
    "line": "petilil",
    "star": 2,
-   "name": "Lilligant",
+   "name": "Petilil",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 87,
-   "atk": 52,
-   "spd": 39,
-   "spr": "lilligant",
+   "hp": 99,
+   "atk": 58,
+   "spd": 29,
+   "spr": "petilil",
    "ability": {
     "name": "Chlorophyll",
     "fx": "Doubles Speed during strong sunlight."
    },
-   "branch": "lilligant",
    "tier": 3
   },
   {
@@ -10746,24 +10518,6 @@
     "fx": "Doubles Speed during strong sunlight."
    },
    "branch": "lilligant",
-   "tier": 3
-  },
-  {
-   "id": "petilil-2-lilliganthisui",
-   "line": "petilil",
-   "star": 2,
-   "name": "Hisuian Lilligant",
-   "type": "grass",
-   "sig": "razor-leaf",
-   "hp": 85,
-   "atk": 49,
-   "spd": 42,
-   "spr": "lilligant_1",
-   "ability": {
-    "name": "Chlorophyll",
-    "fx": "Doubles Speed during strong sunlight."
-   },
-   "branch": "lilliganthisui",
    "tier": 3
   },
   {
@@ -10805,16 +10559,16 @@
    "id": "basculin-2",
    "line": "basculin",
    "star": 2,
-   "name": "Basculegion",
+   "name": "Basculin",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 104,
-   "atk": 54,
-   "spd": 36,
-   "spr": "basculegion",
+   "hp": 88,
+   "atk": 52,
+   "spd": 44,
+   "spr": "basculin",
    "ability": {
-    "name": "Swift Swim",
-    "fx": "Doubles Speed during rain."
+    "name": "Reckless",
+    "fx": "Strengthens recoil moves to 1.2× their power."
    },
    "tier": 6
   },
@@ -10907,13 +10661,13 @@
    "id": "darumaka-2",
    "line": "darumaka",
    "star": 2,
-   "name": "Darmanitan",
+   "name": "Darumaka",
    "type": "fire",
    "sig": "fire-fang",
-   "hp": 87,
+   "hp": 95,
    "atk": 54,
-   "spd": 37,
-   "spr": "darmanitan",
+   "spd": 34,
+   "spr": "darumaka",
    "ability": {
     "name": "Zen Mode",
     "fx": "below 50% HP it switches to a slower, stronger Psychic form"
@@ -10958,13 +10712,13 @@
    "id": "darumakagalar-2",
    "line": "darumakagalar",
    "star": 2,
-   "name": "Galarian Darmanitan",
+   "name": "Galarian Darumaka",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 87,
+   "hp": 95,
    "atk": 54,
-   "spd": 37,
-   "spr": "darmanitan_2",
+   "spd": 34,
+   "spr": "darumaka_2",
    "ability": {
     "name": "Gorilla Tactics",
     "fx": "locks onto the first move it uses for +50% Attack"
@@ -11009,13 +10763,13 @@
    "id": "dwebble-2",
    "line": "dwebble",
    "star": 2,
-   "name": "Crustle",
+   "name": "Dwebble",
    "type": "bug",
    "sig": "pin-missile",
-   "hp": 106,
-   "atk": 56,
-   "spd": 28,
-   "spr": "crustle",
+   "hp": 96,
+   "atk": 50,
+   "spd": 37,
+   "spr": "dwebble",
    "ability": {
     "name": "Sturdy",
     "fx": "Prevents being KOed from full HP, leaving 1 HP instead.  Protects against the one-hit KO moves regardless of HP."
@@ -11038,6 +10792,57 @@
     "fx": "Prevents being KOed from full HP, leaving 1 HP instead.  Protects against the one-hit KO moves regardless of HP."
    },
    "tier": 3
+  },
+  {
+   "id": "scraggy-1",
+   "line": "scraggy",
+   "star": 1,
+   "name": "Scraggy",
+   "type": "dark",
+   "sig": "pursuit",
+   "hp": 66,
+   "atk": 35,
+   "spd": 28,
+   "spr": "scraggy",
+   "ability": {
+    "name": "Shed Skin",
+    "fx": "Has a 33% chance of curing any major status ailment after each turn."
+   },
+   "tier": 4
+  },
+  {
+   "id": "scraggy-2",
+   "line": "scraggy",
+   "star": 2,
+   "name": "Scraggy",
+   "type": "dark",
+   "sig": "crunch",
+   "hp": 102,
+   "atk": 52,
+   "spd": 34,
+   "spr": "scraggy",
+   "ability": {
+    "name": "Shed Skin",
+    "fx": "Has a 33% chance of curing any major status ailment after each turn."
+   },
+   "tier": 4
+  },
+  {
+   "id": "scraggy-3",
+   "line": "scraggy",
+   "star": 3,
+   "name": "Scrafty",
+   "type": "dark",
+   "sig": "dark-pulse",
+   "hp": 158,
+   "atk": 70,
+   "spd": 38,
+   "spr": "scrafty",
+   "ability": {
+    "name": "Shed Skin",
+    "fx": "Has a 33% chance of curing any major status ailment after each turn."
+   },
+   "tier": 4
   },
   {
    "id": "sigilyph-1",
@@ -11111,13 +10916,13 @@
    "id": "yamask-2",
    "line": "yamask",
    "star": 2,
-   "name": "Cofagrigus",
+   "name": "Yamask",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 119,
-   "atk": 55,
-   "spd": 24,
-   "spr": "cofagrigus",
+   "hp": 113,
+   "atk": 51,
+   "spd": 30,
+   "spr": "yamask",
    "ability": {
     "name": "Mummy",
     "fx": "Changes attacking Pokémon's abilities to Mummy on contact."
@@ -11162,13 +10967,13 @@
    "id": "tirtouga-2",
    "line": "tirtouga",
    "star": 2,
-   "name": "Carracosta",
+   "name": "Tirtouga",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 111,
-   "atk": 61,
+   "hp": 113,
+   "atk": 60,
    "spd": 24,
-   "spr": "carracosta",
+   "spr": "tirtouga",
    "ability": {
     "name": "Solid Rock",
     "fx": "Decreases damage taken from super-effective moves by 1/4."
@@ -11213,13 +11018,13 @@
    "id": "archen-2",
    "line": "archen",
    "star": 2,
-   "name": "Archeops",
+   "name": "Archen",
    "type": "rock",
    "sig": "ancient-power",
    "hp": 82,
-   "atk": 60,
-   "spd": 42,
-   "spr": "archeops",
+   "atk": 63,
+   "spd": 38,
+   "spr": "archen",
    "ability": {
     "name": "Defeatist",
     "fx": "Halves Attack and Special Attack at 50% max HP or less."
@@ -11264,13 +11069,13 @@
    "id": "trubbish-2",
    "line": "trubbish",
    "star": 2,
-   "name": "Garbodor",
+   "name": "Trubbish",
    "type": "poison",
    "sig": "poison-fang",
    "hp": 96,
-   "atk": 49,
-   "spd": 36,
-   "spr": "garbodor",
+   "atk": 42,
+   "spd": 41,
+   "spr": "trubbish",
    "ability": {
     "name": "Stench",
     "fx": "Has a 10% chance of making target Pokémon flinch with each hit."
@@ -11315,13 +11120,13 @@
    "id": "zorua-2",
    "line": "zorua",
    "star": 2,
-   "name": "Zoroark",
+   "name": "Zorua",
    "type": "dark",
    "sig": "feint-attack",
-   "hp": 79,
+   "hp": 81,
    "atk": 58,
-   "spd": 43,
-   "spr": "zoroark",
+   "spd": 42,
+   "spr": "zorua",
    "ability": {
     "name": "Illusion",
     "fx": "Takes the appearance of the last conscious party Pokémon upon being sent out until hit by a damaging move."
@@ -11366,13 +11171,13 @@
    "id": "zoruahisui-2",
    "line": "zoruahisui",
    "star": 2,
-   "name": "Hisuian Zoroark",
+   "name": "Hisuian Zorua",
    "type": "ghost",
    "sig": "shadow-punch",
    "hp": 76,
    "atk": 58,
-   "spd": 44,
-   "spr": "zoroark_1",
+   "spd": 43,
+   "spr": "zorua_1",
    "ability": {
     "name": "Illusion",
     "fx": "Takes the appearance of the last conscious party Pokémon upon being sent out until hit by a damaging move."
@@ -11417,13 +11222,13 @@
    "id": "minccino-2",
    "line": "minccino",
    "star": 2,
-   "name": "Cinccino",
+   "name": "Minccino",
    "type": "normal",
    "sig": "harden",
-   "hp": 81,
-   "atk": 46,
-   "spd": 44,
-   "spr": "cinccino",
+   "hp": 87,
+   "atk": 42,
+   "spd": 46,
+   "spr": "minccino",
    "ability": {
     "name": "Cute Charm",
     "fx": "Has a 30% chance of infatuating attacking Pokémon on contact."
@@ -11570,13 +11375,13 @@
    "id": "foongus-2",
    "line": "foongus",
    "star": 2,
-   "name": "Amoonguss",
+   "name": "Foongus",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 119,
-   "atk": 53,
-   "spd": 24,
-   "spr": "amoonguss",
+   "hp": 121,
+   "atk": 56,
+   "spd": 22,
+   "spr": "foongus",
    "ability": {
     "name": "Signature move",
     "fx": "enemies target it until its next turn"
@@ -11652,6 +11457,57 @@
    "tier": 2
   },
   {
+   "id": "tynamo-1",
+   "line": "tynamo",
+   "star": 1,
+   "name": "Tynamo",
+   "type": "electric",
+   "sig": "thunder-shock",
+   "hp": 56,
+   "atk": 35,
+   "spd": 38,
+   "spr": "tynamo",
+   "ability": {
+    "name": "Levitate",
+    "fx": "Evades Ground moves."
+   },
+   "tier": 7
+  },
+  {
+   "id": "tynamo-2",
+   "line": "tynamo",
+   "star": 2,
+   "name": "Eelektrik",
+   "type": "electric",
+   "sig": "electro-ball",
+   "hp": 109,
+   "atk": 61,
+   "spd": 31,
+   "spr": "eelektrik",
+   "ability": {
+    "name": "Levitate",
+    "fx": "Evades Ground moves."
+   },
+   "tier": 7
+  },
+  {
+   "id": "tynamo-3",
+   "line": "tynamo",
+   "star": 3,
+   "name": "Eelektross",
+   "type": "electric",
+   "sig": "thunderbolt",
+   "hp": 149,
+   "atk": 88,
+   "spd": 35,
+   "spr": "eelektross",
+   "ability": {
+    "name": "Levitate",
+    "fx": "Evades Ground moves."
+   },
+   "tier": 7
+  },
+  {
    "id": "elgyem-1",
    "line": "elgyem",
    "star": 1,
@@ -11672,13 +11528,13 @@
    "id": "elgyem-2",
    "line": "elgyem",
    "star": 2,
-   "name": "Beheeyem",
+   "name": "Elgyem",
    "type": "psychic",
    "sig": "psybeam",
-   "hp": 100,
+   "hp": 99,
    "atk": 62,
    "spd": 26,
-   "spr": "beheeyem",
+   "spr": "elgyem",
    "ability": {
     "name": "Telepathy",
     "fx": "Protects against friendly Pokémon's damaging moves."
@@ -11825,13 +11681,13 @@
    "id": "cubchoo-2",
    "line": "cubchoo",
    "star": 2,
-   "name": "Beartic",
+   "name": "Cubchoo",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 103,
-   "atk": 61,
-   "spd": 29,
-   "spr": "beartic",
+   "hp": 96,
+   "atk": 58,
+   "spd": 34,
+   "spr": "cubchoo",
    "ability": {
     "name": "Snow Cloak",
     "fx": "Increases evasion to 1.25× during hail.  Protects against hail damage."
@@ -11854,6 +11710,57 @@
     "fx": "Increases evasion to 1.25× during hail.  Protects against hail damage."
    },
    "tier": 5
+  },
+  {
+   "id": "golett-1",
+   "line": "golett",
+   "star": 1,
+   "name": "Golett",
+   "type": "ground",
+   "sig": "mud-slap",
+   "hp": 65,
+   "atk": 37,
+   "spd": 25,
+   "spr": "golett",
+   "ability": {
+    "name": "Iron Fist",
+    "fx": "Strengthens punch-based moves to 1.2× their power."
+   },
+   "tier": 3
+  },
+  {
+   "id": "golett-2",
+   "line": "golett",
+   "star": 2,
+   "name": "Golett",
+   "type": "ground",
+   "sig": "dig",
+   "hp": 101,
+   "atk": 56,
+   "spd": 30,
+   "spr": "golett",
+   "ability": {
+    "name": "Iron Fist",
+    "fx": "Strengthens punch-based moves to 1.2× their power."
+   },
+   "tier": 3
+  },
+  {
+   "id": "golett-3",
+   "line": "golett",
+   "star": 3,
+   "name": "Golurk",
+   "type": "ground",
+   "sig": "earth-power",
+   "hp": 141,
+   "atk": 81,
+   "spd": 35,
+   "spr": "golurk",
+   "ability": {
+    "name": "Iron Fist",
+    "fx": "Strengthens punch-based moves to 1.2× their power."
+   },
+   "tier": 3
   },
   {
    "id": "pawniard-1",
@@ -11927,13 +11834,13 @@
    "id": "larvesta-2",
    "line": "larvesta",
    "star": 2,
-   "name": "Volcarona",
+   "name": "Larvesta",
    "type": "bug",
    "sig": "signal-beam",
-   "hp": 93,
-   "atk": 56,
-   "spd": 40,
-   "spr": "volcarona",
+   "hp": 95,
+   "atk": 57,
+   "spd": 38,
+   "spr": "larvesta",
    "ability": {
     "name": "Flame Body",
     "fx": "Has a 30% chance of burning attacking Pokémon on contact."
@@ -12771,6 +12678,108 @@
    "tier": 5
   },
   {
+   "id": "litleo-1",
+   "line": "litleo",
+   "star": 1,
+   "name": "Litleo",
+   "type": "fire",
+   "sig": "ember",
+   "hp": 61,
+   "atk": 34,
+   "spd": 35,
+   "spr": "litleo",
+   "ability": {
+    "name": "Rivalry",
+    "fx": "Increases damage inflicted to 1.25× against Pokémon of the same gender, but decreases damage to 0.75× against the opposite gender."
+   },
+   "tier": 6
+  },
+  {
+   "id": "litleo-2",
+   "line": "litleo",
+   "star": 2,
+   "name": "Litleo",
+   "type": "fire",
+   "sig": "fire-spin",
+   "hp": 95,
+   "atk": 51,
+   "spd": 42,
+   "spr": "litleo",
+   "ability": {
+    "name": "Rivalry",
+    "fx": "Increases damage inflicted to 1.25× against Pokémon of the same gender, but decreases damage to 0.75× against the opposite gender."
+   },
+   "tier": 6
+  },
+  {
+   "id": "litleo-3",
+   "line": "litleo",
+   "star": 3,
+   "name": "Pyroar",
+   "type": "fire",
+   "sig": "flamethrower",
+   "hp": 129,
+   "atk": 73,
+   "spd": 50,
+   "spr": "pyroar",
+   "ability": {
+    "name": "Rivalry",
+    "fx": "Increases damage inflicted to 1.25× against Pokémon of the same gender, but decreases damage to 0.75× against the opposite gender."
+   },
+   "tier": 6
+  },
+  {
+   "id": "flabebe-1",
+   "line": "flabebe",
+   "star": 1,
+   "name": "Flabébé",
+   "type": "fairy",
+   "sig": "fairy-wind",
+   "hp": 70,
+   "atk": 37,
+   "spd": 31,
+   "spr": "flabebe",
+   "ability": {
+    "name": "Flower Veil",
+    "fx": "Protects friendly Grass Pokémon from having their stats lowered by other Pokémon."
+   },
+   "tier": 8
+  },
+  {
+   "id": "flabebe-2",
+   "line": "flabebe",
+   "star": 2,
+   "name": "Floette",
+   "type": "fairy",
+   "sig": "play-rough",
+   "hp": 108,
+   "atk": 55,
+   "spd": 37,
+   "spr": "floette",
+   "ability": {
+    "name": "Flower Veil",
+    "fx": "Protects friendly Grass Pokémon from having their stats lowered by other Pokémon."
+   },
+   "tier": 8
+  },
+  {
+   "id": "flabebe-3",
+   "line": "flabebe",
+   "star": 3,
+   "name": "Florges",
+   "type": "fairy",
+   "sig": "dazzling-gleam",
+   "hp": 154,
+   "atk": 78,
+   "spd": 42,
+   "spr": "florges",
+   "ability": {
+    "name": "Flower Veil",
+    "fx": "Protects friendly Grass Pokémon from having their stats lowered by other Pokémon."
+   },
+   "tier": 8
+  },
+  {
    "id": "pancham-1",
    "line": "pancham",
    "star": 1,
@@ -12791,13 +12800,13 @@
    "id": "pancham-2",
    "line": "pancham",
    "star": 2,
-   "name": "Pangoro",
+   "name": "Pancham",
    "type": "fighting",
    "sig": "submission",
-   "hp": 99,
-   "atk": 58,
+   "hp": 101,
+   "atk": 56,
    "spd": 31,
-   "spr": "pangoro",
+   "spr": "pancham",
    "ability": {
     "name": "Iron Fist",
     "fx": "Strengthens punch-based moves to 1.2× their power."
@@ -12820,6 +12829,57 @@
     "fx": "Strengthens punch-based moves to 1.2× their power."
    },
    "tier": 4
+  },
+  {
+   "id": "espurr-1",
+   "line": "espurr",
+   "star": 1,
+   "name": "Espurr",
+   "type": "psychic",
+   "sig": "confusion",
+   "hp": 60,
+   "atk": 30,
+   "spd": 33,
+   "spr": "espurr",
+   "ability": {
+    "name": "Keen Eye",
+    "fx": "Prevents accuracy from being lowered."
+   },
+   "tier": 2
+  },
+  {
+   "id": "espurr-2",
+   "line": "espurr",
+   "star": 2,
+   "name": "Espurr",
+   "type": "psychic",
+   "sig": "calm-mind",
+   "hp": 93,
+   "atk": 45,
+   "spd": 40,
+   "spr": "espurr",
+   "ability": {
+    "name": "Keen Eye",
+    "fx": "Prevents accuracy from being lowered."
+   },
+   "tier": 2
+  },
+  {
+   "id": "espurr-3",
+   "line": "espurr",
+   "star": 3,
+   "name": "Meowstic",
+   "type": "psychic",
+   "sig": "psychic",
+   "hp": 128,
+   "atk": 61,
+   "spd": 50,
+   "spr": "meowstic",
+   "ability": {
+    "name": "Keen Eye",
+    "fx": "Prevents accuracy from being lowered."
+   },
+   "tier": 2
   },
   {
    "id": "honedge-1",
@@ -12893,13 +12953,13 @@
    "id": "swirlix-2",
    "line": "swirlix",
    "star": 2,
-   "name": "Slurpuff",
+   "name": "Swirlix",
    "type": "fairy",
    "sig": "play-rough",
-   "hp": 100,
-   "atk": 49,
-   "spd": 36,
-   "spr": "slurpuff",
+   "hp": 105,
+   "atk": 48,
+   "spd": 35,
+   "spr": "swirlix",
    "ability": {
     "name": "Sweet Veil",
     "fx": "Prevents friendly Pokémon from sleeping."
@@ -12944,13 +13004,13 @@
    "id": "inkay-2",
    "line": "inkay",
    "star": 2,
-   "name": "Malamar",
+   "name": "Inkay",
    "type": "dark",
    "sig": "crunch",
-   "hp": 100,
-   "atk": 50,
-   "spd": 35,
-   "spr": "malamar",
+   "hp": 101,
+   "atk": 48,
+   "spd": 36,
+   "spr": "inkay",
    "ability": {
     "name": "Contrary",
     "fx": "stat drops on it become boosts"
@@ -12975,6 +13035,108 @@
    "tier": 3
   },
   {
+   "id": "binacle-1",
+   "line": "binacle",
+   "star": 1,
+   "name": "Binacle",
+   "type": "rock",
+   "sig": "rock-throw",
+   "hp": 68,
+   "atk": 33,
+   "spd": 33,
+   "spr": "binacle",
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Strengthens moves that make contact to 1.33× their power."
+   },
+   "tier": 6
+  },
+  {
+   "id": "binacle-2",
+   "line": "binacle",
+   "star": 2,
+   "name": "Binacle",
+   "type": "rock",
+   "sig": "ancient-power",
+   "hp": 105,
+   "atk": 50,
+   "spd": 40,
+   "spr": "binacle",
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Strengthens moves that make contact to 1.33× their power."
+   },
+   "tier": 6
+  },
+  {
+   "id": "binacle-3",
+   "line": "binacle",
+   "star": 3,
+   "name": "Barbaracle",
+   "type": "rock",
+   "sig": "power-gem",
+   "hp": 150,
+   "atk": 76,
+   "spd": 41,
+   "spr": "barbaracle",
+   "ability": {
+    "name": "Tough Claws",
+    "fx": "Strengthens moves that make contact to 1.33× their power."
+   },
+   "tier": 6
+  },
+  {
+   "id": "skrelp-1",
+   "line": "skrelp",
+   "star": 1,
+   "name": "Skrelp",
+   "type": "poison",
+   "sig": "poison-sting",
+   "hp": 71,
+   "atk": 38,
+   "spd": 25,
+   "spr": "skrelp",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 5
+  },
+  {
+   "id": "skrelp-2",
+   "line": "skrelp",
+   "star": 2,
+   "name": "Skrelp",
+   "type": "poison",
+   "sig": "acid",
+   "hp": 110,
+   "atk": 57,
+   "spd": 30,
+   "spr": "skrelp",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 5
+  },
+  {
+   "id": "skrelp-3",
+   "line": "skrelp",
+   "star": 3,
+   "name": "Dragalge",
+   "type": "poison",
+   "sig": "sludge-bomb",
+   "hp": 158,
+   "atk": 80,
+   "spd": 34,
+   "spr": "dragalge",
+   "ability": {
+    "name": "Poison Point",
+    "fx": "Has a 30% chance of poisoning attacking Pokémon on contact."
+   },
+   "tier": 5
+  },
+  {
    "id": "clauncher-1",
    "line": "clauncher",
    "star": 1,
@@ -12995,13 +13157,13 @@
    "id": "clauncher-2",
    "line": "clauncher",
    "star": 2,
-   "name": "Clawitzer",
+   "name": "Clauncher",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 99,
-   "atk": 60,
-   "spd": 32,
-   "spr": "clawitzer",
+   "hp": 105,
+   "atk": 52,
+   "spd": 35,
+   "spr": "clauncher",
    "ability": {
     "name": "Mega Launcher",
     "fx": "Strengthens aura and pulse moves to 1.5× their power."
@@ -13046,13 +13208,13 @@
    "id": "tyrunt-2",
    "line": "tyrunt",
    "star": 2,
-   "name": "Tyrantrum",
+   "name": "Tyrunt",
    "type": "rock",
    "sig": "rock-tomb",
-   "hp": 100,
+   "hp": 99,
    "atk": 58,
-   "spd": 35,
-   "spr": "tyrantrum",
+   "spd": 34,
+   "spr": "tyrunt",
    "ability": {
     "name": "Strong Jaw",
     "fx": "Strengthens biting moves to 1.5× their power."
@@ -13073,6 +13235,57 @@
    "ability": {
     "name": "Strong Jaw",
     "fx": "Strengthens biting moves to 1.5× their power."
+   },
+   "tier": 6
+  },
+  {
+   "id": "hawlucha-1",
+   "line": "hawlucha",
+   "star": 1,
+   "name": "Hawlucha",
+   "type": "fighting",
+   "sig": "rock-smash",
+   "hp": 57,
+   "atk": 32,
+   "spd": 39,
+   "spr": "hawlucha",
+   "ability": {
+    "name": "Limber",
+    "fx": "Prevents paralysis."
+   },
+   "tier": 6
+  },
+  {
+   "id": "hawlucha-2",
+   "line": "hawlucha",
+   "star": 2,
+   "name": "Hawlucha",
+   "type": "fighting",
+   "sig": "submission",
+   "hp": 89,
+   "atk": 48,
+   "spd": 47,
+   "spr": "hawlucha",
+   "ability": {
+    "name": "Limber",
+    "fx": "Prevents paralysis."
+   },
+   "tier": 6
+  },
+  {
+   "id": "hawlucha-3",
+   "line": "hawlucha",
+   "star": 3,
+   "name": "Hawlucha",
+   "type": "fighting",
+   "sig": "coaching",
+   "hp": 126,
+   "atk": 67,
+   "spd": 54,
+   "spr": "hawlucha",
+   "ability": {
+    "name": "Limber",
+    "fx": "Prevents paralysis."
    },
    "tier": 6
   },
@@ -13199,13 +13412,13 @@
    "id": "bergmite-2",
    "line": "bergmite",
    "star": 2,
-   "name": "Avalugg",
+   "name": "Bergmite",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 125,
-   "atk": 60,
-   "spd": 23,
-   "spr": "avalugg",
+   "hp": 115,
+   "atk": 58,
+   "spd": 29,
+   "spr": "bergmite",
    "ability": {
     "name": "Own Tempo",
     "fx": "Prevents confusion."
@@ -13775,13 +13988,13 @@
    "id": "crabrawler-2",
    "line": "crabrawler",
    "star": 2,
-   "name": "Crabominable",
+   "name": "Crabrawler",
    "type": "fighting",
    "sig": "mach-punch",
-   "hp": 100,
-   "atk": 61,
-   "spd": 26,
-   "spr": "crabominable",
+   "hp": 85,
+   "atk": 54,
+   "spd": 38,
+   "spr": "crabrawler",
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Prevents Attack from being lowered by other Pokémon."
@@ -13826,13 +14039,13 @@
    "id": "rockruff-2",
    "line": "rockruff",
    "star": 2,
-   "name": "Lycanroc",
+   "name": "Rockruff",
    "type": "rock",
    "sig": "rock-tomb",
-   "hp": 83,
+   "hp": 87,
    "atk": 51,
-   "spd": 43,
-   "spr": "lycanroc",
+   "spd": 42,
+   "spr": "rockruff",
    "ability": {
     "name": "Keen Eye",
     "fx": "Prevents accuracy from being lowered."
@@ -13877,13 +14090,13 @@
    "id": "mareanie-2",
    "line": "mareanie",
    "star": 2,
-   "name": "Toxapex",
+   "name": "Mareanie",
    "type": "poison",
    "sig": "acid",
-   "hp": 133,
-   "atk": 46,
-   "spd": 27,
-   "spr": "toxapex",
+   "hp": 104,
+   "atk": 50,
+   "spd": 36,
+   "spr": "mareanie",
    "ability": {
     "name": "Merciless",
     "fx": "This Pokémon's moves critical hit against poisoned targets."
@@ -13928,13 +14141,13 @@
    "id": "mudbray-2",
    "line": "mudbray",
    "star": 2,
-   "name": "Mudsdale",
+   "name": "Mudbray",
    "type": "ground",
    "sig": "dig",
-   "hp": 114,
-   "atk": 61,
-   "spd": 25,
-   "spr": "mudsdale",
+   "hp": 101,
+   "atk": 60,
+   "spd": 31,
+   "spr": "mudbray",
    "ability": {
     "name": "Own Tempo",
     "fx": "Prevents confusion."
@@ -13979,13 +14192,13 @@
    "id": "morelull-2",
    "line": "morelull",
    "star": 2,
-   "name": "Shiinotic",
+   "name": "Morelull",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 108,
-   "atk": 55,
-   "spd": 24,
-   "spr": "shiinotic",
+   "hp": 110,
+   "atk": 58,
+   "spd": 22,
+   "spr": "morelull",
    "ability": {
     "name": "Illuminate",
     "fx": "Doubles the wild encounter rate."
@@ -14030,13 +14243,13 @@
    "id": "salandit-2",
    "line": "salandit",
    "star": 2,
-   "name": "Salazzle",
+   "name": "Salandit",
    "type": "poison",
    "sig": "poison-jab",
-   "hp": 78,
+   "hp": 79,
    "atk": 50,
    "spd": 44,
-   "spr": "salazzle",
+   "spr": "salandit",
    "ability": {
     "name": "Corrosion",
     "fx": "This Pokémon can inflict poison on Poison and Steel Pokémon."
@@ -14081,13 +14294,13 @@
    "id": "stufful-2",
    "line": "stufful",
    "star": 2,
-   "name": "Bewear",
+   "name": "Stufful",
    "type": "fighting",
    "sig": "double-kick",
-   "hp": 106,
-   "atk": 57,
-   "spd": 31,
-   "spr": "bewear",
+   "hp": 102,
+   "atk": 54,
+   "spd": 35,
+   "spr": "stufful",
    "ability": {
     "name": "Fluffy",
     "fx": "Damage from contact moves is halved.  Damage from Fire moves is doubled."
@@ -14285,15 +14498,15 @@
    "id": "wimpod-2",
    "line": "wimpod",
    "star": 2,
-   "name": "Golisopod",
+   "name": "Wimpod",
    "type": "bug",
    "sig": "signal-beam",
-   "hp": 113,
-   "atk": 61,
-   "spd": 26,
-   "spr": "golisopod",
+   "hp": 79,
+   "atk": 39,
+   "spd": 58,
+   "spr": "wimpod",
    "ability": {
-    "name": "Emergency Exit",
+    "name": "Wimp Out",
     "fx": "This Pokémon automatically switches out when its HP drops below half."
    },
    "tier": 6
@@ -14336,13 +14549,13 @@
    "id": "sandygast-2",
    "line": "sandygast",
    "star": 2,
-   "name": "Palossand",
+   "name": "Sandygast",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 112,
-   "atk": 57,
-   "spd": 25,
-   "spr": "palossand",
+   "hp": 115,
+   "atk": 60,
+   "spd": 22,
+   "spr": "sandygast",
    "ability": {
     "name": "Water Compaction",
     "fx": "Raises this Pokémon's Defense by two stages when it's hit by a Water move."
@@ -14387,16 +14600,16 @@
    "id": "typenull-2",
    "line": "typenull",
    "star": 2,
-   "name": "Silvally",
+   "name": "Type: Null",
    "type": "normal",
    "sig": "harden",
-   "hp": 104,
-   "atk": 50,
-   "spd": 40,
-   "spr": "silvally",
+   "hp": 115,
+   "atk": 56,
+   "spd": 32,
+   "spr": "typenull",
    "ability": {
-    "name": "RKS System",
-    "fx": "Changes this Pokémon's type to match its held Memory."
+    "name": "Battle Armor",
+    "fx": "Protects against critical hits."
    },
    "tier": 7
   },
@@ -15556,13 +15769,13 @@
    "id": "poipole-2",
    "line": "poipole",
    "star": 2,
-   "name": "Naganadel",
+   "name": "Poipole",
    "type": "poison",
    "sig": "poison-jab",
-   "hp": 90,
-   "atk": 58,
-   "spd": 48,
-   "spr": "naganadel",
+   "hp": 107,
+   "atk": 54,
+   "spd": 43,
+   "spr": "poipole",
    "ability": {
     "name": "Beast Boost",
     "fx": "Raises this Pokémon's highest stat by one stage when it faints another Pokémon."
@@ -15772,16 +15985,16 @@
    "id": "meltan-2",
    "line": "meltan",
    "star": 2,
-   "name": "Melmetal",
+   "name": "Meltan",
    "type": "steel",
    "sig": "steel-wing",
-   "hp": 134,
-   "atk": 69,
-   "spd": 26,
-   "spr": "melmetal",
+   "hp": 113,
+   "atk": 66,
+   "spd": 36,
+   "spr": "meltan",
    "ability": {
-    "name": "Iron Fist",
-    "fx": "Strengthens punch-based moves to 1.2× their power."
+    "name": "Magnet Pull",
+    "fx": "Prevents Steel opponents from fleeing or switching out."
    },
    "tier": 4,
    "weight": 10
@@ -15969,13 +16182,13 @@
    "id": "skwovet-2",
    "line": "skwovet",
    "star": 2,
-   "name": "Greedent",
+   "name": "Skwovet",
    "type": "normal",
    "sig": "tri-attack",
-   "hp": 126,
-   "atk": 54,
-   "spd": 20,
-   "spr": "greedent",
+   "hp": 115,
+   "atk": 51,
+   "spd": 26,
+   "spr": "skwovet",
    "ability": {
     "name": "Cheek Pouch",
     "fx": "Restores HP upon eating a Berry, in addition to the Berry's effect."
@@ -16071,13 +16284,13 @@
    "id": "nickit-2",
    "line": "nickit",
    "star": 2,
-   "name": "Thievul",
+   "name": "Nickit",
    "type": "dark",
    "sig": "crunch",
    "hp": 90,
-   "atk": 47,
-   "spd": 40,
-   "spr": "thievul",
+   "atk": 46,
+   "spd": 41,
+   "spr": "nickit",
    "ability": {
     "name": "Run Away",
     "fx": "Ensures success fleeing from wild battles."
@@ -16122,13 +16335,13 @@
    "id": "gossifleur-2",
    "line": "gossifleur",
    "star": 2,
-   "name": "Eldegoss",
+   "name": "Gossifleur",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 106,
-   "atk": 48,
-   "spd": 33,
-   "spr": "eldegoss",
+   "hp": 129,
+   "atk": 52,
+   "spd": 20,
+   "spr": "gossifleur",
    "ability": {
     "name": "Cotton Down",
     "fx": "When Ignores moves and abilities that draw in moves."
@@ -16173,13 +16386,13 @@
    "id": "chewtle-2",
    "line": "chewtle",
    "star": 2,
-   "name": "Drednaw",
+   "name": "Chewtle",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 97,
-   "atk": 53,
-   "spd": 34,
-   "spr": "drednaw",
+   "hp": 95,
+   "atk": 52,
+   "spd": 35,
+   "spr": "chewtle",
    "ability": {
     "name": "Strong Jaw",
     "fx": "Strengthens biting moves to 1.5× their power."
@@ -16224,16 +16437,16 @@
    "id": "yamper-2",
    "line": "yamper",
    "star": 2,
-   "name": "Boltund",
+   "name": "Yamper",
    "type": "electric",
    "sig": "electro-ball",
-   "hp": 80,
-   "atk": 48,
-   "spd": 47,
-   "spr": "boltund",
+   "hp": 119,
+   "atk": 50,
+   "spd": 29,
+   "spr": "yamper",
    "ability": {
-    "name": "Strong Jaw",
-    "fx": "Strengthens biting moves to 1.5× their power."
+    "name": "Ball Fetch",
+    "fx": "If the Pokémon is not holding an item, it will fetch the Poké Ball from the first failed throw of the battle."
    },
    "tier": 4
   },
@@ -16326,19 +16539,55 @@
    "id": "applin-2-flapple",
    "line": "applin",
    "star": 2,
-   "name": "Flapple",
+   "name": "Applin",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 93,
-   "atk": 59,
-   "spd": 36,
-   "spr": "flapple",
+   "hp": 127,
+   "atk": 52,
+   "spd": 28,
+   "spr": "applin",
    "ability": {
     "name": "Ripen",
     "fx": "Doubles the effect of berries."
    },
-   "branch": "flapple",
-   "tier": 6
+   "tier": 6,
+   "branch": "flapple"
+  },
+  {
+   "id": "applin-2-appletun",
+   "line": "applin",
+   "star": 2,
+   "name": "Applin",
+   "type": "grass",
+   "sig": "mega-drain",
+   "hp": 127,
+   "atk": 52,
+   "spd": 28,
+   "spr": "applin",
+   "ability": {
+    "name": "Ripen",
+    "fx": "Doubles the effect of berries."
+   },
+   "tier": 6,
+   "branch": "appletun"
+  },
+  {
+   "id": "applin-2-hydrapple",
+   "line": "applin",
+   "star": 2,
+   "name": "Dipplin",
+   "type": "grass",
+   "sig": "razor-leaf",
+   "hp": 116,
+   "atk": 58,
+   "spd": 28,
+   "spr": "dipplin",
+   "ability": {
+    "name": "Supersweet Syrup",
+    "fx": "Once per battle, when a Pokémon with Supersweet Syrup enters the battle, it lowers the evasion stat of all adjacent opponents by one stage."
+   },
+   "tier": 6,
+   "branch": "hydrapple"
   },
   {
    "id": "applin-3-flapple",
@@ -16359,24 +16608,6 @@
    "tier": 6
   },
   {
-   "id": "applin-2-appletun",
-   "line": "applin",
-   "star": 2,
-   "name": "Appletun",
-   "type": "grass",
-   "sig": "mega-drain",
-   "hp": 122,
-   "atk": 60,
-   "spd": 24,
-   "spr": "appletun",
-   "ability": {
-    "name": "Ripen",
-    "fx": "Doubles the effect of berries."
-   },
-   "branch": "appletun",
-   "tier": 6
-  },
-  {
    "id": "applin-3-appletun",
    "line": "applin",
    "star": 3,
@@ -16392,24 +16623,6 @@
     "fx": "Doubles the effect of berries."
    },
    "branch": "appletun",
-   "tier": 6
-  },
-  {
-   "id": "applin-2-hydrapple",
-   "line": "applin",
-   "star": 2,
-   "name": "Dipplin",
-   "type": "grass",
-   "sig": "razor-leaf",
-   "hp": 116,
-   "atk": 58,
-   "spd": 28,
-   "spr": "dipplin",
-   "ability": {
-    "name": "Supersweet Syrup",
-    "fx": "Once per battle, when a Pokémon with Supersweet Syrup enters the battle, it lowers the evasion stat of all adjacent opponents by one stage."
-   },
-   "branch": "hydrapple",
    "tier": 6
   },
   {
@@ -16502,13 +16715,13 @@
    "id": "arrokuda-2",
    "line": "arrokuda",
    "star": 2,
-   "name": "Barraskewda",
+   "name": "Arrokuda",
    "type": "water",
    "sig": "aqua-tail",
-   "hp": 72,
+   "hp": 81,
    "atk": 51,
-   "spd": 47,
-   "spr": "barraskewda",
+   "spd": 44,
+   "spr": "arrokuda",
    "ability": {
     "name": "Swift Swim",
     "fx": "Doubles Speed during rain."
@@ -16553,16 +16766,16 @@
    "id": "toxel-2",
    "line": "toxel",
    "star": 2,
-   "name": "Toxtricity",
+   "name": "Toxel",
    "type": "electric",
    "sig": "discharge",
-   "hp": 91,
-   "atk": 58,
-   "spd": 36,
-   "spr": "toxtricity",
+   "hp": 93,
+   "atk": 56,
+   "spd": 37,
+   "spr": "toxel",
    "ability": {
-    "name": "Punk Rock",
-    "fx": "Boosts sound-based moves and halves damage from the same moves."
+    "name": "Rattled",
+    "fx": "Raises Speed one stage upon being hit by a Dark, Ghost, or Bug move."
    },
    "tier": 5
   },
@@ -16604,13 +16817,13 @@
    "id": "clobbopus-2",
    "line": "clobbopus",
    "star": 2,
-   "name": "Grapploct",
+   "name": "Clobbopus",
    "type": "fighting",
    "sig": "mach-punch",
    "hp": 102,
-   "atk": 60,
-   "spd": 27,
-   "spr": "grapploct",
+   "atk": 57,
+   "spd": 29,
+   "spr": "clobbopus",
    "ability": {
     "name": "Octolock",
     "fx": "traps a target and drains it more each round"
@@ -16757,13 +16970,13 @@
    "id": "milcery-2",
    "line": "milcery",
    "star": 2,
-   "name": "Alcremie",
+   "name": "Milcery",
    "type": "fairy",
    "sig": "play-rough",
-   "hp": 99,
-   "atk": 55,
-   "spd": 33,
-   "spr": "alcremie",
+   "hp": 107,
+   "atk": 51,
+   "spd": 34,
+   "spr": "milcery",
    "ability": {
     "name": "Sweet Veil",
     "fx": "Prevents friendly Pokémon from sleeping."
@@ -16859,13 +17072,13 @@
    "id": "snom-2",
    "line": "snom",
    "star": 2,
-   "name": "Frosmoth",
+   "name": "Snom",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 88,
+   "hp": 98,
    "atk": 57,
-   "spd": 32,
-   "spr": "frosmoth",
+   "spd": 29,
+   "spr": "snom",
    "ability": {
     "name": "Shield Dust",
     "fx": "Protects against incoming moves' extra effects."
@@ -16961,13 +17174,13 @@
    "id": "cufant-2",
    "line": "cufant",
    "star": 2,
-   "name": "Copperajah",
+   "name": "Cufant",
    "type": "steel",
    "sig": "steel-wing",
-   "hp": 112,
-   "atk": 64,
-   "spd": 23,
-   "spr": "copperajah",
+   "hp": 105,
+   "atk": 57,
+   "spd": 31,
+   "spr": "cufant",
    "ability": {
     "name": "Sheer Force",
     "fx": "Strengthens moves with extra effects to 1.3× their power, but prevents their extra effects."
@@ -17012,16 +17225,16 @@
    "id": "duraludon-2",
    "line": "duraludon",
    "star": 2,
-   "name": "Archaludon",
+   "name": "Duraludon",
    "type": "steel",
    "sig": "steel-wing",
-   "hp": 102,
-   "atk": 58,
-   "spd": 37,
-   "spr": "archaludon",
+   "hp": 95,
+   "atk": 60,
+   "spd": 38,
+   "spr": "duraludon",
    "ability": {
-    "name": "Stamina",
-    "fx": "Raises this Pokémon's Defense by one stage when it takes damage from a move."
+    "name": "Light Metal",
+    "fx": "Halves the Pokémon's weight."
    },
    "tier": 8
   },
@@ -17268,16 +17481,16 @@
    "id": "kubfu-2",
    "line": "kubfu",
    "star": 2,
-   "name": "Urshifu",
+   "name": "Kubfu",
    "type": "fighting",
    "sig": "mach-punch",
-   "hp": 105,
+   "hp": 99,
    "atk": 60,
-   "spd": 42,
-   "spr": "urshifu",
+   "spd": 44,
+   "spr": "kubfu",
    "ability": {
-    "name": "Unseen Fist",
-    "fx": "Contact moves can strike through Protect/Detect."
+    "name": "Inner Focus",
+    "fx": "Prevents flinching."
    },
    "tier": 4,
    "weight": 10
@@ -17825,13 +18038,13 @@
    "id": "tarountula-2",
    "line": "tarountula",
    "star": 2,
-   "name": "Spidops",
+   "name": "Tarountula",
    "type": "bug",
    "sig": "signal-beam",
-   "hp": 109,
-   "atk": 52,
-   "spd": 27,
-   "spr": "spidops",
+   "hp": 107,
+   "atk": 51,
+   "spd": 28,
+   "spr": "tarountula",
    "ability": {
     "name": "Insomnia",
     "fx": "Prevents sleep."
@@ -17927,16 +18140,16 @@
    "id": "tandemaus-2",
    "line": "tandemaus",
    "star": 2,
-   "name": "Maushold",
+   "name": "Tandemaus",
    "type": "normal",
    "sig": "shell-smash",
    "hp": 87,
    "atk": 42,
-   "spd": 45,
-   "spr": "maushold",
+   "spd": 46,
+   "spr": "tandemaus",
    "ability": {
-    "name": "Friend Guard",
-    "fx": "Decreases all direct damage taken by friendly Pokémon to 0.75×."
+    "name": "Run Away",
+    "fx": "Ensures success fleeing from wild battles."
    },
    "tier": 2
   },
@@ -17978,13 +18191,13 @@
    "id": "fidough-2",
    "line": "fidough",
    "star": 2,
-   "name": "Dachsbun",
+   "name": "Fidough",
    "type": "fairy",
    "sig": "play-rough",
-   "hp": 94,
-   "atk": 44,
+   "hp": 91,
+   "atk": 45,
    "spd": 42,
-   "spr": "dachsbun",
+   "spr": "fidough",
    "ability": {
     "name": "Well-Baked Body",
     "fx": "Fire hits heal it instead of hurting it"
@@ -18128,21 +18341,20 @@
    "tier": 6
   },
   {
-   "id": "charcadet-2-armarouge",
+   "id": "charcadet-2",
    "line": "charcadet",
    "star": 2,
-   "name": "Armarouge",
+   "name": "Charcadet",
    "type": "fire",
    "sig": "flame-wheel",
-   "hp": 100,
-   "atk": 57,
-   "spd": 35,
-   "spr": "armarouge",
+   "hp": 101,
+   "atk": 56,
+   "spd": 36,
+   "spr": "charcadet",
    "ability": {
     "name": "Flash Fire",
     "fx": "Protects against Fire moves.  Once one has been blocked, the Pokémon's own Fire moves inflict 1.5× damage until it leaves battle."
    },
-   "branch": "armarouge",
    "tier": 6
   },
   {
@@ -18161,24 +18373,6 @@
     "fx": "Protects against Fire moves.  Once one has been blocked, the Pokémon's own Fire moves inflict 1.5× damage until it leaves battle."
    },
    "branch": "armarouge",
-   "tier": 6
-  },
-  {
-   "id": "charcadet-2-ceruledge",
-   "line": "charcadet",
-   "star": 2,
-   "name": "Ceruledge",
-   "type": "fire",
-   "sig": "fire-spin",
-   "hp": 95,
-   "atk": 56,
-   "spd": 38,
-   "spr": "ceruledge",
-   "ability": {
-    "name": "Flash Fire",
-    "fx": "Protects against Fire moves.  Once one has been blocked, the Pokémon's own Fire moves inflict 1.5× damage until it leaves battle."
-   },
-   "branch": "ceruledge",
    "tier": 6
   },
   {
@@ -18220,16 +18414,16 @@
    "id": "tadbulb-2",
    "line": "tadbulb",
    "star": 2,
-   "name": "Bellibolt",
+   "name": "Tadbulb",
    "type": "electric",
    "sig": "electro-ball",
-   "hp": 115,
-   "atk": 54,
-   "spd": 28,
-   "spr": "bellibolt",
+   "hp": 101,
+   "atk": 51,
+   "spd": 36,
+   "spr": "tadbulb",
    "ability": {
-    "name": "Electromorphosis",
-    "fx": "When hit by an attack, the power of the next Electric-type move it uses is doubled."
+    "name": "Own Tempo",
+    "fx": "Prevents confusion."
    },
    "tier": 4
   },
@@ -18271,13 +18465,13 @@
    "id": "wattrel-2",
    "line": "wattrel",
    "star": 2,
-   "name": "Kilowattrel",
+   "name": "Wattrel",
    "type": "electric",
    "sig": "discharge",
-   "hp": 79,
-   "atk": 49,
-   "spd": 46,
-   "spr": "kilowattrel",
+   "hp": 82,
+   "atk": 48,
+   "spd": 47,
+   "spr": "wattrel",
    "ability": {
     "name": "Wind Power",
     "fx": "When hit by a wind move, the power of the next Electric-type move it uses is doubled."
@@ -18322,13 +18516,13 @@
    "id": "maschiff-2",
    "line": "maschiff",
    "star": 2,
-   "name": "Mabosstiff",
+   "name": "Maschiff",
    "type": "dark",
    "sig": "feint-attack",
-   "hp": 93,
-   "atk": 55,
-   "spd": 38,
-   "spr": "mabosstiff",
+   "hp": 99,
+   "atk": 54,
+   "spd": 36,
+   "spr": "maschiff",
    "ability": {
     "name": "Intimidate",
     "fx": "Lowers opponents' Attack one stage upon entering battle."
@@ -18373,13 +18567,13 @@
    "id": "shroodle-2",
    "line": "shroodle",
    "star": 2,
-   "name": "Grafaiai",
+   "name": "Shroodle",
    "type": "poison",
    "sig": "poison-fang",
-   "hp": 81,
-   "atk": 48,
-   "spd": 44,
-   "spr": "grafaiai",
+   "hp": 76,
+   "atk": 50,
+   "spd": 46,
+   "spr": "shroodle",
    "ability": {
     "name": "Unburden",
     "fx": "Doubles Speed upon using or losing a held item."
@@ -18424,13 +18618,13 @@
    "id": "bramblin-2",
    "line": "bramblin",
    "star": 2,
-   "name": "Brambleghast",
+   "name": "Bramblin",
    "type": "grass",
    "sig": "mega-drain",
-   "hp": 80,
-   "atk": 55,
-   "spd": 39,
-   "spr": "brambleghast",
+   "hp": 79,
+   "atk": 52,
+   "spd": 42,
+   "spr": "bramblin",
    "ability": {
     "name": "Wind Rider",
     "fx": "Gives immunity to wind moves, and causes the Pokémon's Attack to increase by one stage when hit by one."
@@ -18526,13 +18720,13 @@
    "id": "capsakid-2",
    "line": "capsakid",
    "star": 2,
-   "name": "Scovillain",
+   "name": "Capsakid",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 85,
-   "atk": 57,
-   "spd": 36,
-   "spr": "scovillain",
+   "hp": 90,
+   "atk": 52,
+   "spd": 37,
+   "spr": "capsakid",
    "ability": {
     "name": "Chlorophyll",
     "fx": "Doubles Speed during strong sunlight."
@@ -18577,16 +18771,16 @@
    "id": "flittle-2",
    "line": "flittle",
    "star": 2,
-   "name": "Espathra",
+   "name": "Flittle",
    "type": "psychic",
    "sig": "heal-pulse",
-   "hp": 88,
-   "atk": 48,
-   "spd": 42,
-   "spr": "espathra",
+   "hp": 71,
+   "atk": 46,
+   "spd": 49,
+   "spr": "flittle",
    "ability": {
-    "name": "Opportunist",
-    "fx": "Copies stat boosts by the opponent."
+    "name": "Anticipation",
+    "fx": "Notifies all trainers upon entering battle if an opponent has a super-effective move, Self-Destruct, Explosion, or a one-hit KO move."
    },
    "tier": 3
   },
@@ -18730,13 +18924,13 @@
    "id": "finizen-2",
    "line": "finizen",
    "star": 2,
-   "name": "Palafin",
+   "name": "Finizen",
    "type": "water",
    "sig": "bubble-beam",
-   "hp": 97,
-   "atk": 41,
-   "spd": 42,
-   "spr": "palafin",
+   "hp": 93,
+   "atk": 40,
+   "spd": 44,
+   "spr": "finizen",
    "ability": {
     "name": "Zero to Hero",
     "fx": "Palafin starts as Zero Form and becomes Hero Form after its second action in a battle (+30% Attack, +10% Speed)"
@@ -18832,13 +19026,13 @@
    "id": "glimmet-2",
    "line": "glimmet",
    "star": 2,
-   "name": "Glimmora",
+   "name": "Glimmet",
    "type": "rock",
    "sig": "rock-tomb",
-   "hp": 95,
-   "atk": 57,
+   "hp": 85,
+   "atk": 62,
    "spd": 37,
-   "spr": "glimmora",
+   "spr": "glimmet",
    "ability": {
     "name": "Toxic Debris",
     "fx": "Scatters poison spikes at the feet of the opposing team when the Pokémon takes damage from physical moves."
@@ -18883,16 +19077,16 @@
    "id": "greavard-2",
    "line": "greavard",
    "star": 2,
-   "name": "Houndstone",
+   "name": "Greavard",
    "type": "ghost",
    "sig": "shadow-punch",
-   "hp": 103,
+   "hp": 108,
    "atk": 52,
-   "spd": 34,
-   "spr": "houndstone",
+   "spd": 31,
+   "spr": "greavard",
    "ability": {
-    "name": "Sand Rush",
-    "fx": "Doubles Speed during a sandstorm.  Protects against sandstorm damage."
+    "name": "Pickup",
+    "fx": "Picks up other Pokémon's used and Flung held items.  May also pick up an item after battle."
    },
    "tier": 4
   },
@@ -18985,13 +19179,13 @@
    "id": "cetoddle-2",
    "line": "cetoddle",
    "star": 2,
-   "name": "Cetitan",
+   "name": "Cetoddle",
    "type": "ice",
    "sig": "aurora-beam",
-   "hp": 116,
-   "atk": 51,
-   "spd": 34,
-   "spr": "cetitan",
+   "hp": 121,
+   "atk": 50,
+   "spd": 32,
+   "spr": "cetoddle",
    "ability": {
     "name": "Thick Fat",
     "fx": "Halves damage from Fire and Ice moves."
@@ -19070,7 +19264,7 @@
    "id": "tatsugiri-1",
    "line": "tatsugiri",
    "star": 1,
-   "name": "Curly Tatsugiri",
+   "name": "Tatsugiri",
    "type": "dragon",
    "sig": "dragon-breath",
    "hp": 56,
@@ -19087,7 +19281,7 @@
    "id": "tatsugiri-2",
    "line": "tatsugiri",
    "star": 2,
-   "name": "Curly Tatsugiri",
+   "name": "Tatsugiri",
    "type": "dragon",
    "sig": "dragon-claw",
    "hp": 86,
@@ -19104,7 +19298,7 @@
    "id": "tatsugiri-3",
    "line": "tatsugiri",
    "star": 3,
-   "name": "Curly Tatsugiri",
+   "name": "Tatsugiri",
    "type": "dragon",
    "sig": "dragon-pulse",
    "hp": 123,
@@ -19837,13 +20031,13 @@
    "id": "gimmighoul-2",
    "line": "gimmighoul",
    "star": 2,
-   "name": "Gholdengo",
-   "type": "steel",
-   "sig": "steel-wing",
-   "hp": 99,
-   "atk": 58,
-   "spd": 37,
-   "spr": "gholdengo",
+   "name": "Gimmighoul (Chest)",
+   "type": "ghost",
+   "sig": "shadow-punch",
+   "hp": 124,
+   "atk": 66,
+   "spd": 20,
+   "spr": "gimmighoul",
    "ability": {
     "name": "Good as Gold",
     "fx": "It ignores the first debuff it receives in a battle"
@@ -20404,13 +20598,13 @@
    "id": "poltchageist-2",
    "line": "poltchageist",
    "star": 2,
-   "name": "Sinistcha",
+   "name": "Poltchageist",
    "type": "grass",
    "sig": "razor-leaf",
-   "hp": 98,
+   "hp": 90,
    "atk": 57,
-   "spd": 34,
-   "spr": "sinistcha",
+   "spd": 37,
+   "spr": "poltchageist",
    "ability": {
     "name": "Hospitality",
     "fx": "When a Pokémon with Hospitality enters a battle, it restores HP for an ally by 25%."
@@ -24506,6 +24700,578 @@
     "body-press",
     "wide-guard"
    ]
+  }
+ ],
+ "megas": [
+  {
+   "name": "Mega Venusaur",
+   "of": "Venusaur",
+   "spr": "venusaur_1",
+   "stone": "venusaurite"
+  },
+  {
+   "name": "Mega Charizard X",
+   "of": "Charizard",
+   "spr": "charizard_1",
+   "stone": "charizardite-x"
+  },
+  {
+   "name": "Mega Charizard Y",
+   "of": "Charizard",
+   "spr": "charizard_2",
+   "stone": "charizardite-y"
+  },
+  {
+   "name": "Mega Blastoise",
+   "of": "Blastoise",
+   "spr": "blastoise_1",
+   "stone": "blastoisinite"
+  },
+  {
+   "name": "Mega Beedrill",
+   "of": "Beedrill",
+   "spr": "beedrill_1",
+   "stone": "beedrillite"
+  },
+  {
+   "name": "Mega Pidgeot",
+   "of": "Pidgeot",
+   "spr": "pidgeot_1",
+   "stone": "pidgeotite"
+  },
+  {
+   "name": "Mega Raichu X",
+   "of": "Raichu",
+   "spr": "raichu_2",
+   "stone": "raichunite-x"
+  },
+  {
+   "name": "Mega Raichu Y",
+   "of": "Raichu",
+   "spr": "raichu_3",
+   "stone": "raichunite-y"
+  },
+  {
+   "name": "Mega Clefable",
+   "of": "Clefable",
+   "spr": "clefable_1",
+   "stone": "clefablite"
+  },
+  {
+   "name": "Mega Alakazam",
+   "of": "Alakazam",
+   "spr": "alakazam_1",
+   "stone": "alakazite"
+  },
+  {
+   "name": "Mega Victreebel",
+   "of": "Victreebel",
+   "spr": "victreebel_1",
+   "stone": "victreebelite"
+  },
+  {
+   "name": "Mega Slowbro",
+   "of": "Slowbro",
+   "spr": "slowbro_1",
+   "stone": "slowbronite"
+  },
+  {
+   "name": "Mega Gengar",
+   "of": "Gengar",
+   "spr": "gengar_1",
+   "stone": "gengarite"
+  },
+  {
+   "name": "Mega Kangaskhan",
+   "of": "Kangaskhan",
+   "spr": "kangaskhan_1",
+   "stone": "kangaskhanite"
+  },
+  {
+   "name": "Mega Starmie",
+   "of": "Starmie",
+   "spr": "starmie_1",
+   "stone": "starminite"
+  },
+  {
+   "name": "Mega Pinsir",
+   "of": "Pinsir",
+   "spr": "pinsir_1",
+   "stone": "pinsirite"
+  },
+  {
+   "name": "Mega Gyarados",
+   "of": "Gyarados",
+   "spr": "gyarados_1",
+   "stone": "gyaradosite"
+  },
+  {
+   "name": "Mega Aerodactyl",
+   "of": "Aerodactyl",
+   "spr": "aerodactyl_1",
+   "stone": "aerodactylite"
+  },
+  {
+   "name": "Mega Dragonite",
+   "of": "Dragonite",
+   "spr": "dragonite_1",
+   "stone": "dragoninite"
+  },
+  {
+   "name": "Mega Mewtwo X",
+   "of": "Mewtwo",
+   "spr": "mewtwo_1",
+   "stone": "mewtwonite-x"
+  },
+  {
+   "name": "Mega Mewtwo Y",
+   "of": "Mewtwo",
+   "spr": "mewtwo_2",
+   "stone": "mewtwonite-y"
+  },
+  {
+   "name": "Mega Meganium",
+   "of": "Meganium",
+   "spr": "meganium_1",
+   "stone": "meganiumite"
+  },
+  {
+   "name": "Mega Feraligatr",
+   "of": "Feraligatr",
+   "spr": "feraligatr_1",
+   "stone": "feraligite"
+  },
+  {
+   "name": "Mega Ampharos",
+   "of": "Ampharos",
+   "spr": "ampharos_1",
+   "stone": "ampharosite"
+  },
+  {
+   "name": "Mega Steelix",
+   "of": "Steelix",
+   "spr": "steelix_1",
+   "stone": "steelixite"
+  },
+  {
+   "name": "Mega Scizor",
+   "of": "Scizor",
+   "spr": "scizor_1",
+   "stone": "scizorite"
+  },
+  {
+   "name": "Mega Heracross",
+   "of": "Heracross",
+   "spr": "heracross_1",
+   "stone": "heracronite"
+  },
+  {
+   "name": "Mega Skarmory",
+   "of": "Skarmory",
+   "spr": "skarmory_1",
+   "stone": "skarmorite"
+  },
+  {
+   "name": "Mega Houndoom",
+   "of": "Houndoom",
+   "spr": "houndoom_1",
+   "stone": "houndoominite"
+  },
+  {
+   "name": "Mega Tyranitar",
+   "of": "Tyranitar",
+   "spr": "tyranitar_1",
+   "stone": "tyranitarite"
+  },
+  {
+   "name": "Mega Sceptile",
+   "of": "Sceptile",
+   "spr": "sceptile_1",
+   "stone": "sceptilite"
+  },
+  {
+   "name": "Mega Blaziken",
+   "of": "Blaziken",
+   "spr": "blaziken_1",
+   "stone": "blazikenite"
+  },
+  {
+   "name": "Mega Swampert",
+   "of": "Swampert",
+   "spr": "swampert_1",
+   "stone": "swampertite"
+  },
+  {
+   "name": "Mega Gardevoir",
+   "of": "Gardevoir",
+   "spr": "gardevoir_1",
+   "stone": "gardevoirite"
+  },
+  {
+   "name": "Mega Sableye",
+   "of": "Sableye",
+   "spr": "sableye_1",
+   "stone": "sablenite"
+  },
+  {
+   "name": "Mega Mawile",
+   "of": "Mawile",
+   "spr": "mawile_1",
+   "stone": "mawilite"
+  },
+  {
+   "name": "Mega Aggron",
+   "of": "Aggron",
+   "spr": "aggron_1",
+   "stone": "aggronite"
+  },
+  {
+   "name": "Mega Medicham",
+   "of": "Medicham",
+   "spr": "medicham_1",
+   "stone": "medichamite"
+  },
+  {
+   "name": "Mega Manectric",
+   "of": "Manectric",
+   "spr": "manectric_1",
+   "stone": "manectite"
+  },
+  {
+   "name": "Mega Sharpedo",
+   "of": "Sharpedo",
+   "spr": "sharpedo_1",
+   "stone": "sharpedonite"
+  },
+  {
+   "name": "Mega Camerupt",
+   "of": "Camerupt",
+   "spr": "camerupt_1",
+   "stone": "cameruptite"
+  },
+  {
+   "name": "Mega Altaria",
+   "of": "Altaria",
+   "spr": "altaria_1",
+   "stone": "altarianite"
+  },
+  {
+   "name": "Mega Banette",
+   "of": "Banette",
+   "spr": "banette_1",
+   "stone": "banettite"
+  },
+  {
+   "name": "Mega Chimecho",
+   "of": "Chimecho",
+   "spr": "chimecho_1",
+   "stone": "chimechite"
+  },
+  {
+   "name": "Mega Absol",
+   "of": "Absol",
+   "spr": "absol_1",
+   "stone": "absolite"
+  },
+  {
+   "name": "Mega Absol Z",
+   "of": "Absol",
+   "spr": "absol_2",
+   "stone": "absolite-z"
+  },
+  {
+   "name": "Mega Glalie",
+   "of": "Glalie",
+   "spr": "glalie_1",
+   "stone": "glalitite"
+  },
+  {
+   "name": "Mega Salamence",
+   "of": "Salamence",
+   "spr": "salamence_1",
+   "stone": "salamencite"
+  },
+  {
+   "name": "Mega Metagross",
+   "of": "Metagross",
+   "spr": "metagross_1",
+   "stone": "metagrossite"
+  },
+  {
+   "name": "Mega Latias",
+   "of": "Latias",
+   "spr": "latias_1",
+   "stone": "latiasite"
+  },
+  {
+   "name": "Mega Latios",
+   "of": "Latios",
+   "spr": "latios_1",
+   "stone": "latiosite"
+  },
+  {
+   "name": "Primal Kyogre",
+   "of": "Kyogre",
+   "spr": "kyogre_1",
+   "stone": "blue-orb"
+  },
+  {
+   "name": "Primal Groudon",
+   "of": "Groudon",
+   "spr": "groudon_1",
+   "stone": "red-orb"
+  },
+  {
+   "name": "Mega Rayquaza",
+   "of": "Rayquaza",
+   "spr": "rayquaza_1",
+   "stone": null
+  },
+  {
+   "name": "Mega Staraptor",
+   "of": "Staraptor",
+   "spr": "staraptor_1",
+   "stone": "staraptite"
+  },
+  {
+   "name": "Mega Lopunny",
+   "of": "Lopunny",
+   "spr": "lopunny_1",
+   "stone": "lopunnite"
+  },
+  {
+   "name": "Mega Garchomp",
+   "of": "Garchomp",
+   "spr": "garchomp_1",
+   "stone": "garchompite"
+  },
+  {
+   "name": "Mega Garchomp Z",
+   "of": "Garchomp",
+   "spr": "garchomp_2",
+   "stone": "garchompite-z"
+  },
+  {
+   "name": "Mega Lucario",
+   "of": "Lucario",
+   "spr": "lucario_1",
+   "stone": "lucarionite"
+  },
+  {
+   "name": "Mega Lucario Z",
+   "of": "Lucario",
+   "spr": "lucario_2",
+   "stone": "lucarionite-z"
+  },
+  {
+   "name": "Mega Abomasnow",
+   "of": "Abomasnow",
+   "spr": "abomasnow_1",
+   "stone": "abomasite"
+  },
+  {
+   "name": "Mega Gallade",
+   "of": "Gallade",
+   "spr": "gallade_1",
+   "stone": "galladite"
+  },
+  {
+   "name": "Mega Froslass",
+   "of": "Froslass",
+   "spr": "froslass_1",
+   "stone": "froslassite"
+  },
+  {
+   "name": "Mega Heatran",
+   "of": "Heatran",
+   "spr": "heatran_1",
+   "stone": "heatranite"
+  },
+  {
+   "name": "Mega Darkrai",
+   "of": "Darkrai",
+   "spr": "darkrai_1",
+   "stone": "darkranite"
+  },
+  {
+   "name": "Mega Emboar",
+   "of": "Emboar",
+   "spr": "emboar_1",
+   "stone": "emboarite"
+  },
+  {
+   "name": "Mega Excadrill",
+   "of": "Excadrill",
+   "spr": "excadrill_1",
+   "stone": "excadrite"
+  },
+  {
+   "name": "Mega Audino",
+   "of": "Audino",
+   "spr": "audino_1",
+   "stone": "audinite"
+  },
+  {
+   "name": "Mega Scolipede",
+   "of": "Scolipede",
+   "spr": "scolipede_1",
+   "stone": "scolipite"
+  },
+  {
+   "name": "Mega Scrafty",
+   "of": "Scrafty",
+   "spr": "scrafty_1",
+   "stone": "scraftinite"
+  },
+  {
+   "name": "Mega Eelektross",
+   "of": "Eelektross",
+   "spr": "eelektross_1",
+   "stone": "eelektrossite"
+  },
+  {
+   "name": "Mega Chandelure",
+   "of": "Chandelure",
+   "spr": "chandelure_1",
+   "stone": "chandelurite"
+  },
+  {
+   "name": "Mega Golurk",
+   "of": "Golurk",
+   "spr": "golurk_1",
+   "stone": "golurkite"
+  },
+  {
+   "name": "Mega Chesnaught",
+   "of": "Chesnaught",
+   "spr": "chesnaught_1",
+   "stone": "chesnaughtite"
+  },
+  {
+   "name": "Mega Delphox",
+   "of": "Delphox",
+   "spr": "delphox_1",
+   "stone": "delphoxite"
+  },
+  {
+   "name": "Mega Greninja",
+   "of": "Greninja",
+   "spr": "greninja_3",
+   "stone": "greninjite"
+  },
+  {
+   "name": "Mega Pyroar",
+   "of": "Pyroar",
+   "spr": "pyroar_1",
+   "stone": "pyroarite"
+  },
+  {
+   "name": "Mega Floette",
+   "of": "Floette",
+   "spr": "floette_6",
+   "stone": "floettite"
+  },
+  {
+   "name": "Mega Meowstic",
+   "of": "Meowstic",
+   "spr": "meowstic_2",
+   "stone": "meowsticite"
+  },
+  {
+   "name": "Mega Malamar",
+   "of": "Malamar",
+   "spr": "malamar_1",
+   "stone": "malamarite"
+  },
+  {
+   "name": "Mega Barbaracle",
+   "of": "Barbaracle",
+   "spr": "barbaracle_1",
+   "stone": "barbaracite"
+  },
+  {
+   "name": "Mega Dragalge",
+   "of": "Dragalge",
+   "spr": "dragalge_1",
+   "stone": "dragalgite"
+  },
+  {
+   "name": "Mega Hawlucha",
+   "of": "Hawlucha",
+   "spr": "hawlucha_1",
+   "stone": "hawluchanite"
+  },
+  {
+   "name": "Mega Zygarde",
+   "of": "Zygarde",
+   "spr": "zygarde_5",
+   "stone": "zygardite"
+  },
+  {
+   "name": "Mega Diancie",
+   "of": "Diancie",
+   "spr": "diancie_1",
+   "stone": "diancite"
+  },
+  {
+   "name": "Mega Crabominable",
+   "of": "Crabominable",
+   "spr": "crabominable_1",
+   "stone": "crabominite"
+  },
+  {
+   "name": "Mega Golisopod",
+   "of": "Golisopod",
+   "spr": "golisopod_1",
+   "stone": "golisopite"
+  },
+  {
+   "name": "Mega Drampa",
+   "of": "Drampa",
+   "spr": "drampa_1",
+   "stone": "drampanite"
+  },
+  {
+   "name": "Mega Magearna",
+   "of": "Magearna",
+   "spr": "magearna_2",
+   "stone": "magearnite"
+  },
+  {
+   "name": "Mega Zeraora",
+   "of": "Zeraora",
+   "spr": "zeraora_1",
+   "stone": "zeraorite"
+  },
+  {
+   "name": "Mega Falinks",
+   "of": "Falinks",
+   "spr": "falinks_1",
+   "stone": "falinksite"
+  },
+  {
+   "name": "Mega Scovillain",
+   "of": "Scovillain",
+   "spr": "scovillain_1",
+   "stone": "scovillainite"
+  },
+  {
+   "name": "Mega Glimmora",
+   "of": "Glimmora",
+   "spr": "glimmora_1",
+   "stone": "glimmoranite"
+  },
+  {
+   "name": "Mega Tatsugiri",
+   "of": "Tatsugiri",
+   "spr": "tatsugiri_3",
+   "stone": "tatsugirinite"
+  },
+  {
+   "name": "Mega Baxcalibur",
+   "of": "Baxcalibur",
+   "spr": "baxcalibur_1",
+   "stone": "baxcalibrite"
   }
  ]
 }

@@ -55,6 +55,8 @@ function enemyUnit(line, star, mul, nMoves, item, formId){
   while (moves.length < 1 + nMoves && (off.length || sup.length)) moves.push((off.length && (Math.random() < .75 || !sup.length)) ? off.pop() : sup.pop());
   return { form: f.id, moves, item, mul };
 }
+// the Mega Stone for a form, if it can Mega Evolve with one (the first, for Charizard's and Mewtwo's two)
+const stoneFor = form => pick(MEGAS.filter(m => m.of === FORM[form].name && m.stone).map(m => m.stone)) || null;
 function buildEncounter(kind){
   // each opponent mirrors one of your Pokémon's levels, so a mixed-level party meets a mixed-level team
   const mons = partyMons(), n = mons.length, bonus = TUNE.perMap * (R.mapNo - 1);
@@ -62,7 +64,7 @@ function buildEncounter(kind){
   // a trainer's Pokémon knows a second move only if the one of yours it mirrors does
   const mirrorMoves = k => clamp(mirror[k]?.taught.length ?? 0, 0, TUNE.taughtMax);
   const nMoves = extra => clamp(1 + Math.floor((R.mapNo - 1) / 3) + extra, 1, TUNE.taughtMax);
-  const item = p => Math.random() < p ? pick(ITEM_IDS) : null;
+  const item = p => Math.random() < p ? pick(BASE_ITEM_IDS) : null;
   // on maps 1-2, trainers skip lines that hit your Pokémon super-effectively, so an unlucky
   // type matchup can't cost a life before you've had a chance to build
   const types = mons.map(m => FORM[m.form].type);
@@ -80,13 +82,15 @@ function buildEncounter(kind){
     enc.title = g.name; enc.sub = `Gym ${R.mapNo}, ${cap(g.type)} type. Sends out ${n} Pokémon to match yours.`;
     for (let k = 0; k < n; k++){
       const line = typed.length > 1 || Math.random() < .7 ? pick(typed) : pick(TRAINER_LINES);
-      enc.team.push(enemyUnit(line, stars[k], TUNE.enemyMul.boss + bonus, nMoves(1), item(R.mapNo >= 3 ? .35 : 0)));
+      const unit = enemyUnit(line, stars[k], TUNE.enemyMul.boss + bonus, nMoves(1), item(R.mapNo >= 3 ? .35 : 0));
+      if (R.mapNo >= 4) unit.item = stoneFor(unit.form) || unit.item;     // from gym 4 on, leaders' Pokémon carry their Mega Stones
+      enc.team.push(unit);
     }
   } else {
     const line = pick(LEGEND_LINES), ls = clamp(stars[0] + 1, 1, 3), form = formFor(line, ls);
     enc.legend = { line, star: ls };
     enc.title = `Legendary ${FORM[form].name}`; enc.sub = 'Beat it and its escorts to capture it.';
-    enc.team.push(enemyUnit(line, ls, TUNE.enemyMul.legendary + bonus, nMoves(1), pick(ITEM_IDS), form));
+    enc.team.push(enemyUnit(line, ls, TUNE.enemyMul.legendary + bonus, nMoves(1), (stoneFor(form) || pick(BASE_ITEM_IDS)), form));
     for (let k = 1; k < n; k++) enc.team.push(enemyUnit(pick(TRAINER_LINES), Math.max(1, stars[k] - 1), TUNE.enemyMul.trainer + bonus, nMoves(0), null));
   }
   return enc;
@@ -134,7 +138,8 @@ function buildField(){
     }
   });
 }
-const unitView = u => u && { key: 'u' + u.uid, sprite: SPRITES[FORM[u.form].spr], type: u.type, stars: u.level, hp: Math.max(0, u.hp / u.maxHp),
+const unitSpr = u => SPRITES[u.mega?.spr || FORM[u.form].spr];
+const unitView = u => u && { key: 'u' + u.uid, sprite: unitSpr(u), type: u.type, stars: u.level, hp: Math.max(0, u.hp / u.maxHp),
   held: u.item ? ITEM[u.item].spr : null, heldKey: u.item ? 'h' + u.uid : undefined, name: u.name };
 function renderBattle(){
   for (const side of SIDES) for (let r = 0; r < 2; r++) for (let l = 0; l < 3; l++){
@@ -250,7 +255,7 @@ function log(html, cls = ''){
   (logRound && logRound.isConnected ? logRound : list).append(d); show();
 }
 function clearLog(msg){ logRound = null; $('#b-log').innerHTML = `<div class="bf__empty">${msg}</div>`; }
-const who = u => `<span class="lw ${u.side}"><img class="lw__pic" src="${SPRITES[FORM[u.form].spr]}" alt="">${u.name}</span>`;
+const who = u => `<span class="lw ${u.side}"><img class="lw__pic" src="${unitSpr(u)}" alt="">${u.name}</span>`;
 const mvChip = (m, u) => `<span class="le-mv" style="--c:${typeColor(m.type)}">${m.name}</span>`;
 const status = html => $('#b-status').innerHTML = html;
 
@@ -270,7 +275,7 @@ async function compact(){
   if (anim) moves.forEach(m => m.to.classList.add('arriving'));
   render();
   moves.forEach(m => log(`↑ ${who(m.u)} moves up to the front`, 'le-sys'));
-  if (anim){ moves.forEach((m, i) => fly(SPRITES[FORM[m.u.form].spr], starts[i], m.to, { dur: hopDuration() })); await sleep(hopDuration() + 60); }
+  if (anim){ moves.forEach((m, i) => fly(unitSpr(m.u), starts[i], m.to, { dur: hopDuration() })); await sleep(hopDuration() + 60); }
 }
 function center(side, lane){
   const front = board[foe(side)][0];
@@ -652,6 +657,7 @@ async function runBattle(){
   const token = ++battleToken;
   running = true; round = 0; syncBattleButtons();
   $('#b-log').innerHTML = ''; status('Fighting…');
+  for (const side of SIDES) await megaEvolve(side);
   while (!over() && round < 60){
     round++;
     log(`Round ${round}`, 'rnd');
@@ -677,6 +683,21 @@ async function runBattle(){
   log(msg, 'le-end'); status(msg); render();
   running = false; syncBattleButtons();
   return outcome;
+}
+// at the start of a battle, one Pokémon per side can Mega Evolve: of those holding their Mega Stone (or Rayquaza),
+// the fastest; ties go to the one further left, front row first
+async function megaEvolve(side){
+  const u = living(side).map(u => ({ u, m: megaFor(u.form, u.item), p: find(u) })).filter(x => x.m)
+    .sort((a, b) => b.u.spd - a.u.spd || a.p.row - b.p.row || a.p.lane - b.p.lane)[0];
+  if (!u) return;
+  const { u: x, m } = u, was = x.name, b = TUNE.mega, hp = x.maxHp;
+  x.mega = m; x.name = m.name;
+  x.maxHp = Math.round(x.maxHp * (1 + b.hp)); x.hp += x.maxHp - hp; x.atk *= 1 + b.atk; x.spd *= 1 + b.spd;
+  log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(HP +${pct(b.hp)}, Atk +${pct(b.atk)}, Spd +${pct(b.spd)})</small>`);
+  render();
+  const el = elOf(x);
+  if (el && !instant()) el.animate([{ filter: 'none' }, { filter: 'brightness(2.6) drop-shadow(0 0 14px #e9b6ff)', offset: .35 }, { filter: 'none' }], { duration: 900 / speed, easing: 'ease-out' });
+  await wait(900);
 }
 function abortBattle(){
   battleToken++; running = false;

@@ -25,7 +25,7 @@ const LEARN = {};
 for (const f of FORMS) LEARN[f.id] = [...new Set(POOLS.filter(p => poolFits(p, f)).flatMap(p => p.moves))].filter(k => k !== f.sig);
 for (const m of Object.values(MOVES)) m.learnableBy = [];
 for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
-const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Hypno at ★2 and ★3 is one Pokémon
+const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 and ★2 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 // the starters, three to a generation (Grass, Fire, Water); a new run offers one generation's three, at random
@@ -72,6 +72,15 @@ function wildLinesFor(mapNo){
 }
 const ITEM = Object.fromEntries(ITEMS_DATA.map(i => [i.id, i]));
 const ITEM_IDS = ITEMS_DATA.map(i => i.id);
+// Mega Evolution (data.json "megas"): a Pokémon holding its Mega Stone Mega Evolves at the start of a battle (Rayquaza
+// needs no stone). Stones are held items too, but only show up at Poké Marts for a Pokémon in your party that can use them.
+const MEGAS = DATA.megas || [];
+const STONE_IDS = ITEM_IDS.filter(id => ITEM[id].mega), BASE_ITEM_IDS = ITEM_IDS.filter(id => !ITEM[id].mega);
+// a line's Mega Evolutions, from any of its species
+const MEGAS_OF = {};
+for (const m of MEGAS) for (const f of DATA.forms) if (f.name === m.of && !(MEGAS_OF[f.line] ||= []).includes(m)) MEGAS_OF[f.line].push(m);
+// the Mega a Pokémon of this form, holding this item, turns into (or none)
+const megaFor = (form, item) => MEGAS.find(m => m.of === FORM[form].name && (m.stone ? m.stone === item : true));
 
 /* every balance number for the prototype lives here */
 const TUNE = {
@@ -95,10 +104,13 @@ const TUNE = {
   martStock: 4, martRerollStep: 20,
   sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
   bagSize: 4,                                        // held items the player can carry, shown 2 by 2 on the map
+  mega: { hp: .15, atk: .25, spd: .1 },                // a Mega Evolution's boost (a placeholder: each Mega will get its own)
+  megaStonePrice: 150, megaStoneChance: .5,           // a Mart offers a stone for your party (when one fits) this often
   itemPrice: { 'choice-band':120, 'choice-specs':100, 'choice-scarf':120, 'life-orb':120, 'weakness-policy':100,
     'leftovers':90, 'focus-sash':90, 'assault-vest':90, 'safety-goggles':90,
     'rocky-helmet':60, 'protective-pads':60, 'heavy-duty-boots':70 },
 };
+for (const id of STONE_IDS) TUNE.itemPrice[id] ??= TUNE.megaStonePrice;
 const FILL = [1, 0, 2, 4, 3, 5];     // front middle first, then front, then back
 const GYMS = [
   { type:'bug', name:'Leader Wren' }, { type:'normal', name:'Leader Hal' }, { type:'grass', name:'Leader Ivy' },
@@ -1282,6 +1294,7 @@ async function dexPeek(chip){
 }
 // over to the Moves section, scrolled to that move, which flashes so it's easy to spot
 async function dexJumpMove(k){
+  dexSearchClear();
   await dexShow('moves', true);
   const row = document.querySelector(`.dexmove[data-move="${k}"]`), scr = $('#dex-scroll'); if (!row) return;
   const y = scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - 16;
@@ -1308,26 +1321,47 @@ function dexMonHTML(f){
   </div>`;
 }
 // the evolution path, one column per evolution stage: each species appears once, however many levels it spans
-// (Hypno is ★2 and ★3 but shows once), and stands for its most-leveled form (its full stats). A stage with
+// (Drowzee is ★1 and ★2 but shows once), and stands for its most-leveled form (its full stats). A stage with
 // many branches (Eevee's eight) is a grid. Tapping a Pokémon opens its info under the path (see dexOpen).
 const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 // every form of the same species on the same line (one per level it spans), lowest level first
 const speciesForms = f => FORMS.filter(x => x.line === f.line && x.name === f.name).sort((a, b) => a.star - b.star);
 function dexStages(fs){
-  const seen = new Set(), cols = [];
-  for (const n of [1, 2, 3]){
-    const col = [];
-    for (const f of fs.filter(x => x.star === n)) if (!seen.has(f.name)){ seen.add(f.name); col.push(speciesForms(f).at(-1)); }
-    if (col.length) cols.push(col);
+  // each branch's chain of species (Applin → Dipplin → Hydrapple), a species once however many levels it spans
+  const branches = [...new Set(fs.map(f => f.branch).filter(Boolean))], chains = (branches.length ? branches : [null]).map(b => {
+    const chain = [];
+    for (const n of [1, 2, 3]){
+      const f = fs.find(x => x.star === n && (!x.branch || !b || x.branch === b));
+      if (f && chain.at(-1)?.name !== f.name) chain.push(f);
+    }
+    chain.branch = b;
+    return chain;
+  });
+  // one column per evolution step; a species shared by several branches shows once. When only some branches
+  // evolve again (Applin: Dipplin into Hydrapple), each branch keeps its own row, with gaps (null) for the others
+  const cols = [];
+  for (let d = 0; d < 3; d++){
+    const col = [], keyOf = c => c.slice(0, d + 1).map(f => f.name).join('>');
+    const seen = new Set();
+    for (const c of chains) if (c[d] && !seen.has(keyOf(c))){ seen.add(keyOf(c)); col.push(c); }
+    if (!col.length) break;
+    cols.push(col);
   }
-  // when only some branches evolve again (Applin: Dipplin into Hydrapple), keep each branch on its own row, with
-  // gaps (null) for the branches that don't
-  for (let i = 1; i < cols.length; i++){
-    const prev = cols[i - 1], col = cols[i];
-    if (col.length < prev.length && prev.every(f => f && f.branch) && col.every(f => f.branch))
-      cols[i] = prev.map(p => p && col.find(f => f.branch === p.branch) || null);
-  }
-  return cols;
+  return cols.map((col, d) => {
+    const prev = cols[d - 1];
+    const kids = p => col.filter(c => c[d - 1].name === p[d - 1].name);
+    const pad = prev && prev.length > 1 && col.length < prev.length && prev.every(p => kids(p).length <= 1);
+    // each species stands for its most-leveled form on its branch (its full stats)
+    return (pad ? prev.map(p => kids(p)[0] || null) : col)
+      .map(c => c && fs.filter(x => x.name === c[d].name && (!x.branch || !c.branch || x.branch === c.branch)).sort((a, b) => a.star - b.star).at(-1));
+  });
+}
+// under the evolution path: the line's Mega Evolutions, each with the Pokémon and stone it takes
+function dexMegaHTML(l){
+  const ms = MEGAS_OF[l]; if (!ms) return '';
+  return `<div class="dexmega"><span class="dexmega__label">Mega Evolution</span>${ms.map(m => `<div class="dexmega__row">
+    <span class="dexmega__pic"><img src="${SPRITES[m.spr]}" alt="" loading="lazy"></span>
+    <div class="dexmega__text"><b>${m.name}</b><span>${m.stone ? `${m.of} holding <img class="dexmega__stone" src="${spriteURL(ITEM[m.stone].spr)}" alt="">${ITEM[m.stone].name}` : `${m.of}, no stone needed`}</span></div></div>`).join('')}</div>`;
 }
 function dexEvoHTML(fs){
   const cols = dexStages(fs);
@@ -1395,6 +1429,7 @@ async function dexOpen(card, id, toggle = true){
 // from a sprite in the Moves section: open that Pokémon's line with its info showing, and scroll it into view
 async function dexJump(id){
   const f = FORM[id]; if (!f) return;
+  dexSearchClear();
   await dexShow('mons', true);
   const card = document.querySelector(`.dexline[data-line="${f.line}"]`), scr = $('#dex-scroll'); if (!card) return;
   dexOpen(card, speciesForms(f).at(-1).id, false);       // the species' button stands for all its levels
@@ -1411,7 +1446,8 @@ const DEX_BUILD = {
   mons: () => `<p class="dexintro">${SPECIES_N} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
-      return `<article class="dexline" data-line="${l}" data-only="">${dexEvoHTML(fs)}<div class="dexdetail" hidden></div></article>`;
+      const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
+      return `<article class="dexline" data-line="${l}" data-only="" data-q="${searchText(q)}">${dexEvoHTML(fs)}${dexMegaHTML(l)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
@@ -1424,7 +1460,7 @@ const DEX_BUILD = {
             const learn = (sigOf.length ? `<div class="dexlearn"><span>${m.cat === 'unique' ? 'Unique signature of' : 'Signature of'}</span><div class="dexminis">${sigOf.map(dexMini).join('')}</div></div>` : '')
               + (pools.length ? `<div class="dexlearn"><span>Taught to</span><div class="dexpools">${pools.map(poolText).join('<br>')} <small>(★${m.star} and up)</small></div></div>` : '')
               ;
-            return `<article class="dexmove" data-move="${k}">${moveRow(k, false)}${learn}</article>`;
+            return `<article class="dexmove" data-move="${k}" data-q="${searchText(m.name + ' ' + m.type)}">${moveRow(k, false)}${learn}</article>`;
           }).join('');
       }).join('');
   },
@@ -1432,10 +1468,31 @@ const DEX_BUILD = {
   // a scanned Pokémon, or an item (anything without a form)
   scan: () => { const s = DEX.scan?.mon; if (!s) return '';
     return `<article class="dexline dexscan" data-only="${s.form || ''}"><div class="dexdetail">${s.form ? mapMonHTML(s) : mapItemHTML(s, DEX.scan.follow && martSellable()?.it === s)}</div></article>`; },
-  items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle.</p>`
-    + ITEMS_DATA.map(i => `<article class="dexitem"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
+  items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle. A Mega Stone shows up at a Mart only when a Pokémon in your party can use it.</p>`
+    + ITEMS_DATA.map(i => `<article class="dexitem" data-q="${searchText(i.name)}"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
       <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
 };
+/* ---------- search: the box under the tabs narrows the open list (Pokémon by name, type or Mega; moves by name
+   or type; items by name) as you type, and stays as you switch tabs ---------- */
+const DEX_SEARCH = $('#dex-search');
+const searchText = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9 ]/g, '');
+function dexFilter(){
+  const body = $('#dex-body'), q = searchText(DEX_SEARCH.value).trim();
+  if (DEX.tab === 'scan') return;
+  let shown = 0;
+  for (const el of body.querySelectorAll('[data-q]')){ const on = !q || q.split(/ +/).every(w => el.dataset.q.includes(w)); el.hidden = !on; shown += on; }
+  // a move type's heading shows only while one of its moves does
+  body.querySelectorAll('.dextype').forEach(h => {
+    let n = h.nextElementSibling, any = false;
+    while (n && !n.classList.contains('dextype')){ any ||= !n.hidden; n = n.nextElementSibling; }
+    h.hidden = !any;
+  });
+  let none = body.querySelector('.dexempty');
+  if (!none){ none = document.createElement('p'); none.className = 'dexempty'; body.append(none); }
+  none.hidden = !q || shown > 0; none.textContent = `Nothing matches “${DEX_SEARCH.value.trim()}”.`;
+}
+function dexSearchClear(){ if (DEX_SEARCH.value){ DEX_SEARCH.value = ''; dexFilter(); } }
+DEX_SEARCH.addEventListener('input', () => { dexFilter(); $('#dex-scroll').scrollTop = 0; });
 function dexTabs(tab){
   const list = dexTabList(), bar = $('.dextabs');
   bar.style.setProperty('--n', list.length); bar.style.setProperty('--i', Math.max(0, list.indexOf(tab)));
@@ -1454,7 +1511,7 @@ async function dexShow(tab, animate){
     await body.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: `translateX(${-dir * 32}px)` }], { duration: 150, easing: 'ease-in', fill: 'forwards' }).finished.catch(() => {});
     if (token !== DEX.token) return;
   }
-  body.innerHTML = html; scr.scrollTop = 0;
+  body.innerHTML = html; scr.scrollTop = 0; dexFilter();
   body.getAnimations().forEach(a => a.cancel());
   if (animate && !REDUCED) body.animate([{ opacity: 0, transform: `translateX(${dir * 32}px)` }, { opacity: 1, transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2,.8,.2,1)' });
 }
@@ -1613,6 +1670,7 @@ function dexParts(){
 async function openDex(){
   if (wiping || DEX.open || DEX.busy) return;
   DEX.open = DEX.busy = true; hideTip(); rdReady();
+  DEX_SEARCH.value = '';
   const tok = ++DEX.anim, live = () => tok === DEX.anim;   // a screen wipe can cut the animation short
   dexShow(DEX.tab, false);
   DEXPOP.hidden = false; DEXSCROLL.scrollTop = 0;
@@ -2345,7 +2403,13 @@ const sellPrice = id => Math.round(itemPrice(id) * TUNE.sellRate);
 // why an item in the stock can't be bought right now, or '' if it can
 const martBlock = i => MT.sold.has(i) ? 'sold' : R.coins < itemPrice(MT.stock[i]) ? 'poor' : R.bag.indexOf(null) < 0 ? 'full' : '';
 const martRerollFee = () => TUNE.martRerollStep * (MT.rerolls + 1);
-function rollMart(){ MT.stock = shuffle([...ITEM_IDS]).slice(0, TUNE.martStock); MT.sold = new Set(); MT.look = []; }
+function rollMart(){
+  MT.stock = shuffle([...BASE_ITEM_IDS]).slice(0, TUNE.martStock); MT.sold = new Set(); MT.look = [];
+  // sometimes one shelf holds a Mega Stone for a Pokémon in your party (one you don't already have)
+  const owned = new Set([...R.party, ...R.bag].filter(Boolean).flatMap(x => [x.item?.id, x.id]).filter(Boolean));
+  const stones = [...new Set(R.party.filter(Boolean).flatMap(m => (MEGAS_OF[FORM[m.form].line] || []).map(g => g.stone)))].filter(s => s && !owned.has(s));
+  if (stones.length && Math.random() < TUNE.megaStoneChance) MT.stock[MT.stock.length - 1] = pick(stones);
+}
 function openItem(){ MT.rerolls = 0; MT.picked = null; rollMart(); }
 // tap an item in the stock: pick it (or put it back), so the empty bag slots light up and the Buy button shows. An
 // item you can't buy yet can still be picked (its label shakes and the Buy button stays greyed out).

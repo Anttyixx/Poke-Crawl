@@ -95,7 +95,7 @@ def item_sprite_path(item_id):
 
 # Pokémon forms and moves; sprites are filled in from assets/sprites/pokemon by each form's "spr" name
 data_json = json.loads(read('data', 'data.json'))
-sprite_names = sorted({f['spr'] for f in data_json['forms']})
+sprite_names = sorted({f['spr'] for f in data_json['forms']} | {m['spr'] for m in data_json.get('megas', [])})   # forms and Mega Evolutions
 missing = [n for n in sprite_names if not os.path.exists(os.path.join(SPRITES, 'pokemon', n + '.png'))]
 if missing: raise SystemExit(f'No sprite for: {", ".join(missing)} (looked in assets/sprites/pokemon)')
 data_json['sprites'] = {n: game_sprite(os.path.join(SPRITES, 'pokemon', n + '.png')) for n in sprite_names}
