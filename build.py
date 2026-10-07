@@ -8,9 +8,9 @@ any other build is marked as dev with its commit, e.g. "0.2.0-dev (a1b2c3d)". Th
 POKECRAWL_CHANNEL environment variable ("stable" or "dev", set by the deploy workflow), otherwise from the
 current git branch (main = stable).
 
-Pokémon and item sprites come from assets/pokesprite (PokéSprite: msikma/pokesprite). A form's "spr" in
-data/data.json names its file in pokesprite's pokemon-gen8/regular; an item's id names its file in pokesprite's
-items folders. Each sprite is trimmed to the visible pixels, centred on a square canvas with a 1 pixel border,
+Pokémon and item sprites come from assets/sprites (pokemon, shiny and items; up to Gen 9). A form's "spr" in
+data/data.json names its file in assets/sprites/pokemon; an item's id, without its hyphens, names its file in
+assets/sprites/items (rocky-helmet -> rockyhelmet.png). Each sprite is trimmed to the visible pixels, centred on a square canvas with a 1 pixel border,
 scaled up 4x (pixel art stays sharp at any size) and embedded as a data URI.
 
 The release notes button on the title screen shows CHANGELOG.md, converted to HTML here.
@@ -23,7 +23,7 @@ p = lambda *parts: os.path.join(ROOT, *parts)
 read = lambda *parts: open(p(*parts), encoding='utf-8').read()
 b64 = lambda path: 'data:image/png;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
 
-# ---------- PNG in/out (standard library only; covers the 8-bit, non-interlaced PNGs pokesprite ships) ----------
+# ---------- PNG in/out (standard library only; covers the 8-bit, non-interlaced PNGs in assets/sprites) ----------
 def png_read(path):
     """Return (width, height, RGBA bytearray)."""
     raw = open(path, 'rb').read()
@@ -69,7 +69,7 @@ def png_write(w, h, rgba):
     return b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(raw, 9)) + chunk(b'IEND', b'')
 
 def game_sprite(path, scale=4):
-    """A pokesprite image as the game shows it: trimmed, centred in a square with a 1px border, scaled up."""
+    """A sprite as the game shows it: trimmed, centred in a square with a 1px border, scaled up."""
     w, h, px = png_read(path)
     seen = [(x, y) for y in range(h) for x in range(w) if px[(y * w + x) * 4 + 3]]
     if not seen: raise ValueError(f'{path} is empty')
@@ -87,18 +87,18 @@ def game_sprite(path, scale=4):
                 for dx in range(scale): q = (row + (ox + x) * scale + dx) * 4; out[q:q + 4] = pix
     return 'data:image/png;base64,' + base64.b64encode(png_write(big, big, out)).decode()
 
-SPRITES = p('assets', 'pokesprite')
+SPRITES = p('assets', 'sprites')
 def item_sprite_path(item_id):
-    found = sorted(glob.glob(os.path.join(SPRITES, 'items', '*', item_id + '.png')))
-    if not found: raise SystemExit(f'No pokesprite image for item "{item_id}" (looked in assets/pokesprite/items/*/{item_id}.png)')
-    return found[0]
+    path = os.path.join(SPRITES, 'items', item_id.replace('-', '') + '.png')
+    if not os.path.exists(path): raise SystemExit(f'No sprite for item "{item_id}" (looked for {os.path.relpath(path, ROOT)})')
+    return path
 
-# Pokémon forms and moves; sprites are filled in from pokesprite by each form's "spr" name
+# Pokémon forms and moves; sprites are filled in from assets/sprites/pokemon by each form's "spr" name
 data_json = json.loads(read('data', 'data.json'))
 sprite_names = sorted({f['spr'] for f in data_json['forms']})
-missing = [n for n in sprite_names if not os.path.exists(os.path.join(SPRITES, 'pokemon-gen8', 'regular', n + '.png'))]
-if missing: raise SystemExit(f'No pokesprite image for: {", ".join(missing)} (looked in assets/pokesprite/pokemon-gen8/regular)')
-data_json['sprites'] = {n: game_sprite(os.path.join(SPRITES, 'pokemon-gen8', 'regular', n + '.png')) for n in sprite_names}
+missing = [n for n in sprite_names if not os.path.exists(os.path.join(SPRITES, 'pokemon', n + '.png'))]
+if missing: raise SystemExit(f'No sprite for: {", ".join(missing)} (looked in assets/sprites/pokemon)')
+data_json['sprites'] = {n: game_sprite(os.path.join(SPRITES, 'pokemon', n + '.png')) for n in sprite_names}
 data = json.dumps(data_json, ensure_ascii=False, separators=(',', ':'))
 # held items; each item's sprite is found by its id
 items_json = json.loads(read('data', 'items.json'))

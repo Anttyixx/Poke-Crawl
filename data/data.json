@@ -163,63 +163,6 @@
    }
   },
   {
-   "id": "caterpie-1",
-   "line": "caterpie",
-   "tier": 1,
-   "star": 1,
-   "name": "Caterpie",
-   "type": "bug",
-   "primary": "speedster",
-   "secondary": "disruptor",
-   "sig": "bug-bite",
-   "hp": 54,
-   "atk": 26,
-   "spd": 45,
-   "spr": "caterpie",
-   "ability": {
-    "name": "Compound Eyes",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
-   }
-  },
-  {
-   "id": "caterpie-2",
-   "line": "caterpie",
-   "tier": 1,
-   "star": 2,
-   "name": "Metapod",
-   "type": "bug",
-   "primary": "tank",
-   "secondary": "support",
-   "sig": "harden",
-   "hp": 84,
-   "atk": 39,
-   "spd": 54,
-   "spr": "metapod",
-   "ability": {
-    "name": "Compound Eyes",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
-   }
-  },
-  {
-   "id": "caterpie-3",
-   "line": "caterpie",
-   "tier": 1,
-   "star": 3,
-   "name": "Butterfree",
-   "type": "bug",
-   "primary": "support",
-   "secondary": "disruptor",
-   "sig": "coaching",
-   "hp": 119,
-   "atk": 55,
-   "spd": 63,
-   "spr": "butterfree",
-   "ability": {
-    "name": "Compound Eyes",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
-   }
-  },
-  {
    "id": "weedle-1",
    "line": "weedle",
    "tier": 1,
@@ -334,177 +277,6 @@
    }
   },
   {
-   "id": "rattata-1",
-   "line": "rattata",
-   "tier": 1,
-   "star": 1,
-   "name": "Rattata",
-   "type": "normal",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "quick-attack",
-   "hp": 50,
-   "atk": 32,
-   "spd": 49,
-   "spr": "rattata",
-   "ability": {
-    "name": "Guts",
-    "fx": "Once below 50% HP, gains 30% Attack for the rest of the battle."
-   }
-  },
-  {
-   "id": "rattata-2",
-   "line": "rattata",
-   "tier": 1,
-   "star": 2,
-   "name": "Raticate",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "hyper-fang",
-   "hp": 78,
-   "atk": 48,
-   "spd": 59,
-   "spr": "raticate",
-   "ability": {
-    "name": "Guts",
-    "fx": "Once below 50% HP, gains 30% Attack for the rest of the battle."
-   }
-  },
-  {
-   "id": "rattata-3",
-   "line": "rattata",
-   "tier": 1,
-   "star": 3,
-   "name": "Raticate",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "super-fang",
-   "hp": 110,
-   "atk": 67,
-   "spd": 69,
-   "spr": "raticate",
-   "ability": {
-    "name": "Guts",
-    "fx": "Once below 50% HP, gains 30% Attack for the rest of the battle."
-   }
-  },
-  {
-   "id": "spearow-1",
-   "line": "spearow",
-   "tier": 2,
-   "star": 1,
-   "name": "Spearow",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "peck",
-   "hp": 52,
-   "atk": 40,
-   "spd": 36,
-   "spr": "spearow",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "spearow-2",
-   "line": "spearow",
-   "tier": 2,
-   "star": 2,
-   "name": "Fearow",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "blaster",
-   "sig": "fury-attack",
-   "hp": 81,
-   "atk": 60,
-   "spd": 43,
-   "spr": "fearow",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "spearow-3",
-   "line": "spearow",
-   "tier": 2,
-   "star": 3,
-   "name": "Fearow",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "blaster",
-   "sig": "drill-peck",
-   "hp": 114,
-   "atk": 84,
-   "spd": 50,
-   "spr": "fearow",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "ekans-1",
-   "line": "ekans",
-   "tier": 2,
-   "star": 1,
-   "name": "Ekans",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "striker",
-   "sig": "poison-sting",
-   "hp": 64,
-   "atk": 32,
-   "spd": 28,
-   "spr": "ekans",
-   "ability": {
-    "name": "Intimidate",
-    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
-  },
-  {
-   "id": "ekans-2",
-   "line": "ekans",
-   "tier": 2,
-   "star": 2,
-   "name": "Arbok",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "poison-fang",
-   "hp": 99,
-   "atk": 48,
-   "spd": 34,
-   "spr": "arbok",
-   "ability": {
-    "name": "Intimidate",
-    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
-  },
-  {
-   "id": "ekans-3",
-   "line": "ekans",
-   "tier": 2,
-   "star": 3,
-   "name": "Arbok",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "sludge-wave",
-   "hp": 141,
-   "atk": 67,
-   "spd": 39,
-   "spr": "arbok",
-   "ability": {
-    "name": "Intimidate",
-    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
-  },
-  {
    "id": "pichu-1",
    "line": "pichu",
    "tier": 5,
@@ -616,120 +388,6 @@
    "ability": {
     "name": "Sand Veil",
     "fx": "15% chance to take no damage from any hit."
-   }
-  },
-  {
-   "id": "nidoranf-1",
-   "line": "nidoranf",
-   "tier": 3,
-   "star": 1,
-   "name": "Nidoran♀",
-   "type": "poison",
-   "primary": "tank",
-   "secondary": "support",
-   "sig": "poison-sting",
-   "hp": 76,
-   "atk": 28,
-   "spd": 22,
-   "spr": "nidoran-f",
-   "ability": {
-    "name": "Solid Rock",
-    "fx": "Super-effective hits against it deal 25% less damage."
-   }
-  },
-  {
-   "id": "nidoranf-2",
-   "line": "nidoranf",
-   "tier": 3,
-   "star": 2,
-   "name": "Nidorina",
-   "type": "poison",
-   "primary": "tank",
-   "secondary": "healer",
-   "sig": "double-kick",
-   "hp": 118,
-   "atk": 42,
-   "spd": 26,
-   "spr": "nidorina",
-   "ability": {
-    "name": "Solid Rock",
-    "fx": "Super-effective hits against it deal 25% less damage."
-   }
-  },
-  {
-   "id": "nidoranf-3",
-   "line": "nidoranf",
-   "tier": 3,
-   "star": 3,
-   "name": "Nidoqueen",
-   "type": "poison",
-   "primary": "tank",
-   "secondary": "blaster",
-   "sig": "sludge-wave",
-   "hp": 167,
-   "atk": 59,
-   "spd": 31,
-   "spr": "nidoqueen",
-   "ability": {
-    "name": "Solid Rock",
-    "fx": "Super-effective hits against it deal 25% less damage."
-   }
-  },
-  {
-   "id": "nidoranm-1",
-   "line": "nidoranm",
-   "tier": 3,
-   "star": 1,
-   "name": "Nidoran♂",
-   "type": "poison",
-   "primary": "striker",
-   "secondary": "disruptor",
-   "sig": "peck",
-   "hp": 54,
-   "atk": 40,
-   "spd": 30,
-   "spr": "nidoran-m",
-   "ability": {
-    "name": "Sheer Force",
-    "fx": "Its moves deal 25% more damage, but their extra effects never trigger."
-   }
-  },
-  {
-   "id": "nidoranm-2",
-   "line": "nidoranm",
-   "tier": 3,
-   "star": 2,
-   "name": "Nidorino",
-   "type": "poison",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "poison-jab",
-   "hp": 84,
-   "atk": 60,
-   "spd": 36,
-   "spr": "nidorino",
-   "ability": {
-    "name": "Sheer Force",
-    "fx": "Its moves deal 25% more damage, but their extra effects never trigger."
-   }
-  },
-  {
-   "id": "nidoranm-3",
-   "line": "nidoranm",
-   "tier": 3,
-   "star": 3,
-   "name": "Nidoking",
-   "type": "poison",
-   "primary": "striker",
-   "secondary": "blaster",
-   "sig": "sludge-bomb",
-   "hp": 119,
-   "atk": 84,
-   "spd": 42,
-   "spr": "nidoking",
-   "ability": {
-    "name": "Sheer Force",
-    "fx": "Its moves deal 25% more damage, but their extra effects never trigger."
    }
   },
   {
@@ -904,63 +562,6 @@
    }
   },
   {
-   "id": "zubat-1",
-   "line": "zubat",
-   "tier": 1,
-   "star": 1,
-   "name": "Zubat",
-   "type": "poison",
-   "primary": "speedster",
-   "secondary": "disruptor",
-   "sig": "leech-life",
-   "hp": 50,
-   "atk": 28,
-   "spd": 51,
-   "spr": "zubat",
-   "ability": {
-    "name": "Infiltrator",
-    "fx": "Its moves ignore Reflect, Harden and Defense Curl-style damage reduction."
-   }
-  },
-  {
-   "id": "zubat-2",
-   "line": "zubat",
-   "tier": 1,
-   "star": 2,
-   "name": "Golbat",
-   "type": "poison",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "poison-fang",
-   "hp": 78,
-   "atk": 42,
-   "spd": 61,
-   "spr": "golbat",
-   "ability": {
-    "name": "Infiltrator",
-    "fx": "Its moves ignore Reflect, Harden and Defense Curl-style damage reduction."
-   }
-  },
-  {
-   "id": "zubat-3",
-   "line": "zubat",
-   "tier": 1,
-   "star": 3,
-   "name": "Crobat",
-   "type": "poison",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "cross-poison",
-   "hp": 110,
-   "atk": 59,
-   "spd": 71,
-   "spr": "crobat",
-   "ability": {
-    "name": "Infiltrator",
-    "fx": "Its moves ignore Reflect, Harden and Defense Curl-style damage reduction."
-   }
-  },
-  {
    "id": "oddish-1",
    "line": "oddish",
    "tier": 2,
@@ -1039,177 +640,6 @@
    "branch": "bellossom"
   },
   {
-   "id": "paras-1",
-   "line": "paras",
-   "tier": 2,
-   "star": 1,
-   "name": "Paras",
-   "type": "grass",
-   "primary": "disruptor",
-   "secondary": "tank",
-   "sig": "absorb",
-   "hp": 62,
-   "atk": 34,
-   "spd": 26,
-   "spr": "paras",
-   "ability": {
-    "name": "Effect Spore",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 15% Attack for the battle."
-   }
-  },
-  {
-   "id": "paras-2",
-   "line": "paras",
-   "tier": 2,
-   "star": 2,
-   "name": "Parasect",
-   "type": "grass",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "mega-drain",
-   "hp": 96,
-   "atk": 51,
-   "spd": 31,
-   "spr": "parasect",
-   "ability": {
-    "name": "Effect Spore",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 15% Attack for the battle."
-   }
-  },
-  {
-   "id": "paras-3",
-   "line": "paras",
-   "tier": 2,
-   "star": 3,
-   "name": "Parasect",
-   "type": "grass",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "giga-drain",
-   "hp": 136,
-   "atk": 71,
-   "spd": 36,
-   "spr": "parasect",
-   "ability": {
-    "name": "Effect Spore",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 15% Attack for the battle."
-   }
-  },
-  {
-   "id": "venonat-1",
-   "line": "venonat",
-   "tier": 1,
-   "star": 1,
-   "name": "Venonat",
-   "type": "bug",
-   "primary": "disruptor",
-   "secondary": "speedster",
-   "sig": "bug-bite",
-   "hp": 54,
-   "atk": 28,
-   "spd": 39,
-   "spr": "venonat",
-   "ability": {
-    "name": "Tinted Lens",
-    "fx": "Its not-very-effective hits deal normal damage."
-   }
-  },
-  {
-   "id": "venonat-2",
-   "line": "venonat",
-   "tier": 1,
-   "star": 2,
-   "name": "Venomoth",
-   "type": "bug",
-   "primary": "blaster",
-   "secondary": "disruptor",
-   "sig": "signal-beam",
-   "hp": 84,
-   "atk": 42,
-   "spd": 47,
-   "spr": "venomoth",
-   "ability": {
-    "name": "Tinted Lens",
-    "fx": "Its not-very-effective hits deal normal damage."
-   }
-  },
-  {
-   "id": "venonat-3",
-   "line": "venonat",
-   "tier": 1,
-   "star": 3,
-   "name": "Venomoth",
-   "type": "bug",
-   "primary": "blaster",
-   "secondary": "disruptor",
-   "sig": "bug-buzz",
-   "hp": 119,
-   "atk": 59,
-   "spd": 55,
-   "spr": "venomoth",
-   "ability": {
-    "name": "Tinted Lens",
-    "fx": "Its not-very-effective hits deal normal damage."
-   }
-  },
-  {
-   "id": "diglett-1",
-   "line": "diglett",
-   "tier": 2,
-   "star": 1,
-   "name": "Diglett",
-   "type": "ground",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "mud-slap",
-   "hp": 44,
-   "atk": 32,
-   "spd": 53,
-   "spr": "diglett",
-   "ability": {
-    "name": "Arena Trap",
-    "fx": "Enemies in the lane directly across can't be moved by compaction."
-   }
-  },
-  {
-   "id": "diglett-2",
-   "line": "diglett",
-   "tier": 2,
-   "star": 2,
-   "name": "Dugtrio",
-   "type": "ground",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "dig",
-   "hp": 68,
-   "atk": 48,
-   "spd": 64,
-   "spr": "dugtrio",
-   "ability": {
-    "name": "Arena Trap",
-    "fx": "Enemies in the lane directly across can't be moved by compaction."
-   }
-  },
-  {
-   "id": "diglett-3",
-   "line": "diglett",
-   "tier": 2,
-   "star": 3,
-   "name": "Dugtrio",
-   "type": "ground",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "earthquake",
-   "hp": 97,
-   "atk": 67,
-   "spd": 74,
-   "spr": "dugtrio",
-   "ability": {
-    "name": "Arena Trap",
-    "fx": "Enemies in the lane directly across can't be moved by compaction."
-   }
-  },
-  {
    "id": "meowth-1",
    "line": "meowth",
    "tier": 1,
@@ -1264,63 +694,6 @@
    "ability": {
     "name": "Pickup",
     "fx": "Earns 10% more currency from battles it takes part in. Doesn't affect battle."
-   }
-  },
-  {
-   "id": "psyduck-1",
-   "line": "psyduck",
-   "tier": 2,
-   "star": 1,
-   "name": "Psyduck",
-   "type": "water",
-   "primary": "all-rounder",
-   "secondary": "disruptor",
-   "sig": "confusion",
-   "hp": 60,
-   "atk": 32,
-   "spd": 30,
-   "spr": "psyduck",
-   "ability": {
-    "name": "Cloud Nine",
-    "fx": "Opponents' abilities that boost their own damage don't work while it's on the field."
-   }
-  },
-  {
-   "id": "psyduck-2",
-   "line": "psyduck",
-   "tier": 2,
-   "star": 2,
-   "name": "Golduck",
-   "type": "water",
-   "primary": "blaster",
-   "secondary": "all-rounder",
-   "sig": "bubble-beam",
-   "hp": 93,
-   "atk": 48,
-   "spd": 36,
-   "spr": "golduck",
-   "ability": {
-    "name": "Cloud Nine",
-    "fx": "Opponents' abilities that boost their own damage don't work while it's on the field."
-   }
-  },
-  {
-   "id": "psyduck-3",
-   "line": "psyduck",
-   "tier": 2,
-   "star": 3,
-   "name": "Golduck",
-   "type": "water",
-   "primary": "blaster",
-   "secondary": "all-rounder",
-   "sig": "surf",
-   "hp": 132,
-   "atk": 67,
-   "spd": 42,
-   "spr": "golduck",
-   "ability": {
-    "name": "Cloud Nine",
-    "fx": "Opponents' abilities that boost their own damage don't work while it's on the field."
    }
   },
   {
@@ -1573,63 +946,6 @@
    }
   },
   {
-   "id": "machop-1",
-   "line": "machop",
-   "tier": 6,
-   "star": 1,
-   "name": "Machop",
-   "type": "fighting",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "karate-chop",
-   "hp": 58,
-   "atk": 42,
-   "spd": 24,
-   "spr": "machop",
-   "ability": {
-    "name": "No Guard",
-    "fx": "Its hits ignore dodge effects, and so do hits against it."
-   }
-  },
-  {
-   "id": "machop-2",
-   "line": "machop",
-   "tier": 6,
-   "star": 2,
-   "name": "Machoke",
-   "type": "fighting",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "submission",
-   "hp": 90,
-   "atk": 63,
-   "spd": 29,
-   "spr": "machoke",
-   "ability": {
-    "name": "No Guard",
-    "fx": "Its hits ignore dodge effects, and so do hits against it."
-   }
-  },
-  {
-   "id": "machop-3",
-   "line": "machop",
-   "tier": 6,
-   "star": 3,
-   "name": "Machamp",
-   "type": "fighting",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "dynamic-punch",
-   "hp": 128,
-   "atk": 88,
-   "spd": 34,
-   "spr": "machamp",
-   "ability": {
-    "name": "No Guard",
-    "fx": "Its hits ignore dodge effects, and so do hits against it."
-   }
-  },
-  {
    "id": "bellsprout-1",
    "line": "bellsprout",
    "tier": 3,
@@ -1684,177 +1000,6 @@
    "ability": {
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
-   }
-  },
-  {
-   "id": "tentacool-1",
-   "line": "tentacool",
-   "tier": 2,
-   "star": 1,
-   "name": "Tentacool",
-   "type": "water",
-   "primary": "disruptor",
-   "secondary": "speedster",
-   "sig": "poison-sting",
-   "hp": 54,
-   "atk": 28,
-   "spd": 45,
-   "spr": "tentacool",
-   "ability": {
-    "name": "Clear Body",
-    "fx": "Enemy effects can't lower its Attack or Speed."
-   }
-  },
-  {
-   "id": "tentacool-2",
-   "line": "tentacool",
-   "tier": 2,
-   "star": 2,
-   "name": "Tentacruel",
-   "type": "water",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "acid",
-   "hp": 84,
-   "atk": 42,
-   "spd": 54,
-   "spr": "tentacruel",
-   "ability": {
-    "name": "Clear Body",
-    "fx": "Enemy effects can't lower its Attack or Speed."
-   }
-  },
-  {
-   "id": "tentacool-3",
-   "line": "tentacool",
-   "tier": 2,
-   "star": 3,
-   "name": "Tentacruel",
-   "type": "water",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "sludge-wave",
-   "hp": 119,
-   "atk": 59,
-   "spd": 63,
-   "spr": "tentacruel",
-   "ability": {
-    "name": "Clear Body",
-    "fx": "Enemy effects can't lower its Attack or Speed."
-   }
-  },
-  {
-   "id": "geodude-1",
-   "line": "geodude",
-   "tier": 4,
-   "star": 1,
-   "name": "Geodude",
-   "type": "rock",
-   "primary": "tank",
-   "secondary": "striker",
-   "sig": "rock-throw",
-   "hp": 72,
-   "atk": 34,
-   "spd": 18,
-   "spr": "geodude",
-   "ability": {
-    "name": "Sturdy",
-    "fx": "At full HP, survives any single hit with at least 1 HP."
-   }
-  },
-  {
-   "id": "geodude-2",
-   "line": "geodude",
-   "tier": 4,
-   "star": 2,
-   "name": "Graveler",
-   "type": "rock",
-   "primary": "tank",
-   "secondary": "blaster",
-   "sig": "self-destruct",
-   "hp": 112,
-   "atk": 51,
-   "spd": 22,
-   "spr": "graveler",
-   "ability": {
-    "name": "Sturdy",
-    "fx": "At full HP, survives any single hit with at least 1 HP."
-   }
-  },
-  {
-   "id": "geodude-3",
-   "line": "geodude",
-   "tier": 4,
-   "star": 3,
-   "name": "Golem",
-   "type": "rock",
-   "primary": "blaster",
-   "secondary": "tank",
-   "sig": "explosion",
-   "hp": 158,
-   "atk": 71,
-   "spd": 25,
-   "spr": "golem",
-   "ability": {
-    "name": "Sturdy",
-    "fx": "At full HP, survives any single hit with at least 1 HP."
-   }
-  },
-  {
-   "id": "ponyta-1",
-   "line": "ponyta",
-   "tier": 5,
-   "star": 1,
-   "name": "Ponyta",
-   "type": "fire",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "ember",
-   "hp": 50,
-   "atk": 32,
-   "spd": 49,
-   "spr": "ponyta",
-   "ability": {
-    "name": "Flame Body",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
-   }
-  },
-  {
-   "id": "ponyta-2",
-   "line": "ponyta",
-   "tier": 5,
-   "star": 2,
-   "name": "Rapidash",
-   "type": "fire",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "flame-wheel",
-   "hp": 78,
-   "atk": 48,
-   "spd": 59,
-   "spr": "rapidash",
-   "ability": {
-    "name": "Flame Body",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
-   }
-  },
-  {
-   "id": "ponyta-3",
-   "line": "ponyta",
-   "tier": 5,
-   "star": 3,
-   "name": "Rapidash",
-   "type": "fire",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "flamethrower",
-   "hp": 110,
-   "atk": 67,
-   "spd": 69,
-   "spr": "rapidash",
-   "ability": {
-    "name": "Flame Body",
-    "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    }
   },
   {
@@ -2011,291 +1156,6 @@
    "ability": {
     "name": "Magnet Pull",
     "fx": "Steel-type enemies can't be moved by compaction while it's on the field."
-   }
-  },
-  {
-   "id": "farfetchd-1",
-   "line": "farfetchd",
-   "tier": 4,
-   "star": 1,
-   "name": "Farfetch'd",
-   "type": "flying",
-   "primary": "striker",
-   "secondary": "all-rounder",
-   "sig": "peck",
-   "hp": 52,
-   "atk": 38,
-   "spd": 30,
-   "spr": "farfetchd",
-   "ability": {
-    "name": "Super Luck",
-    "fx": "Its hits deal 25% more damage on the first round of a battle."
-   }
-  },
-  {
-   "id": "farfetchd-2",
-   "line": "farfetchd",
-   "tier": 4,
-   "star": 2,
-   "name": "Farfetch'd",
-   "type": "flying",
-   "primary": "striker",
-   "secondary": "all-rounder",
-   "sig": "air-slash",
-   "hp": 81,
-   "atk": 57,
-   "spd": 36,
-   "spr": "farfetchd",
-   "ability": {
-    "name": "Super Luck",
-    "fx": "Its hits deal 25% more damage on the first round of a battle."
-   }
-  },
-  {
-   "id": "farfetchd-3",
-   "line": "farfetchd",
-   "tier": 4,
-   "star": 3,
-   "name": "Farfetch'd",
-   "type": "flying",
-   "primary": "striker",
-   "secondary": "all-rounder",
-   "sig": "leaf-blade",
-   "hp": 114,
-   "atk": 80,
-   "spd": 42,
-   "spr": "farfetchd",
-   "ability": {
-    "name": "Super Luck",
-    "fx": "Its hits deal 25% more damage on the first round of a battle."
-   }
-  },
-  {
-   "id": "doduo-1",
-   "line": "doduo",
-   "tier": 4,
-   "star": 1,
-   "name": "Doduo",
-   "type": "flying",
-   "primary": "speedster",
-   "secondary": "striker",
-   "sig": "peck",
-   "hp": 50,
-   "atk": 34,
-   "spd": 47,
-   "spr": "doduo",
-   "ability": {
-    "name": "Early Bird",
-    "fx": "Recovers from skipped actions one round sooner."
-   }
-  },
-  {
-   "id": "doduo-2",
-   "line": "doduo",
-   "tier": 4,
-   "star": 2,
-   "name": "Dodrio",
-   "type": "flying",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "tri-attack",
-   "hp": 78,
-   "atk": 51,
-   "spd": 56,
-   "spr": "dodrio",
-   "ability": {
-    "name": "Early Bird",
-    "fx": "Recovers from skipped actions one round sooner."
-   }
-  },
-  {
-   "id": "doduo-3",
-   "line": "doduo",
-   "tier": 4,
-   "star": 3,
-   "name": "Dodrio",
-   "type": "flying",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "drill-peck",
-   "hp": 110,
-   "atk": 71,
-   "spd": 66,
-   "spr": "dodrio",
-   "ability": {
-    "name": "Early Bird",
-    "fx": "Recovers from skipped actions one round sooner."
-   }
-  },
-  {
-   "id": "seel-1",
-   "line": "seel",
-   "tier": 3,
-   "star": 1,
-   "name": "Seel",
-   "type": "water",
-   "primary": "tank",
-   "secondary": "all-rounder",
-   "sig": "water-gun",
-   "hp": 76,
-   "atk": 26,
-   "spd": 22,
-   "spr": "seel",
-   "ability": {
-    "name": "Thick Fat",
-    "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
-  },
-  {
-   "id": "seel-2",
-   "line": "seel",
-   "tier": 3,
-   "star": 2,
-   "name": "Dewgong",
-   "type": "ice",
-   "primary": "tank",
-   "secondary": "blaster",
-   "sig": "aurora-beam",
-   "hp": 118,
-   "atk": 39,
-   "spd": 26,
-   "spr": "dewgong",
-   "ability": {
-    "name": "Thick Fat",
-    "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
-  },
-  {
-   "id": "seel-3",
-   "line": "seel",
-   "tier": 3,
-   "star": 3,
-   "name": "Dewgong",
-   "type": "ice",
-   "primary": "tank",
-   "secondary": "blaster",
-   "sig": "blizzard",
-   "hp": 167,
-   "atk": 55,
-   "spd": 31,
-   "spr": "dewgong",
-   "ability": {
-    "name": "Thick Fat",
-    "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
-  },
-  {
-   "id": "grimer-1",
-   "line": "grimer",
-   "tier": 4,
-   "star": 1,
-   "name": "Grimer",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "tank",
-   "sig": "poison-sting",
-   "hp": 80,
-   "atk": 28,
-   "spd": 18,
-   "spr": "grimer",
-   "ability": {
-    "name": "Stench",
-    "fx": "Enemies in the lane directly across lose 10% Speed at the start of battle."
-   }
-  },
-  {
-   "id": "grimer-2",
-   "line": "grimer",
-   "tier": 4,
-   "star": 2,
-   "name": "Muk",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "tank",
-   "sig": "acid",
-   "hp": 124,
-   "atk": 42,
-   "spd": 22,
-   "spr": "muk",
-   "ability": {
-    "name": "Stench",
-    "fx": "Enemies in the lane directly across lose 10% Speed at the start of battle."
-   }
-  },
-  {
-   "id": "grimer-3",
-   "line": "grimer",
-   "tier": 4,
-   "star": 3,
-   "name": "Muk",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "tank",
-   "sig": "sludge-bomb",
-   "hp": 176,
-   "atk": 59,
-   "spd": 25,
-   "spr": "muk",
-   "ability": {
-    "name": "Stench",
-    "fx": "Enemies in the lane directly across lose 10% Speed at the start of battle."
-   }
-  },
-  {
-   "id": "shellder-1",
-   "line": "shellder",
-   "tier": 5,
-   "star": 1,
-   "name": "Shellder",
-   "type": "water",
-   "primary": "tank",
-   "secondary": "striker",
-   "sig": "water-gun",
-   "hp": 66,
-   "atk": 32,
-   "spd": 22,
-   "spr": "shellder",
-   "ability": {
-    "name": "Skill Link",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
-   }
-  },
-  {
-   "id": "shellder-2",
-   "line": "shellder",
-   "tier": 5,
-   "star": 2,
-   "name": "Cloyster",
-   "type": "ice",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "shell-smash",
-   "hp": 102,
-   "atk": 48,
-   "spd": 26,
-   "spr": "cloyster",
-   "ability": {
-    "name": "Skill Link",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
-   }
-  },
-  {
-   "id": "shellder-3",
-   "line": "shellder",
-   "tier": 5,
-   "star": 3,
-   "name": "Cloyster",
-   "type": "ice",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "icicle-spear",
-   "hp": 145,
-   "atk": 67,
-   "spd": 31,
-   "spr": "cloyster",
-   "ability": {
-    "name": "Skill Link",
-    "fx": "Its repeat-hit moves always land the maximum number of hits."
    }
   },
   {
@@ -2470,63 +1330,6 @@
    }
   },
   {
-   "id": "krabby-1",
-   "line": "krabby",
-   "tier": 6,
-   "star": 1,
-   "name": "Krabby",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "water-gun",
-   "hp": 48,
-   "atk": 46,
-   "spd": 28,
-   "spr": "krabby",
-   "ability": {
-    "name": "Hyper Cutter",
-    "fx": "Enemy effects can't lower its Attack."
-   }
-  },
-  {
-   "id": "krabby-2",
-   "line": "krabby",
-   "tier": 6,
-   "star": 2,
-   "name": "Kingler",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "aqua-tail",
-   "hp": 74,
-   "atk": 69,
-   "spd": 34,
-   "spr": "kingler",
-   "ability": {
-    "name": "Hyper Cutter",
-    "fx": "Enemy effects can't lower its Attack."
-   }
-  },
-  {
-   "id": "krabby-3",
-   "line": "krabby",
-   "tier": 6,
-   "star": 3,
-   "name": "Kingler",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "tank",
-   "sig": "crabhammer",
-   "hp": 106,
-   "atk": 97,
-   "spd": 39,
-   "spr": "kingler",
-   "ability": {
-    "name": "Hyper Cutter",
-    "fx": "Enemy effects can't lower its Attack."
-   }
-  },
-  {
    "id": "voltorb-1",
    "line": "voltorb",
    "tier": 1,
@@ -2581,63 +1384,6 @@
    "ability": {
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
-   }
-  },
-  {
-   "id": "exeggcute-1",
-   "line": "exeggcute",
-   "tier": 5,
-   "star": 1,
-   "name": "Exeggcute",
-   "type": "grass",
-   "primary": "all-rounder",
-   "secondary": "healer",
-   "sig": "confusion",
-   "hp": 64,
-   "atk": 34,
-   "spd": 24,
-   "spr": "exeggcute",
-   "ability": {
-    "name": "Harvest",
-    "fx": "Every other round, heals 8% of its max HP."
-   }
-  },
-  {
-   "id": "exeggcute-2",
-   "line": "exeggcute",
-   "tier": 5,
-   "star": 2,
-   "name": "Exeggutor",
-   "type": "grass",
-   "primary": "blaster",
-   "secondary": "healer",
-   "sig": "razor-leaf",
-   "hp": 99,
-   "atk": 51,
-   "spd": 29,
-   "spr": "exeggutor",
-   "ability": {
-    "name": "Harvest",
-    "fx": "Every other round, heals 8% of its max HP."
-   }
-  },
-  {
-   "id": "exeggcute-3",
-   "line": "exeggcute",
-   "tier": 5,
-   "star": 3,
-   "name": "Exeggutor",
-   "type": "grass",
-   "primary": "blaster",
-   "secondary": "healer",
-   "sig": "petal-blizzard",
-   "hp": 141,
-   "atk": 71,
-   "spd": 34,
-   "spr": "exeggutor",
-   "ability": {
-    "name": "Harvest",
-    "fx": "Every other round, heals 8% of its max HP."
    }
   },
   {
@@ -2894,63 +1640,6 @@
    }
   },
   {
-   "id": "koffing-1",
-   "line": "koffing",
-   "tier": 3,
-   "star": 1,
-   "name": "Koffing",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "tank",
-   "sig": "poison-sting",
-   "hp": 72,
-   "atk": 28,
-   "spd": 22,
-   "spr": "koffing",
-   "ability": {
-    "name": "Levitate",
-    "fx": "Immune to Ground moves."
-   }
-  },
-  {
-   "id": "koffing-2",
-   "line": "koffing",
-   "tier": 3,
-   "star": 2,
-   "name": "Weezing",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "acid",
-   "hp": 112,
-   "atk": 42,
-   "spd": 26,
-   "spr": "weezing",
-   "ability": {
-    "name": "Levitate",
-    "fx": "Immune to Ground moves."
-   }
-  },
-  {
-   "id": "koffing-3",
-   "line": "koffing",
-   "tier": 3,
-   "star": 3,
-   "name": "Weezing",
-   "type": "poison",
-   "primary": "disruptor",
-   "secondary": "blaster",
-   "sig": "sludge-wave",
-   "hp": 158,
-   "atk": 59,
-   "spd": 31,
-   "spr": "weezing",
-   "ability": {
-    "name": "Levitate",
-    "fx": "Immune to Ground moves."
-   }
-  },
-  {
    "id": "rhyhorn-1",
    "line": "rhyhorn",
    "tier": 7,
@@ -3065,63 +1754,6 @@
    }
   },
   {
-   "id": "tangela-1",
-   "line": "tangela",
-   "tier": 5,
-   "star": 1,
-   "name": "Tangela",
-   "type": "grass",
-   "primary": "tank",
-   "secondary": "disruptor",
-   "sig": "vine-whip",
-   "hp": 72,
-   "atk": 28,
-   "spd": 24,
-   "spr": "tangela",
-   "ability": {
-    "name": "Regenerator",
-    "fx": "Heals 10% of its max HP at the end of every round it didn't take a hit."
-   }
-  },
-  {
-   "id": "tangela-2",
-   "line": "tangela",
-   "tier": 5,
-   "star": 2,
-   "name": "Tangrowth",
-   "type": "grass",
-   "primary": "tank",
-   "secondary": "striker",
-   "sig": "mega-drain",
-   "hp": 112,
-   "atk": 42,
-   "spd": 29,
-   "spr": "tangrowth",
-   "ability": {
-    "name": "Regenerator",
-    "fx": "Heals 10% of its max HP at the end of every round it didn't take a hit."
-   }
-  },
-  {
-   "id": "tangela-3",
-   "line": "tangela",
-   "tier": 5,
-   "star": 3,
-   "name": "Tangrowth",
-   "type": "grass",
-   "primary": "tank",
-   "secondary": "striker",
-   "sig": "power-whip",
-   "hp": 158,
-   "atk": 59,
-   "spd": 34,
-   "spr": "tangrowth",
-   "ability": {
-    "name": "Regenerator",
-    "fx": "Heals 10% of its max HP at the end of every round it didn't take a hit."
-   }
-  },
-  {
    "id": "kangaskhan-1",
    "line": "kangaskhan",
    "tier": 7,
@@ -3179,120 +1811,6 @@
    }
   },
   {
-   "id": "horsea-1",
-   "line": "horsea",
-   "tier": 4,
-   "star": 1,
-   "name": "Horsea",
-   "type": "water",
-   "primary": "speedster",
-   "secondary": "blaster",
-   "sig": "bubble",
-   "hp": 56,
-   "atk": 34,
-   "spd": 34,
-   "spr": "horsea",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "horsea-2",
-   "line": "horsea",
-   "tier": 4,
-   "star": 2,
-   "name": "Seadra",
-   "type": "water",
-   "primary": "blaster",
-   "secondary": "speedster",
-   "sig": "bubble-beam",
-   "hp": 87,
-   "atk": 51,
-   "spd": 41,
-   "spr": "seadra",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "horsea-3",
-   "line": "horsea",
-   "tier": 4,
-   "star": 3,
-   "name": "Kingdra",
-   "type": "dragon",
-   "primary": "blaster",
-   "secondary": "all-rounder",
-   "sig": "dragon-pulse",
-   "hp": 123,
-   "atk": 71,
-   "spd": 48,
-   "spr": "kingdra",
-   "ability": {
-    "name": "Sniper",
-    "fx": "Its super-effective hits deal 2.5× damage instead of 2×."
-   }
-  },
-  {
-   "id": "goldeen-1",
-   "line": "goldeen",
-   "tier": 2,
-   "star": 1,
-   "name": "Goldeen",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "peck",
-   "hp": 52,
-   "atk": 38,
-   "spd": 30,
-   "spr": "goldeen",
-   "ability": {
-    "name": "Swift Swim",
-    "fx": "Gains 20% Speed while any teammate knows a Water move."
-   }
-  },
-  {
-   "id": "goldeen-2",
-   "line": "goldeen",
-   "tier": 2,
-   "star": 2,
-   "name": "Seaking",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "all-rounder",
-   "sig": "aqua-tail",
-   "hp": 81,
-   "atk": 57,
-   "spd": 36,
-   "spr": "seaking",
-   "ability": {
-    "name": "Swift Swim",
-    "fx": "Gains 20% Speed while any teammate knows a Water move."
-   }
-  },
-  {
-   "id": "goldeen-3",
-   "line": "goldeen",
-   "tier": 2,
-   "star": 3,
-   "name": "Seaking",
-   "type": "water",
-   "primary": "striker",
-   "secondary": "all-rounder",
-   "sig": "megahorn",
-   "hp": 114,
-   "atk": 80,
-   "spd": 42,
-   "spr": "seaking",
-   "ability": {
-    "name": "Swift Swim",
-    "fx": "Gains 20% Speed while any teammate knows a Water move."
-   }
-  },
-  {
    "id": "staryu-1",
    "line": "staryu",
    "tier": 6,
@@ -3347,63 +1865,6 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
-  },
-  {
-   "id": "mimejr-1",
-   "line": "mimejr",
-   "tier": 4,
-   "star": 1,
-   "name": "Mime Jr.",
-   "type": "psychic",
-   "primary": "support",
-   "secondary": "disruptor",
-   "sig": "confusion",
-   "hp": 60,
-   "atk": 30,
-   "spd": 34,
-   "spr": "mime-jr",
-   "ability": {
-    "name": "Filter",
-    "fx": "Super-effective hits against it deal 25% less damage."
-   }
-  },
-  {
-   "id": "mimejr-2",
-   "line": "mimejr",
-   "tier": 4,
-   "star": 2,
-   "name": "Mr. Mime",
-   "type": "psychic",
-   "primary": "support",
-   "secondary": "tank",
-   "sig": "psybeam",
-   "hp": 93,
-   "atk": 45,
-   "spd": 41,
-   "spr": "mr-mime",
-   "ability": {
-    "name": "Filter",
-    "fx": "Super-effective hits against it deal 25% less damage."
-   }
-  },
-  {
-   "id": "mimejr-3",
-   "line": "mimejr",
-   "tier": 4,
-   "star": 3,
-   "name": "Mr. Mime",
-   "type": "psychic",
-   "primary": "support",
-   "secondary": "tank",
-   "sig": "barrier",
-   "hp": 132,
-   "atk": 63,
-   "spd": 48,
-   "spr": "mr-mime",
-   "ability": {
-    "name": "Filter",
-    "fx": "Super-effective hits against it deal 25% less damage."
    }
   },
   {
@@ -3504,63 +1965,6 @@
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
    "branch": "kleavor"
-  },
-  {
-   "id": "smoochum-1",
-   "line": "smoochum",
-   "tier": 3,
-   "star": 1,
-   "name": "Smoochum",
-   "type": "ice",
-   "primary": "disruptor",
-   "secondary": "speedster",
-   "sig": "powder-snow",
-   "hp": 50,
-   "atk": 32,
-   "spd": 43,
-   "spr": "smoochum",
-   "ability": {
-    "name": "Oblivious",
-    "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   }
-  },
-  {
-   "id": "smoochum-2",
-   "line": "smoochum",
-   "tier": 3,
-   "star": 2,
-   "name": "Jynx",
-   "type": "ice",
-   "primary": "blaster",
-   "secondary": "disruptor",
-   "sig": "aurora-beam",
-   "hp": 78,
-   "atk": 48,
-   "spd": 52,
-   "spr": "jynx",
-   "ability": {
-    "name": "Oblivious",
-    "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   }
-  },
-  {
-   "id": "smoochum-3",
-   "line": "smoochum",
-   "tier": 3,
-   "star": 3,
-   "name": "Jynx",
-   "type": "ice",
-   "primary": "blaster",
-   "secondary": "disruptor",
-   "sig": "blizzard",
-   "hp": 110,
-   "atk": 67,
-   "spd": 60,
-   "spr": "jynx",
-   "ability": {
-    "name": "Oblivious",
-    "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   }
   },
   {
    "id": "elekid-1",
@@ -3731,63 +2135,6 @@
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
-   }
-  },
-  {
-   "id": "tauros-1",
-   "line": "tauros",
-   "tier": 7,
-   "star": 1,
-   "name": "Tauros",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "tackle",
-   "hp": 56,
-   "atk": 40,
-   "spd": 36,
-   "spr": "tauros",
-   "ability": {
-    "name": "Anger Point",
-    "fx": "After being hit by a super-effective move, gains 50% Attack for the battle."
-   }
-  },
-  {
-   "id": "tauros-2",
-   "line": "tauros",
-   "tier": 7,
-   "star": 2,
-   "name": "Tauros",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "headbutt",
-   "hp": 87,
-   "atk": 60,
-   "spd": 43,
-   "spr": "tauros",
-   "ability": {
-    "name": "Anger Point",
-    "fx": "After being hit by a super-effective move, gains 50% Attack for the battle."
-   }
-  },
-  {
-   "id": "tauros-3",
-   "line": "tauros",
-   "tier": 7,
-   "star": 3,
-   "name": "Tauros",
-   "type": "normal",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "double-edge",
-   "hp": 123,
-   "atk": 84,
-   "spd": 50,
-   "spr": "tauros",
-   "ability": {
-    "name": "Anger Point",
-    "fx": "After being hit by a super-effective move, gains 50% Attack for the battle."
    }
   },
   {
@@ -4351,7 +2698,7 @@
    "hp": 132,
    "atk": 67,
    "spd": 39,
-   "spr": "porygon-z",
+   "spr": "porygonz",
    "ability": {
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
@@ -4411,63 +2758,6 @@
    "spr": "omastar",
    "ability": {
     "name": "Shell Armor",
-    "fx": "Takes 15% less damage from Single moves."
-   }
-  },
-  {
-   "id": "kabuto-1",
-   "line": "kabuto",
-   "tier": 7,
-   "star": 1,
-   "name": "Kabuto",
-   "type": "rock",
-   "primary": "tank",
-   "secondary": "striker",
-   "sig": "scratch",
-   "hp": 48,
-   "atk": 42,
-   "spd": 32,
-   "spr": "kabuto",
-   "ability": {
-    "name": "Battle Armor",
-    "fx": "Takes 15% less damage from Single moves."
-   }
-  },
-  {
-   "id": "kabuto-2",
-   "line": "kabuto",
-   "tier": 7,
-   "star": 2,
-   "name": "Kabutops",
-   "type": "rock",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "rock-tomb",
-   "hp": 74,
-   "atk": 63,
-   "spd": 38,
-   "spr": "kabutops",
-   "ability": {
-    "name": "Battle Armor",
-    "fx": "Takes 15% less damage from Single moves."
-   }
-  },
-  {
-   "id": "kabuto-3",
-   "line": "kabuto",
-   "tier": 7,
-   "star": 3,
-   "name": "Kabutops",
-   "type": "rock",
-   "primary": "striker",
-   "secondary": "speedster",
-   "sig": "stone-edge",
-   "hp": 106,
-   "atk": 88,
-   "spd": 45,
-   "spr": "kabutops",
-   "ability": {
-    "name": "Battle Armor",
     "fx": "Takes 15% less damage from Single moves."
    }
   },
@@ -4955,33 +3245,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "quick-attack": {
-   "name": "Quick Attack",
-   "star": 1,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 40,
-   "heal": null,
-   "hits": null,
-   "fx": "On the first round of a battle, acts before anyone without a first-round move.",
-   "cat": "sig",
-   "first": "round1"
-  },
-  "headbutt": {
-   "name": "Headbutt",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 65,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "body-slam": {
    "name": "Body Slam",
    "star": 2,
@@ -4995,22 +3258,6 @@
    "fx": "Target loses 10% Speed for the battle.",
    "cat": "sig",
    "spdDrop": 0.1
-  },
-  "fury-attack": {
-   "name": "Fury Attack",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 18,
-   "heal": null,
-   "hits": [
-    2,
-    5
-   ],
-   "fx": "",
-   "cat": "sig"
   },
   "double-hit": {
    "name": "Double Hit",
@@ -5028,19 +3275,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "hyper-fang": {
-   "name": "Hyper Fang",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 75,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "tri-attack": {
    "name": "Tri Attack",
    "star": 2,
@@ -5053,20 +3287,6 @@
    "hits": null,
    "fx": "Target loses 10% Attack or 10% Speed for the battle (random).",
    "cat": "sig"
-  },
-  "self-destruct": {
-   "name": "Self-Destruct",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "splash",
-   "target": null,
-   "power": 130,
-   "heal": null,
-   "hits": null,
-   "fx": "The user faints after using it.",
-   "cat": "sig",
-   "selfFaint": true
   },
   "double-edge": {
    "name": "Double-Edge",
@@ -5377,20 +3597,6 @@
    "cat": "sig",
    "ignoreGuard": true
   },
-  "giga-drain": {
-   "name": "Giga Drain",
-   "star": 3,
-   "type": "grass",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 85,
-   "heal": null,
-   "hits": null,
-   "fx": "User heals 50% of the damage dealt.",
-   "cat": "sig",
-   "drain": 0.5
-  },
   "power-whip": {
    "name": "Power Whip",
    "star": 3,
@@ -5536,22 +3742,6 @@
    "cat": "sig",
    "spdDrop": 0.1
   },
-  "icicle-spear": {
-   "name": "Icicle Spear",
-   "star": 3,
-   "type": "ice",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 28,
-   "heal": null,
-   "hits": [
-    2,
-    5
-   ],
-   "fx": "",
-   "cat": "sig"
-  },
   "karate-chop": {
    "name": "Karate Chop",
    "star": 1,
@@ -5655,75 +3845,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "acid": {
-   "name": "Acid",
-   "star": 2,
-   "type": "poison",
-   "kind": "off",
-   "shape": "splash",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "poison-fang": {
-   "name": "Poison Fang",
-   "star": 2,
-   "type": "poison",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 50,
-   "heal": null,
-   "hits": null,
-   "fx": "Target loses 5% max HP at the end of each of the next 2 rounds.",
-   "cat": "sig",
-   "dot": [
-    5,
-    5
-   ]
-  },
-  "poison-jab": {
-   "name": "Poison Jab",
-   "star": 2,
-   "type": "poison",
-   "kind": "off",
-   "shape": "pierce",
-   "target": null,
-   "power": 55,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "sludge-bomb": {
-   "name": "Sludge Bomb",
-   "star": 3,
-   "type": "poison",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 105,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "sludge-wave": {
-   "name": "Sludge Wave",
-   "star": 3,
-   "type": "poison",
-   "kind": "off",
-   "shape": "row",
-   "target": null,
-   "power": 75,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "cross-poison": {
    "name": "Cross Poison",
    "star": 3,
@@ -5806,19 +3927,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "peck": {
-   "name": "Peck",
-   "star": 1,
-   "type": "flying",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "wing-attack": {
    "name": "Wing Attack",
    "star": 2,
@@ -5827,32 +3935,6 @@
    "shape": "pierce",
    "target": null,
    "power": 50,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "air-slash": {
-   "name": "Air Slash",
-   "star": 2,
-   "type": "flying",
-   "kind": "off",
-   "shape": "splash",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "drill-peck": {
-   "name": "Drill Peck",
-   "star": 3,
-   "type": "flying",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 105,
    "heal": null,
    "hits": null,
    "fx": "",
@@ -6094,19 +4176,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "dragon-pulse": {
-   "name": "Dragon Pulse",
-   "star": 3,
-   "type": "dragon",
-   "kind": "off",
-   "shape": "pierce",
-   "target": null,
-   "power": 90,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "bite": {
    "name": "Bite",
    "star": 1,
@@ -6273,20 +4342,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "leech-life": {
-   "name": "Leech Life",
-   "star": 1,
-   "type": "bug",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 40,
-   "heal": null,
-   "hits": null,
-   "fx": "User heals 50% of the damage dealt.",
-   "cat": "sig",
-   "drain": 0.5
-  },
   "pin-missile": {
    "name": "Pin Missile",
    "star": 2,
@@ -6303,19 +4358,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "signal-beam": {
-   "name": "Signal Beam",
-   "star": 2,
-   "type": "bug",
-   "kind": "off",
-   "shape": "pierce",
-   "target": null,
-   "power": 50,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "x-scissor": {
    "name": "X-Scissor",
    "star": 3,
@@ -6324,32 +4366,6 @@
    "shape": "single",
    "target": null,
    "power": 105,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "megahorn": {
-   "name": "Megahorn",
-   "star": 3,
-   "type": "bug",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 115,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "bug-buzz": {
-   "name": "Bug Buzz",
-   "star": 3,
-   "type": "bug",
-   "kind": "off",
-   "shape": "row",
-   "target": null,
-   "power": 75,
    "heal": null,
    "hits": null,
    "fx": "",
@@ -6414,24 +4430,6 @@
     "atk": 0.15,
     "spd": 0.15
    }
-  },
-  "shell-smash": {
-   "name": "Shell Smash",
-   "star": 2,
-   "type": "normal",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "fx": "User gains 50% Attack and 50% Speed for the battle, but takes 25% more damage.",
-   "cat": "sig",
-   "buff": {
-    "atk": 0.5,
-    "spd": 0.5
-   },
-   "vuln": 0.25
   },
   "frenzy-plant": {
    "name": "Frenzy Plant",
@@ -6515,20 +4513,6 @@
    "cat": "unique",
    "coins": 10
   },
-  "dynamic-punch": {
-   "name": "Dynamic Punch",
-   "star": 3,
-   "type": "fighting",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 115,
-   "heal": null,
-   "hits": null,
-   "fx": "Target loses 20% Speed for the battle.",
-   "cat": "unique",
-   "spdDrop": 0.2
-  },
   "hex": {
    "name": "Hex",
    "star": 3,
@@ -6556,19 +4540,6 @@
    "fx": "User heals 50% of the damage dealt.",
    "cat": "unique",
    "drain": 0.5
-  },
-  "crabhammer": {
-   "name": "Crabhammer",
-   "star": 3,
-   "type": "water",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 135,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "unique"
   },
   "bonemerang": {
    "name": "Bonemerang",

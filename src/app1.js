@@ -25,7 +25,7 @@ const LEARN = {};
 for (const f of FORMS) LEARN[f.id] = [...new Set(POOLS.filter(p => poolFits(p, f)).flatMap(p => p.moves))].filter(k => k !== f.sig);
 for (const m of Object.values(MOVES)) m.learnableBy = [];
 for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learnableBy.push(id);
-const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Raticate at ★2 and ★3 is one Pokémon
+const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Hypno at ★2 and ★3 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
 const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
@@ -1288,7 +1288,7 @@ function dexMonHTML(f){
   </div>`;
 }
 // the evolution path, one column per evolution stage: each species appears once, however many levels it spans
-// (Raticate is ★2 and ★3 but shows once), and stands for its most-leveled form (its full stats). A stage with
+// (Hypno is ★2 and ★3 but shows once), and stands for its most-leveled form (its full stats). A stage with
 // many branches (Eevee's eight) is a grid. Tapping a Pokémon opens its info under the path (see dexOpen).
 const EVO_ARROW = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h9M8.5 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 // every form of the same species on the same line (one per level it spans), lowest level first

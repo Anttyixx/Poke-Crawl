@@ -13,12 +13,13 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **The RotomDex scans everywhere.** Tap a Pokémon or item (a starter, a wild Pokémon, one in your party, bag or daycare, or an item for sale) to select it, and Rotom in the top-right corner starts giving little side-to-side shakes with a tiny hop, glowing with a pulsing halo, to get your attention: tap Rotom to scan what you selected, or double-tap a Pokémon or item to select and scan it in one go. While the scan is open, tapping another Pokémon or item scans that one instead, and nothing can be moved; close the scan (tap Rotom, the Pokémon or item being scanned, or anywhere outside it) and your selection is still there, ready to move. This replaces the old info popup and info box.
 - **Release notes.** A "Release notes" button next to the version number in the title screen's bottom-left corner lists what changed in each version, newest first.
 - **Scanning with the RotomDex.** On the starter screen, the three starters now stand at the top under the title as bare sprites, with no slot boxes around them. Pick one and tap Rotom, and it flies over to scan it: a small RotomDex window opens right next to it with just that Pokémon's stats, EXP, ability, held item and moves, its border rising in a bump to meet Rotom perched by the Pokémon. Tap another starter and Rotom hops over to scan that one, the window folding away as it sets off and opening out of Rotom again, with the new Pokémon's info, as it lands; the scan looks just like a Pokémon's entry in the full RotomDex. Choose with the "I Choose You!!" button at the bottom of the screen, or tap "Full RotomDex", pinned to the scan's top-right corner, and Rotom opens the whole RotomDex.
-- **Every Generation 1 Pokémon**, plus the other members of their families from later generations: babies like Pichu, Cleffa and Happiny, and evolutions like Crobat, Scizor, Kleavor, Magnezone, Blissey and all eight Eeveelutions. 78 evolution lines, 184 Pokémon in all.
+- **Generation 1 Pokémon**, plus the other members of their families from later generations: babies like Pichu, Cleffa and Happiny, and evolutions like Scizor, Kleavor, Magnezone, Blissey and all eight Eeveelutions. 48 evolution lines, 119 Pokémon in all.
 - **Branching evolutions.** Eevee, Slowpoke, Tyrogue and Scyther pick their branch when they reach ★2, and Oddish and Poliwag when they reach ★3, then stay on it.
 - **Real legendaries.** Articuno, Zapdos, Moltres, Mewtwo and Mew wait on Legendary nodes. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
+- **New sprites.** Every Pokémon and item has a new sprite, from a set that goes up to Generation 9.
 - EXP is shown in points (100 to a level) instead of percentages: after a battle you'll see "your party gained 10 EXP each", and a Pokémon's scan shows its EXP like 50/100.
 - **Clearer moves.** Every move now leads with what kind of move it is (Attack, Support or Defense) and a plain description of what it does, like "Deals 45% of Attack as damage to the opposing Pokémon in front." The button for switching a move is now a swap icon.
 - **Daycare, like the other screens.** The daycare's slots sit in the middle and your party and bag are in the bottom corners, just like on the map: tap a Pokémon in your party, then a daycare slot, to leave it there (or the other way round). The daycare now holds 8 Pokémon instead of 10.
@@ -44,10 +45,13 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Status moves like Will-O-Wisp and Thunder Wave say "no damage" instead of "0% of Attack".
 - **Moves rebuilt for 2-move Pokémon.** Signature moves are now their own kind of move: learned by leveling and never taught. Most are shared within a type (Ember, Flamethrower, Surf, Earthquake…), and 26 standout Pokémon have one of their own: Charizard's Blast Burn, Raichu's Volt Tackle, Jigglypuff's Sing, Persian's Pay Day (bonus coins), Ditto's Transform, Magikarp's Splash, Mewtwo's Psystrike and more. The Move Tutor teaches everything else.
 - The RotomDex's Moves tab says which Pokémon can be taught each move, and marks unique signatures.
-- The RotomDex shows each line as how it evolves, with each Pokémon once and no star levels (Raticate no longer appears twice). Eevee's eight evolutions sit in a grid, and a Pokémon whose signature move changes as it levels lists each one.
+- The RotomDex shows each line as how it evolves, with each Pokémon once and no star levels. Eevee's eight evolutions sit in a grid, and a Pokémon whose signature move changes as it levels lists each one.
 - Rotom's flight into the RotomDex is now a short hop and shallow dip, matching its way back (which dips a little less), and opening and closing are 10% quicker.
 - Rotom now perches on the RotomDex window's top edge near the left corner, a little bigger, with the window's border rising in a bump to meet it; the window opens out from it. Tap Rotom to close the RotomDex.
 - Every Pokémon now knows just 2 moves: its signature move and one move taught at a Move Tutor (it was 2 taught moves). Teaching a Pokémon a new move replaces the one it was taught before. Trainers' and gym leaders' Pokémon follow the same rule.
+
+### Removed
+- Caterpie, Rattata, Spearow, Ekans, Nidoran♀, Nidoran♂, Zubat and Paras, and their evolutions, are gone, to match the planned roster.
 
 ## 0.3.0 (2026-10-02)
 
