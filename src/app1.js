@@ -38,7 +38,7 @@ const STARTERS = STARTER_GENS.flat();
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
 const TEAM_LINES = LINE_IDS.filter(l => !LEGEND_LINES.includes(l));
 // how likely a line is to be picked for a map's wild Pokémon (data.json "weight", default 100; Paradox Pokémon 40).
-// Mythical Pokémon (weight 10 or less) aren't in the wild pools: one turns up on map TUNE.mythicalMap (see wildLinesFor).
+// Mythical Pokémon (weight 10 or less) aren't in the wild pools: one can turn up on a map with no Legendary node (see newMap).
 // Rare lines stay off trainers' and gym leaders' teams.
 const lineWeight = l => LINES[l][1][0].weight ?? 100;
 const TRAINER_LINES = TEAM_LINES.filter(l => lineWeight(l) >= 100);
@@ -77,7 +77,7 @@ function foundAt(l){
   const f = LINES[l][1][0];
   if (STARTERS.includes(l)) return 'Starter';
   if (f.legendary) return 'Legendary nodes only';
-  if (MYTHICAL_LINES.includes(l)) return `Mythical · may turn up on map ${TUNE.mythicalMap}`;
+  if (MYTHICAL_LINES.includes(l)) return `Mythical · very rare, from map ${TUNE.mythical.from} on`;
   const where = `<span title="Found at wild nodes from map ${lineTier(l)} on">Wild from map ${lineTier(l)}</span>`;
   return lineWeight(l) < 100 ? `${where} · ${lineWeight(l) <= 10 ? 'very rare' : 'uncommon'}` : where;
 }
@@ -110,12 +110,12 @@ function buildMapPool(mapNo){
   return pool;
 }
 // three different wild lines for a wild node: from this map's pool, ones not offered yet on this map first. On map
-// TUNE.mythicalMap, the first wild node also offers a Mythical Pokémon
+// where a Mythical Pokémon spawned (R.mythicalHere, see newMap), the first wild node also offers it
 function wildLinesFor(mapNo){
   const pool = (R.pools ||= {})[mapNo] ||= buildMapPool(mapNo), seen = R.offered ||= [];
   const out = shuffle(pool.filter(l => !seen.includes(l))).slice(0, 3);
   for (const l of shuffle(pool.filter(l => !out.includes(l)))) if (out.length < 3) out.push(l);
-  if (mapNo === TUNE.mythicalMap && !R.mythical && MYTHICAL_LINES.length){ R.mythical = pick(MYTHICAL_LINES); out[Math.floor(Math.random() * out.length)] = R.mythical; }
+  if (R.mythicalHere && MYTHICAL_LINES.length){ R.mythicalHere = false; out[Math.floor(Math.random() * out.length)] = pick(MYTHICAL_LINES); }
   seen.push(...out);
   return out;
 }
@@ -160,8 +160,9 @@ const TUNE = {
   hopSlow: .8,                                       // Pokémon slot-to-slot jumps run 25% faster than the original
   mapPool: { size: 12, gimmick: [1, 2], random: 4, luck: 1.5 },   // each map's wild Pokémon: how many, how many with a gimmick, how many
                                                     // at random (the rest fit your team), and how much chance mixes into that fit
-  mythicalMap: 5,                                   // the first wild node on this map also offers a Mythical Pokémon
-  legendaryNode: [0, .08, .08, .08, .08, 1, .08, .5], // chance a map (1 to 8) has a Legendary node; at most one per map
+  legendaryNode: [0, 0, 0, 0, 0, 1, .1, .1],       // chance a map (1 to 8) has a Legendary node; at most one per map
+  mythical: { from: 2, chance: .01 },               // from this map on, a map with no Legendary node has this chance of a
+                                                    // Mythical Pokémon (offered at its first wild node), doubling every map
   wildMove: { base: .10, perMap: .07 },              // chance a wild Pokémon knows a move besides its signature: 10% on map 1, +7% a map                                // each wild Pokémon is from this map's tier this often; else an earlier tier
   martStock: 4, martRerollStep: 20,
   sellRate: .5,                                      // a Poké Mart buys items back for this share of their price
@@ -531,8 +532,17 @@ function placeLegendary(map){
     && ![...n.pars, ...n.kids].some(id => SPECIAL.has(map.nodes.get(id)?.type));
   const cands = [...map.nodes.values()].filter(ok), trainers = cands.filter(n => n.type === 'trainer');
   const n = pick(trainers.length ? trainers : cands); if (n) n.type = 'legendary';
+  return !!n;
 }
 const legendaryRoll = mapNo => Math.random() < (TUNE.legendaryNode[mapNo - 1] ?? 0);
+// a new map: maybe a Legendary node; if not, maybe a Mythical Pokémon (1% on map 2, 2% on map 3, 4%, 8%…)
+function newMap(mapNo){
+  const map = generateMap(randomSeed(), GEN, legendaryRoll(mapNo)), m = TUNE.mythical;
+  const legendary = [...map.nodes.values()].some(n => n.type === 'legendary');
+  R.mythicalHere = !legendary && mapNo >= m.from && Math.random() < m.chance * 2 ** (mapNo - m.from);
+  R.offered = [];
+  return map;
+}
 function generateMap(seed, cfg = GEN, legendary = false){
   const found = [];
   for (let attempt = 0; attempt < 600 && found.length < cfg.candidates; attempt++){ const m = buildValidMap(seed, attempt, cfg); if (m) found.push(m); }
@@ -550,7 +560,7 @@ const randomSeed = () => Math.floor(Math.random() * 1e9);
 const R = {};
 function newRun(){
   Object.assign(R, { mapNo: 1, lives: TUNE.lives, coins: TUNE.startCoins, party: Array(6).fill(null), bag: Array(TUNE.bagSize).fill(null),
-    daycare: Array(TUNE.daycareSize).fill(null), at: 'S', trail: ['S'], gymsBeaten: 0, map: generateMap(randomSeed(), GEN, legendaryRoll(1)), pools: {}, offered: [], mythical: null });
+    daycare: Array(TUNE.daycareSize).fill(null), at: 'S', trail: ['S'], gymsBeaten: 0, pools: {} }); R.map = newMap(1);
 }
 const partyMons = () => R.party.filter(Boolean);
 const partyCount = () => partyMons().length;
@@ -2793,7 +2803,7 @@ RENDER['scr-daycare'] = () => {
 };
 $('#day-go').addEventListener('click', () => {
   if (!DC.postGym) return toMap();
-  R.mapNo++; R.map = generateMap(randomSeed(), GEN, legendaryRoll(R.mapNo)); R.at = 'S'; R.trail = ['S']; R.offered = [];
+  R.mapNo++; R.map = newMap(R.mapNo); R.at = 'S'; R.trail = ['S'];
   toMap();
 });
 
