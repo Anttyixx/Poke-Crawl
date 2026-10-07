@@ -156,7 +156,6 @@
   {
    "id": "weedle-1",
    "line": "weedle",
-   "tier": 1,
    "star": 1,
    "name": "Weedle",
    "type": "poison",
@@ -169,12 +168,12 @@
    "ability": {
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "weedle-2",
    "line": "weedle",
-   "tier": 1,
    "star": 2,
    "name": "Kakuna",
    "type": "poison",
@@ -187,12 +186,12 @@
    "ability": {
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "weedle-3",
    "line": "weedle",
-   "tier": 1,
    "star": 3,
    "name": "Beedrill",
    "type": "poison",
@@ -205,12 +204,12 @@
    "ability": {
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "pidgey-1",
    "line": "pidgey",
-   "tier": 1,
    "star": 1,
    "name": "Pidgey",
    "type": "flying",
@@ -223,12 +222,12 @@
    "ability": {
     "name": "Gale Wings",
     "fx": "At full HP, its first action of each battle happens before anyone else acts."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "pidgey-2",
    "line": "pidgey",
-   "tier": 1,
    "star": 2,
    "name": "Pidgeotto",
    "type": "flying",
@@ -241,12 +240,12 @@
    "ability": {
     "name": "Gale Wings",
     "fx": "At full HP, its first action of each battle happens before anyone else acts."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "pidgey-3",
    "line": "pidgey",
-   "tier": 1,
    "star": 3,
    "name": "Pidgeot",
    "type": "flying",
@@ -259,12 +258,12 @@
    "ability": {
     "name": "Gale Wings",
     "fx": "At full HP, its first action of each battle happens before anyone else acts."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "pichu-1",
    "line": "pichu",
-   "tier": 5,
    "star": 1,
    "name": "Pichu",
    "type": "electric",
@@ -277,12 +276,12 @@
    "ability": {
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "pichu-2",
    "line": "pichu",
-   "tier": 5,
    "star": 2,
    "name": "Pikachu",
    "type": "electric",
@@ -295,12 +294,12 @@
    "ability": {
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "pichu-3",
    "line": "pichu",
-   "tier": 5,
    "star": 3,
    "name": "Raichu",
    "type": "electric",
@@ -313,12 +312,12 @@
    "ability": {
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "sandshrew-1",
    "line": "sandshrew",
-   "tier": 3,
    "star": 1,
    "name": "Sandshrew",
    "type": "ground",
@@ -331,12 +330,12 @@
    "ability": {
     "name": "Sand Veil",
     "fx": "15% chance to take no damage from any hit."
-   }
+   },
+   "tier": 2
   },
   {
    "id": "sandshrew-2",
    "line": "sandshrew",
-   "tier": 3,
    "star": 2,
    "name": "Sandshrew",
    "type": "ground",
@@ -349,12 +348,12 @@
    "ability": {
     "name": "Sand Veil",
     "fx": "15% chance to take no damage from any hit."
-   }
+   },
+   "tier": 2
   },
   {
    "id": "sandshrew-3",
    "line": "sandshrew",
-   "tier": 3,
    "star": 3,
    "name": "Sandslash",
    "type": "ground",
@@ -367,7 +366,8 @@
    "ability": {
     "name": "Sand Veil",
     "fx": "15% chance to take no damage from any hit."
-   }
+   },
+   "tier": 2
   },
   {
    "id": "sandshrewalola-1",
@@ -385,7 +385,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "sandshrewalola-2",
@@ -403,7 +403,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "sandshrewalola-3",
@@ -421,12 +421,11 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "cleffa-1",
    "line": "cleffa",
-   "tier": 4,
    "star": 1,
    "name": "Cleffa",
    "type": "fairy",
@@ -439,12 +438,13 @@
    "ability": {
     "name": "Magic Guard",
     "fx": "Only takes damage from direct hits: immune to recoil, Life Orb, Rocky Helmet and Leech Seed."
-   }
+   },
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "cleffa-2",
    "line": "cleffa",
-   "tier": 4,
    "star": 2,
    "name": "Clefairy",
    "type": "fairy",
@@ -457,12 +457,13 @@
    "ability": {
     "name": "Magic Guard",
     "fx": "Only takes damage from direct hits: immune to recoil, Life Orb, Rocky Helmet and Leech Seed."
-   }
+   },
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "cleffa-3",
    "line": "cleffa",
-   "tier": 4,
    "star": 3,
    "name": "Clefable",
    "type": "fairy",
@@ -475,12 +476,13 @@
    "ability": {
     "name": "Magic Guard",
     "fx": "Only takes damage from direct hits: immune to recoil, Life Orb, Rocky Helmet and Leech Seed."
-   }
+   },
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "vulpix-1",
    "line": "vulpix",
-   "tier": 3,
    "star": 1,
    "name": "Vulpix",
    "type": "fire",
@@ -493,12 +495,12 @@
    "ability": {
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "vulpix-2",
    "line": "vulpix",
-   "tier": 3,
    "star": 2,
    "name": "Vulpix",
    "type": "fire",
@@ -511,12 +513,12 @@
    "ability": {
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "vulpix-3",
    "line": "vulpix",
-   "tier": 3,
    "star": 3,
    "name": "Ninetales",
    "type": "fire",
@@ -529,7 +531,8 @@
    "ability": {
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "vulpixalola-1",
@@ -547,7 +550,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "vulpixalola-2",
@@ -565,7 +568,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "vulpixalola-3",
@@ -583,12 +586,11 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "igglybuff-1",
    "line": "igglybuff",
-   "tier": 3,
    "star": 1,
    "name": "Igglybuff",
    "type": "normal",
@@ -601,12 +603,12 @@
    "ability": {
     "name": "Friend Guard",
     "fx": "Teammates in the lanes beside it, in the same row, take 15% less damage."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "igglybuff-2",
    "line": "igglybuff",
-   "tier": 3,
    "star": 2,
    "name": "Jigglypuff",
    "type": "normal",
@@ -619,12 +621,12 @@
    "ability": {
     "name": "Friend Guard",
     "fx": "Teammates in the lanes beside it, in the same row, take 15% less damage."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "igglybuff-3",
    "line": "igglybuff",
-   "tier": 3,
    "star": 3,
    "name": "Wigglytuff",
    "type": "normal",
@@ -637,12 +639,12 @@
    "ability": {
     "name": "Friend Guard",
     "fx": "Teammates in the lanes beside it, in the same row, take 15% less damage."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "oddish-1",
    "line": "oddish",
-   "tier": 2,
    "star": 1,
    "name": "Oddish",
    "type": "grass",
@@ -655,12 +657,13 @@
    "ability": {
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "oddish-2",
    "line": "oddish",
-   "tier": 2,
    "star": 2,
    "name": "Gloom",
    "type": "grass",
@@ -673,12 +676,13 @@
    "ability": {
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "oddish-3-vileplume",
    "line": "oddish",
-   "tier": 2,
    "star": 3,
    "name": "Vileplume",
    "type": "grass",
@@ -692,12 +696,13 @@
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "branch": "vileplume"
+   "branch": "vileplume",
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "oddish-3-bellossom",
    "line": "oddish",
-   "tier": 2,
    "star": 3,
    "name": "Bellossom",
    "type": "grass",
@@ -711,12 +716,13 @@
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "branch": "bellossom"
+   "branch": "bellossom",
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "meowth-1",
    "line": "meowth",
-   "tier": 1,
    "star": 1,
    "name": "Meowth",
    "type": "normal",
@@ -729,12 +735,13 @@
    "ability": {
     "name": "Pickup",
     "fx": "Earns 10% more coins from battles it takes part in. Doesn't affect battle."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "meowth-2",
    "line": "meowth",
-   "tier": 1,
    "star": 2,
    "name": "Meowth",
    "type": "normal",
@@ -747,12 +754,13 @@
    "ability": {
     "name": "Pickup",
     "fx": "Earns 10% more coins from battles it takes part in. Doesn't affect battle."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "meowth-3",
    "line": "meowth",
-   "tier": 1,
    "star": 3,
    "name": "Persian",
    "type": "normal",
@@ -765,7 +773,9 @@
    "ability": {
     "name": "Pickup",
     "fx": "Earns 10% more coins from battles it takes part in. Doesn't affect battle."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "meowthgalar-1",
@@ -824,7 +834,6 @@
   {
    "id": "mankey-1",
    "line": "mankey",
-   "tier": 5,
    "star": 1,
    "name": "Mankey",
    "type": "fighting",
@@ -837,12 +846,13 @@
    "ability": {
     "name": "Anger Point",
     "fx": "After being hit by a super-effective move, gains 50% Attack for the battle."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "mankey-2",
    "line": "mankey",
-   "tier": 5,
    "star": 2,
    "name": "Primeape",
    "type": "fighting",
@@ -855,12 +865,13 @@
    "ability": {
     "name": "Anger Point",
     "fx": "After being hit by a super-effective move, gains 50% Attack for the battle."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "mankey-3",
    "line": "mankey",
-   "tier": 5,
    "star": 3,
    "name": "Annihilape",
    "type": "fighting",
@@ -873,12 +884,13 @@
    "ability": {
     "name": "Defiant",
     "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "growlithe-1",
    "line": "growlithe",
-   "tier": 6,
    "star": 1,
    "name": "Growlithe",
    "type": "fire",
@@ -891,12 +903,12 @@
    "ability": {
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "growlithe-2",
    "line": "growlithe",
-   "tier": 6,
    "star": 2,
    "name": "Growlithe",
    "type": "fire",
@@ -909,12 +921,12 @@
    "ability": {
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "growlithe-3",
    "line": "growlithe",
-   "tier": 6,
    "star": 3,
    "name": "Arcanine",
    "type": "fire",
@@ -927,12 +939,12 @@
    "ability": {
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "poliwag-1",
    "line": "poliwag",
-   "tier": 6,
    "star": 1,
    "name": "Poliwag",
    "type": "water",
@@ -945,12 +957,12 @@
    "ability": {
     "name": "Water Absorb",
     "fx": "Immune to Water moves; heals 20% of its max HP when hit by one."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "poliwag-2",
    "line": "poliwag",
-   "tier": 6,
    "star": 2,
    "name": "Poliwhirl",
    "type": "water",
@@ -963,12 +975,12 @@
    "ability": {
     "name": "Water Absorb",
     "fx": "Immune to Water moves; heals 20% of its max HP when hit by one."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "poliwag-3-poliwrath",
    "line": "poliwag",
-   "tier": 6,
    "star": 3,
    "name": "Poliwrath",
    "type": "water",
@@ -982,12 +994,12 @@
     "name": "Water Absorb",
     "fx": "Immune to Water moves; heals 20% of its max HP when hit by one."
    },
-   "branch": "poliwrath"
+   "branch": "poliwrath",
+   "tier": 6
   },
   {
    "id": "poliwag-3-politoed",
    "line": "poliwag",
-   "tier": 6,
    "star": 3,
    "name": "Politoed",
    "type": "water",
@@ -1001,12 +1013,12 @@
     "name": "Water Absorb",
     "fx": "Immune to Water moves; heals 20% of its max HP when hit by one."
    },
-   "branch": "politoed"
+   "branch": "politoed",
+   "tier": 6
   },
   {
    "id": "abra-1",
    "line": "abra",
-   "tier": 6,
    "star": 1,
    "name": "Abra",
    "type": "psychic",
@@ -1019,12 +1031,13 @@
    "ability": {
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
-   }
+   },
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "abra-2",
    "line": "abra",
-   "tier": 6,
    "star": 2,
    "name": "Kadabra",
    "type": "psychic",
@@ -1037,12 +1050,13 @@
    "ability": {
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
-   }
+   },
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "abra-3",
    "line": "abra",
-   "tier": 6,
    "star": 3,
    "name": "Alakazam",
    "type": "psychic",
@@ -1055,12 +1069,13 @@
    "ability": {
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
-   }
+   },
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "bellsprout-1",
    "line": "bellsprout",
-   "tier": 3,
    "star": 1,
    "name": "Bellsprout",
    "type": "grass",
@@ -1073,12 +1088,12 @@
    "ability": {
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "bellsprout-2",
    "line": "bellsprout",
-   "tier": 3,
    "star": 2,
    "name": "Weepinbell",
    "type": "grass",
@@ -1091,12 +1106,12 @@
    "ability": {
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "bellsprout-3",
    "line": "bellsprout",
-   "tier": 3,
    "star": 3,
    "name": "Victreebel",
    "type": "grass",
@@ -1109,7 +1124,8 @@
    "ability": {
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "geodudealola-1",
@@ -1168,7 +1184,6 @@
   {
    "id": "slowpoke-1",
    "line": "slowpoke",
-   "tier": 5,
    "star": 1,
    "name": "Slowpoke",
    "type": "psychic",
@@ -1181,12 +1196,12 @@
    "ability": {
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "slowpoke-2",
    "line": "slowpoke",
-   "tier": 5,
    "star": 2,
    "name": "Slowpoke",
    "type": "psychic",
@@ -1199,12 +1214,12 @@
    "ability": {
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
-   }
+   },
+   "tier": 4
   },
   {
    "id": "slowpoke-3-slowbro",
    "line": "slowpoke",
-   "tier": 5,
    "star": 3,
    "name": "Slowbro",
    "type": "psychic",
@@ -1218,12 +1233,12 @@
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
-   "branch": "slowbro"
+   "branch": "slowbro",
+   "tier": 4
   },
   {
    "id": "slowpoke-3-slowking",
    "line": "slowpoke",
-   "tier": 5,
    "star": 3,
    "name": "Slowking",
    "type": "psychic",
@@ -1237,12 +1252,12 @@
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
-   "branch": "slowking"
+   "branch": "slowking",
+   "tier": 4
   },
   {
    "id": "magnemite-1",
    "line": "magnemite",
-   "tier": 5,
    "star": 1,
    "name": "Magnemite",
    "type": "electric",
@@ -1255,12 +1270,12 @@
    "ability": {
     "name": "Magnet Pull",
     "fx": "Its moves deal 20% more damage to Steel-type enemies."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "magnemite-2",
    "line": "magnemite",
-   "tier": 5,
    "star": 2,
    "name": "Magneton",
    "type": "electric",
@@ -1273,12 +1288,12 @@
    "ability": {
     "name": "Magnet Pull",
     "fx": "Its moves deal 20% more damage to Steel-type enemies."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "magnemite-3",
    "line": "magnemite",
-   "tier": 5,
    "star": 3,
    "name": "Magnezone",
    "type": "steel",
@@ -1291,12 +1306,12 @@
    "ability": {
     "name": "Magnet Pull",
     "fx": "Its moves deal 20% more damage to Steel-type enemies."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "gastly-1",
    "line": "gastly",
-   "tier": 6,
    "star": 1,
    "name": "Gastly",
    "type": "ghost",
@@ -1309,12 +1324,12 @@
    "ability": {
     "name": "Levitate",
     "fx": "Immune to Ground moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "gastly-2",
    "line": "gastly",
-   "tier": 6,
    "star": 2,
    "name": "Haunter",
    "type": "ghost",
@@ -1327,12 +1342,12 @@
    "ability": {
     "name": "Levitate",
     "fx": "Immune to Ground moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "gastly-3",
    "line": "gastly",
-   "tier": 6,
    "star": 3,
    "name": "Gengar",
    "type": "ghost",
@@ -1345,12 +1360,12 @@
    "ability": {
     "name": "Levitate",
     "fx": "Immune to Ground moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "onix-1",
    "line": "onix",
-   "tier": 4,
    "star": 1,
    "name": "Onix",
    "type": "rock",
@@ -1363,12 +1378,12 @@
    "ability": {
     "name": "Rock Head",
     "fx": "Takes no recoil damage from its own moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "onix-2",
    "line": "onix",
-   "tier": 4,
    "star": 2,
    "name": "Onix",
    "type": "rock",
@@ -1381,12 +1396,12 @@
    "ability": {
     "name": "Rock Head",
     "fx": "Takes no recoil damage from its own moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "onix-3",
    "line": "onix",
-   "tier": 4,
    "star": 3,
    "name": "Steelix",
    "type": "steel",
@@ -1399,12 +1414,12 @@
    "ability": {
     "name": "Rock Head",
     "fx": "Takes no recoil damage from its own moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "drowzee-1",
    "line": "drowzee",
-   "tier": 2,
    "star": 1,
    "name": "Drowzee",
    "type": "psychic",
@@ -1417,12 +1432,12 @@
    "ability": {
     "name": "Insomnia",
     "fx": "Can't be made to skip actions by enemy moves."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "drowzee-2",
    "line": "drowzee",
-   "tier": 2,
    "star": 2,
    "name": "Drowzee",
    "type": "psychic",
@@ -1435,12 +1450,12 @@
    "ability": {
     "name": "Insomnia",
     "fx": "Can't be made to skip actions by enemy moves."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "drowzee-3",
    "line": "drowzee",
-   "tier": 2,
    "star": 3,
    "name": "Hypno",
    "type": "psychic",
@@ -1453,12 +1468,12 @@
    "ability": {
     "name": "Insomnia",
     "fx": "Can't be made to skip actions by enemy moves."
-   }
+   },
+   "tier": 3
   },
   {
    "id": "voltorb-1",
    "line": "voltorb",
-   "tier": 1,
    "star": 1,
    "name": "Voltorb",
    "type": "electric",
@@ -1471,12 +1486,13 @@
    "ability": {
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "voltorb-2",
    "line": "voltorb",
-   "tier": 1,
    "star": 2,
    "name": "Voltorb",
    "type": "electric",
@@ -1489,12 +1505,13 @@
    "ability": {
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "voltorb-3",
    "line": "voltorb",
-   "tier": 1,
    "star": 3,
    "name": "Electrode",
    "type": "electric",
@@ -1507,12 +1524,13 @@
    "ability": {
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "cubone-1",
    "line": "cubone",
-   "tier": 4,
    "star": 1,
    "name": "Cubone",
    "type": "ground",
@@ -1525,12 +1543,12 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "cubone-2",
    "line": "cubone",
-   "tier": 4,
    "star": 2,
    "name": "Cubone",
    "type": "ground",
@@ -1543,12 +1561,12 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "cubone-3",
    "line": "cubone",
-   "tier": 4,
    "star": 3,
    "name": "Marowak",
    "type": "ground",
@@ -1561,7 +1579,8 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 1
   },
   {
    "id": "marowakalola-1",
@@ -1579,7 +1598,8 @@
     "name": "Burning Bones",
     "fx": "Its hits make the target lose 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "marowakalola-2",
@@ -1597,7 +1617,8 @@
     "name": "Burning Bones",
     "fx": "Its hits make the target lose 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "marowakalola-3",
@@ -1615,12 +1636,12 @@
     "name": "Burning Bones",
     "fx": "Its hits make the target lose 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "tyrogue-1",
    "line": "tyrogue",
-   "tier": 6,
    "star": 1,
    "name": "Tyrogue",
    "type": "fighting",
@@ -1633,12 +1654,13 @@
    "ability": {
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
-   }
+   },
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "tyrogue-2",
    "line": "tyrogue",
-   "tier": 6,
    "star": 2,
    "name": "Tyrogue",
    "type": "fighting",
@@ -1651,12 +1673,13 @@
    "ability": {
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
-   }
+   },
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "tyrogue-3-hitmonlee",
    "line": "tyrogue",
-   "tier": 6,
    "star": 3,
    "name": "Hitmonlee",
    "type": "fighting",
@@ -1670,12 +1693,13 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "branch": "hitmonlee"
+   "branch": "hitmonlee",
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "tyrogue-3-hitmonchan",
    "line": "tyrogue",
-   "tier": 6,
    "star": 3,
    "name": "Hitmonchan",
    "type": "fighting",
@@ -1689,12 +1713,13 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "branch": "hitmonchan"
+   "branch": "hitmonchan",
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "tyrogue-3-hitmontop",
    "line": "tyrogue",
-   "tier": 6,
    "star": 3,
    "name": "Hitmontop",
    "type": "fighting",
@@ -1708,12 +1733,13 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "branch": "hitmontop"
+   "branch": "hitmontop",
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "lickitung-1",
    "line": "lickitung",
-   "tier": 5,
    "star": 1,
    "name": "Lickitung",
    "type": "normal",
@@ -1726,12 +1752,12 @@
    "ability": {
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "lickitung-2",
    "line": "lickitung",
-   "tier": 5,
    "star": 2,
    "name": "Lickitung",
    "type": "normal",
@@ -1744,12 +1770,12 @@
    "ability": {
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "lickitung-3",
    "line": "lickitung",
-   "tier": 5,
    "star": 3,
    "name": "Lickilicky",
    "type": "normal",
@@ -1762,12 +1788,12 @@
    "ability": {
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "rhyhorn-1",
    "line": "rhyhorn",
-   "tier": 7,
    "star": 1,
    "name": "Rhyhorn",
    "type": "ground",
@@ -1780,12 +1806,12 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "rhyhorn-2",
    "line": "rhyhorn",
-   "tier": 7,
    "star": 2,
    "name": "Rhydon",
    "type": "ground",
@@ -1798,12 +1824,12 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "rhyhorn-3",
    "line": "rhyhorn",
-   "tier": 7,
    "star": 3,
    "name": "Rhyperior",
    "type": "ground",
@@ -1816,12 +1842,12 @@
    "ability": {
     "name": "Lightning Rod",
     "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "happiny-1",
    "line": "happiny",
-   "tier": 8,
    "star": 1,
    "name": "Happiny",
    "type": "normal",
@@ -1834,12 +1860,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "happiny-2",
    "line": "happiny",
-   "tier": 8,
    "star": 2,
    "name": "Chansey",
    "type": "normal",
@@ -1852,12 +1878,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "happiny-3",
    "line": "happiny",
-   "tier": 8,
    "star": 3,
    "name": "Blissey",
    "type": "normal",
@@ -1870,12 +1896,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "kangaskhan-1",
    "line": "kangaskhan",
-   "tier": 7,
    "star": 1,
    "name": "Kangaskhan",
    "type": "normal",
@@ -1888,12 +1914,13 @@
    "ability": {
     "name": "Scrappy",
     "fx": "Its Normal and Fighting moves can hit Ghost types."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "kangaskhan-2",
    "line": "kangaskhan",
-   "tier": 7,
    "star": 2,
    "name": "Kangaskhan",
    "type": "normal",
@@ -1906,12 +1933,13 @@
    "ability": {
     "name": "Scrappy",
     "fx": "Its Normal and Fighting moves can hit Ghost types."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "kangaskhan-3",
    "line": "kangaskhan",
-   "tier": 7,
    "star": 3,
    "name": "Kangaskhan",
    "type": "normal",
@@ -1924,12 +1952,13 @@
    "ability": {
     "name": "Scrappy",
     "fx": "Its Normal and Fighting moves can hit Ghost types."
-   }
+   },
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "staryu-1",
    "line": "staryu",
-   "tier": 6,
    "star": 1,
    "name": "Staryu",
    "type": "water",
@@ -1942,12 +1971,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "staryu-2",
    "line": "staryu",
-   "tier": 6,
    "star": 2,
    "name": "Staryu",
    "type": "water",
@@ -1960,12 +1989,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "staryu-3",
    "line": "staryu",
-   "tier": 6,
    "star": 3,
    "name": "Starmie",
    "type": "water",
@@ -1978,12 +2007,12 @@
    "ability": {
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "scyther-1",
    "line": "scyther",
-   "tier": 8,
    "star": 1,
    "name": "Scyther",
    "type": "bug",
@@ -1996,12 +2025,12 @@
    "ability": {
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "scyther-2",
    "line": "scyther",
-   "tier": 8,
    "star": 2,
    "name": "Scyther",
    "type": "bug",
@@ -2014,12 +2043,12 @@
    "ability": {
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "scyther-3-scizor",
    "line": "scyther",
-   "tier": 8,
    "star": 3,
    "name": "Scizor",
    "type": "steel",
@@ -2033,12 +2062,12 @@
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
-   "branch": "scizor"
+   "branch": "scizor",
+   "tier": 5
   },
   {
    "id": "scyther-3-kleavor",
    "line": "scyther",
-   "tier": 8,
    "star": 3,
    "name": "Kleavor",
    "type": "rock",
@@ -2052,12 +2081,12 @@
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
-   "branch": "kleavor"
+   "branch": "kleavor",
+   "tier": 5
   },
   {
    "id": "elekid-1",
    "line": "elekid",
-   "tier": 7,
    "star": 1,
    "name": "Elekid",
    "type": "electric",
@@ -2070,12 +2099,12 @@
    "ability": {
     "name": "Motor Drive",
     "fx": "Immune to Electric moves; gains 20% Speed when hit by one."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "elekid-2",
    "line": "elekid",
-   "tier": 7,
    "star": 2,
    "name": "Electabuzz",
    "type": "electric",
@@ -2088,12 +2117,12 @@
    "ability": {
     "name": "Motor Drive",
     "fx": "Immune to Electric moves; gains 20% Speed when hit by one."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "elekid-3",
    "line": "elekid",
-   "tier": 7,
    "star": 3,
    "name": "Electivire",
    "type": "electric",
@@ -2106,12 +2135,12 @@
    "ability": {
     "name": "Motor Drive",
     "fx": "Immune to Electric moves; gains 20% Speed when hit by one."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "magby-1",
    "line": "magby",
-   "tier": 7,
    "star": 1,
    "name": "Magby",
    "type": "fire",
@@ -2124,12 +2153,12 @@
    "ability": {
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "magby-2",
    "line": "magby",
-   "tier": 7,
    "star": 2,
    "name": "Magmar",
    "type": "fire",
@@ -2142,12 +2171,12 @@
    "ability": {
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "magby-3",
    "line": "magby",
-   "tier": 7,
    "star": 3,
    "name": "Magmortar",
    "type": "fire",
@@ -2160,12 +2189,12 @@
    "ability": {
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "pinsir-1",
    "line": "pinsir",
-   "tier": 7,
    "star": 1,
    "name": "Pinsir",
    "type": "bug",
@@ -2178,12 +2207,12 @@
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "pinsir-2",
    "line": "pinsir",
-   "tier": 7,
    "star": 2,
    "name": "Pinsir",
    "type": "bug",
@@ -2196,12 +2225,12 @@
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "pinsir-3",
    "line": "pinsir",
-   "tier": 7,
    "star": 3,
    "name": "Pinsir",
    "type": "bug",
@@ -2214,12 +2243,12 @@
    "ability": {
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "magikarp-1",
    "line": "magikarp",
-   "tier": 8,
    "star": 1,
    "name": "Magikarp",
    "type": "water",
@@ -2232,12 +2261,13 @@
    "ability": {
     "name": "Moxie",
     "fx": "Gains 20% Attack each time it knocks out an enemy."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "magikarp-2",
    "line": "magikarp",
-   "tier": 8,
    "star": 2,
    "name": "Magikarp",
    "type": "water",
@@ -2250,12 +2280,13 @@
    "ability": {
     "name": "Moxie",
     "fx": "Gains 20% Attack each time it knocks out an enemy."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "magikarp-3",
    "line": "magikarp",
-   "tier": 8,
    "star": 3,
    "name": "Gyarados",
    "type": "water",
@@ -2268,12 +2299,13 @@
    "ability": {
     "name": "Moxie",
     "fx": "Gains 20% Attack each time it knocks out an enemy."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "lapras-1",
    "line": "lapras",
-   "tier": 8,
    "star": 1,
    "name": "Lapras",
    "type": "ice",
@@ -2286,12 +2318,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "lapras-2",
    "line": "lapras",
-   "tier": 8,
    "star": 2,
    "name": "Lapras",
    "type": "ice",
@@ -2304,12 +2336,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "lapras-3",
    "line": "lapras",
-   "tier": 8,
    "star": 3,
    "name": "Lapras",
    "type": "ice",
@@ -2322,12 +2354,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "ditto-1",
    "line": "ditto",
-   "tier": 1,
    "star": 1,
    "name": "Ditto",
    "type": "normal",
@@ -2340,12 +2372,13 @@
    "ability": {
     "name": "Imposter",
     "fx": "Transforms into the enemy directly across at the start of battle, copying its type and stats but keeping its own HP."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "ditto-2",
    "line": "ditto",
-   "tier": 1,
    "star": 2,
    "name": "Ditto",
    "type": "normal",
@@ -2358,12 +2391,13 @@
    "ability": {
     "name": "Imposter",
     "fx": "Transforms into the enemy directly across at the start of battle, copying its type and stats but keeping its own HP."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "ditto-3",
    "line": "ditto",
-   "tier": 1,
    "star": 3,
    "name": "Ditto",
    "type": "normal",
@@ -2376,12 +2410,13 @@
    "ability": {
     "name": "Imposter",
     "fx": "Transforms into the enemy directly across at the start of battle, copying its type and stats but keeping its own HP."
-   }
+   },
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "eevee-1",
    "line": "eevee",
-   "tier": 6,
    "star": 1,
    "name": "Eevee",
    "type": "normal",
@@ -2394,12 +2429,13 @@
    "ability": {
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-2",
    "line": "eevee",
-   "tier": 6,
    "star": 2,
    "name": "Eevee",
    "type": "normal",
@@ -2412,12 +2448,13 @@
    "ability": {
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-vaporeon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Vaporeon",
    "type": "water",
@@ -2431,12 +2468,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "vaporeon"
+   "branch": "vaporeon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-jolteon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Jolteon",
    "type": "electric",
@@ -2450,12 +2488,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "jolteon"
+   "branch": "jolteon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-flareon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Flareon",
    "type": "fire",
@@ -2469,12 +2508,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "flareon"
+   "branch": "flareon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-espeon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Espeon",
    "type": "psychic",
@@ -2488,12 +2528,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "espeon"
+   "branch": "espeon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-umbreon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Umbreon",
    "type": "dark",
@@ -2507,12 +2548,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "umbreon"
+   "branch": "umbreon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-leafeon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Leafeon",
    "type": "grass",
@@ -2526,12 +2568,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "leafeon"
+   "branch": "leafeon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-glaceon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Glaceon",
    "type": "ice",
@@ -2545,12 +2588,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "glaceon"
+   "branch": "glaceon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "eevee-3-sylveon",
    "line": "eevee",
-   "tier": 6,
    "star": 3,
    "name": "Sylveon",
    "type": "fairy",
@@ -2564,12 +2608,13 @@
     "name": "Adaptability",
     "fx": "Moves that match its current type deal 25% more damage."
    },
-   "branch": "sylveon"
+   "branch": "sylveon",
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "porygon-1",
    "line": "porygon",
-   "tier": 8,
    "star": 1,
    "name": "Porygon",
    "type": "normal",
@@ -2582,12 +2627,13 @@
    "ability": {
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "porygon-2",
    "line": "porygon",
-   "tier": 8,
    "star": 2,
    "name": "Porygon2",
    "type": "normal",
@@ -2600,12 +2646,13 @@
    "ability": {
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "porygon-3",
    "line": "porygon",
-   "tier": 8,
    "star": 3,
    "name": "Porygon-Z",
    "type": "normal",
@@ -2618,12 +2665,13 @@
    "ability": {
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
-   }
+   },
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "omanyte-1",
    "line": "omanyte",
-   "tier": 7,
    "star": 1,
    "name": "Omanyte",
    "type": "rock",
@@ -2636,12 +2684,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "omanyte-2",
    "line": "omanyte",
-   "tier": 7,
    "star": 2,
    "name": "Omanyte",
    "type": "rock",
@@ -2654,12 +2702,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "omanyte-3",
    "line": "omanyte",
-   "tier": 7,
    "star": 3,
    "name": "Omastar",
    "type": "rock",
@@ -2672,12 +2720,12 @@
    "ability": {
     "name": "Shell Armor",
     "fx": "Takes 15% less damage from Single moves."
-   }
+   },
+   "tier": 5
   },
   {
    "id": "aerodactyl-1",
    "line": "aerodactyl",
-   "tier": 8,
    "star": 1,
    "name": "Aerodactyl",
    "type": "rock",
@@ -2690,12 +2738,12 @@
    "ability": {
     "name": "Unnerve",
     "fx": "Enemies can't heal from their own moves while it's on the field."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "aerodactyl-2",
    "line": "aerodactyl",
-   "tier": 8,
    "star": 2,
    "name": "Aerodactyl",
    "type": "rock",
@@ -2708,12 +2756,12 @@
    "ability": {
     "name": "Unnerve",
     "fx": "Enemies can't heal from their own moves while it's on the field."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "aerodactyl-3",
    "line": "aerodactyl",
-   "tier": 8,
    "star": 3,
    "name": "Aerodactyl",
    "type": "rock",
@@ -2726,12 +2774,12 @@
    "ability": {
     "name": "Unnerve",
     "fx": "Enemies can't heal from their own moves while it's on the field."
-   }
+   },
+   "tier": 6
   },
   {
    "id": "munchlax-1",
    "line": "munchlax",
-   "tier": 8,
    "star": 1,
    "name": "Munchlax",
    "type": "normal",
@@ -2744,12 +2792,12 @@
    "ability": {
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "munchlax-2",
    "line": "munchlax",
-   "tier": 8,
    "star": 2,
    "name": "Munchlax",
    "type": "normal",
@@ -2762,12 +2810,12 @@
    "ability": {
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "munchlax-3",
    "line": "munchlax",
-   "tier": 8,
    "star": 3,
    "name": "Snorlax",
    "type": "normal",
@@ -2780,7 +2828,8 @@
    "ability": {
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
-   }
+   },
+   "tier": 7
   },
   {
    "id": "articuno-1",
@@ -3109,7 +3158,6 @@
   {
    "id": "dratini-1",
    "line": "dratini",
-   "tier": 8,
    "star": 1,
    "name": "Dratini",
    "type": "dragon",
@@ -3122,12 +3170,12 @@
    "ability": {
     "name": "Multiscale",
     "fx": "At full HP, takes 50% less damage from the first hit."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "dratini-2",
    "line": "dratini",
-   "tier": 8,
    "star": 2,
    "name": "Dragonair",
    "type": "dragon",
@@ -3140,12 +3188,12 @@
    "ability": {
     "name": "Multiscale",
     "fx": "At full HP, takes 50% less damage from the first hit."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "dratini-3",
    "line": "dratini",
-   "tier": 8,
    "star": 3,
    "name": "Dragonite",
    "type": "dragon",
@@ -3158,7 +3206,8 @@
    "ability": {
     "name": "Multiscale",
     "fx": "At full HP, takes 50% less damage from the first hit."
-   }
+   },
+   "tier": 8
   },
   {
    "id": "mewtwo-1",
@@ -3176,7 +3225,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "mewtwo-2",
@@ -3194,7 +3244,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "mewtwo-3",
@@ -3212,7 +3263,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "mew-1",
@@ -3230,7 +3282,8 @@
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "mew-2",
@@ -3248,7 +3301,8 @@
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "mew-3",
@@ -3266,7 +3320,8 @@
     "name": "Synchronize",
     "fx": "When an enemy lowers its Attack or Speed, that enemy loses the same amount."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chikorita-1",
@@ -3564,7 +3619,7 @@
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "mareep-2",
@@ -3582,7 +3637,7 @@
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "mareep-3",
@@ -3600,7 +3655,7 @@
     "name": "Static",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 20% Speed for the battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "azurill-1",
@@ -3908,7 +3963,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "misdreavus-2",
@@ -3926,7 +3981,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "misdreavus-3",
@@ -3944,7 +3999,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "unown-1",
@@ -3962,7 +4017,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "unown-2",
@@ -3980,7 +4036,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "unown-3",
@@ -3998,7 +4055,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "wynaut-1",
@@ -4016,7 +4074,8 @@
     "name": "Shadow Tag",
     "fx": "The enemy directly across from it can't use its taught move."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "wynaut-2",
@@ -4034,7 +4093,8 @@
     "name": "Shadow Tag",
     "fx": "The enemy directly across from it can't use its taught move."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "wynaut-3",
@@ -4052,7 +4112,8 @@
     "name": "Shadow Tag",
     "fx": "The enemy directly across from it can't use its taught move."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "girafarig-1",
@@ -4070,7 +4131,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "girafarig-2",
@@ -4088,7 +4149,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "girafarig-3",
@@ -4106,7 +4167,7 @@
     "name": "Cud Chew",
     "fx": "The first time it heals in a battle, it heals the same amount again at the end of the next round."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "dunsparce-1",
@@ -4124,7 +4185,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 6
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "dunsparce-2",
@@ -4142,7 +4204,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 6
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "dunsparce-3",
@@ -4160,7 +4223,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 6
+   "tier": 7,
+   "gimmick": true
   },
   {
    "id": "gligar-1",
@@ -4178,7 +4242,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "gligar-2",
@@ -4196,7 +4261,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "gligar-3",
@@ -4214,7 +4280,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "snubbull-1",
@@ -4232,7 +4299,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "snubbull-2",
@@ -4250,7 +4317,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "snubbull-3",
@@ -4268,7 +4335,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "qwilfishhisui-1",
@@ -4286,7 +4353,8 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "qwilfishhisui-2",
@@ -4304,7 +4372,8 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "qwilfishhisui-3",
@@ -4322,7 +4391,8 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "shuckle-1",
@@ -4340,7 +4410,8 @@
     "name": "Juicer",
     "fx": "At the start of its turn, a held berry is used up and heals the whole team for 12% max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "shuckle-2",
@@ -4358,7 +4429,8 @@
     "name": "Juicer",
     "fx": "At the start of its turn, a held berry is used up and heals the whole team for 12% max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "shuckle-3",
@@ -4376,7 +4448,8 @@
     "name": "Juicer",
     "fx": "At the start of its turn, a held berry is used up and heals the whole team for 12% max HP."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "heracross-1",
@@ -4448,7 +4521,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "sneasel-2",
@@ -4466,7 +4539,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "sneasel-3",
@@ -4484,7 +4557,7 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "sneaselhisui-1",
@@ -4502,7 +4575,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "sneaselhisui-2",
@@ -4520,7 +4593,7 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "sneaselhisui-3",
@@ -4538,7 +4611,7 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "teddiursa-1",
@@ -4556,7 +4629,8 @@
     "name": "Guts",
     "fx": "While below half HP or losing HP each round, its attacks deal 40% more damage."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "teddiursa-2",
@@ -4574,7 +4648,8 @@
     "name": "Guts",
     "fx": "While below half HP or losing HP each round, its attacks deal 40% more damage."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "teddiursa-3",
@@ -4592,7 +4667,8 @@
     "name": "Guts",
     "fx": "While below half HP or losing HP each round, its attacks deal 40% more damage."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "swinub-1",
@@ -4610,7 +4686,7 @@
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "swinub-2",
@@ -4628,7 +4704,7 @@
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "swinub-3",
@@ -4646,7 +4722,7 @@
     "name": "Oblivious",
     "fx": "Can't have its Attack lowered, and ignores Speed drops."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "corsola-1",
@@ -4718,7 +4794,7 @@
     "name": "Weak Armor",
     "fx": "Each time it's hit by a Single move it gains 10% Speed but takes 5% more damage for the battle (up to 3 times)."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "corsolagalar-2",
@@ -4736,7 +4812,7 @@
     "name": "Weak Armor",
     "fx": "Each time it's hit by a Single move it gains 10% Speed but takes 5% more damage for the battle (up to 3 times)."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "corsolagalar-3",
@@ -4754,7 +4830,7 @@
     "name": "Weak Armor",
     "fx": "Each time it's hit by a Single move it gains 10% Speed but takes 5% more damage for the battle (up to 3 times)."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "remoraid-1",
@@ -4772,7 +4848,8 @@
     "name": "Hustle",
     "fx": "Its attacks deal 30% more damage, but it is 20% less likely to pick its taught move."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "remoraid-2",
@@ -4790,7 +4867,8 @@
     "name": "Hustle",
     "fx": "Its attacks deal 30% more damage, but it is 20% less likely to pick its taught move."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "remoraid-3",
@@ -4808,7 +4886,8 @@
     "name": "Suction Cups",
     "fx": "Can't be moved out of its slot by enemy moves."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "delibird-1",
@@ -4826,7 +4905,8 @@
     "name": "Present",
     "fx": "Its signature is a gift: usually a heal for a teammate, sometimes a hit."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "delibird-2",
@@ -4844,7 +4924,8 @@
     "name": "Present",
     "fx": "Its signature is a gift: usually a heal for a teammate, sometimes a hit."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "delibird-3",
@@ -4862,7 +4943,8 @@
     "name": "Present",
     "fx": "Its signature is a gift: usually a heal for a teammate, sometimes a hit."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "mantyke-1",
@@ -4880,7 +4962,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "mantyke-2",
@@ -4898,7 +4980,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "mantyke-3",
@@ -4916,7 +4998,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "skarmory-1",
@@ -5042,7 +5124,8 @@
     "name": "Critique",
     "fx": "At battle start, 1 random enemy Pokémon loses its ability for the rest of the battle. If you have more than one Smeargle, only one Critique is used per battle."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "smeargle-2",
@@ -5060,7 +5143,8 @@
     "name": "Critique",
     "fx": "At battle start, 1 random enemy Pokémon loses its ability for the rest of the battle. If you have more than one Smeargle, only one Critique is used per battle."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "smeargle-3",
@@ -5078,7 +5162,8 @@
     "name": "Critique",
     "fx": "At battle start, 1 random enemy Pokémon loses its ability for the rest of the battle. If you have more than one Smeargle, only one Critique is used per battle."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "miltank-1",
@@ -5474,7 +5559,6 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -5493,7 +5577,6 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -5512,7 +5595,6 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -5960,7 +6042,8 @@
     "name": "Truant",
     "fx": "Skips every second turn."
    },
-   "tier": 8
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "slakoth-2",
@@ -5978,7 +6061,8 @@
     "name": "Vital Spirit",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 8
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "slakoth-3",
@@ -5996,7 +6080,8 @@
     "name": "Truant",
     "fx": "Skips every second turn."
    },
-   "tier": 8
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "nincada-1",
@@ -6014,7 +6099,8 @@
     "name": "Compound Eyes",
     "fx": "Its taught move is 25% more likely to be picked."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "nincada-2",
@@ -6032,7 +6118,8 @@
     "name": "Compound Eyes",
     "fx": "Its taught move is 25% more likely to be picked."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "nincada-3-ninjask",
@@ -6051,7 +6138,8 @@
     "fx": "Gains 10% Speed at the end of each round."
    },
    "branch": "ninjask",
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "nincada-3-shedinja",
@@ -6070,7 +6158,8 @@
     "fx": "Only super-effective moves damage it."
    },
    "branch": "shedinja",
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "whismur-1",
@@ -6142,7 +6231,8 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "sableye-2",
@@ -6160,7 +6250,8 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "sableye-3",
@@ -6178,7 +6269,8 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "mawile-1",
@@ -6196,7 +6288,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "mawile-2",
@@ -6214,7 +6307,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "mawile-3",
@@ -6232,7 +6326,8 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "aron-1",
@@ -6250,7 +6345,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "aron-2",
@@ -6268,7 +6363,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "aron-3",
@@ -6286,7 +6381,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "meditite-1",
@@ -6412,7 +6507,8 @@
     "name": "Plus",
     "fx": "Gains 20% Attack while Minun is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "plusle-2",
@@ -6430,7 +6526,8 @@
     "name": "Plus",
     "fx": "Gains 20% Attack while Minun is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "plusle-3",
@@ -6448,7 +6545,8 @@
     "name": "Plus",
     "fx": "Gains 20% Attack while Minun is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "minun-1",
@@ -6466,7 +6564,8 @@
     "name": "Minus",
     "fx": "Gains 20% Attack while Plusle is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "minun-2",
@@ -6484,7 +6583,8 @@
     "name": "Minus",
     "fx": "Gains 20% Attack while Plusle is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "minun-3",
@@ -6502,7 +6602,8 @@
     "name": "Minus",
     "fx": "Gains 20% Attack while Plusle is on its team."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "carvanha-1",
@@ -6574,7 +6675,7 @@
     "name": "Water Veil",
     "fx": "Can't be made to lose HP each round by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "wailmer-2",
@@ -6592,7 +6693,7 @@
     "name": "Water Veil",
     "fx": "Can't be made to lose HP each round by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "wailmer-3",
@@ -6610,7 +6711,7 @@
     "name": "Water Veil",
     "fx": "Can't be made to lose HP each round by enemy moves."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "numel-1",
@@ -6682,7 +6783,8 @@
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "spinda-2",
@@ -6700,7 +6802,8 @@
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "spinda-3",
@@ -6718,7 +6821,8 @@
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "trapinch-1",
@@ -6736,7 +6840,7 @@
     "name": "Hyper Cutter",
     "fx": "Enemy effects can't lower its Attack."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "trapinch-2",
@@ -6754,7 +6858,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "trapinch-3",
@@ -6772,7 +6876,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "swablu-1",
@@ -6844,7 +6948,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "lunatone-2",
@@ -6862,7 +6967,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "lunatone-3",
@@ -6880,7 +6986,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "solrock-1",
@@ -6898,7 +7005,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "solrock-2",
@@ -6916,7 +7024,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "solrock-3",
@@ -6934,7 +7043,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "lileep-1",
@@ -7006,7 +7116,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "feebas-2",
@@ -7024,7 +7134,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "feebas-3",
@@ -7042,7 +7152,7 @@
     "name": "Marvel Scale",
     "fx": "While losing HP each round, it takes 30% less damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "castform-1",
@@ -7060,7 +7170,8 @@
     "name": "Forecast",
     "fx": "The equipped signature sets its type: Fire, Water or Ice."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "castform-2",
@@ -7078,7 +7189,8 @@
     "name": "Forecast",
     "fx": "The equipped signature sets its type: Fire, Water or Ice."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "castform-3",
@@ -7096,7 +7208,8 @@
     "name": "Forecast",
     "fx": "The equipped signature sets its type: Fire, Water or Ice."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "shuppet-1",
@@ -7168,7 +7281,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "duskull-2",
@@ -7186,7 +7299,7 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "duskull-3",
@@ -7204,7 +7317,7 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "chingling-1",
@@ -8018,7 +8131,8 @@
     "name": "Air Lock",
     "fx": "Turns off every battle-start effect from enemy abilities."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "rayquaza-2",
@@ -8036,7 +8150,8 @@
     "name": "Air Lock",
     "fx": "Turns off every battle-start effect from enemy abilities."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "rayquaza-3",
@@ -8054,7 +8169,8 @@
     "name": "Air Lock",
     "fx": "Turns off every battle-start effect from enemy abilities."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "jirachi-1",
@@ -8072,7 +8188,6 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -8091,7 +8206,6 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -8110,7 +8224,6 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -8129,7 +8242,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "deoxys-2",
@@ -8147,7 +8261,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "deoxys-3",
@@ -8165,7 +8280,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "turtwig-1",
@@ -8336,7 +8452,7 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "starly-2",
@@ -8354,7 +8470,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "starly-3",
@@ -8372,7 +8488,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "shinx-1",
@@ -8390,7 +8506,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "shinx-2",
@@ -8408,7 +8524,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "shinx-3",
@@ -8426,7 +8542,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "cranidos-1",
@@ -8498,7 +8614,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "shieldon-2",
@@ -8516,7 +8632,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "shieldon-3",
@@ -8534,7 +8650,7 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "combee-1",
@@ -8606,7 +8722,8 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "pachirisu-2",
@@ -8624,7 +8741,8 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "pachirisu-3",
@@ -8642,7 +8760,8 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "cherubi-1",
@@ -8714,7 +8833,7 @@
     "name": "Sticky Hold",
     "fx": "Enemy moves can't take its held item."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "shellos-2",
@@ -8732,7 +8851,7 @@
     "name": "Sticky Hold",
     "fx": "Enemy moves can't take its held item."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "shellos-3",
@@ -8750,7 +8869,7 @@
     "name": "Sticky Hold",
     "fx": "Enemy moves can't take its held item."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "drifloon-1",
@@ -8768,7 +8887,7 @@
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "drifloon-2",
@@ -8786,7 +8905,7 @@
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "drifloon-3",
@@ -8804,7 +8923,7 @@
     "name": "Aftermath",
     "fx": "When knocked out by a Single or Pierce move, the attacker loses 20% of its max HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "buneary-1",
@@ -8930,7 +9049,8 @@
     "name": "Odd Keystone",
     "fx": "Gains 5% Attack each time any Pokémon faints."
    },
-   "tier": 3
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "spiritomb-2",
@@ -8948,7 +9068,8 @@
     "name": "Odd Keystone",
     "fx": "Gains 5% Attack each time any Pokémon faints."
    },
-   "tier": 3
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "spiritomb-3",
@@ -8966,7 +9087,8 @@
     "name": "Odd Keystone",
     "fx": "Gains 5% Attack each time any Pokémon faints."
    },
-   "tier": 3
+   "tier": 4,
+   "gimmick": true
   },
   {
    "id": "gible-1",
@@ -9038,7 +9160,7 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "riolu-2",
@@ -9056,7 +9178,7 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "riolu-3",
@@ -9074,7 +9196,7 @@
     "name": "Steadfast",
     "fx": "Gains 10% Speed each time it's hit (max +40%)."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "hippopotas-1",
@@ -9092,7 +9214,7 @@
     "name": "Sand Stream",
     "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "hippopotas-2",
@@ -9110,7 +9232,7 @@
     "name": "Sand Stream",
     "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "hippopotas-3",
@@ -9128,7 +9250,7 @@
     "name": "Sand Stream",
     "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "skorupi-1",
@@ -9308,7 +9430,8 @@
     "name": "Appliance forms",
     "fx": "The equipped signature sets its form and type."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "rotom-2",
@@ -9326,7 +9449,8 @@
     "name": "Appliance forms",
     "fx": "The equipped signature sets its form and type."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "rotom-3",
@@ -9344,7 +9468,8 @@
     "name": "Appliance forms",
     "fx": "The equipped signature sets its form and type."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "uxie-1",
@@ -9362,7 +9487,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9381,7 +9505,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9400,7 +9523,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9419,7 +9541,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9438,7 +9559,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9457,7 +9577,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9476,7 +9595,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9495,7 +9613,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9514,7 +9631,6 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9695,7 +9811,8 @@
     "name": "Slow Start",
     "fx": "Has half its Attack and Speed for the first 5 rounds of every battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "regigigas-2",
@@ -9713,7 +9830,8 @@
     "name": "Slow Start",
     "fx": "Has half its Attack and Speed for the first 5 rounds of every battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "regigigas-3",
@@ -9731,7 +9849,8 @@
     "name": "Slow Start",
     "fx": "Has half its Attack and Speed for the first 5 rounds of every battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "giratina-1",
@@ -9857,7 +9976,6 @@
     "name": "Hydration",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9876,7 +9994,6 @@
     "name": "Hydration",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9895,7 +10012,6 @@
     "name": "Hydration",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -9968,8 +10084,8 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "shaymin-2",
@@ -9987,8 +10103,8 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "shaymin-3",
@@ -10006,8 +10122,8 @@
     "name": "Natural Cure",
     "fx": "Clears any damage-over-time effects on itself at the end of each round."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "arceus-1",
@@ -10025,7 +10141,8 @@
     "name": "Multitype",
     "fx": "Its type matches its signature move's type."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "arceus-2",
@@ -10043,7 +10160,8 @@
     "name": "Multitype",
     "fx": "Its type matches its signature move's type."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "arceus-3",
@@ -10061,7 +10179,8 @@
     "name": "Multitype",
     "fx": "Its type matches its signature move's type."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "victini-1",
@@ -10079,7 +10198,6 @@
     "name": "Victory Star",
     "fx": "Teammates' taught moves are 10% more likely to be picked."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -10098,7 +10216,6 @@
     "name": "Victory Star",
     "fx": "Teammates' taught moves are 10% more likely to be picked."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -10117,7 +10234,6 @@
     "name": "Victory Star",
     "fx": "Teammates' taught moves are 10% more likely to be picked."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -10343,7 +10459,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pansage-2",
@@ -10361,7 +10477,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pansage-3",
@@ -10379,7 +10495,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pansear-1",
@@ -10397,7 +10513,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pansear-2",
@@ -10415,7 +10531,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pansear-3",
@@ -10433,7 +10549,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "panpour-1",
@@ -10451,7 +10567,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "panpour-2",
@@ -10469,7 +10585,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "panpour-3",
@@ -10487,7 +10603,7 @@
     "name": "Gluttony",
     "fx": "Heals 15% of its max HP the first time it drops below 50% HP."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "munna-1",
@@ -10667,7 +10783,7 @@
     "name": "Sand Rush",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "drilbur-2",
@@ -10685,7 +10801,7 @@
     "name": "Sand Rush",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "drilbur-3",
@@ -10703,7 +10819,7 @@
     "name": "Sand Rush",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "audino-1",
@@ -10775,7 +10891,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "tympole-2",
@@ -10793,7 +10909,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "tympole-3",
@@ -10811,7 +10927,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "throh-1",
@@ -11173,7 +11289,7 @@
     "name": "Reckless",
     "fx": "Moves with recoil deal 20% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "basculin-2",
@@ -11191,7 +11307,7 @@
     "name": "Reckless",
     "fx": "Moves with recoil deal 20% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "basculin-3",
@@ -11209,7 +11325,7 @@
     "name": "Swift Swim",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "sandile-1",
@@ -11227,7 +11343,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "sandile-2",
@@ -11245,7 +11361,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "sandile-3",
@@ -11263,7 +11379,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "darumaka-1",
@@ -11281,7 +11397,8 @@
     "name": "Zen Mode",
     "fx": "Below 50% HP it switches to a slower, stronger Psychic form."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "darumaka-2",
@@ -11299,7 +11416,8 @@
     "name": "Zen Mode",
     "fx": "Below 50% HP it switches to a slower, stronger Psychic form."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "darumaka-3",
@@ -11317,7 +11435,8 @@
     "name": "Zen Mode",
     "fx": "Below 50% HP it switches to a slower, stronger Psychic form."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "darumakagalar-1",
@@ -11335,7 +11454,8 @@
     "name": "Gorilla Tactics",
     "fx": "Has 50% more Attack, but keeps using its first move for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "darumakagalar-2",
@@ -11353,7 +11473,8 @@
     "name": "Gorilla Tactics",
     "fx": "Has 50% more Attack, but keeps using its first move for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "darumakagalar-3",
@@ -11371,7 +11492,8 @@
     "name": "Gorilla Tactics",
     "fx": "Has 50% more Attack, but keeps using its first move for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "dwebble-1",
@@ -11605,7 +11727,7 @@
     "name": "Solid Rock",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "tirtouga-2",
@@ -11623,7 +11745,7 @@
     "name": "Solid Rock",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "tirtouga-3",
@@ -11641,7 +11763,7 @@
     "name": "Solid Rock",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "archen-1",
@@ -11659,7 +11781,7 @@
     "name": "Defeatist",
     "fx": "Has half its Attack while below 50% HP."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "archen-2",
@@ -11677,7 +11799,7 @@
     "name": "Defeatist",
     "fx": "Has half its Attack while below 50% HP."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "archen-3",
@@ -11695,7 +11817,7 @@
     "name": "Defeatist",
     "fx": "Has half its Attack while below 50% HP."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "trubbish-1",
@@ -11767,7 +11889,8 @@
     "name": "Illusion",
     "fx": "Looks like another Pokémon until it's hit by a damaging move."
    },
-   "tier": 6
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "zorua-2",
@@ -11785,7 +11908,8 @@
     "name": "Illusion",
     "fx": "Looks like another Pokémon until it's hit by a damaging move."
    },
-   "tier": 6
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "zorua-3",
@@ -11803,7 +11927,8 @@
     "name": "Illusion",
     "fx": "Looks like another Pokémon until it's hit by a damaging move."
    },
-   "tier": 6
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "zoruahisui-1",
@@ -12037,7 +12162,8 @@
     "name": "Decoy",
     "fx": "Enemies target it until its next turn."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "foongus-2",
@@ -12055,7 +12181,8 @@
     "name": "Decoy",
     "fx": "Enemies target it until its next turn."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "foongus-3",
@@ -12073,7 +12200,8 @@
     "name": "Decoy",
     "fx": "Enemies target it until its next turn."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "alomomola-1",
@@ -12145,7 +12273,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 7
+   "tier": 6
   },
   {
    "id": "tynamo-2",
@@ -12163,7 +12291,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 7
+   "tier": 6
   },
   {
    "id": "tynamo-3",
@@ -12181,7 +12309,7 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 7
+   "tier": 6
   },
   {
    "id": "elgyem-1",
@@ -12199,7 +12327,7 @@
     "name": "Telepathy",
     "fx": "Takes no damage from its own teammates' moves."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "elgyem-2",
@@ -12217,7 +12345,7 @@
     "name": "Telepathy",
     "fx": "Takes no damage from its own teammates' moves."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "elgyem-3",
@@ -12235,7 +12363,7 @@
     "name": "Telepathy",
     "fx": "Takes no damage from its own teammates' moves."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "litwick-1",
@@ -12253,7 +12381,7 @@
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "litwick-2",
@@ -12271,7 +12399,7 @@
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "litwick-3",
@@ -12289,7 +12417,7 @@
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "axew-1",
@@ -12307,7 +12435,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "axew-2",
@@ -12325,7 +12453,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "axew-3",
@@ -12343,7 +12471,7 @@
     "name": "Rivalry",
     "fx": "Deals 25% more damage to enemies that share one of its types."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "cubchoo-1",
@@ -12361,7 +12489,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "cubchoo-2",
@@ -12379,7 +12507,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "cubchoo-3",
@@ -12397,7 +12525,7 @@
     "name": "Snow Cloak",
     "fx": "15% chance to take no damage from any hit."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "golett-1",
@@ -12469,7 +12597,7 @@
     "name": "Defiant",
     "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "pawniard-2",
@@ -12487,7 +12615,7 @@
     "name": "Defiant",
     "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "pawniard-3",
@@ -12505,7 +12633,7 @@
     "name": "Defiant",
     "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "larvesta-1",
@@ -12523,7 +12651,7 @@
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "larvesta-2",
@@ -12541,7 +12669,7 @@
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "larvesta-3",
@@ -12559,7 +12687,7 @@
     "name": "Flame Body",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
    },
-   "tier": 7
+   "tier": 8
   },
   {
    "id": "cobalion-1",
@@ -13009,7 +13137,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "kyurem-2",
@@ -13027,7 +13156,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "kyurem-3",
@@ -13045,7 +13175,8 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "keldeo-1",
@@ -13063,8 +13194,8 @@
     "name": "Justified",
     "fx": "Gains 20% Attack each time it's hit by a Dark move."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "keldeo-2",
@@ -13082,8 +13213,8 @@
     "name": "Justified",
     "fx": "Gains 20% Attack each time it's hit by a Dark move."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "keldeo-3",
@@ -13101,8 +13232,8 @@
     "name": "Justified",
     "fx": "Gains 20% Attack each time it's hit by a Dark move."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "meloetta-1",
@@ -13120,8 +13251,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "meloetta-2",
@@ -13139,8 +13270,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "meloetta-3",
@@ -13158,8 +13289,8 @@
     "name": "Serene Grace",
     "fx": "Every chance-based effect on its moves is twice as likely."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "genesect-1",
@@ -13177,7 +13308,8 @@
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "genesect-2",
@@ -13195,7 +13327,8 @@
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "genesect-3",
@@ -13213,7 +13346,8 @@
     "name": "Download",
     "fx": "At the start of battle, gains 15% Attack or 15% Speed, whichever helps more against the enemy across."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chespin-1",
@@ -13332,7 +13466,8 @@
    "ability": {
     "name": "Battle Bond",
     "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
-   }
+   },
+   "gimmick": true
   },
   {
    "id": "froakie-2",
@@ -13349,7 +13484,8 @@
    "ability": {
     "name": "Battle Bond",
     "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
-   }
+   },
+   "gimmick": true
   },
   {
    "id": "froakie-3",
@@ -13366,7 +13502,8 @@
    "ability": {
     "name": "Battle Bond",
     "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
-   }
+   },
+   "gimmick": true
   },
   {
    "id": "fletchling-1",
@@ -13546,7 +13683,7 @@
     "name": "Iron Fist",
     "fx": "Its Fighting moves deal 20% more damage."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pancham-2",
@@ -13564,7 +13701,7 @@
     "name": "Iron Fist",
     "fx": "Its Fighting moves deal 20% more damage."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "pancham-3",
@@ -13582,7 +13719,7 @@
     "name": "Iron Fist",
     "fx": "Its Fighting moves deal 20% more damage."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "espurr-1",
@@ -13654,7 +13791,8 @@
     "name": "No Guard",
     "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "honedge-2",
@@ -13672,7 +13810,8 @@
     "name": "No Guard",
     "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "honedge-3",
@@ -13690,7 +13829,8 @@
     "name": "Stance Change",
     "fx": "Turns into Blade Forme (more Attack) to attack and Shield Forme (takes less damage) to defend."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "swirlix-1",
@@ -13762,7 +13902,8 @@
     "name": "Contrary",
     "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "inkay-2",
@@ -13780,7 +13921,8 @@
     "name": "Contrary",
     "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "inkay-3",
@@ -13798,7 +13940,8 @@
     "name": "Contrary",
     "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "binacle-1",
@@ -13816,7 +13959,7 @@
     "name": "Tough Claws",
     "fx": "Its Single moves deal 20% more damage."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "binacle-2",
@@ -13834,7 +13977,7 @@
     "name": "Tough Claws",
     "fx": "Its Single moves deal 20% more damage."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "binacle-3",
@@ -13852,7 +13995,7 @@
     "name": "Tough Claws",
     "fx": "Its Single moves deal 20% more damage."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "skrelp-1",
@@ -13870,7 +14013,7 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 4
   },
   {
    "id": "skrelp-2",
@@ -13888,7 +14031,7 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 4
   },
   {
    "id": "skrelp-3",
@@ -13906,7 +14049,7 @@
     "name": "Poison Point",
     "fx": "When hit by a Single or Pierce move, 30% chance the attacker loses 8% of its max HP."
    },
-   "tier": 5
+   "tier": 4
   },
   {
    "id": "clauncher-1",
@@ -13978,7 +14121,7 @@
     "name": "Strong Jaw",
     "fx": "Its Dark moves deal 30% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "tyrunt-2",
@@ -13996,7 +14139,7 @@
     "name": "Strong Jaw",
     "fx": "Its Dark moves deal 30% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "tyrunt-3",
@@ -14014,7 +14157,7 @@
     "name": "Strong Jaw",
     "fx": "Its Dark moves deal 30% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "hawlucha-1",
@@ -14032,7 +14175,7 @@
     "name": "Limber",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "hawlucha-2",
@@ -14050,7 +14193,7 @@
     "name": "Limber",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "hawlucha-3",
@@ -14068,7 +14211,7 @@
     "name": "Limber",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 6
+   "tier": 5
   },
   {
    "id": "goomy-1",
@@ -14140,7 +14283,8 @@
     "name": "Key Ring",
     "fx": "Every enemy holding an item loses 10% Speed."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "klefki-2",
@@ -14158,7 +14302,8 @@
     "name": "Key Ring",
     "fx": "Every enemy holding an item loses 10% Speed."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "klefki-3",
@@ -14176,7 +14321,8 @@
     "name": "Key Ring",
     "fx": "Every enemy holding an item loses 10% Speed."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "bergmite-1",
@@ -14356,7 +14502,8 @@
     "name": "Aura Break",
     "fx": "Every Dark and Fairy move in the battle deals 25% less damage, on both sides."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "zygarde-2",
@@ -14374,7 +14521,8 @@
     "name": "Aura Break",
     "fx": "Every Dark and Fairy move in the battle deals 25% less damage, on both sides."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "zygarde-3",
@@ -14392,7 +14540,8 @@
     "name": "Aura Break",
     "fx": "Every Dark and Fairy move in the battle deals 25% less damage, on both sides."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "diancie-1",
@@ -14410,8 +14559,8 @@
     "name": "Clear Body",
     "fx": "Enemy moves can't lower its Attack or Speed."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "diancie-2",
@@ -14429,8 +14578,8 @@
     "name": "Clear Body",
     "fx": "Enemy moves can't lower its Attack or Speed."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "diancie-3",
@@ -14448,8 +14597,8 @@
     "name": "Clear Body",
     "fx": "Enemy moves can't lower its Attack or Speed."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "hoopa-1",
@@ -14467,8 +14616,8 @@
     "name": "Magician",
     "fx": "The first time it damages an enemy holding an item, the item stops working for the battle."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "hoopa-2",
@@ -14486,8 +14635,8 @@
     "name": "Magician",
     "fx": "The first time it damages an enemy holding an item, the item stops working for the battle."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "hoopa-3",
@@ -14505,8 +14654,8 @@
     "name": "Magician",
     "fx": "The first time it damages an enemy holding an item, the item stops working for the battle."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "volcanion-1",
@@ -14577,7 +14726,8 @@
    "ability": {
     "name": "Overgrow",
     "fx": "Below 33% HP, its Grass moves deal 50% more damage."
-   }
+   },
+   "gimmick": true
   },
   {
    "id": "rowlet-2",
@@ -14594,7 +14744,8 @@
    "ability": {
     "name": "Overgrow",
     "fx": "Below 33% HP, its Grass moves deal 50% more damage."
-   }
+   },
+   "gimmick": true
   },
   {
    "id": "rowlet-3-decidueye",
@@ -14612,7 +14763,8 @@
     "name": "Overgrow",
     "fx": "Below 33% HP, its Grass moves deal 50% more damage."
    },
-   "branch": "decidueye"
+   "branch": "decidueye",
+   "gimmick": true
   },
   {
    "id": "rowlet-3-decidueyehisui",
@@ -14630,7 +14782,8 @@
     "name": "Overgrow",
     "fx": "Below 33% HP, its Grass moves deal 50% more damage."
    },
-   "branch": "decidueyehisui"
+   "branch": "decidueyehisui",
+   "gimmick": true
   },
   {
    "id": "litten-1",
@@ -14750,7 +14903,8 @@
     "name": "Swarm",
     "fx": "Below 33% HP, its Bug moves deal 50% more damage."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "grubbin-2",
@@ -14768,7 +14922,8 @@
     "name": "Battery",
     "fx": "Teammates beside it deal 20% more damage."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "grubbin-3",
@@ -14786,7 +14941,8 @@
     "name": "Levitate",
     "fx": "Immune to Ground moves."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "crabrawler-1",
@@ -14912,7 +15068,8 @@
     "name": "Merciless",
     "fx": "Deals 30% more damage to enemies that are losing HP each round."
    },
-   "tier": 4
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "mareanie-2",
@@ -14930,7 +15087,8 @@
     "name": "Merciless",
     "fx": "Deals 30% more damage to enemies that are losing HP each round."
    },
-   "tier": 4
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "mareanie-3",
@@ -14948,7 +15106,8 @@
     "name": "Merciless",
     "fx": "Deals 30% more damage to enemies that are losing HP each round."
    },
-   "tier": 4
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "mudbray-1",
@@ -15344,7 +15503,7 @@
     "name": "Wimp Out",
     "fx": "The first time its HP drops below half, it moves to an empty back-row slot if there is one."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "wimpod-2",
@@ -15362,7 +15521,7 @@
     "name": "Wimp Out",
     "fx": "The first time its HP drops below half, it moves to an empty back-row slot if there is one."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "wimpod-3",
@@ -15380,7 +15539,7 @@
     "name": "Emergency Exit",
     "fx": "The first time its HP drops below half, it moves to an empty back-row slot if there is one."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "sandygast-1",
@@ -15452,7 +15611,8 @@
     "name": "Battle Armor",
     "fx": "Takes 15% less damage from Single moves."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "typenull-2",
@@ -15470,7 +15630,8 @@
     "name": "Battle Armor",
     "fx": "Takes 15% less damage from Single moves."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "typenull-3",
@@ -15488,7 +15649,8 @@
     "name": "RKS System",
     "fx": "Its type matches its signature move's type."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "minior-1",
@@ -15506,7 +15668,8 @@
     "name": "Shields Down",
     "fx": "Above half HP it takes 25% less damage; below half HP it gains 30% Attack and Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "minior-2",
@@ -15524,7 +15687,8 @@
     "name": "Shields Down",
     "fx": "Above half HP it takes 25% less damage; below half HP it gains 30% Attack and Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "minior-3",
@@ -15542,7 +15706,8 @@
     "name": "Shields Down",
     "fx": "Above half HP it takes 25% less damage; below half HP it gains 30% Attack and Speed."
    },
-   "tier": 1
+   "tier": 1,
+   "gimmick": true
   },
   {
    "id": "komala-1",
@@ -15560,7 +15725,8 @@
     "name": "Comatose",
     "fx": "Can't be made to skip actions or lose HP each round from enemy moves."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "komala-2",
@@ -15578,7 +15744,8 @@
     "name": "Comatose",
     "fx": "Can't be made to skip actions or lose HP each round from enemy moves."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "komala-3",
@@ -15596,7 +15763,8 @@
     "name": "Comatose",
     "fx": "Can't be made to skip actions or lose HP each round from enemy moves."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "mimikyu-1",
@@ -15614,7 +15782,8 @@
     "name": "Disguise",
     "fx": "Takes no damage from the first hit of each battle."
    },
-   "tier": 2
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "mimikyu-2",
@@ -15632,7 +15801,8 @@
     "name": "Disguise",
     "fx": "Takes no damage from the first hit of each battle."
    },
-   "tier": 2
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "mimikyu-3",
@@ -15650,7 +15820,8 @@
     "name": "Disguise",
     "fx": "Takes no damage from the first hit of each battle."
    },
-   "tier": 2
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "drampa-1",
@@ -16046,7 +16217,8 @@
     "name": "Unaware",
     "fx": "Ignores enemies' Attack and Speed boosts when they attack it."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "cosmog-2",
@@ -16064,7 +16236,8 @@
     "name": "Sturdy",
     "fx": "From full HP, a hit that would knock it out leaves it at 1 HP instead."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "cosmog-3-solgaleo",
@@ -16083,7 +16256,8 @@
     "fx": "Enemy moves can't lower its Attack or Speed."
    },
    "branch": "solgaleo",
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "cosmog-3-lunala",
@@ -16102,7 +16276,8 @@
     "fx": "At full HP, takes 50% less damage from the first hit."
    },
    "branch": "lunala",
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "nihilego-1",
@@ -16120,7 +16295,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16139,7 +16313,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16158,7 +16331,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16177,7 +16349,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16196,7 +16367,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16215,7 +16385,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16234,7 +16403,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16253,7 +16421,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16272,7 +16439,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16291,7 +16457,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16310,7 +16475,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16329,7 +16493,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16348,7 +16511,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16367,7 +16529,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16386,7 +16547,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16405,7 +16565,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16424,7 +16583,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16443,7 +16601,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16462,7 +16619,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16481,7 +16637,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16500,7 +16655,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16519,7 +16673,8 @@
     "name": "Prism Armor",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "necrozma-2",
@@ -16537,7 +16692,8 @@
     "name": "Prism Armor",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "necrozma-3",
@@ -16555,7 +16711,8 @@
     "name": "Prism Armor",
     "fx": "Takes 25% less damage from super-effective moves."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "magearna-1",
@@ -16573,8 +16730,8 @@
     "name": "Soul-Heart",
     "fx": "Gains 10% Attack each time any Pokémon faints."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "magearna-2",
@@ -16592,8 +16749,8 @@
     "name": "Soul-Heart",
     "fx": "Gains 10% Attack each time any Pokémon faints."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "magearna-3",
@@ -16611,8 +16768,8 @@
     "name": "Soul-Heart",
     "fx": "Gains 10% Attack each time any Pokémon faints."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "marshadow-1",
@@ -16630,8 +16787,8 @@
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "marshadow-2",
@@ -16649,8 +16806,8 @@
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "marshadow-3",
@@ -16668,8 +16825,8 @@
     "name": "Technician",
     "fx": "Moves with 60% power or less deal 50% more damage."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "poipole-1",
@@ -16687,8 +16844,8 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "poipole-2",
@@ -16706,8 +16863,8 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "poipole-3",
@@ -16725,8 +16882,8 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "stakataka-1",
@@ -16744,7 +16901,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16763,7 +16919,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16782,7 +16937,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16801,7 +16955,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16820,7 +16973,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16839,7 +16991,6 @@
     "name": "Beast Boost",
     "fx": "Each time it knocks out an enemy, its Attack or Speed (whichever is higher) rises 20%."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -16858,7 +17009,6 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -16877,7 +17027,6 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -16896,7 +17045,6 @@
     "name": "Volt Absorb",
     "fx": "Immune to Electric moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -16915,7 +17063,6 @@
     "name": "Magnet Pull",
     "fx": "Its moves deal 20% more damage to Steel-type enemies."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -16934,7 +17081,6 @@
     "name": "Magnet Pull",
     "fx": "Its moves deal 20% more damage to Steel-type enemies."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -16953,7 +17099,6 @@
     "name": "Iron Fist",
     "fx": "Its Fighting moves deal 20% more damage."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -17179,7 +17324,7 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "rookidee-2",
@@ -17197,7 +17342,7 @@
     "name": "Keen Eye",
     "fx": "Enemy moves can't lower its Speed."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "rookidee-3",
@@ -17215,7 +17360,7 @@
     "name": "Pressure",
     "fx": "Enemies directly across from it are half as likely to pick their signature move."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "nickit-1",
@@ -17503,7 +17648,7 @@
     "name": "Ripen",
     "fx": "Its held items that heal it work twice as well."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "applin-2-flapple",
@@ -17521,8 +17666,8 @@
     "name": "Ripen",
     "fx": "Its held items that heal it work twice as well."
    },
-   "tier": 6,
-   "branch": "flapple"
+   "branch": "flapple",
+   "tier": 7
   },
   {
    "id": "applin-2-appletun",
@@ -17540,8 +17685,8 @@
     "name": "Ripen",
     "fx": "Its held items that heal it work twice as well."
    },
-   "tier": 6,
-   "branch": "appletun"
+   "branch": "appletun",
+   "tier": 7
   },
   {
    "id": "applin-2-hydrapple",
@@ -17559,8 +17704,8 @@
     "name": "Supersweet Syrup",
     "fx": "At the start of battle, the enemy front row loses 10% Speed."
    },
-   "tier": 6,
-   "branch": "hydrapple"
+   "branch": "hydrapple",
+   "tier": 7
   },
   {
    "id": "applin-3-flapple",
@@ -17579,7 +17724,7 @@
     "fx": "Its held items that heal it work twice as well."
    },
    "branch": "flapple",
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "applin-3-appletun",
@@ -17598,7 +17743,7 @@
     "fx": "Its held items that heal it work twice as well."
    },
    "branch": "appletun",
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "applin-3-hydrapple",
@@ -17617,7 +17762,7 @@
     "fx": "At the start of battle, the enemy front row loses 10% Speed."
    },
    "branch": "hydrapple",
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "cramorant-1",
@@ -17635,7 +17780,8 @@
     "name": "Gulp Missile",
     "fx": "After using a Water move, the next enemy to hit it with a Single move loses 15% of its max HP."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "cramorant-2",
@@ -17653,7 +17799,8 @@
     "name": "Gulp Missile",
     "fx": "After using a Water move, the next enemy to hit it with a Single move loses 15% of its max HP."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "cramorant-3",
@@ -17671,7 +17818,8 @@
     "name": "Gulp Missile",
     "fx": "After using a Water move, the next enemy to hit it with a Single move loses 15% of its max HP."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "arrokuda-1",
@@ -17743,7 +17891,8 @@
     "name": "Rattled",
     "fx": "Gains 10% Speed each time it's hit by a Dark, Ghost or Bug move."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "toxel-2",
@@ -17761,7 +17910,8 @@
     "name": "Rattled",
     "fx": "Gains 10% Speed each time it's hit by a Dark, Ghost or Bug move."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "toxel-3",
@@ -17779,7 +17929,8 @@
     "name": "Punk Rock",
     "fx": "Its moves that hit a whole row deal 30% more damage, and it takes 30% less damage from them."
    },
-   "tier": 5
+   "tier": 6,
+   "gimmick": true
   },
   {
    "id": "clobbopus-1",
@@ -17797,7 +17948,8 @@
     "name": "Octolock",
     "fx": "Its hits make the target lose 5% Speed each round for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "clobbopus-2",
@@ -17815,7 +17967,8 @@
     "name": "Octolock",
     "fx": "Its hits make the target lose 5% Speed each round for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "clobbopus-3",
@@ -17833,7 +17986,8 @@
     "name": "Octolock",
     "fx": "Its hits make the target lose 5% Speed each round for the rest of the battle."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "hatenna-1",
@@ -17905,7 +18059,8 @@
     "name": "Haunted Ground",
     "fx": "Damage it takes comes back as a curse: the attacker loses 25% of that damage at the end of the next round."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "runerigus-2",
@@ -17923,7 +18078,8 @@
     "name": "Haunted Ground",
     "fx": "Damage it takes comes back as a curse: the attacker loses 25% of that damage at the end of the next round."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "runerigus-3",
@@ -17941,7 +18097,8 @@
     "name": "Haunted Ground",
     "fx": "Damage it takes comes back as a curse: the attacker loses 25% of that damage at the end of the next round."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "milcery-1",
@@ -17959,7 +18116,7 @@
     "name": "Sweet Veil",
     "fx": "Its teammates can't be made to skip actions by enemy moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "milcery-2",
@@ -17977,7 +18134,7 @@
     "name": "Sweet Veil",
     "fx": "Its teammates can't be made to skip actions by enemy moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "milcery-3",
@@ -17995,7 +18152,7 @@
     "name": "Sweet Veil",
     "fx": "Its teammates can't be made to skip actions by enemy moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "falinks-1",
@@ -18067,7 +18224,7 @@
     "name": "Shield Dust",
     "fx": "Ignores the extra effects of enemy moves (like Attack or Speed drops)."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "snom-2",
@@ -18085,7 +18242,7 @@
     "name": "Shield Dust",
     "fx": "Ignores the extra effects of enemy moves (like Attack or Speed drops)."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "snom-3",
@@ -18103,7 +18260,7 @@
     "name": "Shield Dust",
     "fx": "Ignores the extra effects of enemy moves (like Attack or Speed drops)."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "stonjourner-1",
@@ -18499,8 +18656,8 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 4,
-   "weight": 10
+   "weight": 10,
+   "gimmick": true
   },
   {
    "id": "kubfu-2",
@@ -18518,8 +18675,8 @@
     "name": "Inner Focus",
     "fx": "Can't be made to skip actions by enemy moves."
    },
-   "tier": 4,
-   "weight": 10
+   "weight": 10,
+   "gimmick": true
   },
   {
    "id": "kubfu-3",
@@ -18537,8 +18694,8 @@
     "name": "Unseen Fist",
     "fx": "Its Single moves go through Protect, Detect and shields."
    },
-   "tier": 4,
-   "weight": 10
+   "weight": 10,
+   "gimmick": true
   },
   {
    "id": "zarude-1",
@@ -18556,7 +18713,6 @@
     "name": "Leaf Guard",
     "fx": "Can't be made to lose HP each round or skip actions for the first 3 rounds."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -18575,7 +18731,6 @@
     "name": "Leaf Guard",
     "fx": "Can't be made to lose HP each round or skip actions for the first 3 rounds."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -18594,7 +18749,6 @@
     "name": "Leaf Guard",
     "fx": "Can't be made to lose HP each round or skip actions for the first 3 rounds."
    },
-   "tier": 4,
    "weight": 10
   },
   {
@@ -19252,7 +19406,8 @@
     "name": "Well-Baked Body",
     "fx": "Immune to Fire moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "fidough-2",
@@ -19270,7 +19425,8 @@
     "name": "Well-Baked Body",
     "fx": "Immune to Fire moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "fidough-3",
@@ -19288,7 +19444,8 @@
     "name": "Well-Baked Body",
     "fx": "Immune to Fire moves; heals 20% of its max HP when hit by one."
    },
-   "tier": 3
+   "tier": 3,
+   "gimmick": true
   },
   {
    "id": "smoliv-1",
@@ -19414,7 +19571,7 @@
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "charcadet-2",
@@ -19432,7 +19589,7 @@
     "name": "Flash Fire",
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "charcadet-3-armarouge",
@@ -19451,7 +19608,7 @@
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
    "branch": "armarouge",
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "charcadet-3-ceruledge",
@@ -19470,7 +19627,7 @@
     "fx": "Immune to Fire moves. After being hit by one, its own Fire moves deal 50% more damage."
    },
    "branch": "ceruledge",
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "tadbulb-1",
@@ -19488,7 +19645,7 @@
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "tadbulb-2",
@@ -19506,7 +19663,7 @@
     "name": "Own Tempo",
     "fx": "Can't be made to skip actions or lose Speed from enemy moves."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "tadbulb-3",
@@ -19524,7 +19681,7 @@
     "name": "Electromorphosis",
     "fx": "After being hit, its next Electric move deals twice the damage."
    },
-   "tier": 4
+   "tier": 5
   },
   {
    "id": "wattrel-1",
@@ -19596,7 +19753,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "maschiff-2",
@@ -19614,7 +19771,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "maschiff-3",
@@ -19632,7 +19789,7 @@
     "name": "Intimidate",
     "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "shroodle-1",
@@ -19650,7 +19807,7 @@
     "name": "Unburden",
     "fx": "Gains 50% Speed once its held item is used up."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "shroodle-2",
@@ -19668,7 +19825,7 @@
     "name": "Unburden",
     "fx": "Gains 50% Speed once its held item is used up."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "shroodle-3",
@@ -19686,7 +19843,7 @@
     "name": "Unburden",
     "fx": "Gains 50% Speed once its held item is used up."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "bramblin-1",
@@ -19758,7 +19915,7 @@
     "name": "Anger Shell",
     "fx": "The first time its HP drops below half, it gains 30% Attack and 20% Speed but takes 15% more damage."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "klawf-2",
@@ -19776,7 +19933,7 @@
     "name": "Anger Shell",
     "fx": "The first time its HP drops below half, it gains 30% Attack and 20% Speed but takes 15% more damage."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "klawf-3",
@@ -19794,7 +19951,7 @@
     "name": "Anger Shell",
     "fx": "The first time its HP drops below half, it gains 30% Attack and 20% Speed but takes 15% more damage."
    },
-   "tier": 1
+   "tier": 2
   },
   {
    "id": "capsakid-1",
@@ -19812,7 +19969,7 @@
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "capsakid-2",
@@ -19830,7 +19987,7 @@
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "capsakid-3",
@@ -19848,7 +20005,7 @@
     "name": "Chlorophyll",
     "fx": "Gains 25% Speed for the first 2 rounds of every battle."
    },
-   "tier": 3
+   "tier": 4
   },
   {
    "id": "flittle-1",
@@ -19920,7 +20077,7 @@
     "name": "Mold Breaker",
     "fx": "Its moves ignore the target's ability."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "tinkatink-2",
@@ -19938,7 +20095,7 @@
     "name": "Mold Breaker",
     "fx": "Its moves ignore the target's ability."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "tinkatink-3",
@@ -19956,7 +20113,7 @@
     "name": "Mold Breaker",
     "fx": "Its moves ignore the target's ability."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "bombirdier-1",
@@ -20028,7 +20185,8 @@
     "name": "Zero to Hero",
     "fx": "Palafin starts as Zero Form and becomes Hero Form after its second action in a battle (+30% Attack, +10% Speed)."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "finizen-2",
@@ -20046,7 +20204,8 @@
     "name": "Zero to Hero",
     "fx": "Palafin starts as Zero Form and becomes Hero Form after its second action in a battle (+30% Attack, +10% Speed)."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "finizen-3",
@@ -20064,7 +20223,8 @@
     "name": "Zero to Hero",
     "fx": "Palafin starts as Zero Form and becomes Hero Form after its second action in a battle (+30% Attack, +10% Speed)."
    },
-   "tier": 2
+   "tier": 2,
+   "gimmick": true
   },
   {
    "id": "cyclizar-1",
@@ -20082,7 +20242,7 @@
     "name": "Shed Skin",
     "fx": "33% chance at the end of each round to clear any damage-over-time effects on itself."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "cyclizar-2",
@@ -20100,7 +20260,7 @@
     "name": "Shed Skin",
     "fx": "33% chance at the end of each round to clear any damage-over-time effects on itself."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "cyclizar-3",
@@ -20118,7 +20278,7 @@
     "name": "Shed Skin",
     "fx": "33% chance at the end of each round to clear any damage-over-time effects on itself."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "glimmet-1",
@@ -20136,7 +20296,7 @@
     "name": "Toxic Debris",
     "fx": "When hit by a Single move, every enemy in the attacker's row loses 3% of its max HP at the end of each of the next 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "glimmet-2",
@@ -20154,7 +20314,7 @@
     "name": "Toxic Debris",
     "fx": "When hit by a Single move, every enemy in the attacker's row loses 3% of its max HP at the end of each of the next 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "glimmet-3",
@@ -20172,7 +20332,7 @@
     "name": "Toxic Debris",
     "fx": "When hit by a Single move, every enemy in the attacker's row loses 3% of its max HP at the end of each of the next 3 rounds."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "greavard-1",
@@ -20244,7 +20404,8 @@
     "name": "Costar",
     "fx": "At battle start it copies the biggest stat boost any teammate has."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "flamigo-2",
@@ -20262,7 +20423,8 @@
     "name": "Costar",
     "fx": "At battle start it copies the biggest stat boost any teammate has."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "flamigo-3",
@@ -20280,7 +20442,8 @@
     "name": "Costar",
     "fx": "At battle start it copies the biggest stat boost any teammate has."
    },
-   "tier": 5
+   "tier": 5,
+   "gimmick": true
   },
   {
    "id": "cetoddle-1",
@@ -20298,7 +20461,7 @@
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "cetoddle-2",
@@ -20316,7 +20479,7 @@
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "cetoddle-3",
@@ -20334,7 +20497,7 @@
     "name": "Thick Fat",
     "fx": "Takes 50% less damage from Fire and Ice moves."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "dondozo-1",
@@ -20352,7 +20515,7 @@
     "name": "Unaware",
     "fx": "Ignores enemies' Attack and Speed boosts when they attack it."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "dondozo-2",
@@ -20370,7 +20533,7 @@
     "name": "Unaware",
     "fx": "Ignores enemies' Attack and Speed boosts when they attack it."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "dondozo-3",
@@ -20388,7 +20551,7 @@
     "name": "Unaware",
     "fx": "Ignores enemies' Attack and Speed boosts when they attack it."
    },
-   "tier": 6
+   "tier": 7
   },
   {
    "id": "tatsugiri-1",
@@ -20406,7 +20569,7 @@
     "name": "Commander",
     "fx": "While Dondozo is on its team, it gives Dondozo 20% more Attack and Speed."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "tatsugiri-2",
@@ -20424,7 +20587,7 @@
     "name": "Commander",
     "fx": "While Dondozo is on its team, it gives Dondozo 20% more Attack and Speed."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "tatsugiri-3",
@@ -20442,7 +20605,7 @@
     "name": "Commander",
     "fx": "While Dondozo is on its team, it gives Dondozo 20% more Attack and Speed."
    },
-   "tier": 2
+   "tier": 3
   },
   {
    "id": "greattusk-1",
@@ -20460,8 +20623,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "greattusk-2",
@@ -20479,8 +20642,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "greattusk-3",
@@ -20498,8 +20661,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "screamtail-1",
@@ -20517,8 +20680,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "screamtail-2",
@@ -20536,8 +20699,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "screamtail-3",
@@ -20555,8 +20718,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "brutebonnet-1",
@@ -20574,8 +20737,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "brutebonnet-2",
@@ -20593,8 +20756,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "brutebonnet-3",
@@ -20612,8 +20775,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "fluttermane-1",
@@ -20631,8 +20794,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "fluttermane-2",
@@ -20650,8 +20813,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "fluttermane-3",
@@ -20669,8 +20832,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "slitherwing-1",
@@ -20688,8 +20851,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "slitherwing-2",
@@ -20707,8 +20870,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "slitherwing-3",
@@ -20726,8 +20889,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "sandyshocks-1",
@@ -20745,8 +20908,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "sandyshocks-2",
@@ -20764,8 +20927,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "sandyshocks-3",
@@ -20783,8 +20946,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "irontreads-1",
@@ -20802,8 +20965,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "irontreads-2",
@@ -20821,8 +20984,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "irontreads-3",
@@ -20840,8 +21003,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironbundle-1",
@@ -20859,8 +21022,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironbundle-2",
@@ -20878,8 +21041,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironbundle-3",
@@ -20897,8 +21060,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironhands-1",
@@ -20916,8 +21079,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironhands-2",
@@ -20935,8 +21098,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironhands-3",
@@ -20954,8 +21117,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironjugulis-1",
@@ -20973,8 +21136,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironjugulis-2",
@@ -20992,8 +21155,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironjugulis-3",
@@ -21011,8 +21174,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironmoth-1",
@@ -21030,8 +21193,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironmoth-2",
@@ -21049,8 +21212,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironmoth-3",
@@ -21068,8 +21231,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 7,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironthorns-1",
@@ -21087,8 +21250,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironthorns-2",
@@ -21106,8 +21269,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironthorns-3",
@@ -21125,8 +21288,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "frigibax-1",
@@ -21198,7 +21361,8 @@
     "name": "Good as Gold",
     "fx": "Ignores the first Attack or Speed drop it receives in a battle."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "gimmighoul-2",
@@ -21216,7 +21380,8 @@
     "name": "Good as Gold",
     "fx": "Ignores the first Attack or Speed drop it receives in a battle."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "gimmighoul-3",
@@ -21234,7 +21399,8 @@
     "name": "Good as Gold",
     "fx": "Ignores the first Attack or Speed drop it receives in a battle."
    },
-   "tier": 7
+   "tier": 8,
+   "gimmick": true
   },
   {
    "id": "wochien-1",
@@ -21252,7 +21418,8 @@
     "name": "Tablets of Ruin",
     "fx": "At battle start the enemy front row loses 10% Attack."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "wochien-2",
@@ -21270,7 +21437,8 @@
     "name": "Tablets of Ruin",
     "fx": "At battle start the enemy front row loses 10% Attack."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "wochien-3",
@@ -21288,7 +21456,8 @@
     "name": "Tablets of Ruin",
     "fx": "At battle start the enemy front row loses 10% Attack."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chienpao-1",
@@ -21306,7 +21475,8 @@
     "name": "Sword of Ruin",
     "fx": "At battle start the enemy front row takes 10% more damage for the battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chienpao-2",
@@ -21324,7 +21494,8 @@
     "name": "Sword of Ruin",
     "fx": "At battle start the enemy front row takes 10% more damage for the battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chienpao-3",
@@ -21342,7 +21513,8 @@
     "name": "Sword of Ruin",
     "fx": "At battle start the enemy front row takes 10% more damage for the battle."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "tinglu-1",
@@ -21360,7 +21532,8 @@
     "name": "Vessel of Ruin",
     "fx": "At battle start the enemy front row loses 10% Speed."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "tinglu-2",
@@ -21378,7 +21551,8 @@
     "name": "Vessel of Ruin",
     "fx": "At battle start the enemy front row loses 10% Speed."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "tinglu-3",
@@ -21396,7 +21570,8 @@
     "name": "Vessel of Ruin",
     "fx": "At battle start the enemy front row loses 10% Speed."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chiyu-1",
@@ -21414,7 +21589,8 @@
     "name": "Beads of Ruin",
     "fx": "Its attacks ignore 10% of the target's damage reduction."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chiyu-2",
@@ -21432,7 +21608,8 @@
     "name": "Beads of Ruin",
     "fx": "Its attacks ignore 10% of the target's damage reduction."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "chiyu-3",
@@ -21450,7 +21627,8 @@
     "name": "Beads of Ruin",
     "fx": "Its attacks ignore 10% of the target's damage reduction."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "roaringmoon-1",
@@ -21468,8 +21646,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "roaringmoon-2",
@@ -21487,8 +21665,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "roaringmoon-3",
@@ -21506,8 +21684,8 @@
     "name": "Protosynthesis",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironvaliant-1",
@@ -21525,8 +21703,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironvaliant-2",
@@ -21544,8 +21722,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "ironvaliant-3",
@@ -21563,8 +21741,8 @@
     "name": "Quark Drive",
     "fx": "For the first 3 rounds of every battle, its Attack or Speed (whichever is higher) is 30% higher."
    },
-   "tier": 8,
-   "weight": 40
+   "weight": 40,
+   "tier": 8
   },
   {
    "id": "koraidon-1",
@@ -21798,7 +21976,7 @@
     "name": "Hospitality",
     "fx": "At the start of battle, heals the teammate with the least HP for 25% of its max HP."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "poltchageist-2",
@@ -21816,7 +21994,7 @@
     "name": "Hospitality",
     "fx": "At the start of battle, heals the teammate with the least HP for 25% of its max HP."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "poltchageist-3",
@@ -21834,7 +22012,7 @@
     "name": "Hospitality",
     "fx": "At the start of battle, heals the teammate with the least HP for 25% of its max HP."
    },
-   "tier": 5
+   "tier": 6
   },
   {
    "id": "okidogi-1",
@@ -21852,7 +22030,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21871,7 +22048,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21890,7 +22066,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21909,7 +22084,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21928,7 +22102,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21947,7 +22120,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21966,7 +22138,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -21985,7 +22156,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -22004,7 +22174,6 @@
     "name": "Toxic Chain",
     "fx": "Its hits have a 30% chance to make the target lose 5% of its max HP at the end of each round for the rest of the battle."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -22023,8 +22192,8 @@
     "name": "Mask change",
     "fx": "The equipped signature sets its mask and type."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "ogerpon-2",
@@ -22042,8 +22211,8 @@
     "name": "Mask change",
     "fx": "The equipped signature sets its mask and type."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "ogerpon-3",
@@ -22061,8 +22230,8 @@
     "name": "Mask change",
     "fx": "The equipped signature sets its mask and type."
    },
-   "tier": 4,
-   "weight": 5
+   "weight": 5,
+   "gimmick": true
   },
   {
    "id": "gougingfire-1",
@@ -22296,7 +22465,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "terapagos-2",
@@ -22314,7 +22484,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "terapagos-3",
@@ -22332,7 +22503,8 @@
     "name": "Forme change",
     "fx": "The equipped signature sets its form."
    },
-   "legendary": true
+   "legendary": true,
+   "gimmick": true
   },
   {
    "id": "pecharunt-1",
@@ -22350,7 +22522,6 @@
     "name": "Poison Puppeteer",
     "fx": "Enemies losing HP each round from its moves also lose 10% Speed."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -22369,7 +22540,6 @@
     "name": "Poison Puppeteer",
     "fx": "Enemies losing HP each round from its moves also lose 10% Speed."
    },
-   "tier": 4,
    "weight": 5
   },
   {
@@ -22388,7 +22558,6 @@
     "name": "Poison Puppeteer",
     "fx": "Enemies losing HP each round from its moves also lose 10% Speed."
    },
-   "tier": 4,
    "weight": 5
   }
  ],
