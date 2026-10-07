@@ -5395,7 +5395,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "tackle",
+   "sig": "sketch",
    "hp": 61,
    "atk": 19,
    "spd": 42,
@@ -5415,7 +5415,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "body-slam",
+   "sig": "sketch",
    "hp": 95,
    "atk": 29,
    "spd": 51,
@@ -5435,7 +5435,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "hyper-voice",
+   "sig": "sketch",
    "hp": 135,
    "atk": 40,
    "spd": 59,
@@ -37577,6 +37577,24 @@
     "yamask",
     "zacian",
     "zamazenta"
+   ]
+  },
+  "sketch": {
+   "name": "Sketch",
+   "star": 1,
+   "type": "normal",
+   "kind": "sup",
+   "shape": null,
+   "target": "self",
+   "power": null,
+   "heal": null,
+   "hits": null,
+   "chance": 30,
+   "fx": "Turns into the last move used in the battle, by anyone. Smeargle keeps the copied move after the battle, and can switch between Sketch and any move it has sketched from its scan.",
+   "cat": "unique",
+   "contact": false,
+   "learnBy": [
+    "smeargle"
    ]
   }
  },

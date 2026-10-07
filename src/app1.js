@@ -23,7 +23,7 @@ const LINE_IDS = Object.keys(LINES);
 const TEACHABLE = Object.keys(MOVES).filter(k => MOVES[k].learnBy);
 const LEARN_BY = Object.fromEntries(TEACHABLE.map(k => [k, new Set(MOVES[k].learnBy)]));
 const LEARN = {};
-for (const f of FORMS) LEARN[f.id] = TEACHABLE.filter(k => LEARN_BY[k].has(f.line) && k !== f.sig);
+for (const f of FORMS) LEARN[f.id] = TEACHABLE.filter(k => LEARN_BY[k].has(f.line) && (k !== f.sig || k === 'sketch'));
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 and ★2 is one Pokémon
 // teachables nearly every line can learn (Protect, Rest, Facade…): the Move Tutor offers at most one of them at a time
 const UNIVERSAL = new Set(TEACHABLE.filter(k => LEARN_BY[k].size >= LINE_IDS.length * .75));
@@ -252,9 +252,23 @@ const learnedOf = m => m.learned ||= [...known(m)];
 function remember(m, ...ks){ const L = learnedOf(m); for (const k of ks) if (k && !L.includes(k)) L.push(k); }
 // what a slot ('sig', or a taught slot's index) can be swapped for
 function swapOptions(m, slot){
-  const have = known(m), sig = slot === 'sig';
+  const have = known(m), sig = slot === 'sig', cur = sig ? sigOf(m) : m.taught[slot];
   const lineSigs = new Set(FORMS.filter(f => f.line === FORM[m.form].line).map(f => f.sig));
-  return learnedOf(m).filter(k => !have.includes(k) && (sig ? lineSigs.has(k) : MOVES[k].chance != null));
+  const opts = learnedOf(m).filter(k => !have.includes(k) && (sig ? lineSigs.has(k) : MOVES[k].chance != null));
+  // a Sketch slot (Smeargle's) can go back to Sketch, or to any move it sketched before
+  if (cur === 'sketch' || m.sketched?.includes(cur))
+    for (const k of ['sketch', ...(m.sketched || [])]) if (k !== cur && !opts.includes(k) && (k === 'sketch' || !have.includes(k))) opts.push(k);
+  return opts;
+}
+/* ---------- Sketch ----------
+   Smeargle's move, as its signature and as a teachable (it can know it in both slots). In battle, Sketch turns into the
+   last move anyone used, and the Pokémon keeps that move after the battle (m.sketched remembers every move it sketched).
+   Between battles its scan can switch the slot back to Sketch, or to any move it sketched before. A sketched move in the
+   taught slot is used as often as Sketch would be. */
+const SKETCH = 'sketch';
+function keepSketch(m, i, k){
+  if (i === 0) m.sig = k; else m.taught[i - 1] = k;
+  if (!(m.sketched ||= []).includes(k)) m.sketched.push(k);
 }
 function swapMove(m, slot, k){
   const old = slot === 'sig' ? sigOf(m) : m.taught[slot];
@@ -272,20 +286,22 @@ const moveLimit = star => TUNE.moveLimit + TUNE.moveLimitStep * (star - 1);
 // the "Moves" heading in a Pokémon's entry, with its move limit beside it
 const movesLabel = star => `<span>Moves <em class="dexkv__aside" title="It can use ${moveLimit(star)} moves per battle, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}">· ${moveLimit(star)} per battle</em></span>`;
 // a taught move's percent chance to be used, with this held item
-function moveChance(k, item){
-  const m = MOVES[k], o = item && ITEM[item]?.odds;
-  return Math.min(100, Math.round((m.chance ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1)));
+// (sk: the moves it sketched, which take Sketch's chance)
+function moveChance(k, item, sk){
+  const m = MOVES[k], o = item && ITEM[item]?.odds, c = sk?.includes(k) ? MOVES[SKETCH].chance : m.chance;
+  return Math.min(100, Math.round((c ?? 0) * (o && (!o.kind || o.kind === m.kind) ? o.mul : 1)));
 }
 // odds for a move list [signature, ...taught]: each taught move its chance, the signature the rest
-function moveOdds(moves, item){
-  const taught = moves.slice(1).map(k => moveChance(k, item));
+function moveOdds(moves, item, sk){
+  const taught = moves.slice(1).map(k => moveChance(k, item, sk));
   return [Math.max(0, 100 - taught.reduce((a, b) => a + b, 0)), ...taught];
 }
 // a party Pokémon's odds for each move it knows, as { move: percent }
-function monOdds(m){ const ks = known(m), o = moveOdds(ks, m.item?.id); return Object.fromEntries(ks.map((k, i) => [k, o[i]])); }
+function monOdds(m){ const ks = known(m), o = moveOdds(ks, m.item?.id, m.sketched); return Object.fromEntries(ks.map((k, i) => [k, o[i]])); }
 const nm = m => FORM[m.form].name;
 function learnable(m){
   const have = new Set([...known(m), ...(m.learned || [])]);      // (a move it learned before is switched to from its scan)
+  if (!m.taught.includes(SKETCH)) have.delete(SKETCH);             // Sketch can be taught on top of a Sketch signature
   return (LEARN[m.form] || []).filter(k => !have.has(k) && MOVES[k].star <= m.star && !(m.item?.id === 'assault-vest' && MOVES[k].kind === 'sup'));
 }
 // taught: whether it arrives knowing a move besides its signature (starters don't; wild ones sometimes, see wildMoveChance)
@@ -315,9 +331,10 @@ function gainExp(m, amt){
 function levelUp(m){
   const from = nm(m);
   learnedOf(m);
-  m.star++; m.form = formFor(m.line, m.star, m.form); m.sig = null;          // a new level brings its new signature move
+  const kept = m.sketched?.includes(m.sig) && m.sig;                         // (Smeargle keeps a move it sketched)
+  m.star++; m.form = formFor(m.line, m.star, m.form); m.sig = FORM[m.form].sig === SKETCH && kept || null;   // a new level brings its new signature move
   const sig = FORM[m.form].sig;
-  m.taught = m.taught.filter(k => k !== sig);
+  m.taught = m.taught.filter(k => k !== sig || k === SKETCH);
   remember(m, sig);
   return { from, to: nm(m) };
 }

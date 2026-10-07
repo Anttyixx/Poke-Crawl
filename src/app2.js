@@ -41,7 +41,7 @@ const AREA_SHAPES = new Set(['splash','row','back','field']);
 const SIDE_MOVES = new Set(['reflect','wide-guard','safeguard','wish']);
 
 const SIDES = ['you','opp'];
-let lineup = null, board = null, sideSt = null, round = 0, ctx = null, running = false, battleToken = 0, uidSeq = 0;
+let lineup = null, board = null, sideSt = null, round = 0, lastUsed = null, ctx = null, running = false, battleToken = 0, uidSeq = 0;
 let speed = 2, speedPref = 2, entranceAbort = null;
 const turnOf = new Map();
 const B = { enc: null, coins: 0, slotEls: { you:[[],[]], opp:[[],[]] } };
@@ -101,14 +101,14 @@ function freshStatus(){
     lastHit:null, hitThisRound:false, vuln:0, skipWhy:'', mist:false, dots:[], seed:null, lastMove:null, planned:null, lock:null, sashUsed:false, wpUsed:false };
 }
 function freshBoard(){
-  board = {}; sideSt = {};
+  board = {}; sideSt = {}; lastUsed = null;
   for (const side of SIDES){
     board[side] = [[null,null,null],[null,null,null]];
     sideSt[side] = { reflect:0, reflectP:.25, screen:0, wideGuard:0, safeguard:false, fainted:false, wishes:[] };
     for (const { cell, unit } of lineup[side]){
       const f = FORM[unit.form], it = unit.item;
       const maxHp = Math.round(f.hp * unit.mul * (it === 'assault-vest' ? 1.25 : 1));
-      const u = { ...unit, uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
+      const u = { ...unit, moves: [...unit.moves], sketched: [...(unit.sketched || [])], uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
         atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
       u.limit = u.left = moveLimit(f.star);                // moves it can still use this battle
       board[side][Math.floor(cell / 3)][cell % 3] = u;
@@ -169,7 +169,7 @@ function modLine(u){
   return out.join(', ');
 }
 function tipHTML(u){
-  const odds = u.left <= 0 ? u.moves.map(() => 0) : u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item);
+  const odds = u.left <= 0 ? u.moves.map(() => 0) : u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item, u.sketched);
   const mods = modLine(u);
   return `<div class="tip__head"><span class="tip__name">${u.name} <span class="dt__stars">${'★'.repeat(u.level)}</span></span>
       <span class="tip__side" style="color:var(--${u.side === 'you' ? 'you' : 'foe'})">${u.side === 'you' ? 'Yours' : 'Opponent'}</span></div>
@@ -308,6 +308,7 @@ function usable(u, k){
   if (round === 1 && m.charge) return false;                                        // charging moves can't open a battle
   if (m.kind === 'sup'){
     if (k === 'transform') return living(foe(u.side)).length > 0;
+    if (k === SKETCH) return !!lastUsed && !u.moves.includes(lastUsed);      // there's a move to copy that it doesn't know
     return k === 'splash' || supportTargets(u, pos, k, m).length > 0;
   }
   if (pos.row === 1) return false;                                                  // the back row can't reach anyone
@@ -324,7 +325,7 @@ function draw(u){
   if (u.st.lock) return usable(u, u.st.lock) ? u.st.lock : null;
   const [sig, ...taught] = u.moves;
   let r = Math.random() * 100;
-  for (const k of taught){ const c = moveChance(k, u.item); if (r < c && usable(u, k)) return k; r -= c; }
+  for (const k of taught){ const c = moveChance(k, u.item, u.sketched); if (r < c && usable(u, k)) return k; r -= c; }
   if (usable(u, sig)) return sig;
   return taught.find(k => usable(u, k)) || null;
 }
@@ -391,6 +392,16 @@ async function resolveSupport(u, pos, key, m, el){
   if (key === 'splash'){
     status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
     floatText(el, 'nothing happens', 'info'); log(note('but nothing happens'), 'le'); await wait(420); return true;
+  }
+  if (key === SKETCH){
+    // turns into the last move anyone used; a party Pokémon keeps it after the battle (see keepSketch)
+    const i = u.moves.indexOf(SKETCH), k = lastUsed;
+    status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
+    u.moves[i] = k; (u.sketched ||= []).push(k);
+    if (u.mon) keepSketch(u.mon, i, k);
+    burst(el, typeColor(MOVES[k].type)); floatText(el, 'sketched', 'buff');
+    log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>sketches ${mvChip(MOVES[k], u)}</div></div>`, 'le');
+    await wait(420); return true;
   }
   if (key === 'transform'){
     // copies the moves of the enemy directly across (or the nearest one), with their odds, for the rest of the battle
@@ -588,8 +599,9 @@ async function act(u, forced){
   const ok = m.kind === 'sup' ? await resolveSupport(u, pos, key, m, el) : await resolveOffense(u, pos, key, m, el, origKey);
   if (ok){
     u.st.used.add(origKey); u.st.lastMove = origKey;
+    if (origKey !== 'struggle' && origKey !== SKETCH) lastUsed = origKey;
     if (origKey !== 'struggle' && --u.left === 0) log(`⚠ ${who(u)} has used up its ${u.limit} moves and will Struggle from now on`, 'le-sys');
-    if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle'){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
+    if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle' && origKey !== SKETCH){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
   }
   await wait(140);
   dropTag(); setTurn(u, null);
@@ -705,7 +717,7 @@ function setupBattle(enc){
   abortBattle();
   B.enc = enc; B.coins = 0;
   lineup = {
-    you: R.party.map((m, i) => m && { cell: i, unit: { side:'you', form: m.form, moves: known(m), item: m.item?.id || null, mul: 1 } }).filter(Boolean),
+    you: R.party.map((m, i) => m && { cell: i, unit: { side:'you', form: m.form, moves: known(m), item: m.item?.id || null, mul: 1, mon: m, sketched: [...(m.sketched || [])] } }).filter(Boolean),
     opp: enc.team.map((u, k) => ({ cell: FILL[k], unit: { side:'opp', ...u } })),
   };
   freshBoard(); render(); clearLog('The battle log fills in as the fight plays out.');
