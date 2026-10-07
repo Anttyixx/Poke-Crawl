@@ -1327,3 +1327,15 @@ body.feeding .screen, body.feeding #rotomdex, body.feeding #mapbag{ pointer-even
 .dexevo__path--long .dexevo__mon{ padding-left:0; padding-right:0; }
 .dexevo__path--long .dexevo__name{ font-size:10.5px; letter-spacing:-.02em; }
 .dexevo__path--long .dexevo__arrow svg{ width:10px; height:10px; }
+/* Megas sit in a rounded diamond instead of a circle, framed in Mega purple; the sprite stays upright and may spill
+   past the frame's corners */
+.dexevo__mon--mega .dexevo__pic, .dexmon--mega .dexmon__pic{ position:relative; background:none; border-color:transparent; box-shadow:none; }
+.dexevo__mon--mega .dexevo__pic::before, .dexmon--mega .dexmon__pic::before{ content:''; position:absolute; inset:9%; border-radius:24%; transform:rotate(45deg);
+  background:radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--t) 34%, transparent), transparent 75%), var(--tile);
+  border:2px solid #c77dff; box-shadow:0 0 10px color-mix(in srgb, #c77dff 35%, transparent), inset 0 0 8px color-mix(in srgb, #ff8bd8 25%, transparent);
+  transition:box-shadow .2s ease, border-color .2s ease; }
+.dexevo__mon--mega .dexevo__pic img, .dexmon--mega .dexmon__pic img{ position:relative; width:92%; height:92%; }
+.dexevo__mon--mega[aria-pressed="true"] .dexevo__pic{ border-color:transparent; box-shadow:none; }
+.dexevo__mon--mega[aria-pressed="true"] .dexevo__pic::before{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 45%, transparent); }
+.dexevo__mon--mega .dexevo__name{ color:#e2b8ff; }
+.dexmon--mega .dexmon__pic::before{ inset:13%; }

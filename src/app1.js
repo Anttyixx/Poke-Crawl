@@ -1348,7 +1348,7 @@ async function dexJumpMove(k){
 function dexMonHTML(f){
   const stat = (label, k, v) => `<div class="dstat" data-stat="${k}"><span>${label}</span><b>${v}</b><i class="dstat__bar"><i style="width:${Math.max(3, Math.round(v / STAT_MAX[k] * 100))}%"></i></i></div>`;
   const tutor = f.mega ? [] : tutorMoves(f), sigs = f.mega ? [f.sig] : [...new Set(speciesForms(f).map(x => x.sig))];
-  return `<div class="dexmon" data-form="${f.id}" style="--t:${typeColor(f.type)}">
+  return `<div class="dexmon${f.mega ? ' dexmon--mega' : ''}" data-form="${f.id}" style="--t:${typeColor(f.type)}">
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b></div>
@@ -1411,7 +1411,7 @@ function dexEvoHTML(fs){
   return `<div class="dexevo">
     <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
     <div class="dexevo__path${cols.length > 3 ? ' dexevo__path--long' : ''}" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
-      + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map((f, j) => f ? `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
+      + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map((f, j) => f ? `<button class="dexevo__mon${f.mega ? ' dexevo__mon--mega' : ''}" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
           <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${evoLabel(f)}</span></button>`
           : `<span class="dexevo__mon dexevo__gap" aria-hidden="true"><span class="dexevo__pic"></span><span class="dexevo__name">${cols[i - 1][j].name}</span></span>`).join('')}</div>`).join('')}</div>
   </div>`;
