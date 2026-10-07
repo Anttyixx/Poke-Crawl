@@ -13,9 +13,11 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **The RotomDex scans everywhere.** Tap a Pokémon or item (a starter, a wild Pokémon, one in your party, bag or daycare, or an item for sale) to select it, and Rotom in the top-right corner starts giving little side-to-side shakes with a tiny hop, glowing with a pulsing halo, to get your attention: tap Rotom to scan what you selected, or double-tap a Pokémon or item to select and scan it in one go. While the scan is open, tapping another Pokémon or item scans that one instead, and nothing can be moved; close the scan (tap Rotom, the Pokémon or item being scanned, or anywhere outside it) and your selection is still there, ready to move. This replaces the old info popup and info box.
 - **Release notes.** A "Release notes" button next to the version number in the title screen's bottom-left corner lists what changed in each version, newest first.
 - **Scanning with the RotomDex.** On the starter screen, the three starters now stand at the top under the title as bare sprites, with no slot boxes around them. Pick one and tap Rotom, and it flies over to scan it: a small RotomDex window opens right next to it with just that Pokémon's stats, EXP, ability, held item and moves, its border rising in a bump to meet Rotom perched by the Pokémon. Tap another starter and Rotom hops over to scan that one, the window folding away as it sets off and opening out of Rotom again, with the new Pokémon's info, as it lands; the scan looks just like a Pokémon's entry in the full RotomDex. Choose with the "I Choose You!!" button at the bottom of the screen, or tap "Full RotomDex", pinned to the scan's top-right corner, and Rotom opens the whole RotomDex.
-- **Generation 1 Pokémon**, plus the other members of their families from later generations: babies like Pichu, Cleffa and Happiny, and evolutions like Scizor, Kleavor, Magnezone, Blissey and all eight Eeveelutions. 48 evolution lines, 119 Pokémon in all.
-- **Branching evolutions.** Eevee, Slowpoke, Tyrogue and Scyther pick their branch when they reach ★2, and Oddish and Poliwag when they reach ★3, then stay on it.
-- **Real legendaries.** Articuno, Zapdos, Moltres, Mewtwo and Mew wait on Legendary nodes. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
+- **741 Pokémon from every generation**, in 393 evolution lines: from Bulbasaur to the Paldea starters, with Alolan, Galarian and Hisuian forms (Alolan Vulpix, Galarian Darmanitan, Hisuian Zoroark…), Ultra Beasts, Paradox Pokémon, and new evolutions like Annihilape (Primeape's ★3), Kingambit, Hydrapple and Clodsire.
+- **Starters from every generation.** Each run offers one generation's three starters (Grass, Fire and Water), picked at random.
+- **Rare wild Pokémon.** Mythical Pokémon (like Celebi, Jirachi and the Ultra Beasts) can turn up at wild nodes from map 4 on, but very rarely; Zeraora, Meltan, Kubfu and Zarude are a little less rare, and Paradox Pokémon are uncommon. They never appear on trainers' teams. The RotomDex says where each Pokémon is found.
+- **Branching evolutions.** Lines like Eevee, Tyrogue, Wurmple and Applin pick their branch when they reach ★2, and lines like Oddish, Ralts and Cyndaquil (Typhlosion or Hisuian Typhlosion) when they reach ★3, then stay on it.
+- **Real legendaries.** Legendary Pokémon, from Articuno to Koraidon and Miraidon, wait on Legendary nodes. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
@@ -51,6 +53,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - Every Pokémon now knows just 2 moves: its signature move and one move taught at a Move Tutor (it was 2 taught moves). Teaching a Pokémon a new move replaces the one it was taught before. Trainers' and gym leaders' Pokémon follow the same rule.
 
 ### Removed
+- Pokémon no longer have a role (like Tank or Striker) in their scan or RotomDex entry.
 - Caterpie, Rattata, Spearow, Ekans, Nidoran♀, Nidoran♂, Zubat and Paras, and their evolutions, are gone, to match the planned roster.
 
 ## 0.3.0 (2026-10-02)

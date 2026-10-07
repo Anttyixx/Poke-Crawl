@@ -28,14 +28,35 @@ for (const [id, ks] of Object.entries(LEARN)) for (const k of ks) MOVES[k].learn
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Hypno at ★2 and ★3 is one Pokémon
 const UNIVERSAL = new Set(POOLS.filter(p => p.rule.all).flatMap(p => p.moves));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', learnableBy:[] };
-const STARTERS = ['bulbasaur', 'charmander', 'squirtle'];
+// the starters, three to a generation (Grass, Fire, Water); a new run offers one generation's three, at random
+const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],
+  ['turtwig', 'chimchar', 'piplup'], ['snivy', 'tepig', 'oshawott'], ['chespin', 'fennekin', 'froakie'], ['rowlet', 'litten', 'popplio'],
+  ['grookey', 'scorbunny', 'sobble'], ['sprigatito', 'fuecoco', 'quaxly']];
+const STARTERS = STARTER_GENS.flat();
 // legendaries come only from Legendary nodes: never in wild offers or on trainers' and gym leaders' teams
 const LEGEND_LINES = LINE_IDS.filter(l => LINES[l][1][0].legendary);
 const TEAM_LINES = LINE_IDS.filter(l => !LEGEND_LINES.includes(l));
+// how often a wild line is offered (data.json "weight", default 100): mythicals 5, the rarer legendaries 10, Paradox
+// Pokémon 40. Rare lines stay off trainers' and gym leaders' teams.
+const lineWeight = l => LINES[l][1][0].weight ?? 100;
+const TRAINER_LINES = TEAM_LINES.filter(l => lineWeight(l) >= 100);
 const WILD_LINES = TEAM_LINES.filter(l => !STARTERS.includes(l));
 // every wild line has a tier, 1 to 8 (data.json, on its forms): the first map it can be found on. Higher tiers end up
 // stronger (stats, abilities), but every tier is worth having
 const lineTier = l => LINES[l][1][0].tier || 1;
+function pickWeighted(a, w){
+  let r = Math.random() * a.reduce((t, x) => t + w(x), 0);
+  for (const x of a) if ((r -= w(x)) < 0) return x;
+  return a[a.length - 1];
+}
+// where a line turns up, for the RotomDex
+function foundAt(l){
+  const f = LINES[l][1][0];
+  if (STARTERS.includes(l)) return 'Starter';
+  if (f.legendary) return 'Legendary nodes only';
+  const where = `<span title="Found at wild nodes from map ${lineTier(l)} on">Wild from map ${lineTier(l)}</span>`;
+  return lineWeight(l) < 100 ? `${where} · ${lineWeight(l) <= 10 ? 'very rare' : 'uncommon'}` : where;
+}
 // three different wild lines for this map: each one from this map's tier (TUNE.wildTierChance), or else from any
 // earlier tier, so new Pokémon show up on every map and the earlier ones still turn up
 const wildMoveChance = () => Math.min(1, TUNE.wildMove.base + TUNE.wildMove.perMap * (R.mapNo - 1));
@@ -45,7 +66,7 @@ function wildLinesFor(mapNo){
   while (out.length < 3){
     const fresh = a => a.filter(l => !out.includes(l));
     const pool = !fresh(before).length || (fresh(now).length && Math.random() < TUNE.wildTierChance) ? fresh(now) : fresh(before);
-    out.push(pick(pool.length ? pool : fresh(WILD_LINES)));
+    out.push(pickWeighted(pool.length ? pool : fresh(WILD_LINES), lineWeight));
   }
   return out;
 }
@@ -1179,7 +1200,6 @@ function mapMonHTML(m){
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b>${starRow(m.star)}</div>
-      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}</div>` : ''}
       <div class="dstats dstats--4">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}${exp}</div>
     </div>
     <div class="dexmon__more">
@@ -1275,7 +1295,7 @@ function dexMonHTML(f){
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b></div>
-      ${f.primary ? `<div class="dexmon__roles">${cap(f.primary)}${f.secondary ? ` · ${cap(f.secondary)}` : ''}${f.tier ? ` · <span title="Found at wild nodes from map ${f.tier} on">Wild from map ${f.tier}</span>` : ''}</div>` : ''}
+      <div class="dexmon__roles">${foundAt(f.line)}</div>
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
     <div class="dexmon__more">
@@ -1300,6 +1320,13 @@ function dexStages(fs){
     for (const f of fs.filter(x => x.star === n)) if (!seen.has(f.name)){ seen.add(f.name); col.push(speciesForms(f).at(-1)); }
     if (col.length) cols.push(col);
   }
+  // when only some branches evolve again (Applin: Dipplin into Hydrapple), keep each branch on its own row, with
+  // gaps (null) for the branches that don't
+  for (let i = 1; i < cols.length; i++){
+    const prev = cols[i - 1], col = cols[i];
+    if (col.length < prev.length && prev.every(f => f && f.branch) && col.every(f => f.branch))
+      cols[i] = prev.map(p => p && col.find(f => f.branch === p.branch) || null);
+  }
   return cols;
 }
 function dexEvoHTML(fs){
@@ -1307,8 +1334,9 @@ function dexEvoHTML(fs){
   return `<div class="dexevo">
     <div class="dexevo__bar"><span class="dexevo__label">${fs[0].name} line</span><span class="dexevo__hint">Tap a Pokémon for its info</span></div>
     <div class="dexevo__path" role="group" aria-label="Evolution path">${cols.map((c, i) => (i ? `<span class="dexevo__arrow">${EVO_ARROW}</span>` : '')
-      + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map(f => `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
-          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span></button>`).join('')}</div>`).join('')}</div>
+      + `<div class="dexevo__col${c.length > 3 ? ' dexevo__col--grid' : ''}">${c.map((f, j) => f ? `<button class="dexevo__mon" type="button" data-form="${f.id}" aria-pressed="false" aria-expanded="false" style="--t:${typeColor(f.type)}">
+          <span class="dexevo__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></span><span class="dexevo__name">${f.name}</span></button>`
+          : `<span class="dexevo__mon dexevo__gap" aria-hidden="true"><span class="dexevo__pic"></span><span class="dexevo__name">${cols[i - 1][j].name}</span></span>`).join('')}</div>`).join('')}</div>
   </div>`;
 }
 /* ---------- a Pokémon's info opens inside its line's card ----------
@@ -1919,7 +1947,7 @@ function buildTitle(){
   $('#title-map').innerHTML = `<svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none">${lines.join('')}</svg>
     <div class="tbg__nodes">${[...nodes.values()].map(n => `<span class="tnode" data-type="${n.type}" style="left:${n.x}%;top:${n.y}%">${ICON[n.type]}</span>`).join('')}</div>`;
   $('#title-version').textContent = 'v' + VERSION;
-  $('#title-mons').innerHTML = STARTERS.map((l, i) => {
+  $('#title-mons').innerHTML = STARTER_GENS[0].map((l, i) => {
     const f = LINES[l][1][0];
     return `<div class="tmon" style="--t:var(--t-${f.type}); --i:${i}"><img src="${SPRITES[f.spr]}" alt="${f.name}"></div>`;
   }).join('');
@@ -1944,7 +1972,7 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 // three starters across the middle of the screen. Tapping one picks it; tapping Rotom then scans it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
 const ST = { offer: [], home: -1, chosen: false, pressed: -1e9 };
-function openStarter(){ newRun(); Object.assign(ST, { offer: STARTERS.map(l => makeMon(l, 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
+function openStarter(){ newRun(); Object.assign(ST, { offer: pick(STARTER_GENS).map(l => makeMon(l, 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
 // tap a starter to pick it ("I Choose You!!" shows, and Rotom lights up to scan it); tap it again to put it back
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
