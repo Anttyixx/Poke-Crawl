@@ -28,6 +28,9 @@ const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 a
 // teachables nearly every line can learn (Protect, Rest, Facade…): the Move Tutor offers at most one of them at a time
 const UNIVERSAL = new Set(TEACHABLE.filter(k => LEARN_BY[k].size >= LINE_IDS.length * .75));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has no PP left in any of its moves. The user takes 12% of its max HP.', cat:'none', contact:true };
+// the hit a Pokémon falls back on when none of its moves would do anything from where it stands (a heal with no one
+// hurt, a charging move in round 1…), so a Support Pokémon on its own still fights. Uses no PP
+MOVES.pound = { name:'Pound', star:1, type:'none', kind:'off', shape:'single', power:25, fx:'Used when none of its moves would do anything from where it stands, like a heal with no one hurt. Uses no PP.', cat:'none', contact:true };
 // the starters, three to a generation (Grass, Fire, Water); a new run offers one Grass, one Fire and one Water starter,
 // each from a different generation, at random
 const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],
@@ -178,6 +181,7 @@ const TUNE = {
   // the first maps have more wild and trainer nodes, so a new run builds its team and levels it up: wild nodes per route
   // (fewest, most), extra wild nodes off the main routes, the weights of the other nodes (normally trainer 52, item 13,
   // tutor 12: see GEN), and node types that can sit side by side at a fork (normally every choice there is different)
+  battleSpeed: 1.5,                                  // how fast battles play at 1× (the old 1.5×); 2× and 4× scale from it
   earlyMaps: [{ wildMin: 3, wildMax: 4, extraWilds: 5, weights: { trainer: 85, item: 6, tutor: 4 }, repeatKids: ['trainer'] },
               { wildMin: 3, wildMax: 3, extraWilds: 3, weights: { trainer: 60, item: 11, tutor: 10 }, repeatKids: ['trainer'] }],
   mythical: { from: 2, chance: .01 },               // from this map on, a map with no Legendary node has this chance of a
@@ -292,7 +296,7 @@ function swapMove(m, slot, k){
    ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
 // the "Moves" heading in a Pokémon's entry. Each move has its own PP (MOVES[k].pp): how many times it can be used in a
 // battle. A move out of PP can't be picked; with none left in any move, the Pokémon Struggles. PP refills after each battle
-const movesLabel = () => `<span>Moves <em class="dexkv__aside" title="Each move can be used as many times as its PP per battle. PP refills after every battle">· PP refills after each battle</em></span>`;
+const movesLabel = () => DEX.scan ? '<span>Moves</span>' : `<span>Moves <em class="dexkv__aside" title="Each move can be used as many times as its PP per battle. PP refills after every battle">· PP refills after each battle</em></span>`;
 // a taught move's percent chance to be used, with this held item
 // (sk: the moves it sketched, which take Sketch's chance)
 function moveChance(k, item, sk){
@@ -312,11 +316,14 @@ function learnable(m){
   if (!m.taught.includes(SKETCH)) have.delete(SKETCH);             // Sketch can be taught on top of a Sketch signature
   return (LEARN[m.form] || []).filter(k => !have.has(k) && MOVES[k].star <= m.star && !(m.item?.id === 'assault-vest' && MOVES[k].kind === 'sup'));
 }
+// a move that deals damage
+const isAttack = k => MOVES[k].kind === 'off' && MOVES[k].power !== 0;
 // taught: whether it arrives knowing a move besides its signature (starters don't; wild ones sometimes, see wildMoveChance)
 function makeMon(line, star = 1, exp = 0, taught = true){
   const m = { uid: 'm' + (++uidN), line, star, form: formFor(line, star), exp: star >= 3 ? 1 : exp, taught: [], item: null };
-  const opts = learnable(m), off = opts.filter(k => MOVES[k].kind === 'off');
+  const opts = learnable(m), off = opts.filter(k => MOVES[k].kind === 'off'), hits = off.filter(k => MOVES[k].power > 0);
   if (taught && opts.length) m.taught.push(pick(off.length ? off : opts));
+  else if (!isAttack(FORM[m.form].sig) && hits.length) m.taught.push(pick(hits));   // a Support Pokémon always comes knowing an attack
   // it learned the signature moves of the levels it grew through (on its own branch)
   const br = FORM[m.form].branch;
   for (let s2 = 1; s2 < star; s2++) remember(m, ...LINES[line][s2].filter(f => !f.branch || !br || f.branch === br).map(f => f.sig));
@@ -1610,7 +1617,7 @@ const DEX_BUILD = {
   scan: () => { const s = DEX.scan?.mon; if (!s) return '';
     return `<article class="dexline dexscan" data-only="${s.form || ''}"><div class="dexdetail">${s.form ? mapMonHTML(s) : mapItemHTML(s, DEX.scan.follow && martSellable()?.it === s)}</div></article>`; },
   items: () => `<p class="dexintro">${ITEMS_DATA.length} held items. Buy them at Poké Marts; each Pokémon can hold one, and it works automatically in battle. A Mega Stone shows up at a Mart only when a Pokémon in your party can use it.</p>`
-    + ITEMS_DATA.map(i => `<article class="dexitem" data-q="${searchText(i.name)}"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
+    + ITEMS_DATA.map(i => `<article class="dexitem" data-item="${i.id}" data-q="${searchText(i.name)}"><div class="dexitem__pic"><img src="${spriteURL(i.spr)}" alt=""></div>
       <div class="dexitem__main"><div class="dexitem__head"><b>${i.name}</b>${TUNE.itemPrice[i.id] != null ? `<span class="dexprice">${TUNE.itemPrice[i.id]} coins</span>` : ''}</div><p>${i.fx}</p></div></article>`).join(''),
 };
 /* ---------- search: the box under the tabs narrows the open list (Pokémon by name, type or Mega; moves by name
@@ -2014,7 +2021,7 @@ function dexApply(g){
   if (DEX.open && !DEX.busy && !RD.flying) rdPlace(rdSpot());
 }
 function dexActions(){
-  const bar = $('#dex-act'), acts = DEX.scan ? [{ label: 'Full RotomDex', run: dexToFull }] : [];
+  const bar = $('#dex-act'), acts = DEX.scan ? [{ label: 'View dex entry', run: dexToEntry }] : [];
   bar.hidden = !acts.length;
   bar.innerHTML = acts.map((a, i) => `<button class="btn ${a.go ? 'btn--go' : ''}" type="button" data-act="${i}">${a.label}</button>`).join('');
   bar._acts = acts;
@@ -2104,10 +2111,20 @@ async function rdRelocate(change, dip, slow = 1){
   if (await dexUnfold(fl, b.x - a.x, b.y - a.y, sc, live, flight)){ DEX.busy = false; rdStill(false); }
 }
 // "Full RotomDex": Rotom leaves the Pokémon, the page dims, and it opens the full RotomDex on the Pokémon section
-async function dexToFull(){
+// "View dex entry": the scan turns into the full RotomDex, open at the scanned Pokémon's (or item's) entry
+async function dexToEntry(){
+  const s = DEX.scan?.mon, form = s?.form, item = !form && s && (s.id || s.item?.id);
+  await dexToFull(form ? 'mons' : item ? 'items' : null);
+  if (form) return dexJump(form);
+  dexSearchClear();
+  const row = item && document.querySelector(`.dexitem[data-item="${item}"]`), scr = $('#dex-scroll'); if (!row) return;
+  scr.scrollTo({ top: scr.scrollTop + row.getBoundingClientRect().top - scr.getBoundingClientRect().top - 16, behavior: REDUCED ? 'auto' : 'smooth' });
+  row.classList.remove('dexflash'); void row.offsetWidth; row.classList.add('dexflash');
+}
+async function dexToFull(tab){
   DEXVEIL.style.opacity = 0;
   await rdRelocate(() => {
-    endScan(); DEX.tab = DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
+    endScan(); DEX.tab = tab || DEX.tabBefore || 'mons'; dexActions(); dexShow(DEX.tab, false); dexTabs(DEX.tab);
     DEXVEIL.animate([{ opacity: 0 }, { opacity: 1 }], { duration: RD_MS.home, easing: 'ease-out', fill: 'forwards' });
   }, .6, 1 / .9);                                               // flies there 10% slower than a normal hop
   DEXVEIL.getAnimations().forEach(x => x.cancel()); DEXVEIL.style.opacity = '';
@@ -2168,11 +2185,11 @@ NOTES.querySelector('.notes__veil').addEventListener('click', closeNotes);
 addEventListener('keydown', e => { if (e.key === 'Escape') closeNotes(); });
 
 /* ================= starter ================= */
-// three starters across the middle of the screen. Tapping one picks it; tapping Rotom then scans it (openScan): the RotomDex opens
+// three starters across the middle of the screen. Tapping one picks it and Rotom scans it (openScan): the RotomDex opens
 // beside it on the Scan tab, with "I Choose You!!" at the bottom. Choosing it puts Rotom away and starts the run.
 const ST = { offer: [], home: -1, chosen: false, pressed: -1e9 };
 function openStarter(){ newRun(); Object.assign(ST, { offer: shuffle([...STARTER_GENS]).slice(0, 3).map((g, i) => makeMon(g[i], 1, 0, false)), home: -1, chosen: false }); $('#starter-act').hidden = true; }
-// tap a starter to pick it ("I Choose You!!" shows, and Rotom lights up to scan it); tap it again to put it back
+// tap a starter to pick it: "I Choose You!!" shows and Rotom scans it straight away; tap it again to put Rotom away
 function starterTap(i){
   if (ST.chosen || wiping || !ST.offer[i] || DEX.busy) return;
   const twice = doubleTap('starter|' + i);
@@ -2180,7 +2197,7 @@ function starterTap(i){
   ST.home = ST.home === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('starter-act', $('#starter-act'), ST.home >= 0);
   refresh();
-  if (twice) scanNow();
+  if (ST.home >= 0) scanNow();                                // Rotom scans it straight away
 }
 async function chooseStarter(){
   const i = ST.home;
@@ -2400,7 +2417,7 @@ function wildTap(i){
   W.scanning = W.scanning === i && !scanMode() && !twice ? -1 : i; UI.focus = 'offer';
   setShown('wild-act', $('#wild-act'), W.scanning >= 0);
   refresh();
-  if (twice) scanNow();
+  if (W.scanning >= 0) scanNow();                             // Rotom scans it straight away
 }
 // "I Choose You!!": the scan closes, the other two leave, and your party lights up for you to pick a slot
 async function wildChoose(){

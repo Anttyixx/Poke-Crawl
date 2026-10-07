@@ -35,14 +35,15 @@ for (const [k, m] of Object.entries(MOVES)){
   if (m.dot) DOTS[k] = m.dot;
 }
 const ALL_TYPES = Object.keys(CHART);
-const NO_METRONOME = new Set(['metronome','counter','struggle', ...Object.keys(MOVES).filter(k => MOVES[k].selfFaint)]);
+const NO_METRONOME = new Set(['metronome','counter','struggle','pound', ...Object.keys(MOVES).filter(k => MOVES[k].selfFaint)]);
 const CHOICE = new Set(['choice-band','choice-specs','choice-scarf']);
 const AREA_SHAPES = new Set(['splash','row','back','field']);
 const SIDE_MOVES = new Set(['reflect','wide-guard','safeguard','wish']);
 
 const SIDES = ['you','opp'];
 let lineup = null, board = null, sideSt = null, round = 0, lastUsed = null, ctx = null, running = false, battleToken = 0, uidSeq = 0;
-let speed = 2, speedPref = 2, entranceAbort = null;
+let speed = 1, speedPref = 1, entranceAbort = null;      // the 1×, 2×, 4× button; 1× plays at TUNE.battleSpeed (see rate)
+const rate = () => speed * TUNE.battleSpeed;
 const turnOf = new Map();
 const B = { enc: null, coins: 0, slotEls: { you:[[],[]], opp:[[],[]] } };
 
@@ -52,6 +53,7 @@ function enemyUnit(line, star, mul, nMoves, item, formId){
   const pool = (LEARN[f.id] || []).filter(k => k !== f.sig && MOVES[k].star <= star && !(item === 'assault-vest' && MOVES[k].kind === 'sup'));
   const off = shuffle(pool.filter(k => MOVES[k].kind === 'off')), sup = shuffle(pool.filter(k => MOVES[k].kind === 'sup'));
   const moves = [f.sig];
+  if (!isAttack(f.sig) && !nMoves){ const hit = off.find(k => MOVES[k].power > 0); if (hit) moves.push(hit); }   // a Support Pokémon always has an attack
   while (moves.length < 1 + nMoves && (off.length || sup.length)) moves.push((off.length && (Math.random() < .75 || !sup.length)) ? off.pop() : sup.pop());
   return { form: f.id, moves, item, mul };
 }
@@ -217,12 +219,12 @@ $('#scr-battle').addEventListener('scroll', hideTip, { passive: true });
 /* ---------- timing + feedback ---------- */
 const instant = () => speed === 0;
 const animOn = () => !instant() && !REDUCED;
-const wait = ms => instant() ? Promise.resolve() : new Promise(r => setTimeout(r, ms / speed));
+const wait = ms => instant() ? Promise.resolve() : new Promise(r => setTimeout(r, ms / rate()));
 function flash(el, cls){ if (!el || instant()) return; el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); setTimeout(() => el.classList.remove(cls), 500); }
 function floatText(el, text, kind){
   if (!el || instant()) return;
   const f = document.createElement('div'); f.className = `float float--${kind}`; f.textContent = text;
-  const dur = 900 / speed; f.style.setProperty('--fdur', dur + 'ms');
+  const dur = 900 / rate(); f.style.setProperty('--fdur', dur + 'ms');
   el.append(f); setTimeout(() => f.remove(), dur + 50);
 }
 function mid(el){ const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }
@@ -236,7 +238,7 @@ function dash(el, toEl){
   if (!animOn() || !toEl || !el) return;
   const a = mid(el), b = mid(toEl), dx = (b.x - a.x) * .32, dy = (b.y - a.y) * .32;
   el.querySelector('.slot__sprite').animate([{ transform:'none' }, { transform:`translate(${-dx * .15}px, ${-dy * .15}px) scale(.94)`, offset:.25 },
-    { transform:`translate(${dx}px, ${dy}px) scale(1.12)`, offset:.55 }, { transform:'none' }], { duration: 460 / speed, easing:'ease-in-out' });
+    { transform:`translate(${dx}px, ${dy}px) scale(1.12)`, offset:.55 }, { transform:'none' }], { duration: 460 / rate(), easing:'ease-in-out' });
 }
 function shoot(fromEl, toEl, color){
   if (!animOn() || !toEl || !fromEl) return Promise.resolve();
@@ -245,10 +247,10 @@ function shoot(fromEl, toEl, color){
   o.style.left = a.x + 'px'; o.style.top = a.y + 'px'; document.body.append(o);
   const dx = b.x - a.x, dy = b.y - a.y, arc = Math.min(40, Math.hypot(dx, dy) * .15), f = [];
   for (let i = 0; i <= 10; i++){ const t = i / 10; f.push({ transform:`translate(${dx * t}px, ${dy * t - 4 * arc * t * (1 - t)}px) scale(${.7 + .5 * t})` }); }
-  return new Promise(res => { const an = o.animate(f, { duration: 260 / speed, easing:'ease-in' }); an.onfinish = () => { o.remove(); res(); }; });
+  return new Promise(res => { const an = o.animate(f, { duration: 260 / rate(), easing:'ease-in' }); an.onfinish = () => { o.remove(); res(); }; });
 }
 function burst(el, color){ if (!animOn() || !el) return; const d = document.createElement('div'); d.className = 'burst'; d.style.setProperty('--c', color); el.append(d); setTimeout(() => d.remove(), 450); }
-const hopDuration = () => Math.max(300, 560 / speed);
+const hopDuration = () => Math.max(300, 560 / rate());
 
 /* ---------- log ---------- */
 // Each round gets its own box in the log ("Round 3"), and each entry is tinted by whose Pokémon it is about (the
@@ -304,7 +306,7 @@ function shapeTargets(side, c, shape){
     : shape === 'row' ? b[0] : shape === 'back' ? b[1] : b.flat();
   return list.filter(t => t && !(AREA_SHAPES.has(shape) && t.item === 'safety-goggles'));
 }
-const lowestAlly = (side, except) => living(side).filter(x => x !== except).reduce((a, b) => (!a || b.hp / b.maxHp < a.hp / a.maxHp ? b : a), null);
+const lowestAlly = (side, except, hurt) => living(side).filter(x => x !== except && (!hurt || x.hp < x.maxHp)).reduce((a, b) => (!a || b.hp / b.maxHp < a.hp / a.maxHp ? b : a), null);
 const strongestAlly = (side, except) => living(side).filter(x => x !== except).reduce((a, b) => (!a || effAtk(b) > effAtk(a) ? b : a), null);
 const over = () => !living('you').length || !living('opp').length;
 function faint(u, why = ''){
@@ -315,11 +317,14 @@ function faint(u, why = ''){
 }
 function checkFaints(list){ for (const t of list) if (t.hp <= 0 && find(t)) faint(t); }
 function lower(t, stat, amt){ if (sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
+// a move that does no damage and heals nothing: buffs, shields and debuffs (Splash is Magikarp's whole act, so it's left out)
+const statOnly = k => { const m = MOVES[k]; return k !== 'splash' && (m.kind === 'sup' ? !m.heal : m.power === 0); };
 // would this move do something if used right now, from where the Pokémon stands? (moves that would fail are never picked)
 function usable(u, k){
   const pos = find(u), m = MOVES[k];
   if (!pos || !m) return false;
   if (round === 1 && m.charge) return false;                                        // charging moves can't open a battle
+  if (u.st.lastMove === k && statOnly(k)) return false;                             // a move that only changes stats isn't used twice in a row
   if (m.kind === 'sup'){
     if (k === 'transform') return living(foe(u.side)).length > 0;
     if (k === SKETCH) return !!lastUsed && !u.moves.includes(lastUsed);      // there's a move to copy that it doesn't know
@@ -343,17 +348,22 @@ function draw(u){
   let r = Math.random() * 100;
   for (const k of taught){ const c = moveChance(k, u.item, u.sketched); if (r < c && ok(k)) return k; r -= c; }
   if (ok(sig)) return sig;
-  return taught.find(ok) || null;
+  return taught.find(ok) || (usable(u, 'pound') ? 'pound' : null);
 }
 
 /* ---------- support moves ---------- */
 function supportTargets(u, pos, key, m){
+  const ts = pickSupportTargets(u, pos, key, m);
+  return m.heal && !m.buff && !m.shield ? ts.filter(t => t.hp < t.maxHp) : ts;   // a pure heal skips anyone at full HP
+}
+function pickSupportTargets(u, pos, key, m){
   const side = u.side;
   switch (m.target){
     case 'self': return [u];
     case 'team': return living(side);
     case 'front': return board[side][0].filter(Boolean);
-    case 'lowest': { const t = lowestAlly(side, null); return t ? [t] : []; }
+    case 'lowest': { const t = lowestAlly(side, null, true); return t ? [t] : []; }
+    case 'hurt': { const t = living(side).filter(x => x.hp < x.maxHp).reduce((a, b) => (!a || b.maxHp - b.hp > a.maxHp - a.hp ? b : a), null); return t ? [t] : []; }   // the teammate missing the most HP
     case 'ahead': {
       const ahead = pos.row === 1 ? board[side][0][pos.lane] : null;
       if (ahead) return [ahead];
@@ -595,7 +605,7 @@ async function act(u, forced){
     await wait(420); setTurn(u, null); return;
   }
   // the move planned at the start of the round, if it would still work (the field may have changed since); else a new pick
-  const plan = u.st.planned, stillOK = plan && usable(u, plan) && (plan === 'struggle' ? outOfPP(u) : ppLeft(u, plan) > 0 && !(u.st.lock && plan !== u.st.lock));
+  const plan = u.st.planned, stillOK = plan && plan !== 'pound' && usable(u, plan) && (plan === 'struggle' ? outOfPP(u) : ppLeft(u, plan) > 0 && !(u.st.lock && plan !== u.st.lock));
   const origKey = forced ? forced.move : stillOK ? plan : draw(u);
   u.st.planned = null;
   if (!origKey){
@@ -609,17 +619,17 @@ async function act(u, forced){
     const c = center(u.side, pos.lane), hits = k => c >= 0 && shapeTargets(u.side, c, MOVES[k].shape).length > 0;
     key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k) && hits(k))); m = MOVES[key];
   }
-  if (origKey !== 'struggle') spendPP(u, origKey);
+  if (origKey !== 'struggle' && origKey !== 'pound') spendPP(u, origKey);
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
   const ok = m.kind === 'sup' ? await resolveSupport(u, pos, key, m, el) : await resolveOffense(u, pos, key, m, el, origKey);
   if (ok){
     u.st.used.add(origKey); u.st.lastMove = origKey;
-    if (origKey !== 'struggle' && origKey !== SKETCH) lastUsed = origKey;
-    if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle' && origKey !== SKETCH){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
+    if (origKey !== 'struggle' && origKey !== 'pound' && origKey !== SKETCH) lastUsed = origKey;
+    if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle' && origKey !== 'pound' && origKey !== SKETCH){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
   }
-  if (origKey !== 'struggle'){
+  if (origKey !== 'struggle' && origKey !== 'pound'){
     if (outOfPP(u)) log(`⚠ ${who(u)} has no PP left and will Struggle from now on`, 'le-sys');
     else if (ppLeft(u, origKey) === 0 && u.moves.includes(origKey)) log(`⚠ ${who(u)}'s ${MOVES[origKey].name} is out of PP`, 'le-sys');
   }
@@ -722,7 +732,7 @@ async function megaEvolve(side){
   log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(${[chg('HP', b.hp), chg('Atk', b.atk), chg('Spd', b.spd)].filter(Boolean).join(', ')})</small>`);
   render();
   const el = elOf(x);
-  if (el && !instant()) el.animate([{ filter: 'none' }, { filter: 'brightness(2.6) drop-shadow(0 0 14px #e9b6ff)', offset: .35 }, { filter: 'none' }], { duration: 900 / speed, easing: 'ease-out' });
+  if (el && !instant()) el.animate([{ filter: 'none' }, { filter: 'brightness(2.6) drop-shadow(0 0 14px #e9b6ff)', offset: .35 }, { filter: 'none' }], { duration: 900 / rate(), easing: 'ease-out' });
   await wait(900);
 }
 function abortBattle(){
