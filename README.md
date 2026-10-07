@@ -29,7 +29,7 @@ bundles everything (code, styles, data and sprites) into that one file.
 | `src/game.css` | Everything else (later rules override earlier ones) |
 | `data/data.json` | Pokémon forms and moves |
 | `data/items.json` | Held items |
-| `assets/pokesprite/` | Pokémon and item sprites (from PokéSprite) |
+| `assets/sprites/` | Pokémon (normal and shiny, up to Gen 9) and item sprites |
 | `assets/` | EXP Candy, the 18 TR sprites and Rotom Pokédex (the Pokédex icon) |
 | `docs/design/` | Feature/design notes |
 | `build.py` | Stitches it all into `dist/index.html` |
@@ -52,4 +52,4 @@ Each release to the stable game gets a version number (`0.MINOR.PATCH` during de
 
 ## Credits
 
-Pokémon and item sprites come from [PokéSprite](https://github.com/msikma/pokesprite) by Michiel Sikma and contributors (code and data under the MIT license). The sprite images are © Nintendo / Creatures Inc. / GAME FREAK Inc. Poke-Crawl is a free, non-commercial fan project and is not affiliated with or endorsed by them.
+Pokémon and item sprites are the Pokémon menu icons and item icons (see `assets/sprites/README.md`). The sprite images are © Nintendo / Creatures Inc. / GAME FREAK Inc. Poke-Crawl is a free, non-commercial fan project and is not affiliated with or endorsed by them.
