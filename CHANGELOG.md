@@ -18,9 +18,9 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 - **RotomDex search.** A search box under the tabs narrows the list as you type: Pokémon by name, type or Mega, moves by name or type, items by name.
 - **Starters from every generation.** Each run offers a Grass, a Fire and a Water starter, each from a different generation, picked at random.
 - Starting a run fades straight from the title screen to the starters, without the screen wipe.
-- **Mythical Pokémon.** On map 5, the first wild node also offers a Mythical Pokémon (like Celebi, Jirachi, Zeraora or one of the Ultra Beasts). Paradox Pokémon are in the strongest wild tier, and are a little rarer there. Neither shows up on trainers' teams.
+- **Mythical Pokémon.** From map 2 on, a map without a Legendary node has a small chance of a Mythical Pokémon (like Celebi, Jirachi, Zeraora or one of the Ultra Beasts), which the map's first wild node then offers: 1% on map 2, doubling every map (2%, 4%, 8%… up to 64% on map 8). Paradox Pokémon are in the strongest wild tier, and are a little rarer there. Neither shows up on trainers' teams.
 - **Branching evolutions.** Lines like Wurmple and Applin pick their branch when they reach ★2, and lines like Eevee, Tyrogue, Oddish, Ralts and Cyndaquil (Typhlosion or Hisuian Typhlosion) when they reach ★3, then stay on it.
-- **Real legendaries.** Legendary Pokémon, from Articuno to Koraidon and Miraidon, wait on Legendary nodes: at most one per map, and rare, except that map 6 always has one and map 8 often does. Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
+- **Real legendaries.** Legendary Pokémon, from Articuno to Koraidon and Miraidon, wait on Legendary nodes. None appear before map 6; map 6 always has one, and maps 7 and 8 each have a 10% chance (never more than one per map). Beat them to catch them; they never show up as wild Pokémon or on trainers' teams.
 - Sell items at Poké Marts: tap an item in your bag (or one a Pokémon holds) and press Sell in its scan, for half its price.
 
 ### Changed
