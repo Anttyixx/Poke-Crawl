@@ -768,7 +768,7 @@
    "type": "normal",
    "role": "Striker",
    "sub": "Multi-hit",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 50,
    "atk": 28,
    "spd": 49,
@@ -2782,7 +2782,7 @@
    "type": "normal",
    "role": "All-Rounder",
    "sub": "Buffer",
-   "sig": "tri-attack",
+   "sig": "body-slam",
    "hp": 93,
    "atk": 48,
    "spd": 34,
@@ -3278,7 +3278,7 @@
    "type": "dark",
    "role": "All-Rounder",
    "sub": "Draining",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 78,
    "atk": 39,
    "spd": 37,
@@ -4582,7 +4582,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Debuffing",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 59,
    "atk": 35,
    "spd": 34,
@@ -4759,7 +4759,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Multi-hit",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 52,
    "atk": 32,
    "spd": 40,
@@ -4873,7 +4873,7 @@
    "type": "normal",
    "role": "Tank",
    "sub": "Bulky",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 66,
    "atk": 41,
    "spd": 27,
@@ -5338,7 +5338,7 @@
    "type": "dark",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 52,
    "atk": 38,
    "spd": 34,
@@ -5395,7 +5395,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 61,
    "atk": 19,
    "spd": 42,
@@ -5415,7 +5415,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "hyper-fang",
+   "sig": "body-slam",
    "hp": 95,
    "atk": 29,
    "spd": 51,
@@ -6506,7 +6506,7 @@
    "type": "normal",
    "role": "Striker",
    "sub": "Splash",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 67,
    "atk": 37,
    "spd": 26,
@@ -6563,7 +6563,7 @@
    "type": "dark",
    "role": "All-Rounder",
    "sub": "Debuffing",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 61,
    "atk": 35,
    "spd": 27,
@@ -7262,7 +7262,7 @@
    "type": "flying",
    "role": "Support",
    "sub": "Healer",
-   "sig": "peck",
+   "sig": "gust",
    "hp": 71,
    "atk": 28,
    "spd": 33,
@@ -7784,7 +7784,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Heavy",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 51,
    "atk": 39,
    "spd": 29,
@@ -9441,7 +9441,7 @@
    "type": "normal",
    "role": "Striker",
    "sub": "Multi-hit",
-   "sig": "fury-attack",
+   "sig": "double-hit",
    "hp": 85,
    "atk": 45,
    "spd": 44,
@@ -10340,7 +10340,7 @@
    "type": "normal",
    "role": "All-Rounder",
    "sub": "Balanced",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 73,
    "atk": 44,
    "spd": 35,
@@ -10571,7 +10571,7 @@
    "type": "dark",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 63,
    "atk": 42,
    "spd": 42,
@@ -10688,7 +10688,7 @@
    "type": "normal",
    "role": "All-Rounder",
    "sub": "Balanced",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 77,
    "atk": 38,
    "spd": 38,
@@ -12191,7 +12191,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Bulky",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 66,
    "atk": 35,
    "spd": 28,
@@ -12533,7 +12533,7 @@
    "type": "dark",
    "role": "All-Rounder",
    "sub": "Debuffing",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 52,
    "atk": 39,
    "spd": 35,
@@ -12650,7 +12650,7 @@
    "type": "normal",
    "role": "Support",
    "sub": "Buffer",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 56,
    "atk": 28,
    "spd": 38,
@@ -13280,7 +13280,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Multi-hit",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 59,
    "atk": 39,
    "spd": 33,
@@ -14657,7 +14657,7 @@
    "type": "dark",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 65,
    "atk": 32,
    "spd": 30,
@@ -15233,7 +15233,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Draining",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 76,
    "atk": 42,
    "spd": 35,
@@ -16460,7 +16460,7 @@
    "type": "normal",
    "role": "All-Rounder",
    "sub": "Balanced",
-   "sig": "scratch",
+   "sig": "tackle",
    "hp": 74,
    "atk": 37,
    "spd": 27,
@@ -17523,7 +17523,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Sustain",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 95,
    "atk": 38,
    "spd": 24,
@@ -18229,7 +18229,7 @@
    "type": "normal",
    "role": "Tank",
    "sub": "Sustain",
-   "sig": "tri-attack",
+   "sig": "body-slam",
    "hp": 115,
    "atk": 51,
    "spd": 26,
@@ -18267,7 +18267,7 @@
    "type": "flying",
    "role": "Tank",
    "sub": "Sustain",
-   "sig": "peck",
+   "sig": "gust",
    "hp": 56,
    "atk": 31,
    "spd": 37,
@@ -18324,7 +18324,7 @@
    "type": "dark",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 58,
    "atk": 31,
    "spd": 34,
@@ -18748,7 +18748,7 @@
    "type": "flying",
    "role": "Support",
    "sub": "Debuffer",
-   "sig": "peck",
+   "sig": "gust",
    "hp": 58,
    "atk": 32,
    "spd": 32,
@@ -19732,7 +19732,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Heavy",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 72,
    "atk": 38,
    "spd": 37,
@@ -20830,7 +20830,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Bulky",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 64,
    "atk": 36,
    "spd": 30,
@@ -21517,7 +21517,7 @@
    "type": "flying",
    "role": "Support",
    "sub": "Buffer",
-   "sig": "peck",
+   "sig": "gust",
    "hp": 58,
    "atk": 36,
    "spd": 32,
@@ -22288,7 +22288,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Splash",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 66,
    "atk": 39,
    "spd": 37,
@@ -22585,7 +22585,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Sustain",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 84,
    "atk": 40,
    "spd": 33,
@@ -22645,7 +22645,7 @@
    "type": "dark",
    "role": "Striker",
    "sub": "Multi-hit",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 62,
    "atk": 40,
    "spd": 44,
@@ -22705,7 +22705,7 @@
    "type": "dark",
    "role": "Tank",
    "sub": "Bulky",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 97,
    "atk": 41,
    "spd": 26,
@@ -22765,7 +22765,7 @@
    "type": "dark",
    "role": "All-Rounder",
    "sub": "Splash",
-   "sig": "pursuit",
+   "sig": "bite",
    "hp": 65,
    "atk": 44,
    "spd": 38,
@@ -23709,7 +23709,7 @@
    "type": "normal",
    "role": "Tank",
    "sub": "Bulky",
-   "sig": "tri-attack",
+   "sig": "body-slam",
    "hp": 137,
    "atk": 54,
    "spd": 41,
@@ -23813,19 +23813,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "scratch": {
-   "name": "Scratch",
-   "star": 1,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "quick-attack": {
    "name": "Quick Attack",
    "star": 1,
@@ -23851,7 +23838,7 @@
    "heal": null,
    "hits": null,
    "fx": "",
-   "cat": "sig"
+   "cat": "unique"
   },
   "body-slam": {
    "name": "Body Slam",
@@ -23867,22 +23854,6 @@
    "cat": "sig",
    "spdDrop": 0.1
   },
-  "fury-attack": {
-   "name": "Fury Attack",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 18,
-   "heal": null,
-   "hits": [
-    2,
-    5
-   ],
-   "fx": "",
-   "cat": "sig"
-  },
   "double-hit": {
    "name": "Double Hit",
    "star": 2,
@@ -23897,32 +23868,6 @@
     2
    ],
    "fx": "",
-   "cat": "sig"
-  },
-  "hyper-fang": {
-   "name": "Hyper Fang",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 75,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
-  "tri-attack": {
-   "name": "Tri Attack",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 60,
-   "heal": null,
-   "hits": null,
-   "fx": "Target loses 10% Attack or 10% Speed for the battle (random).",
    "cat": "sig"
   },
   "self-destruct": {
@@ -24244,7 +24189,7 @@
    "power": 105,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "sig",
    "ignoreGuard": true
   },
@@ -24421,7 +24366,7 @@
     5
    ],
    "fx": "",
-   "cat": "sig"
+   "cat": "unique"
   },
   "karate-chop": {
    "name": "Karate Chop",
@@ -24677,19 +24622,6 @@
    "fx": "",
    "cat": "sig"
   },
-  "peck": {
-   "name": "Peck",
-   "star": 1,
-   "type": "flying",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "wing-attack": {
    "name": "Wing Attack",
    "star": 2,
@@ -24827,7 +24759,8 @@
    "buff": {
     "atk": 0.2,
     "spd": 0.2
-   }
+   },
+   "chance": 15
   },
   "rock-throw": {
    "name": "Rock Throw",
@@ -24935,7 +24868,7 @@
    "power": 60,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "sig",
    "ignoreGuard": true
   },
@@ -25015,7 +24948,7 @@
    "power": 55,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "sig",
    "ignoreGuard": true
   },
@@ -25228,7 +25161,7 @@
   },
   "harden": {
    "name": "Harden",
-   "star": 2,
+   "star": 1,
    "type": "normal",
    "kind": "sup",
    "shape": null,
@@ -25236,12 +25169,13 @@
    "power": null,
    "heal": null,
    "hits": null,
-   "fx": "The next 2 hits on the user deal 50% less damage.",
+   "fx": "The next 3 hits on the user deal 40% less damage.",
    "cat": "sig",
    "shield": {
-    "n": 2,
-    "p": 0.5
-   }
+    "n": 3,
+    "p": 0.4
+   },
+   "chance": 15
   },
   "heal-pulse": {
    "name": "Heal Pulse",
@@ -25267,7 +25201,8 @@
    "heal": 0.25,
    "hits": null,
    "fx": "Heals every teammate 25% of its max HP.",
-   "cat": "sig"
+   "cat": "sig",
+   "chance": 10
   },
   "coaching": {
    "name": "Coaching",
@@ -25386,20 +25321,6 @@
    "cat": "unique",
    "coins": 10
   },
-  "dynamic-punch": {
-   "name": "Dynamic Punch",
-   "star": 3,
-   "type": "fighting",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 115,
-   "heal": null,
-   "hits": null,
-   "fx": "Target loses 20% Speed for the battle.",
-   "cat": "unique",
-   "spdDrop": 0.2
-  },
   "hex": {
    "name": "Hex",
    "star": 3,
@@ -25427,19 +25348,6 @@
    "fx": "User heals 50% of the damage dealt.",
    "cat": "unique",
    "drain": 0.5
-  },
-  "crabhammer": {
-   "name": "Crabhammer",
-   "star": 3,
-   "type": "water",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 135,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "unique"
   },
   "bonemerang": {
    "name": "Bonemerang",
@@ -25503,19 +25411,6 @@
    "heal": 0.4,
    "hits": null,
    "fx": "Heals the lowest-HP teammate 40% of its max HP.",
-   "cat": "unique"
-  },
-  "barrier": {
-   "name": "Barrier",
-   "star": 3,
-   "type": "psychic",
-   "kind": "sup",
-   "shape": null,
-   "target": "front",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "fx": "Own front row takes 40% less damage for the next 2 rounds.",
    "cat": "unique"
   },
   "bullet-punch": {
@@ -25671,24 +25566,6 @@
    "cat": "unique",
    "selfAtk": -0.2
   },
-  "defense-curl": {
-   "name": "Defense Curl",
-   "star": 1,
-   "type": "normal",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 20,
-   "fx": "The next 2 hits on the user deal 50% less damage.",
-   "cat": "tutor",
-   "shield": {
-    "n": 2,
-    "p": 0.5
-   }
-  },
   "focus-energy": {
    "name": "Focus Energy",
    "star": 1,
@@ -25773,9 +25650,9 @@
    "heal": null,
    "hits": null,
    "chance": 20,
-   "fx": "Targets lose 10% Attack for the battle.",
+   "fx": "Targets lose 15% Attack for the battle.",
    "cat": "tutor",
-   "atkDrop": 0.1
+   "atkDrop": 0.15
   },
   "double-slap": {
    "name": "Double Slap",
@@ -25808,37 +25685,6 @@
    "fx": "+10% power each time it is used this battle.",
    "cat": "tutor"
   },
-  "howl": {
-   "name": "Howl",
-   "star": 1,
-   "type": "normal",
-   "kind": "sup",
-   "shape": null,
-   "target": "front",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Own front row gains 10% Attack for the battle.",
-   "cat": "tutor",
-   "buff": {
-    "atk": 0.1
-   }
-  },
-  "refresh": {
-   "name": "Refresh",
-   "star": 1,
-   "type": "normal",
-   "kind": "sup",
-   "shape": null,
-   "target": "lowest",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Clears every stat drop and damage-over-time effect on the lowest-HP teammate.",
-   "cat": "tutor"
-  },
   "facade": {
    "name": "Facade",
    "star": 2,
@@ -25867,20 +25713,6 @@
    "fx": "User takes 25% of the damage dealt.",
    "cat": "tutor",
    "recoil": 0.25
-  },
-  "retaliate": {
-   "name": "Retaliate",
-   "star": 2,
-   "type": "normal",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 50,
-   "heal": null,
-   "hits": null,
-   "chance": 20,
-   "fx": "Double power if a teammate has fainted this battle.",
-   "cat": "tutor"
   },
   "rapid-spin": {
    "name": "Rapid Spin",
@@ -26063,23 +25895,6 @@
    "cat": "tutor",
    "atkDrop": 0.1
   },
-  "growth": {
-   "name": "Growth",
-   "star": 1,
-   "type": "grass",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "User gains 20% Attack for the battle.",
-   "cat": "tutor",
-   "buff": {
-    "atk": 0.2
-   }
-  },
   "stun-spore": {
    "name": "Stun Spore",
    "star": 1,
@@ -26123,20 +25938,6 @@
    "fx": "",
    "cat": "tutor"
   },
-  "aromatherapy": {
-   "name": "Aromatherapy",
-   "star": 3,
-   "type": "grass",
-   "kind": "sup",
-   "shape": null,
-   "target": "team",
-   "power": null,
-   "heal": 0.2,
-   "hits": null,
-   "chance": 10,
-   "fx": "Heals every teammate 20% of its max HP.",
-   "cat": "tutor"
-  },
   "solar-beam": {
    "name": "Solar Beam",
    "star": 3,
@@ -26152,20 +25953,6 @@
    "cat": "tutor",
    "charge": true
   },
-  "charge": {
-   "name": "Charge",
-   "star": 1,
-   "type": "electric",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "The user's next offensive move deals 50% more damage.",
-   "cat": "tutor"
-  },
   "nuzzle": {
    "name": "Nuzzle",
    "star": 1,
@@ -26180,21 +25967,6 @@
    "fx": "Target loses 20% Speed for the battle.",
    "cat": "tutor",
    "spdDrop": 0.2
-  },
-  "thunder-wave": {
-   "name": "Thunder Wave",
-   "star": 2,
-   "type": "electric",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 0,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Target loses 30% Speed for the battle.",
-   "cat": "tutor",
-   "spdDrop": 0.3
   },
   "thunder-punch": {
    "name": "Thunder Punch",
@@ -26224,20 +25996,6 @@
    "fx": "User takes 25% of the damage dealt.",
    "cat": "tutor",
    "recoil": 0.25
-  },
-  "mist": {
-   "name": "Mist",
-   "star": 1,
-   "type": "ice",
-   "kind": "sup",
-   "shape": null,
-   "target": "front",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Own front row can't have its Attack or Speed lowered for the rest of the battle.",
-   "cat": "tutor"
   },
   "ice-punch": {
    "name": "Ice Punch",
@@ -26315,7 +26073,7 @@
    "heal": null,
    "hits": null,
    "chance": 15,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "tutor",
    "ignoreGuard": true
   },
@@ -26414,29 +26172,14 @@
    "cat": "tutor",
    "vsDot": true
   },
-  "mud-shot": {
-   "name": "Mud Shot",
-   "star": 1,
-   "type": "ground",
-   "kind": "off",
-   "shape": "splash",
-   "target": null,
-   "power": 25,
-   "heal": null,
-   "hits": null,
-   "chance": 20,
-   "fx": "Targets lose 10% Speed for the battle.",
-   "cat": "tutor",
-   "spdDrop": 0.1
-  },
   "bulldoze": {
    "name": "Bulldoze",
-   "star": 2,
+   "star": 1,
    "type": "ground",
    "kind": "off",
    "shape": "row",
    "target": null,
-   "power": 35,
+   "power": 30,
    "heal": null,
    "hits": null,
    "chance": 15,
@@ -26458,21 +26201,6 @@
    "fx": "",
    "cat": "tutor"
   },
-  "feather-dance": {
-   "name": "Feather Dance",
-   "star": 1,
-   "type": "flying",
-   "kind": "off",
-   "shape": "row",
-   "target": null,
-   "power": 0,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Targets lose 15% Attack for the battle.",
-   "cat": "tutor",
-   "atkDrop": 0.15
-  },
   "aerial-ace": {
    "name": "Aerial Ace",
    "star": 2,
@@ -26484,23 +26212,9 @@
    "heal": null,
    "hits": null,
    "chance": 20,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "tutor",
    "ignoreGuard": true
-  },
-  "roost": {
-   "name": "Roost",
-   "star": 2,
-   "type": "flying",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": 0.4,
-   "hits": null,
-   "chance": 15,
-   "fx": "User heals 40% of its max HP.",
-   "cat": "tutor"
   },
   "tailwind": {
    "name": "Tailwind",
@@ -26565,20 +26279,6 @@
    "fx": "Own front row takes 25% less damage for the next 2 rounds.",
    "cat": "tutor"
   },
-  "light-screen": {
-   "name": "Light Screen",
-   "star": 2,
-   "type": "psychic",
-   "kind": "sup",
-   "shape": null,
-   "target": "front",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "Own front row takes 25% less damage from area moves for the next 2 rounds.",
-   "cat": "tutor"
-  },
   "psyshock": {
    "name": "Psyshock",
    "star": 3,
@@ -26590,7 +26290,7 @@
    "heal": null,
    "hits": null,
    "chance": 10,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "tutor",
    "ignoreGuard": true
   },
@@ -26699,19 +26399,6 @@
    "fx": "",
    "cat": "tutor"
   },
-  "pursuit": {
-   "name": "Pursuit",
-   "star": 1,
-   "type": "dark",
-   "kind": "off",
-   "shape": "single",
-   "target": null,
-   "power": 45,
-   "heal": null,
-   "hits": null,
-   "fx": "",
-   "cat": "sig"
-  },
   "snarl": {
    "name": "Snarl",
    "star": 2,
@@ -26753,27 +26440,9 @@
    "heal": null,
    "hits": null,
    "chance": 10,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "tutor",
    "ignoreGuard": true
-  },
-  "dragon-dance": {
-   "name": "Dragon Dance",
-   "star": 2,
-   "type": "dragon",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "User gains 20% Attack and 20% Speed for the battle.",
-   "cat": "tutor",
-   "buff": {
-    "atk": 0.2,
-    "spd": 0.2
-   }
   },
   "dragon-rush": {
    "name": "Dragon Rush",
@@ -26788,24 +26457,6 @@
    "chance": 10,
    "fx": "",
    "cat": "tutor"
-  },
-  "iron-defense": {
-   "name": "Iron Defense",
-   "star": 1,
-   "type": "steel",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": null,
-   "hits": null,
-   "chance": 15,
-   "fx": "The next 3 hits on the user deal 40% less damage.",
-   "cat": "tutor",
-   "shield": {
-    "n": 3,
-    "p": 0.4
-   }
   },
   "iron-head": {
    "name": "Iron Head",
@@ -26863,20 +26514,6 @@
    "hits": null,
    "chance": 20,
    "fx": "",
-   "cat": "tutor"
-  },
-  "moonlight": {
-   "name": "Moonlight",
-   "star": 2,
-   "type": "fairy",
-   "kind": "sup",
-   "shape": null,
-   "target": "self",
-   "power": null,
-   "heal": 0.4,
-   "hits": null,
-   "chance": 15,
-   "fx": "User heals 40% of its max HP.",
    "cat": "tutor"
   },
   "moonblast": {
@@ -26954,7 +26591,7 @@
   },
   "swords-dance": {
    "name": "Swords Dance",
-   "star": 3,
+   "star": 2,
    "type": "normal",
    "kind": "sup",
    "shape": null,
@@ -26963,10 +26600,10 @@
    "heal": null,
    "hits": null,
    "chance": 10,
-   "fx": "User gains 50% Attack for the battle.",
+   "fx": "User gains 40% Attack for the battle.",
    "cat": "tutor",
    "buff": {
-    "atk": 0.5
+    "atk": 0.4
    }
   },
   "mega-kick": {
@@ -27188,7 +26825,7 @@
    "power": 120,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "mega",
    "ignoreGuard": true
   },
@@ -27635,7 +27272,7 @@
    "power": 130,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "mega",
    "ignoreGuard": true
   },
@@ -27690,7 +27327,7 @@
    "power": 120,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "mega",
    "ignoreGuard": true
   },
@@ -27805,7 +27442,7 @@
    "power": 110,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "mega",
    "ignoreGuard": true
   },
@@ -27847,7 +27484,7 @@
    "power": 120,
    "heal": null,
    "hits": null,
-   "fx": "Ignores damage reduction from Reflect and from shielding moves like Defense Curl.",
+   "fx": "Ignores damage reduction from Reflect and from shielding moves like Harden.",
    "cat": "mega",
    "ignoreGuard": true
   },
@@ -28373,6 +28010,20 @@
    "fx": "",
    "cat": "mega",
    "hits": null
+  },
+  "recover": {
+   "name": "Recover",
+   "star": 2,
+   "type": "normal",
+   "kind": "sup",
+   "shape": null,
+   "target": "self",
+   "power": null,
+   "heal": 0.4,
+   "hits": null,
+   "chance": 15,
+   "fx": "User heals 40% of its max HP.",
+   "cat": "tutor"
   }
  },
  "pools": [
@@ -28383,7 +28034,7 @@
     "all": true
    },
    "moves": [
-    "defense-curl",
+    "harden",
     "focus-energy",
     "helping-hand",
     "protect",
@@ -28401,15 +28052,13 @@
     "growl",
     "double-slap",
     "rage",
-    "howl",
-    "refresh",
+    "helping-hand",
+    "safeguard",
     "facade",
     "take-down",
-    "retaliate",
     "rapid-spin",
     "wish",
     "metronome",
-    "safeguard",
     "mega-kick"
    ]
   },
@@ -28447,11 +28096,11 @@
     "type": "grass"
    },
    "moves": [
-    "growth",
+    "swords-dance",
     "stun-spore",
     "leech-seed",
     "seed-bomb",
-    "aromatherapy",
+    "lunar-blessing",
     "solar-beam"
    ]
   },
@@ -28462,9 +28111,8 @@
     "type": "electric"
    },
    "moves": [
-    "charge",
+    "focus-energy",
     "nuzzle",
-    "thunder-wave",
     "thunder-punch",
     "wild-charge"
    ]
@@ -28476,7 +28124,7 @@
     "type": "ice"
    },
    "moves": [
-    "mist",
+    "safeguard",
     "ice-punch",
     "icy-wind",
     "freeze-dry",
@@ -28517,7 +28165,6 @@
     "type": "ground"
    },
    "moves": [
-    "mud-shot",
     "bulldoze",
     "drill-run",
     "rock-blast"
@@ -28530,9 +28177,9 @@
     "type": "flying"
    },
    "moves": [
-    "feather-dance",
+    "growl",
     "aerial-ace",
-    "roost",
+    "recover",
     "tailwind"
    ]
   },
@@ -28546,7 +28193,6 @@
     "agility",
     "hypnosis",
     "reflect",
-    "light-screen",
     "psyshock"
    ]
   },
@@ -28575,7 +28221,7 @@
     "confuse-ray",
     "shadow-sneak",
     "shadow-ball",
-    "pursuit"
+    "bite"
    ]
   },
   {
@@ -28586,7 +28232,6 @@
    },
    "moves": [
     "bite",
-    "pursuit",
     "snarl",
     "sucker-punch",
     "night-slash",
@@ -28600,7 +28245,7 @@
     "type": "dragon"
    },
    "moves": [
-    "dragon-dance",
+    "calm-mind",
     "dragon-rush",
     "aqua-jet",
     "iron-head"
@@ -28613,7 +28258,6 @@
     "type": "steel"
    },
    "moves": [
-    "iron-defense",
     "iron-head",
     "meteor-mash",
     "rock-blast"
@@ -28628,10 +28272,11 @@
    "moves": [
     "charm",
     "disarming-voice",
-    "moonlight",
+    "recover",
     "wish",
     "metronome",
-    "moonblast"
+    "moonblast",
+    "safeguard"
    ]
   },
   {
@@ -28689,7 +28334,6 @@
     "min": 70
    },
    "moves": [
-    "iron-defense",
     "rollout",
     "reflect",
     "body-press",

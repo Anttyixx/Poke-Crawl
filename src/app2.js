@@ -38,7 +38,7 @@ const ALL_TYPES = Object.keys(CHART);
 const NO_METRONOME = new Set(['metronome','counter','struggle', ...Object.keys(MOVES).filter(k => MOVES[k].selfFaint)]);
 const CHOICE = new Set(['choice-band','choice-specs','choice-scarf']);
 const AREA_SHAPES = new Set(['splash','row','back','field']);
-const SIDE_MOVES = new Set(['reflect','light-screen','barrier','wide-guard','safeguard','wish']);
+const SIDE_MOVES = new Set(['reflect','wide-guard','safeguard','wish']);
 
 const SIDES = ['you','opp'];
 let lineup = null, board = null, sideSt = null, round = 0, ctx = null, running = false, battleToken = 0, uidSeq = 0;
@@ -300,7 +300,7 @@ function faint(u, why = ''){
   log(`✕ ${who(u)} fainted${why}`, 'le-faint');
 }
 function checkFaints(list){ for (const t of list) if (t.hp <= 0 && find(t)) faint(t); }
-function lower(t, stat, amt){ if (t.st.mist || sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
+function lower(t, stat, amt){ if (sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
 // would this move do something if used right now, from where the Pokémon stands? (moves that would fail are never picked)
 function usable(u, k){
   const pos = find(u), m = MOVES[k];
@@ -352,11 +352,9 @@ function applySupport(u, key, m, t){
   const bf = (atk, spd, txt) => { if (atk) t.st.atkMod += atk * mul; if (spd) t.st.spdMod += spd * mul; res.push({ txt }); };
   const P = x => pct(x * mul);
   switch (key){
-    case 'focus-energy': case 'charge': t.st.focus = true; res.push({ txt:'next hit +50%' }); break;
+    case 'focus-energy': t.st.focus = true; res.push({ txt:'next hit +50%' }); break;
     case 'protect': t.st.protect = true; res.push({ txt:'protected' }); break;
-    case 'mist': t.st.mist = true; res.push({ txt:'stats locked' }); break;
     case 'rest': { const a = t.maxHp - t.hp; t.hp = t.maxHp; t.st.skip = 2; t.st.skipWhy = 'asleep'; res.push({ heal:a, txt:'sleeps 2 turns' }); break; }
-    case 'refresh': t.st.atkMod = Math.max(0, t.st.atkMod); t.st.spdMod = Math.max(0, t.st.spdMod); t.st.dots = []; t.st.seed = null; res.push({ txt:'cleansed' }); break;
     default: {
       // everything else is data: a heal, Attack/Speed changes, damage shields, and taking more or less damage
       if (m.heal) heal(m.heal);
@@ -373,8 +371,6 @@ function applySupport(u, key, m, t){
 function doSideSupport(u, key){
   const s = sideSt[u.side];
   if (key === 'reflect'){ s.reflect = 2; s.reflectP = .25; return 'front row −25% for 2 rounds'; }
-  if (key === 'barrier'){ s.reflect = 2; s.reflectP = .4; return 'front row −40% for 2 rounds'; }
-  if (key === 'light-screen'){ s.screen = 2; return 'front row −25% vs area for 2 rounds'; }
   if (key === 'wide-guard'){ s.wideGuard = round + 1; return 'blocks area moves until end of next round'; }
   if (key === 'safeguard'){ s.safeguard = true; for (const t of living(u.side)){ t.st.dots = []; t.st.seed = null; } return 'no stat drops or damage over time'; }
   if (key === 'wish'){ s.wishes.push(round + 1); return 'heals the lowest-HP ally at end of next round'; }
@@ -385,7 +381,7 @@ async function resolveSupport(u, pos, key, m, el){
   if (SIDE_MOVES.has(key)){
     await wait(300);
     const txt = doSideSupport(u, key);
-    const team = ['reflect', 'light-screen', 'barrier'].includes(key) ? board[u.side][0].filter(Boolean) : living(u.side);
+    const team = key === 'reflect' ? board[u.side][0].filter(Boolean) : living(u.side);
     team.forEach(t => { setTurn(t, t === u ? 'acting' : 'ally'); burst(elOf(t), typeColor(m.type)); });
     floatText(el, key === 'wish' ? 'wish' : 'team', 'info');
     log(note(txt), 'le');
@@ -434,7 +430,6 @@ function movePower(u, key, m, t, h){
   if (key === 'rage') p *= 1 + .1 * u.st.rage;
   if (key === 'rollout') p = 20 * Math.pow(2, Math.min(3, u.st.rollout));
   if (key === 'facade' && u.hp < u.maxHp / 2) p *= 2;
-  if (key === 'retaliate' && sideSt[u.side].fainted) p *= 2;
   if (m.vsDot && (t.st.dots.length || t.st.seed)) p *= 2;
   if (m.lowBonus && t.hp < t.maxHp * .25) p *= 2;
   if (key === 'electro-ball'){ const d = effSpd(u) - effSpd(t); if (d > 0) p = Math.min(120, 50 * (1 + .25 * Math.floor(d / 10))); }
@@ -467,7 +462,6 @@ function guard(t, key, m, dmg, area){
   const ignore = IGNORE_GUARD.has(key);
   if (!ignore && t.st.shields.length){ const sh = t.st.shields[0]; dmg *= 1 - sh.p; if (--sh.n <= 0) t.st.shields.shift(); }
   if (!ignore && front && s.reflect > 0) dmg *= 1 - s.reflectP;
-  if (area && front && s.screen > 0) dmg *= .75;
   if (t.st.vuln) dmg *= 1 + t.st.vuln;
   return { dmg: Math.max(dmg > 0 ? 1 : 0, Math.round(dmg)), note:'' };
 }
@@ -521,7 +515,6 @@ async function resolveOffense(u, pos, key, m, el, origKey){
     const add = (txt, kind = 'debuff') => { T.notes.push(txt); floatText(tel, txt, kind); };
     if (SPD_DROP[key]){ const r = lower(t, 'spdMod', SPD_DROP[key]); add(r === true ? `Spd −${pct(SPD_DROP[key])}` : 'drop blocked'); }
     if (ATK_DROP[key]){ const r = lower(t, 'atkMod', ATK_DROP[key]); add(r === true ? `Atk −${pct(ATK_DROP[key])}` : 'drop blocked'); }
-    if (key === 'tri-attack'){ const st = Math.random() < .5 ? 'atkMod' : 'spdMod'; const r = lower(t, st, .1); add(r === true ? `${st === 'atkMod' ? 'Atk' : 'Spd'} −10%` : 'drop blocked'); }
     if (DOTS[key]){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.dots.push([...DOTS[key]]); add(key === 'toxic' ? 'badly poisoned' : 'poisoned'); } }
     if (m.skipTarget){ t.st.skip = Math.max(t.st.skip, m.skipTarget); t.st.skipWhy = 'asleep'; add('falls asleep'); }
     if (key === 'leech-seed'){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.seed = u; add('seeded'); } }
@@ -638,7 +631,6 @@ async function roundEnd(){
       log(`<div class="le-top">${who(t)} <span class="le-note">wish comes true</span></div><div class="le-res"><div>${who(t)} <b class="h">+${a}</b></div></div>`, 'le');
     }
     if (S.reflect > 0) S.reflect--;
-    if (S.screen > 0) S.screen--;
   }
   if (any){ render(); await wait(500); }
   for (const side of SIDES) checkFaints(living(side));
