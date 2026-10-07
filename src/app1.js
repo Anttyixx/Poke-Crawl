@@ -50,6 +50,21 @@ function pickWeighted(a, w){
   for (const x of a) if ((r -= w(x)) < 0) return x;
   return a[a.length - 1];
 }
+// a Pokémon's role (data.json "role": Striker, Tank, Support or All-Rounder), shown in the RotomDex and scans
+const roleHTML = f => f.role ? `<b class="dexrole">${f.role}</b>` : '';
+// the species a form evolves from (on its own branch), or null for a line's first Pokémon
+function evolvesFrom(f){
+  const own = FORMS.filter(x => x.line === f.line && x.name === f.name), first = Math.min(...own.map(x => x.star));
+  if (first === 1) return null;
+  const br = own.find(x => x.branch)?.branch;
+  return LINES[f.line][first - 1].find(x => !x.branch || !br || x.branch === br)?.name || null;
+}
+// the line under a Pokémon's name in the RotomDex: its role, then where it turns up. Only a line's first Pokémon
+// is found anywhere; its evolutions say what they evolve from
+function dexWhere(f){
+  const from = evolvesFrom(f);
+  return [roleHTML(f), from ? `Evolves from ${from}` : foundAt(f.line)].filter(Boolean).join(' · ');
+}
 // where a line turns up, for the RotomDex
 function foundAt(l){
   const f = LINES[l][1][0];
@@ -1227,6 +1242,7 @@ function mapMonHTML(m){
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt=""></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b>${starRow(m.star)}</div>
+      <div class="dexmon__roles">${roleHTML(f)}</div>
       <div class="dstats dstats--4">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}${exp}</div>
     </div>
     <div class="dexmon__more">
@@ -1323,7 +1339,7 @@ function dexMonHTML(f){
     <div class="dexmon__side"><div class="dexmon__pic"><img src="${formSprite(f)}" alt="" loading="lazy"></div>${typePill(f.type)}</div>
     <div class="dexmon__main">
       <div class="dexmon__head"><b>${f.name}</b></div>
-      <div class="dexmon__roles">${foundAt(f.line)}</div>
+      <div class="dexmon__roles">${dexWhere(f)}</div>
       <div class="dstats">${stat('HP', 'hp', f.hp)}${stat('Attack', 'atk', f.atk)}${stat('Speed', 'spd', f.spd)}</div>
     </div>
     <div class="dexmon__more">
@@ -1461,7 +1477,7 @@ const DEX_BUILD = {
   mons: () => `<p class="dexintro">${SPECIES_N} Pokémon in ${LINE_IDS.length} evolution lines. Tap any Pokémon to see its stats, signature move, ability and the moves it can be taught.</p>`
     + LINE_IDS.map(l => {
       const fs = FORMS.filter(f => f.line === l).sort((a, b) => a.star - b.star);
-      const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
+      const q = [...fs.map(f => f.name), ...new Set(fs.map(f => f.type)), ...new Set(fs.map(f => f.role)), ...(MEGAS_OF[l] || []).map(m => m.name)].join(' ');
       return `<article class="dexline" data-line="${l}" data-only="" data-q="${searchText(q)}">${dexEvoHTML(fs)}${dexMegaHTML(l)}<div class="dexdetail" hidden></div></article>`;
     }).join(''),
   moves: () => {

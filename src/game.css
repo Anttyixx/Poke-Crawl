@@ -1330,3 +1330,4 @@ body.feeding .screen, body.feeding #rotomdex, body.feeding #mapbag{ pointer-even
 .dexmega__text{ display:flex; flex-direction:column; min-width:0; font-size:13px; }
 .dexmega__text span{ color:var(--ink-dim); font-size:12px; display:flex; align-items:center; gap:3px; }
 .dexmega__stone{ width:18px; height:18px; image-rendering:pixelated; }
+.dexrole{ color:var(--ink); font-weight:600; }
