@@ -110,11 +110,25 @@ function freshBoard(){
       const maxHp = Math.round(f.hp * unit.mul * (it === 'assault-vest' ? 1.25 : 1));
       const u = { ...unit, moves: [...unit.moves], sketched: [...(unit.sketched || [])], uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
         atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
-      u.limit = u.left = moveLimit(f.star);                // moves it can still use this battle
+      u.pp = u.moves.map(k => MOVES[k].pp);                // PP left in each move this battle (full again next battle)
       board[side][Math.floor(cell / 3)][cell % 3] = u;
     }
   }
   turnOf.clear();
+}
+/* ---------- PP ----------
+   Each move slot has its own PP (u.pp, from MOVES[k].pp), refilled at the start of every battle. Using a move spends
+   one; a move with none left can't be picked, and its odds go to the Pokémon's other moves. With no PP left in any
+   move, it Struggles. */
+const ppLeft = (u, k) => u.moves.reduce((t, x, i) => t + (x === k ? u.pp[i] : 0), 0);
+const outOfPP = u => u.pp.every(p => p <= 0);
+function spendPP(u, k){ const i = u.moves.findIndex((x, j) => x === k && u.pp[j] > 0); if (i >= 0) u.pp[i]--; }
+// this Pokémon's odds right now: moves out of PP get none, the rest share them
+function oddsNow(u){
+  if (outOfPP(u)) return u.moves.map(() => 0);
+  if (u.st.lock) return u.moves.map(k => k === u.st.lock && ppLeft(u, k) > 0 ? 100 : 0);
+  const o = moveOdds(u.moves, u.item, u.sketched).map((c, i) => u.pp[i] > 0 ? c : 0), t = o.reduce((a, b) => a + b, 0);
+  return t ? o.map(c => Math.round(c * 100 / t)) : o;
 }
 const living = side => board[side].flat().filter(Boolean);
 function find(u){ for (let r = 0; r < 2; r++) for (let l = 0; l < 3; l++) if (board[u.side][r][l] === u) return { row:r, lane:l }; return null; }
@@ -169,7 +183,7 @@ function modLine(u){
   return out.join(', ');
 }
 function tipHTML(u){
-  const odds = u.left <= 0 ? u.moves.map(() => 0) : u.st.lock ? u.moves.map(k => k === u.st.lock ? 100 : 0) : moveOdds(u.moves, u.item, u.sketched);
+  const odds = oddsNow(u);
   const mods = modLine(u);
   return `<div class="tip__head"><span class="tip__name">${u.name} <span class="dt__stars">${'★'.repeat(u.level)}</span></span>
       <span class="tip__side" style="color:var(--${u.side === 'you' ? 'you' : 'foe'})">${u.side === 'you' ? 'Yours' : 'Opponent'}</span></div>
@@ -177,9 +191,9 @@ function tipHTML(u){
     <div class="tip__stats"><div class="tip__stat"><b>${Math.max(0, u.hp)}/${u.maxHp}</b><span>HP</span></div>
       <div class="tip__stat"><b>${Math.round(effAtk(u))}</b><span>Attack</span></div><div class="tip__stat"><b>${Math.round(effSpd(u))}</b><span>Speed</span></div></div>
     ${mods ? `<div class="tip__mods">${mods}</div>` : ''}
-    <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, odds[i])).join('')}</div>
+    <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, odds[i], '', u.pp[i])).join('')}</div>
     ${u.item ? `<div class="dt__item"><img src="${ITEM[u.item].spr}" alt=""><div><b>${ITEM[u.item].name}</b><br>${ITEM[u.item].fx}</div></div>` : ''}
-    <div class="tip__foot"><b>${u.left}/${u.limit}</b> moves left${u.left <= 0 ? ': using Struggle' : u.st.lock ? `. Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}` : ''}. It only picks moves that would work from where it stands.</div>`;
+    <div class="tip__foot">${outOfPP(u) ? 'No PP left: using Struggle. ' : u.st.lock ? `Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}. ` : ''}It only picks moves with PP left that would work from where it stands.</div>`;
 }
 function placeTip(el){
   const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pad = 8;
@@ -317,17 +331,19 @@ function usable(u, k){
   if (c < 0) return false;
   return k === 'metronome' || shapeTargets(u.side, c, m.shape).length > 0;
 }
-// pick a move: once the move limit is used up, Struggle. Otherwise roll the taught move's chance (see moveOdds); if
+// pick a move: with no PP left in any move, Struggle. A move out of PP is never picked. Otherwise roll the taught move's chance (see moveOdds); if
 // it doesn't come up, or it would fail from here, use the signature move; if the signature would fail, the taught move.
 // null: nothing it could use from here
 function draw(u){
-  if (u.left <= 0) return usable(u, 'struggle') ? 'struggle' : null;
-  if (u.st.lock) return usable(u, u.st.lock) ? u.st.lock : null;
+  const struggle = () => usable(u, 'struggle') ? 'struggle' : null;
+  if (outOfPP(u)) return struggle();
+  if (u.st.lock) return ppLeft(u, u.st.lock) <= 0 ? struggle() : usable(u, u.st.lock) ? u.st.lock : null;
+  const ok = k => ppLeft(u, k) > 0 && usable(u, k);
   const [sig, ...taught] = u.moves;
   let r = Math.random() * 100;
-  for (const k of taught){ const c = moveChance(k, u.item, u.sketched); if (r < c && usable(u, k)) return k; r -= c; }
-  if (usable(u, sig)) return sig;
-  return taught.find(k => usable(u, k)) || null;
+  for (const k of taught){ const c = moveChance(k, u.item, u.sketched); if (r < c && ok(k)) return k; r -= c; }
+  if (ok(sig)) return sig;
+  return taught.find(ok) || null;
 }
 
 /* ---------- support moves ---------- */
@@ -397,7 +413,7 @@ async function resolveSupport(u, pos, key, m, el){
     // turns into the last move anyone used; a party Pokémon keeps it after the battle (see keepSketch)
     const i = u.moves.indexOf(SKETCH), k = lastUsed;
     status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
-    u.moves[i] = k; (u.sketched ||= []).push(k);
+    u.moves[i] = k; u.pp[i] = MOVES[k].pp; (u.sketched ||= []).push(k);
     if (u.mon) keepSketch(u.mon, i, k);
     burst(el, typeColor(MOVES[k].type)); floatText(el, 'sketched', 'buff');
     log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>sketches ${mvChip(MOVES[k], u)}</div></div>`, 'le');
@@ -409,7 +425,7 @@ async function resolveSupport(u, pos, key, m, el){
     status(`${who(u)} ${mvChip(m, u)}`); await wait(300);
     if (!t){ flash(el, 'fizzle'); floatText(el, 'no target', 'info'); log(note('no one to copy'), 'le fail'); await wait(420); return false; }
     await shoot(elOf(t), el, typeColor(t.type));
-    u.moves = [...t.moves];
+    u.moves = [...t.moves]; u.pp = u.moves.map(k => MOVES[k].pp);
     burst(el, typeColor(t.type)); floatText(el, 'transformed', 'buff');
     log(`<div class="le-top">${who(u)} ${mvChip(m, u)}</div><div class="le-res"><div>copies ${who(t)}: ${u.moves.map(k => mvChip(MOVES[k], u)).join(' ')}</div></div>`, 'le');
     await wait(420); return true;
@@ -579,7 +595,7 @@ async function act(u, forced){
     await wait(420); setTurn(u, null); return;
   }
   // the move planned at the start of the round, if it would still work (the field may have changed since); else a new pick
-  const plan = u.st.planned, stillOK = plan && usable(u, plan) && (plan === 'struggle') === (u.left <= 0);
+  const plan = u.st.planned, stillOK = plan && usable(u, plan) && (plan === 'struggle' ? outOfPP(u) : ppLeft(u, plan) > 0 && !(u.st.lock && plan !== u.st.lock));
   const origKey = forced ? forced.move : stillOK ? plan : draw(u);
   u.st.planned = null;
   if (!origKey){
@@ -593,6 +609,7 @@ async function act(u, forced){
     const c = center(u.side, pos.lane), hits = k => c >= 0 && shapeTargets(u.side, c, MOVES[k].shape).length > 0;
     key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k) && hits(k))); m = MOVES[key];
   }
+  if (origKey !== 'struggle') spendPP(u, origKey);
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
@@ -600,8 +617,11 @@ async function act(u, forced){
   if (ok){
     u.st.used.add(origKey); u.st.lastMove = origKey;
     if (origKey !== 'struggle' && origKey !== SKETCH) lastUsed = origKey;
-    if (origKey !== 'struggle' && --u.left === 0) log(`⚠ ${who(u)} has used up its ${u.limit} moves and will Struggle from now on`, 'le-sys');
     if (CHOICE.has(u.item) && !u.st.lock && origKey !== 'struggle' && origKey !== SKETCH){ u.st.lock = origKey; log(`🔒 ${who(u)} is locked into ${MOVES[origKey].name} by its ${ITEM[u.item].name}`, 'le-sys'); }
+  }
+  if (origKey !== 'struggle'){
+    if (outOfPP(u)) log(`⚠ ${who(u)} has no PP left and will Struggle from now on`, 'le-sys');
+    else if (ppLeft(u, origKey) === 0 && u.moves.includes(origKey)) log(`⚠ ${who(u)}'s ${MOVES[origKey].name} is out of PP`, 'le-sys');
   }
   await wait(140);
   dropTag(); setTurn(u, null);
@@ -696,7 +716,7 @@ async function megaEvolve(side){
   if (!u) return;
   const { u: x, m } = u, was = x.name, b = m.boost, hp = x.maxHp;
   // it becomes the Mega: its own type and stat boosts, and its signature move is the Mega's (its taught move stays)
-  x.mega = m; x.name = m.name; x.type = m.type || x.type; x.moves[0] = m.sig;
+  x.mega = m; x.name = m.name; x.type = m.type || x.type; x.moves[0] = m.sig; x.pp[0] = MOVES[m.sig].pp;
   x.maxHp = Math.round(x.maxHp * b.hp); x.hp += x.maxHp - hp; x.atk *= b.atk; x.spd *= b.spd;
   const chg = (k, v) => v === 1 ? '' : `${k} ${v > 1 ? '+' : '−'}${pct(Math.abs(v - 1))}`;
   log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(${[chg('HP', b.hp), chg('Atk', b.atk), chg('Spd', b.spd)].filter(Boolean).join(', ')})</small>`);

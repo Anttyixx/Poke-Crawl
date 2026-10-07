@@ -701,6 +701,10 @@ button{ font:inherit; color:inherit; }
 .mv__stars{ display:block; margin-top:4px; font-size:11px; letter-spacing:1px; line-height:1; }
 .mv__stars i{ font-style:normal; color:#3a4050; }
 .mv__stars i.on{ color:var(--star-gold); }
+.mv__foot{ display:flex; align-items:center; gap:8px; margin-top:4px; }
+.mv__foot .mv__stars{ margin-top:0; }
+.mv__ppn{ font-size:10.5px; font-weight:700; letter-spacing:.04em; line-height:1; color:var(--ink-dim); font-variant-numeric:tabular-nums; white-space:nowrap; }
+.mv__ppn.out{ color:#ff7a7a; }
 
 /* ---------- Move Tutor cards: a TR slot on the left ---------- */
 .trcard{ display:grid; grid-template-columns: 58px 1fr auto; gap:4px 14px; align-items:center; cursor:pointer; }
@@ -981,7 +985,7 @@ button{ font:inherit; color:inherit; }
 .dexevo__mon{ appearance:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px 7px; min-width:0;
   border-radius:14px; border:1.5px solid transparent; background:transparent; color:var(--ink); font:inherit;
   transition:background .2s ease, border-color .2s ease, opacity .2s ease, transform .15s ease; }
-.dexevo__mon:hover{ background:#1f2430; }
+.dexevo__mon:hover .dexevo__pic{ border-color:color-mix(in srgb, var(--glow-selected) 45%, color-mix(in srgb, var(--t) 55%, #1b1f29)); }
 .dexevo__mon:focus-visible{ outline:2px solid var(--glow-selected); outline-offset:2px; }
 .dexevo__pic{ width:62px; height:62px; border-radius:50%; display:grid; place-items:center;
   background:radial-gradient(circle at 50% 60%, color-mix(in srgb, var(--t) 34%, transparent), transparent 70%), var(--tile);
@@ -996,8 +1000,9 @@ button{ font:inherit; color:inherit; }
 .dexevo__col--grid .dexevo__name{ font-size:11.5px; }
 .dexevo__col:has(> :nth-child(2)) .dexevo__pic{ width:50px; height:50px; }      /* a branching stage stacks two smaller choices */
 /* narrowed to one stage: it lights up, the others fade back */
-.dexevo__mon[aria-pressed="true"]{ background:color-mix(in srgb, var(--glow-selected) 10%, #1a1f29); border-color:color-mix(in srgb, var(--glow-selected) 60%, transparent); }
-.dexevo__mon[aria-pressed="true"] .dexevo__pic{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 40%, transparent); }
+.dexevo__mon[aria-pressed="true"] .dexevo__pic{ border-color:var(--glow-selected);
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--glow-selected) 22%, transparent), 0 0 22px color-mix(in srgb, var(--glow-selected) 55%, transparent); }
+.dexevo__mon[aria-pressed="true"] .dexevo__name{ color:var(--glow-selected); text-shadow:0 0 10px color-mix(in srgb, var(--glow-selected) 45%, transparent); }
 .dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]{ opacity:.55; }
 .dexline:not([data-only=""]) .dexevo__mon[aria-pressed="false"]:hover{ opacity:.8; }
 /* the info box under the path: closed by default, grows open (its height is animated from JS) */
@@ -1336,7 +1341,8 @@ body.feeding .screen, body.feeding #rotomdex, body.feeding #mapbag{ pointer-even
   transition:box-shadow .2s ease, border-color .2s ease; }
 .dexevo__mon--mega .dexevo__pic img, .dexmon--mega .dexmon__pic img{ position:relative; width:92%; height:92%; }
 .dexevo__mon--mega[aria-pressed="true"] .dexevo__pic{ border-color:transparent; box-shadow:none; }
-.dexevo__mon--mega[aria-pressed="true"] .dexevo__pic::before{ border-color:var(--glow-selected); box-shadow:0 0 16px color-mix(in srgb, var(--glow-selected) 45%, transparent); }
+.dexevo__mon--mega[aria-pressed="true"] .dexevo__pic::before{ border-color:var(--glow-selected); box-shadow:0 0 0 3px color-mix(in srgb, var(--glow-selected) 22%, transparent), 0 0 22px color-mix(in srgb, var(--glow-selected) 55%, transparent); }
+.dexevo__mon--mega[aria-pressed="true"] .dexevo__name{ color:var(--glow-selected); }
 .dexevo__mon--mega .dexevo__name{ color:#e2b8ff; }
 .dexmon--mega .dexmon__pic::before{ inset:13%; }
 .mvkind--touch{ color:#c9b8ff; background:rgba(180,160,255,.12); }

@@ -27,7 +27,7 @@ for (const f of FORMS) LEARN[f.id] = TEACHABLE.filter(k => LEARN_BY[k].has(f.lin
 const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 and ★2 is one Pokémon
 // teachables nearly every line can learn (Protect, Rest, Facade…): the Move Tutor offers at most one of them at a time
 const UNIVERSAL = new Set(TEACHABLE.filter(k => LEARN_BY[k].size >= LINE_IDS.length * .75));
-MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has used up its move limit for the battle. The user takes 12% of its max HP.', cat:'none', contact:true };
+MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has no PP left in any of its moves. The user takes 12% of its max HP.', cat:'none', contact:true };
 // the starters, three to a generation (Grass, Fire, Water); a new run offers one Grass, one Fire and one Water starter,
 // each from a different generation, at random
 const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],
@@ -167,7 +167,6 @@ const TUNE = {
   enemyMul: { trainer: .85, boss: .9, legendary: .85 }, perMap: .02,
   trainerDrop: .3,                                   // chance each trainer Pokémon is one level below the one it mirrors
   tutorPrice: { 1: 40, 2: 80, 3: 150 }, rerollStep: 20,
-  moveLimit: 12, moveLimitStep: 2,                   // moves a Pokémon can use per battle at ★1, and how much each star adds
   taughtMax: 1,                                      // moves besides its signature: every Pokémon knows 2 moves in all
   daycareSize: 8,
   candyExp: .25,                                     // an EXP Candy (left by a released Pokémon) is worth a quarter of a level
@@ -286,10 +285,9 @@ function swapMove(m, slot, k){
    info shows them as percentages (e.g. Vine Whip 85%, Rollout 15%). If the move it lands on would fail from where it
    stands, it uses the other one instead (see draw in the battle engine). A held item can scale a taught move's chance:
    ITEM[id].odds = { kind: 'off' | 'sup' (or any move), mul }. */
-// how many moves a Pokémon can use in one battle (a move that happens costs one); then it Struggles. Grows with its stars
-const moveLimit = star => TUNE.moveLimit + TUNE.moveLimitStep * (star - 1);
-// the "Moves" heading in a Pokémon's entry, with its move limit beside it
-const movesLabel = star => `<span>Moves <em class="dexkv__aside" title="It can use ${moveLimit(star)} moves per battle, then it Struggles${star < 3 ? `. +${TUNE.moveLimitStep} at each star` : ''}">· ${moveLimit(star)} per battle</em></span>`;
+// the "Moves" heading in a Pokémon's entry. Each move has its own PP (MOVES[k].pp): how many times it can be used in a
+// battle. A move out of PP can't be picked; with none left in any move, the Pokémon Struggles. PP refills after each battle
+const movesLabel = () => `<span>Moves <em class="dexkv__aside" title="Each move can be used as many times as its PP per battle. PP refills after every battle">· PP refills after each battle</em></span>`;
 // a taught move's percent chance to be used, with this held item
 // (sk: the moves it sketched, which take Sketch's chance)
 function moveChance(k, item, sk){
@@ -1020,14 +1018,15 @@ function tapSlot(name, i){
 // a move's level as three stars, filled up to its star rating
 const moveStars = n => `<span class="mv__stars" aria-label="${n} star move">${'<i class="on">★</i>'.repeat(n)}${'<i>★</i>'.repeat(3 - n)}</span>`;
 // chance: this Pokémon's percent chance to use it; without one, a taught move shows its base chance
-// side: extra HTML under the odds on the right (a Change button)
-function moveRow(k, sig, chance, side = ''){
+// side: extra HTML under the odds on the right (a Change button); left: its PP left in a battle (else its full PP)
+function moveRow(k, sig, chance, side = '', left = null){
   const m = MOVES[k];
+  const pp = m.pp ? `<small class="mv__ppn${left === 0 ? ' out' : ''}" title="Can be used ${m.pp} times per battle">PP ${left != null ? `${left}/` : ''}${m.pp}</small>` : '';
   const odds = chance != null ? `${chance}%` : m.chance ? `${m.chance}% chance` : '';
   const title = chance != null ? `Used ${chance}% of the time` : m.chance ? `A Pokémon taught it uses it ${m.chance}% of the time, and its signature move otherwise` : '';
   return `<div class="mv${sig ? ' mv--sig' : ''}">
     <span class="mv__name">${sig ? '<i class="mv__sig">Signature</i>' : ''}${kindTag(m)}${m.name} <span class="pill" style="--c:${typeColor(m.type)}">${cap(m.type)}</span>
-    <small class="mv__desc">${moveDesc(m)}</small>${moveStars(m.star)}</span>
+    <small class="mv__desc">${moveDesc(m)}</small><span class="mv__foot">${moveStars(m.star)}${pp}</span></span>
     ${side ? '<span class="mv__side">' : ''}<span class="mv__pp${chance === 0 ? ' out' : ''}${chance == null ? '' : ' mv__pp--pct'}" title="${title}">${odds}</span>${side}${side ? '</span>' : ''}</div>`;
 }
 function moveChip(k, sig){
@@ -1348,7 +1347,7 @@ function mapMonHTML(m){
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
       ${it ? `<div class="dexkv"><span>Holding</span><div class="dexheld"><img src="${spriteURL(it.spr)}" alt=""><p><b>${it.name}.</b> ${it.fx}</p></div></div>` : ''}
-      <div class="dexkv">${movesLabel(f.star)}<div class="mvlist">${monMovesHTML(m)}</div></div>
+      <div class="dexkv">${movesLabel()}<div class="mvlist">${monMovesHTML(m)}</div></div>
       ${releaseHTML(m)}
     </div>
   </div>`;
@@ -1443,7 +1442,7 @@ function dexMonHTML(f){
     </div>
     <div class="dexmon__more">
       <div class="dexkv"><span>Ability</span><p><b>${f.ability.name}.</b> ${f.ability.fx}</p></div>
-      <div class="dexkv">${movesLabel(f.star)}<div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}
+      <div class="dexkv">${movesLabel()}<div>${sigs.length > 1 ? '<p class="dexnote">Its signature move changes as it levels up:</p>' : ''}<div class="mvlist">${sigs.map(k => moveRow(k, true)).join('')}</div>${dexGoHTML(f.sig)}
         ${f.mega ? `<p class="dexnote dexnote--tutor">Mega Evolving always swaps its signature move for ${MOVES[f.sig].name}; it keeps the move it was taught.</p>` : `<p class="dexnote dexnote--tutor">Can be taught:</p>${tutor.length
         ? `<div class="chips">${tutor.map(dexChipHTML).join('')}</div><div class="dexpeek" hidden></div>`
         : '<i class="dexnone">None</i>'}`}</div></div>
@@ -1580,7 +1579,7 @@ const DEX_BUILD = {
     }).join(''),
   moves: () => {
     const ids = Object.keys(MOVES), types = [...new Set(ids.map(k => MOVES[k].type))].sort((a, b) => (a === 'none') - (b === 'none') || a.localeCompare(b));
-    return `<p class="dexintro">${ids.length} moves in two groups. <b>Signature moves</b> are learned by leveling, one at each ★, and define how a Pokémon plays. <b>Teachable moves</b> are taught at a Move Tutor; each one lists the Pokémon that can learn it. Every Pokémon knows 2: its signature move and one teachable move. Attacks also say whether they make <b>contact</b>, which sets off Rocky Helmet and some abilities.</p>`
+    return `<p class="dexintro">${ids.length} moves in two groups. <b>Signature moves</b> are learned by leveling, one at each ★, and define how a Pokémon plays. <b>Teachable moves</b> are taught at a Move Tutor; each one lists the Pokémon that can learn it. Every Pokémon knows 2: its signature move and one teachable move. Each move has <b>PP</b>, how many times it can be used per battle. Attacks also say whether they make <b>contact</b>, which sets off Rocky Helmet and some abilities.</p>`
       + types.map(t => {
         const ks = ids.filter(k => MOVES[k].type === t).sort((a, b) => MOVES[a].star - MOVES[b].star || MOVES[a].name.localeCompare(MOVES[b].name));
         return `<h2 class="dextype" style="--c:${typeColor(t)}">${t === 'none' ? 'Other' : cap(t)} <small>${ks.length} ${ks.length === 1 ? 'move' : 'moves'}</small></h2>`
@@ -2791,7 +2790,7 @@ RENDER['scr-tutor'] = () => {
       <div class="trcard__slot"></div>
       <div class="trcard__body">
         <span class="mvcard__name">${kindTag(mv)}${mv.name} <span class="pill" style="--c:${typeColor(mv.type)}">${cap(mv.type)}</span></span>
-        <span class="mvcard__meta">${moveDesc(mv)} <span class="mvcard__chance">Used ${mv.chance}% of the time.</span></span>
+        <span class="mvcard__meta">${moveDesc(mv)} <span class="mvcard__chance">Used ${mv.chance}% of the time, ${mv.pp} PP.</span></span>
         <span class="mvcard__who">${who.length ? who.map(m => `<img src="${formSprite(FORM[m.form])}" alt="${nm(m)}" title="${nm(m)}">`).join('') : none}</span>
       </div>
       <span class="mvcard__price">${price(k)}<small>${afford ? 'coins' : 'too expensive'}</small></span>
