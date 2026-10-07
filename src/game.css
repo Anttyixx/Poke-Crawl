@@ -982,6 +982,7 @@ button{ font:inherit; color:inherit; }
 .dexevo__pic img{ width:84%; height:84%; object-fit:contain; image-rendering:pixelated; }
 .dexevo__name{ font-family:var(--display); font-weight:600; font-size:13.5px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 /* a stage with many branches (Eevee's eight) packs into a grid */
+.dexevo__gap{ visibility:hidden; }
 .dexevo__col--grid{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:4px; flex:0 1 340px; }
 .dexevo__col--grid .dexevo__mon{ padding:6px 2px 5px; }
 .dexevo__col.dexevo__col--grid .dexevo__pic{ width:46px; height:46px; }

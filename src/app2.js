@@ -66,8 +66,8 @@ function buildEncounter(kind){
   // on maps 1-2, trainers skip lines that hit your Pokémon super-effectively, so an unlucky
   // type matchup can't cost a life before you've had a chance to build
   const types = mons.map(m => FORM[m.form].type);
-  const gentle = TEAM_LINES.filter(l => !types.some(t => eff(LINES[l][1][0].type, t) > 1));
-  const trainerLine = () => pick(R.mapNo <= 2 && gentle.length ? gentle : TEAM_LINES);
+  const gentle = TRAINER_LINES.filter(l => !types.some(t => eff(LINES[l][1][0].type, t) > 1));
+  const trainerLine = () => pick(R.mapNo <= 2 && gentle.length ? gentle : TRAINER_LINES);
   const enc = { kind, team: [] };
   if (kind === 'trainer'){
     enc.title = pick(TRAINERS); enc.sub = `Sends out ${n} Pokémon to match yours.`;
@@ -76,10 +76,10 @@ function buildEncounter(kind){
       enc.team.push(enemyUnit(trainerLine(), s, TUNE.enemyMul.trainer + bonus, mirrorMoves(k), item(R.mapNo >= 3 ? .2 : 0)));
     }
   } else if (kind === 'boss'){
-    const g = GYMS[R.mapNo - 1], typed = TEAM_LINES.filter(l => LINES[l][1][0].type === g.type);
+    const g = GYMS[R.mapNo - 1], typed = TRAINER_LINES.filter(l => LINES[l][1][0].type === g.type);
     enc.title = g.name; enc.sub = `Gym ${R.mapNo}, ${cap(g.type)} type. Sends out ${n} Pokémon to match yours.`;
     for (let k = 0; k < n; k++){
-      const line = typed.length > 1 || Math.random() < .7 ? pick(typed) : pick(TEAM_LINES);
+      const line = typed.length > 1 || Math.random() < .7 ? pick(typed) : pick(TRAINER_LINES);
       enc.team.push(enemyUnit(line, stars[k], TUNE.enemyMul.boss + bonus, nMoves(1), item(R.mapNo >= 3 ? .35 : 0)));
     }
   } else {
@@ -87,7 +87,7 @@ function buildEncounter(kind){
     enc.legend = { line, star: ls };
     enc.title = `Legendary ${FORM[form].name}`; enc.sub = 'Beat it and its escorts to capture it.';
     enc.team.push(enemyUnit(line, ls, TUNE.enemyMul.legendary + bonus, nMoves(1), pick(ITEM_IDS), form));
-    for (let k = 1; k < n; k++) enc.team.push(enemyUnit(pick(TEAM_LINES), Math.max(1, stars[k] - 1), TUNE.enemyMul.trainer + bonus, nMoves(0), null));
+    for (let k = 1; k < n; k++) enc.team.push(enemyUnit(pick(TRAINER_LINES), Math.max(1, stars[k] - 1), TUNE.enemyMul.trainer + bonus, nMoves(0), null));
   }
   return enc;
 }
