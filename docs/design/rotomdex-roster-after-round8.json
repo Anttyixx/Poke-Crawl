@@ -88,7 +88,8 @@
   "mega_forms": [
    {
     "name": "Mega Venusaur",
-    "sprite_file": "venusaur-mega.png"
+    "sprite_file": "venusaur-mega.png",
+    "stone": "Venusaurite"
    }
   ],
   "spawn_class": null,
@@ -174,11 +175,13 @@
   "mega_forms": [
    {
     "name": "Mega Charizard X",
-    "sprite_file": "charizard-mega-x.png"
+    "sprite_file": "charizard-mega-x.png",
+    "stone": "Charizardite X"
    },
    {
     "name": "Mega Charizard Y",
-    "sprite_file": "charizard-mega-y.png"
+    "sprite_file": "charizard-mega-y.png",
+    "stone": "Charizardite Y"
    }
   ],
   "spawn_class": null,
@@ -273,7 +276,8 @@
   "mega_forms": [
    {
     "name": "Mega Blastoise",
-    "sprite_file": "blastoise-mega.png"
+    "sprite_file": "blastoise-mega.png",
+    "stone": "Blastoisinite"
    }
   ],
   "spawn_class": null,
@@ -368,7 +372,8 @@
   "mega_forms": [
    {
     "name": "Mega Beedrill",
-    "sprite_file": "beedrill-mega.png"
+    "sprite_file": "beedrill-mega.png",
+    "stone": "Beedrillite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -428,7 +433,18 @@
   "backrow": null,
   "sprite_file": "raichu.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Raichu X",
+    "sprite_file": "raichu_2.png",
+    "stone": "Raichunite X"
+   },
+   {
+    "name": "Mega Raichu Y",
+    "sprite_file": "raichu_3.png",
+    "stone": "Raichunite Y"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -598,7 +614,13 @@
   "backrow": null,
   "sprite_file": "clefable.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Clefable",
+    "sprite_file": "clefable_1.png",
+    "stone": "Clefablite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -972,7 +994,8 @@
   "mega_forms": [
    {
     "name": "Mega Alakazam",
-    "sprite_file": "alakazam-mega.png"
+    "sprite_file": "alakazam-mega.png",
+    "stone": "Alakazite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -1061,7 +1084,13 @@
   "backrow": null,
   "sprite_file": "victreebel.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Victreebel",
+    "sprite_file": "victreebel_1.png",
+    "stone": "Victreebelite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -1238,7 +1267,8 @@
   "mega_forms": [
    {
     "name": "Mega Gengar",
-    "sprite_file": "gengar-mega.png"
+    "sprite_file": "gengar-mega.png",
+    "stone": "Gengarite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -1670,7 +1700,8 @@
   "mega_forms": [
    {
     "name": "Mega Kangaskhan",
-    "sprite_file": "kangaskhan-mega.png"
+    "sprite_file": "kangaskhan-mega.png",
+    "stone": "Kangaskhanite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -1730,7 +1761,13 @@
   "backrow": null,
   "sprite_file": "starmie.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Starmie",
+    "sprite_file": "starmie_1.png",
+    "stone": "Starminite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -1843,7 +1880,8 @@
   "mega_forms": [
    {
     "name": "Mega Pinsir",
-    "sprite_file": "pinsir-mega.png"
+    "sprite_file": "pinsir-mega.png",
+    "stone": "Pinsirite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -1902,7 +1940,8 @@
   "mega_forms": [
    {
     "name": "Mega Gyarados",
-    "sprite_file": "gyarados-mega.png"
+    "sprite_file": "gyarados-mega.png",
+    "stone": "Gyaradosite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -2195,7 +2234,8 @@
   "mega_forms": [
    {
     "name": "Mega Aerodactyl",
-    "sprite_file": "aerodactyl-mega.png"
+    "sprite_file": "aerodactyl-mega.png",
+    "stone": "Aerodactylite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -2479,7 +2519,13 @@
   "backrow": null,
   "sprite_file": "dragonite.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Dragonite",
+    "sprite_file": "dragonite_1.png",
+    "stone": "Dragoninite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -2511,11 +2557,13 @@
   "mega_forms": [
    {
     "name": "Mega Mewtwo Y",
-    "sprite_file": "mewtwo-mega-y.png"
+    "sprite_file": "mewtwo-mega-y.png",
+    "stone": "Mewtwonite Y"
    },
    {
     "name": "Mega Mewtwo X",
-    "sprite_file": "mewtwo-mega-x.png"
+    "sprite_file": "mewtwo-mega-x.png",
+    "stone": "Mewtwonite X"
    }
   ],
   "spawn_class": "Legendary node only",
@@ -2634,7 +2682,13 @@
   "backrow": null,
   "sprite_file": "meganium.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Meganium",
+    "sprite_file": "meganium_1.png",
+    "stone": "Meganiumite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -2831,7 +2885,13 @@
   "backrow": null,
   "sprite_file": "feraligatr.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Feraligatr",
+    "sprite_file": "feraligatr_1.png",
+    "stone": "Feraligite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -3132,7 +3192,8 @@
   "mega_forms": [
    {
     "name": "Mega Ampharos",
-    "sprite_file": "ampharos-mega.png"
+    "sprite_file": "ampharos-mega.png",
+    "stone": "Ampharosite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -3542,7 +3603,8 @@
   "mega_forms": [
    {
     "name": "Mega Steelix",
-    "sprite_file": "steelix-mega.png"
+    "sprite_file": "steelix-mega.png",
+    "stone": "Steelixite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -3632,7 +3694,8 @@
   "mega_forms": [
    {
     "name": "Mega Scizor",
-    "sprite_file": "scizor-mega.png"
+    "sprite_file": "scizor-mega.png",
+    "stone": "Scizorite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -4012,7 +4075,13 @@
   "backrow": null,
   "sprite_file": "skarmory.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Skarmory",
+    "sprite_file": "skarmory_1.png",
+    "stone": "Skarmorite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -4414,7 +4483,8 @@
   "mega_forms": [
    {
     "name": "Mega Tyranitar",
-    "sprite_file": "tyranitar-mega.png"
+    "sprite_file": "tyranitar-mega.png",
+    "stone": "Tyranitarite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -4593,7 +4663,8 @@
   "mega_forms": [
    {
     "name": "Mega Sceptile",
-    "sprite_file": "sceptile-mega.png"
+    "sprite_file": "sceptile-mega.png",
+    "stone": "Sceptilite"
    }
   ],
   "spawn_class": null,
@@ -4679,7 +4750,8 @@
   "mega_forms": [
    {
     "name": "Mega Blaziken",
-    "sprite_file": "blaziken-mega.png"
+    "sprite_file": "blaziken-mega.png",
+    "stone": "Blazikenite"
    }
   ],
   "spawn_class": null,
@@ -4774,7 +4846,8 @@
   "mega_forms": [
    {
     "name": "Mega Swampert",
-    "sprite_file": "swampert-mega.png"
+    "sprite_file": "swampert-mega.png",
+    "stone": "Swampertite"
    }
   ],
   "spawn_class": null,
@@ -5092,7 +5165,8 @@
   "mega_forms": [
    {
     "name": "Mega Gardevoir",
-    "sprite_file": "gardevoir-mega.png"
+    "sprite_file": "gardevoir-mega.png",
+    "stone": "Gardevoirite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5438,7 +5512,8 @@
   "mega_forms": [
    {
     "name": "Mega Sableye",
-    "sprite_file": "sableye-mega.png"
+    "sprite_file": "sableye-mega.png",
+    "stone": "Sablenite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5471,7 +5546,8 @@
   "mega_forms": [
    {
     "name": "Mega Mawile",
-    "sprite_file": "mawile-mega.png"
+    "sprite_file": "mawile-mega.png",
+    "stone": "Mawilite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5563,7 +5639,8 @@
   "mega_forms": [
    {
     "name": "Mega Aggron",
-    "sprite_file": "aggron-mega.png"
+    "sprite_file": "aggron-mega.png",
+    "stone": "Aggronite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5622,7 +5699,8 @@
   "mega_forms": [
    {
     "name": "Mega Medicham",
-    "sprite_file": "medicham-mega.png"
+    "sprite_file": "medicham-mega.png",
+    "stone": "Medichamite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5685,7 +5763,8 @@
   "mega_forms": [
    {
     "name": "Mega Manectric",
-    "sprite_file": "manectric-mega.png"
+    "sprite_file": "manectric-mega.png",
+    "stone": "Manectite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5802,7 +5881,8 @@
   "mega_forms": [
    {
     "name": "Mega Sharpedo",
-    "sprite_file": "sharpedo-mega.png"
+    "sprite_file": "sharpedo-mega.png",
+    "stone": "Sharpedonite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -5923,7 +6003,8 @@
   "mega_forms": [
    {
     "name": "Mega Camerupt",
-    "sprite_file": "camerupt-mega.png"
+    "sprite_file": "camerupt-mega.png",
+    "stone": "Cameruptite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -6330,7 +6411,13 @@
   "backrow": "D) Drop the Debuff tag. Team buff stays as its identity.",
   "sprite_file": "chimecho.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Chimecho",
+    "sprite_file": "chimecho_1.png",
+    "stone": "Chimechite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -6360,7 +6447,13 @@
   "mega_forms": [
    {
     "name": "Mega Absol",
-    "sprite_file": "absol-mega.png"
+    "sprite_file": "absol-mega.png",
+    "stone": "Absolite"
+   },
+   {
+    "name": "Mega Absol Z",
+    "sprite_file": "absol_2.png",
+    "stone": "Absolite Z"
    }
   ],
   "spawn_class": "Wild, common",
@@ -6450,7 +6543,8 @@
   "mega_forms": [
    {
     "name": "Mega Glalie",
-    "sprite_file": "glalie-mega.png"
+    "sprite_file": "glalie-mega.png",
+    "stone": "Glalitite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -6565,7 +6659,8 @@
   "mega_forms": [
    {
     "name": "Mega Salamence",
-    "sprite_file": "salamence-mega.png"
+    "sprite_file": "salamence-mega.png",
+    "stone": "Salamencite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -6651,7 +6746,8 @@
   "mega_forms": [
    {
     "name": "Mega Metagross",
-    "sprite_file": "metagross-mega.png"
+    "sprite_file": "metagross-mega.png",
+    "stone": "Metagrossite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -6774,7 +6870,8 @@
   "mega_forms": [
    {
     "name": "Mega Latias",
-    "sprite_file": "latias-mega.png"
+    "sprite_file": "latias-mega.png",
+    "stone": "Latiasite"
    }
   ],
   "spawn_class": "Legendary node only",
@@ -6809,7 +6906,8 @@
   "mega_forms": [
    {
     "name": "Mega Latios",
-    "sprite_file": "latios-mega.png"
+    "sprite_file": "latios-mega.png",
+    "stone": "Latiosite"
    }
   ],
   "spawn_class": "Legendary node only",
@@ -6844,7 +6942,8 @@
   "mega_forms": [
    {
     "name": "Primal Kyogre",
-    "sprite_file": "kyogre-primal.png"
+    "sprite_file": "kyogre-primal.png",
+    "stone": "Blue Orb"
    }
   ],
   "spawn_class": "Legendary node only",
@@ -6876,7 +6975,8 @@
   "mega_forms": [
    {
     "name": "Primal Groudon",
-    "sprite_file": "groudon-primal.png"
+    "sprite_file": "groudon-primal.png",
+    "stone": "Red Orb"
    }
   ],
   "spawn_class": "Legendary node only",
@@ -6909,7 +7009,8 @@
   "mega_forms": [
    {
     "name": "Mega Rayquaza",
-    "sprite_file": "rayquaza-mega.png"
+    "sprite_file": "rayquaza-mega.png",
+    "stone": null
    }
   ],
   "spawn_class": "Legendary node only",
@@ -7314,7 +7415,13 @@
   "backrow": null,
   "sprite_file": "staraptor.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Staraptor",
+    "sprite_file": "staraptor_1.png",
+    "stone": "Staraptite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -8034,7 +8141,13 @@
   "mega_forms": [
    {
     "name": "Mega Garchomp",
-    "sprite_file": "garchomp-mega.png"
+    "sprite_file": "garchomp-mega.png",
+    "stone": "Garchompite"
+   },
+   {
+    "name": "Mega Garchomp Z",
+    "sprite_file": "garchomp_2.png",
+    "stone": "Garchompite Z"
    }
   ],
   "spawn_class": "Wild, common",
@@ -8127,7 +8240,13 @@
   "mega_forms": [
    {
     "name": "Mega Lucario",
-    "sprite_file": "lucario-mega.png"
+    "sprite_file": "lucario-mega.png",
+    "stone": "Lucarionite"
+   },
+   {
+    "name": "Mega Lucario Z",
+    "sprite_file": "lucario_2.png",
+    "stone": "Lucarionite Z"
    }
   ],
   "spawn_class": "Wild, common",
@@ -8395,7 +8514,8 @@
   "mega_forms": [
    {
     "name": "Mega Abomasnow",
-    "sprite_file": "abomasnow-mega.png"
+    "sprite_file": "abomasnow-mega.png",
+    "stone": "Abomasite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -8746,7 +8866,8 @@
   "mega_forms": [
    {
     "name": "Mega Gallade",
-    "sprite_file": "gallade-mega.png"
+    "sprite_file": "gallade-mega.png",
+    "stone": "Galladite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -8806,7 +8927,13 @@
   "backrow": "B) Front-row debuffer: Icy Wind is a Splash from the front row; the slow rides on the attack.",
   "sprite_file": "froslass.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Froslass",
+    "sprite_file": "froslass_1.png",
+    "stone": "Froslassite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -9004,7 +9131,13 @@
   "backrow": null,
   "sprite_file": "heatran.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Heatran",
+    "sprite_file": "heatran_1.png",
+    "stone": "Heatranite"
+   }
+  ],
   "spawn_class": "Legendary node only",
   "spawn_weight": 0
  },
@@ -9120,7 +9253,13 @@
   "backrow": "Rare signature exception: can be cast from the back row",
   "sprite_file": "darkrai.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Darkrai",
+    "sprite_file": "darkrai_1.png",
+    "stone": "Darkranite"
+   }
+  ],
   "spawn_class": "Legendary node only",
   "spawn_weight": 0
  },
@@ -9384,7 +9523,13 @@
   "backrow": null,
   "sprite_file": "emboar.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Emboar",
+    "sprite_file": "emboar_1.png",
+    "stone": "Emboarite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -9991,7 +10136,13 @@
   "backrow": null,
   "sprite_file": "excadrill.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Excadrill",
+    "sprite_file": "excadrill_1.png",
+    "stone": "Excadrite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -10023,7 +10174,8 @@
   "mega_forms": [
    {
     "name": "Mega Audino",
-    "sprite_file": "audino-mega.png"
+    "sprite_file": "audino-mega.png",
+    "stone": "Audinite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -11537,7 +11689,13 @@
   "backrow": "B) Front-row debuffer: the burn rides on its Splash attacks, so it plays in front.",
   "sprite_file": "chandelure.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Chandelure",
+    "sprite_file": "chandelure_1.png",
+    "stone": "Chandelurite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -12226,7 +12384,13 @@
   "backrow": null,
   "sprite_file": "chesnaught.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Chesnaught",
+    "sprite_file": "chesnaught_1.png",
+    "stone": "Chesnaughtite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -12316,7 +12480,13 @@
   "backrow": null,
   "sprite_file": "delphox.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Delphox",
+    "sprite_file": "delphox_1.png",
+    "stone": "Delphoxite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -12406,7 +12576,13 @@
   "backrow": null,
   "sprite_file": "greninja.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Greninja",
+    "sprite_file": "greninja_3.png",
+    "stone": "Greninjite"
+   }
+  ],
   "spawn_class": null,
   "spawn_weight": null
  },
@@ -12752,7 +12928,13 @@
   "backrow": "B) Front-row debuffer: Topsy-Turvy rides on its hit, so Malamar plays in front.",
   "sprite_file": "malamar.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Malamar",
+    "sprite_file": "malamar_1.png",
+    "stone": "Malamarite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -13151,7 +13333,13 @@
   "backrow": null,
   "sprite_file": "zygarde.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Zygarde",
+    "sprite_file": "zygarde_5.png",
+    "stone": "Zygardite"
+   }
+  ],
   "spawn_class": "Legendary node only",
   "spawn_weight": 0
  },
@@ -13183,7 +13371,8 @@
   "mega_forms": [
    {
     "name": "Mega Diancie",
-    "sprite_file": "diancie-mega.png"
+    "sprite_file": "diancie-mega.png",
+    "stone": "Diancite"
    }
   ],
   "spawn_class": "Wild, very rare",
@@ -13659,7 +13848,13 @@
   "backrow": null,
   "sprite_file": "crabominable.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Crabominable",
+    "sprite_file": "crabominable_1.png",
+    "stone": "Crabominite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -14207,7 +14402,13 @@
   "backrow": null,
   "sprite_file": "golisopod.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Golisopod",
+    "sprite_file": "golisopod_1.png",
+    "stone": "Golisopite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -14436,7 +14637,13 @@
   "backrow": null,
   "sprite_file": "drampa.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Drampa",
+    "sprite_file": "drampa_1.png",
+    "stone": "Drampanite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  },
@@ -15038,7 +15245,13 @@
   "backrow": null,
   "sprite_file": "magearna.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Magearna",
+    "sprite_file": "magearna_2.png",
+    "stone": "Magearnite"
+   }
+  ],
   "spawn_class": "Wild, very rare",
   "spawn_weight": 5
  },
@@ -15184,7 +15397,13 @@
   "backrow": null,
   "sprite_file": "zeraora.png",
   "open_item": null,
-  "mega_forms": [],
+  "mega_forms": [
+   {
+    "name": "Mega Zeraora",
+    "sprite_file": "zeraora_1.png",
+    "stone": "Zeraorite"
+   }
+  ],
   "spawn_class": "Wild, rare",
   "spawn_weight": 10
  },
@@ -17319,7 +17538,8 @@
   "mega_forms": [
    {
     "name": "Mega Slowbro",
-    "sprite_file": "slowbro-mega.png"
+    "sprite_file": "slowbro-mega.png",
+    "stone": "Slowbronite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -17936,7 +18156,8 @@
   "mega_forms": [
    {
     "name": "Mega Altaria",
-    "sprite_file": "altaria-mega.png"
+    "sprite_file": "altaria-mega.png",
+    "stone": "Altarianite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -18928,7 +19149,8 @@
   "mega_forms": [
    {
     "name": "Mega Baxcalibur",
-    "sprite_file": "newpack/baxcalibur-1.png"
+    "sprite_file": "newpack/baxcalibur-1.png",
+    "stone": "Baxcalibrite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -18962,7 +19184,8 @@
   "mega_forms": [
    {
     "name": "Mega Falinks",
-    "sprite_file": "newpack/falinks-1.png"
+    "sprite_file": "newpack/falinks-1.png",
+    "stone": "Falinksite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -19025,7 +19248,8 @@
   "mega_forms": [
    {
     "name": "Mega Glimmora",
-    "sprite_file": "newpack/glimmora-1.png"
+    "sprite_file": "newpack/glimmora-1.png",
+    "stone": "Glimmoranite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -19084,7 +19308,8 @@
   "mega_forms": [
    {
     "name": "Mega Scovillain",
-    "sprite_file": "newpack/scovillain-1.png"
+    "sprite_file": "newpack/scovillain-1.png",
+    "stone": "Scovillainite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -19119,6 +19344,11 @@
    {
     "name": "Mega Curly Tatsugiri",
     "sprite_file": "newpack/tatsugiri-3.png"
+   },
+   {
+    "name": "Mega Tatsugiri",
+    "sprite_file": "tatsugiri_3.png",
+    "stone": "Tatsugirinite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -20326,7 +20556,8 @@
   "mega_forms": [
    {
     "name": "Mega Pidgeot",
-    "sprite_file": "pidgeot-mega.png"
+    "sprite_file": "pidgeot-mega.png",
+    "stone": "Pidgeotite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -20389,7 +20620,8 @@
   "mega_forms": [
    {
     "name": "Mega Houndoom",
-    "sprite_file": "houndoom-mega.png"
+    "sprite_file": "houndoom-mega.png",
+    "stone": "Houndoominite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -20454,7 +20686,8 @@
   "mega_forms": [
    {
     "name": "Mega Lopunny",
-    "sprite_file": "lopunny-mega.png"
+    "sprite_file": "lopunny-mega.png",
+    "stone": "Lopunnite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -20513,7 +20746,8 @@
   "mega_forms": [
    {
     "name": "Mega Banette",
-    "sprite_file": "banette-mega.png"
+    "sprite_file": "banette-mega.png",
+    "stone": "Banettite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -20547,7 +20781,8 @@
   "mega_forms": [
    {
     "name": "Mega Heracross",
-    "sprite_file": "heracross-mega.png"
+    "sprite_file": "heracross-mega.png",
+    "stone": "Heracronite"
    }
   ],
   "spawn_class": "Wild, common",
@@ -21717,6 +21952,616 @@
   "sprite_file": "newpack/clodsire.png",
   "open_item": null,
   "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "venipede",
+  "name": "Venipede",
+  "dex": 543,
+  "line": "Venipede line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "venipede.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "whirlipede",
+  "name": "Whirlipede",
+  "dex": 544,
+  "line": "Venipede line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "whirlipede.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "scolipede",
+  "name": "Scolipede",
+  "dex": 545,
+  "line": "Venipede line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "scolipede.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Scolipede",
+    "sprite_file": "scolipede_1.png",
+    "stone": "Scolipite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "scraggy",
+  "name": "Scraggy",
+  "dex": 559,
+  "line": "Scraggy line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "scraggy.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "scrafty",
+  "name": "Scrafty",
+  "dex": 560,
+  "line": "Scraggy line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "scrafty.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Scrafty",
+    "sprite_file": "scrafty_1.png",
+    "stone": "Scraftinite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "tynamo",
+  "name": "Tynamo",
+  "dex": 602,
+  "line": "Tynamo line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "tynamo.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "eelektrik",
+  "name": "Eelektrik",
+  "dex": 603,
+  "line": "Tynamo line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "eelektrik.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "eelektross",
+  "name": "Eelektross",
+  "dex": 604,
+  "line": "Tynamo line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "eelektross.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Eelektross",
+    "sprite_file": "eelektross_1.png",
+    "stone": "Eelektrossite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "litleo",
+  "name": "Litleo",
+  "dex": 667,
+  "line": "Litleo line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "litleo.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "pyroar",
+  "name": "Pyroar",
+  "dex": 668,
+  "line": "Litleo line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "pyroar.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Pyroar",
+    "sprite_file": "pyroar_1.png",
+    "stone": "Pyroarite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "flabebe",
+  "name": "Flabébé",
+  "dex": 669,
+  "line": "Flabebe line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "flabebe.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "floette",
+  "name": "Floette",
+  "dex": 670,
+  "line": "Flabebe line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "floette.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Floette",
+    "sprite_file": "floette_6.png",
+    "stone": "Floettite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "florges",
+  "name": "Florges",
+  "dex": 671,
+  "line": "Flabebe line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "florges.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "binacle",
+  "name": "Binacle",
+  "dex": 688,
+  "line": "Binacle line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "binacle.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "barbaracle",
+  "name": "Barbaracle",
+  "dex": 689,
+  "line": "Binacle line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "barbaracle.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Barbaracle",
+    "sprite_file": "barbaracle_1.png",
+    "stone": "Barbaracite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "skrelp",
+  "name": "Skrelp",
+  "dex": 690,
+  "line": "Skrelp line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "skrelp.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "dragalge",
+  "name": "Dragalge",
+  "dex": 691,
+  "line": "Skrelp line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "dragalge.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Dragalge",
+    "sprite_file": "dragalge_1.png",
+    "stone": "Dragalgite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "hawlucha",
+  "name": "Hawlucha",
+  "dex": 701,
+  "line": "Hawlucha",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "hawlucha.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Hawlucha",
+    "sprite_file": "hawlucha_1.png",
+    "stone": "Hawluchanite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "golett",
+  "name": "Golett",
+  "dex": 622,
+  "line": "Golett line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "golett.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "golurk",
+  "name": "Golurk",
+  "dex": 623,
+  "line": "Golett line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "golurk.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Golurk",
+    "sprite_file": "golurk_1.png",
+    "stone": "Golurkite"
+   }
+  ],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "espurr",
+  "name": "Espurr",
+  "dex": 677,
+  "line": "Espurr line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "espurr.png",
+  "open_item": null,
+  "mega_forms": [],
+  "spawn_class": "Wild, common",
+  "spawn_weight": 100
+ },
+ {
+  "id": "meowstic",
+  "name": "Meowstic",
+  "dex": 678,
+  "line": "Espurr line",
+  "pool": "wild",
+  "in_roster": true,
+  "role": null,
+  "playstyle": [],
+  "attack": [],
+  "has_gimmick": false,
+  "gimmick_description": "",
+  "evolution_trigger": null,
+  "wild_spawn_rule": null,
+  "rarity": "Normal",
+  "earlier_note_on_line": "Added so every Mega Pokémon is in the game",
+  "archetype": null,
+  "signature": null,
+  "backrow": null,
+  "sprite_file": "meowstic.png",
+  "open_item": null,
+  "mega_forms": [
+   {
+    "name": "Mega Meowstic",
+    "sprite_file": "meowstic_2.png",
+    "stone": "Meowsticite"
+   }
+  ],
   "spawn_class": "Wild, common",
   "spawn_weight": 100
  }
