@@ -29,8 +29,8 @@ const SPECIES_N = new Set(FORMS.map(f => f.name)).size;     // Drowzee at ★1 a
 const UNIVERSAL = new Set(TEACHABLE.filter(k => LEARN_BY[k].size >= LINE_IDS.length * .75));
 MOVES.struggle = { name:'Struggle', star:1, type:'none', kind:'off', shape:'single', power:20, fx:'Used once a Pokémon has no PP left in any of its moves. The user takes 12% of its max HP.', cat:'none', contact:true };
 // the hit a Pokémon falls back on when none of its moves would do anything from where it stands (a heal with no one
-// hurt, a charging move in round 1…), so a Support Pokémon on its own still fights. Uses no PP
-MOVES.pound = { name:'Pound', star:1, type:'none', kind:'off', shape:'single', power:25, fx:'Used when none of its moves would do anything from where it stands, like a heal with no one hurt. Uses no PP.', cat:'none', contact:true };
+// hurt, a charging move in round 1…), so a Support Pokémon on its own still fights. It has its own PP (u.poundPP)
+MOVES.pound = { name:'Pound', star:1, type:'none', kind:'off', shape:'single', power:25, pp:10, fx:'Used when none of its moves would do anything from where it stands, like a heal with no one hurt. Every Pokémon has it, with its own PP.', cat:'none', contact:true };
 // the starters, three to a generation (Grass, Fire, Water); a new run offers one Grass, one Fire and one Water starter,
 // each from a different generation, at random
 const STARTER_GENS = [['bulbasaur', 'charmander', 'squirtle'], ['chikorita', 'cyndaquil', 'totodile'], ['treecko', 'torchic', 'mudkip'],

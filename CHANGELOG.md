@@ -26,7 +26,7 @@ channel shows the upcoming version with its commit, e.g. `0.2.0-dev (a1b2c3d)`.
 
 ### Changed
 - **Signature moves fit each Pokémon's role.** Every Support Pokémon's signature move now does its job instead of attacking: Healers heal (Synthesis, Aqua Ring, Heal Bell, Aromatherapy, Jungle Healing…), Buffers raise the team's Attack or Speed (Howl, Sunny Day, Quiver Dance, Geomancy…), Debuffers lower the enemy's stats or put it to sleep (Scary Face, Tickle, Sticky Web, Glare, Dark Void…), and Utility Pokémon shield the team (Light Screen, Misty Terrain). 50 new signature moves. A few Strikers that had a support move as their signature got an attack instead.
-- **Support Pokémon still fight.** A Support Pokémon always comes knowing one teachable attack. A move that only changes stats (a buff, shield or debuff) isn't used twice in a row, a pure heal is only used when someone is hurt, and when none of a Pokémon's moves would do anything it hits with Pound (weak, uses no PP).
+- **Support Pokémon still fight.** A Support Pokémon always comes knowing one teachable attack. A move that only changes stats (a buff, shield or debuff) isn't used twice in a row, a pure heal is only used when someone is hurt, and when none of a Pokémon's moves would do anything it hits with Pound (weak, 10 PP of its own). Struggle, once every move is out of PP, is the only move without PP.
 - **Life Dew** heals only the teammate missing the most HP, by 25%, instead of 10% to the whole team.
 - **Slower default battle speed.** 1× now plays at the old 1.5× speed (2× and 4× scale from it), and battles start at 1×.
 - **Instant scans.** On the starter and wild Pokémon screens, tapping a Pokémon has Rotom scan it straight away.

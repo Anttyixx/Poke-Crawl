@@ -113,6 +113,7 @@ function freshBoard(){
       const u = { ...unit, moves: [...unit.moves], sketched: [...(unit.sketched || [])], uid: ++uidSeq, name: f.name, type: f.type, level: f.star, maxHp, hp: maxHp,
         atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
       u.pp = u.moves.map(k => MOVES[k].pp);                // PP left in each move this battle (full again next battle)
+      u.poundPP = MOVES.pound.pp;                           // and in Pound, its fallback hit
       board[side][Math.floor(cell / 3)][cell % 3] = u;
     }
   }
@@ -195,7 +196,7 @@ function tipHTML(u){
     ${mods ? `<div class="tip__mods">${mods}</div>` : ''}
     <div class="mvlist">${u.moves.map((k, i) => moveRow(k, i === 0, odds[i], '', u.pp[i])).join('')}</div>
     ${u.item ? `<div class="dt__item"><img src="${ITEM[u.item].spr}" alt=""><div><b>${ITEM[u.item].name}</b><br>${ITEM[u.item].fx}</div></div>` : ''}
-    <div class="tip__foot">${outOfPP(u) ? 'No PP left: using Struggle. ' : u.st.lock ? `Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}. ` : ''}It only picks moves with PP left that would work from where it stands.</div>`;
+    <div class="tip__foot">${outOfPP(u) ? 'No PP left: using Struggle. ' : u.st.lock ? `Locked into ${MOVES[u.st.lock].name} by its ${ITEM[u.item].name}. ` : ''}It only picks moves with PP left that would work from where it stands; with none, it uses Pound (<b>${u.poundPP}/${MOVES.pound.pp}</b> PP).</div>`;
 }
 function placeTip(el){
   const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, pad = 8;
@@ -348,7 +349,7 @@ function draw(u){
   let r = Math.random() * 100;
   for (const k of taught){ const c = moveChance(k, u.item, u.sketched); if (r < c && ok(k)) return k; r -= c; }
   if (ok(sig)) return sig;
-  return taught.find(ok) || (usable(u, 'pound') ? 'pound' : null);
+  return taught.find(ok) || (u.poundPP > 0 && usable(u, 'pound') ? 'pound' : null);
 }
 
 /* ---------- support moves ---------- */
@@ -619,7 +620,7 @@ async function act(u, forced){
     const c = center(u.side, pos.lane), hits = k => c >= 0 && shapeTargets(u.side, c, MOVES[k].shape).length > 0;
     key = pick(Object.keys(MOVES).filter(k => MOVES[k].kind === 'off' && !NO_METRONOME.has(k) && hits(k))); m = MOVES[key];
   }
-  if (origKey !== 'struggle' && origKey !== 'pound') spendPP(u, origKey);
+  if (origKey === 'pound') u.poundPP--; else if (origKey !== 'struggle') spendPP(u, origKey);
   setTurn(u, 'acting');
   const dropTag = showMoveTag(el, m, u);
   await wait(120);
