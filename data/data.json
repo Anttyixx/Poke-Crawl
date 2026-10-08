@@ -15,7 +15,14 @@
    "spr": "bulbasaur",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -32,8 +39,11 @@
    "spd": 26,
    "spr": "ivysaur",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Leaf Guard",
+    "fx": "Heals 5% of its max HP at the end of every round.",
+    "ab": {
+     "regen": 0.05
+    }
    }
   },
   {
@@ -50,8 +60,16 @@
    "spd": 31,
    "spr": "venusaur",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Harvest",
+    "fx": "Heals 8% of its max HP at the end of every round, and below 33% HP its Grass moves deal 50% more damage.",
+    "ab": {
+     "regen": 0.08,
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -69,7 +87,14 @@
    "spr": "charmander",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -86,8 +111,20 @@
    "spd": 41,
    "spr": "charmeleon",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Flash Fire",
+    "fx": "Takes no damage from Fire moves, and its own Fire moves deal 10% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire"
+      ],
+      "mul": 0
+     },
+     "typeBoost": {
+      "type": "fire",
+      "mul": 1.1
+     }
+    }
    }
   },
   {
@@ -104,8 +141,15 @@
    "spd": 48,
    "spr": "charizard",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Solar Power",
+    "fx": "Its Fire moves deal 35% more damage, but it loses 5% of its max HP at the end of every round.",
+    "ab": {
+     "typeBoost": {
+      "type": "fire",
+      "mul": 1.35
+     },
+     "regen": -0.05
+    }
    }
   },
   {
@@ -123,7 +167,14 @@
    "spr": "squirtle",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -140,8 +191,12 @@
    "spd": 29,
    "spr": "wartortle",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Skill Link",
+    "fx": "Its multi-hit moves always hit the most times, and deal 10% more damage.",
+    "ab": {
+     "maxHits": true,
+     "multiBoost": 1.1
+    }
    }
   },
   {
@@ -158,8 +213,12 @@
    "spd": 34,
    "spr": "blastoise",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Rain Dish",
+    "fx": "Takes 10% less damage, and heals 6% of its max HP at the end of every round.",
+    "ab": {
+     "dmgTaken": 0.9,
+     "regen": 0.06
+    }
    }
   },
   {
@@ -3518,8 +3577,11 @@
    "spd": 30,
    "spr": "chikorita",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Leaf Guard",
+    "fx": "Heals 4% of its max HP at the end of every round.",
+    "ab": {
+     "regen": 0.04
+    }
    }
   },
   {
@@ -3536,8 +3598,11 @@
    "spd": 37,
    "spr": "bayleef",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Healer",
+    "fx": "Its healing moves heal 30% more.",
+    "ab": {
+     "healBoost": 1.3
+    }
    }
   },
   {
@@ -3554,8 +3619,12 @@
    "spd": 43,
    "spr": "meganium",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Flower Veil",
+    "fx": "Its healing moves heal 30% more, and its teammates' stats can't be lowered.",
+    "ab": {
+     "healBoost": 1.3,
+     "teamNoDrops": true
+    }
    }
   },
   {
@@ -3573,7 +3642,14 @@
    "spr": "cyndaquil",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -3590,8 +3666,11 @@
    "spd": 41,
    "spr": "quilava",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Flame Body",
+    "fx": "Any enemy whose contact move hits it loses 8% of its own max HP.",
+    "ab": {
+     "contactPunish": 0.08
+    }
    }
   },
   {
@@ -3608,8 +3687,15 @@
    "spd": 46,
    "spr": "typhlosion",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Drought",
+    "fx": "Its Fire moves deal 25% more damage, and its moves that hit more than one Pokémon deal 15% more.",
+    "ab": {
+     "typeBoost": {
+      "type": "fire",
+      "mul": 1.25
+     },
+     "areaBoost": 1.15
+    }
    },
    "branch": "typhlosion"
   },
@@ -3627,8 +3713,14 @@
    "spd": 45,
    "spr": "typhlosion_1",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Cursed Body",
+    "fx": "Any enemy whose contact move hits it loses 15% Attack and 10% Speed for the battle.",
+    "ab": {
+     "contactDrop": {
+      "atk": 0.15,
+      "spd": 0.1
+     }
+    }
    },
    "branch": "typhlosionhisui"
   },
@@ -3647,7 +3739,14 @@
    "spr": "totodile",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -3664,8 +3763,11 @@
    "spd": 35,
    "spr": "croconaw",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Strong Jaw",
+    "fx": "Its contact moves deal 25% more damage.",
+    "ab": {
+     "contactBoost": 1.25
+    }
    }
   },
   {
@@ -3682,8 +3784,11 @@
    "spd": 41,
    "spr": "feraligatr",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Sheer Force",
+    "fx": "All its moves deal 25% more damage.",
+    "ab": {
+     "allBoost": 1.25
+    }
    }
   },
   {
@@ -5918,7 +6023,14 @@
    "spr": "treecko",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -5935,8 +6047,14 @@
    "spd": 45,
    "spr": "grovyle",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Unburden",
+    "fx": "The first time its HP drops below 50%, it gains 30% Speed for the battle.",
+    "ab": {
+     "onHurt": {
+      "below": 0.5,
+      "spd": 0.3
+     }
+    }
    }
   },
   {
@@ -5953,8 +6071,12 @@
    "spd": 51,
    "spr": "sceptile",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Technician",
+    "fx": "Its multi-hit moves always hit the most times, and deal 30% more damage.",
+    "ab": {
+     "maxHits": true,
+     "multiBoost": 1.3
+    }
    }
   },
   {
@@ -5972,7 +6094,14 @@
    "spr": "torchic",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -5989,8 +6118,13 @@
    "spd": 34,
    "spr": "combusken",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Speed Boost",
+    "fx": "Gains 5% Speed at the end of every round.",
+    "ab": {
+     "perRound": {
+      "spd": 0.05
+     }
+    }
    }
   },
   {
@@ -6007,8 +6141,16 @@
    "spd": 41,
    "spr": "blaziken",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Hustle",
+    "fx": "Starts every battle with 25% more Attack, and gains 5% Speed at the end of every round.",
+    "ab": {
+     "startSelf": {
+      "atk": 0.25
+     },
+     "perRound": {
+      "spd": 0.05
+     }
+    }
    }
   },
   {
@@ -6026,7 +6168,14 @@
    "spr": "mudkip",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -6043,8 +6192,16 @@
    "spd": 32,
    "spr": "marshtomp",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Water Absorb",
+    "fx": "Takes no damage from Water moves.",
+    "ab": {
+     "resist": {
+      "types": [
+       "water"
+      ],
+      "mul": 0
+     }
+    }
    }
   },
   {
@@ -6061,8 +6218,17 @@
    "spd": 36,
    "spr": "swampert",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Solid Rock",
+    "fx": "Takes 30% less damage from super-effective moves, and none from Water moves.",
+    "ab": {
+     "superResist": 0.7,
+     "resist": {
+      "types": [
+       "water"
+      ],
+      "mul": 0
+     }
+    }
    }
   },
   {
@@ -8751,7 +8917,14 @@
    "spr": "turtwig",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -8768,8 +8941,11 @@
    "spd": 27,
    "spr": "grotle",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Shell Armor",
+    "fx": "Takes 10% less damage from every hit.",
+    "ab": {
+     "dmgTaken": 0.9
+    }
    }
   },
   {
@@ -8786,8 +8962,12 @@
    "spd": 35,
    "spr": "torterra",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Overcoat",
+    "fx": "Takes 20% less damage from every hit, and heals 4% of its max HP at the end of every round.",
+    "ab": {
+     "dmgTaken": 0.8,
+     "regen": 0.04
+    }
    }
   },
   {
@@ -8805,7 +8985,14 @@
    "spr": "chimchar",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -8822,8 +9009,13 @@
    "spd": 41,
    "spr": "monferno",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Unnerve",
+    "fx": "At the start of a battle, the opposing front row loses 10% Speed.",
+    "ab": {
+     "startFoe": {
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -8840,8 +9032,12 @@
    "spd": 49,
    "spr": "infernape",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Iron Fist",
+    "fx": "Its contact moves deal 30% more damage, and its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "contactBoost": 1.3,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -8859,7 +9055,14 @@
    "spr": "piplup",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -8876,8 +9079,11 @@
    "spd": 33,
    "spr": "prinplup",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Defiant",
+    "fx": "Its stats can't be lowered.",
+    "ab": {
+     "noDrops": true
+    }
    }
   },
   {
@@ -8894,8 +9100,11 @@
    "spd": 36,
    "spr": "empoleon",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Competitive",
+    "fx": "Whenever one of its stats is lowered, it gains 25% Attack for the battle.",
+    "ab": {
+     "competitive": 0.25
+    }
    }
   },
   {
@@ -10812,7 +11021,14 @@
    "spr": "snivy",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -10829,8 +11045,11 @@
    "spd": 43,
    "spr": "servine",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Own Tempo",
+    "fx": "Its moves that raise stats raise them 30% more.",
+    "ab": {
+     "buffBoost": 1.3
+    }
    }
   },
   {
@@ -10847,8 +11066,12 @@
    "spd": 52,
    "spr": "serperior",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Contrary",
+    "fx": "Moves that would lower its stats raise them instead, and its own stat-raising moves raise them 30% more.",
+    "ab": {
+     "contrary": true,
+     "buffBoost": 1.3
+    }
    }
   },
   {
@@ -10866,7 +11089,14 @@
    "spr": "tepig",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -10883,8 +11113,17 @@
    "spd": 33,
    "spr": "pignite",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Thick Fat",
+    "fx": "Takes 50% less damage from Fire and Ice moves.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire",
+       "ice"
+      ],
+      "mul": 0.5
+     }
+    }
    }
   },
   {
@@ -10901,8 +11140,12 @@
    "spd": 37,
    "spr": "emboar",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Reckless",
+    "fx": "Its contact moves deal 30% more damage, and it takes no recoil damage.",
+    "ab": {
+     "contactBoost": 1.3,
+     "recoilImmune": true
+    }
    }
   },
   {
@@ -10920,7 +11163,14 @@
    "spr": "oshawott",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -10937,8 +11187,11 @@
    "spd": 35,
    "spr": "dewott",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Shell Armor",
+    "fx": "Takes 10% less damage from every hit.",
+    "ab": {
+     "dmgTaken": 0.9
+    }
    }
   },
   {
@@ -10955,8 +11208,11 @@
    "spd": 39,
    "spr": "samurott",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Sharpness",
+    "fx": "Its contact moves deal 35% more damage.",
+    "ab": {
+     "contactBoost": 1.35
+    }
    }
   },
   {
@@ -14097,7 +14353,14 @@
    "spr": "chespin",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -14114,8 +14377,11 @@
    "spd": 35,
    "spr": "quilladin",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Bulletproof",
+    "fx": "Takes 40% less damage from moves that hit more than one Pokémon.",
+    "ab": {
+     "areaResist": 0.6
+    }
    }
   },
   {
@@ -14132,8 +14398,12 @@
    "spd": 37,
    "spr": "chesnaught",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Iron Barbs",
+    "fx": "Any enemy whose contact move hits it loses 12% of its own max HP, and it takes 40% less from moves that hit more than one Pokémon.",
+    "ab": {
+     "contactPunish": 0.12,
+     "areaResist": 0.6
+    }
    }
   },
   {
@@ -14151,7 +14421,14 @@
    "spr": "fennekin",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -14168,8 +14445,11 @@
    "spd": 38,
    "spr": "braixen",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Magic Guard",
+    "fx": "Takes no damage from poison, Leech Seed, recoil, Rocky Helmet or Life Orb.",
+    "ab": {
+     "magicGuard": true
+    }
    }
   },
   {
@@ -14186,8 +14466,15 @@
    "spd": 47,
    "spr": "delphox",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Psychic Surge",
+    "fx": "At the start of a battle, the whole team gains 10% Attack and 10% Speed; its own stat-raising moves raise them 20% more.",
+    "ab": {
+     "startTeam": {
+      "atk": 0.1,
+      "spd": 0.1
+     },
+     "buffBoost": 1.2
+    }
    }
   },
   {
@@ -14204,8 +14491,15 @@
    "spd": 37,
    "spr": "froakie",
    "ability": {
-    "name": "Battle Bond",
-    "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
+    "name": "Torrent",
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    },
    "gimmick": true
   },
@@ -14223,8 +14517,11 @@
    "spd": 45,
    "spr": "frogadier",
    "ability": {
-    "name": "Battle Bond",
-    "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
+    "name": "Protean",
+    "fx": "All its moves deal 10% more damage.",
+    "ab": {
+     "allBoost": 1.1
+    }
    },
    "gimmick": true
   },
@@ -14243,7 +14540,13 @@
    "spr": "greninja",
    "ability": {
     "name": "Battle Bond",
-    "fx": "The first time it knocks out an enemy, it gains 30% Attack and 10% Speed for the battle."
+    "fx": "Each time it knocks out a Pokémon, it gains 20% Attack and 10% Speed for the battle.",
+    "ab": {
+     "onKO": {
+      "atk": 0.2,
+      "spd": 0.1
+     }
+    }
    },
    "gimmick": true
   },
@@ -15534,7 +15837,14 @@
    "spr": "rowlet",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    },
    "gimmick": true
   },
@@ -15552,8 +15862,11 @@
    "spd": 33,
    "spr": "dartrix",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Tinted Lens",
+    "fx": "Its resisted moves deal double damage (up to normal).",
+    "ab": {
+     "tinted": true
+    }
    },
    "gimmick": true
   },
@@ -15571,8 +15884,12 @@
    "spd": 39,
    "spr": "decidueye",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Long Reach",
+    "fx": "Its moves never make contact, and go straight through shields, Protect-style guards and Reflect.",
+    "ab": {
+     "noContact": true,
+     "ignoreGuard": true
+    }
    },
    "branch": "decidueye",
    "gimmick": true
@@ -15591,8 +15908,12 @@
    "spd": 36,
    "spr": "decidueye_1",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Scrappy",
+    "fx": "Its moves are never resisted, and its contact moves deal 15% more damage.",
+    "ab": {
+     "scrappy": true,
+     "contactBoost": 1.15
+    }
    },
    "branch": "decidueyehisui",
    "gimmick": true
@@ -15612,7 +15933,14 @@
    "spr": "litten",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -15629,8 +15957,14 @@
    "spd": 43,
    "spr": "torracat",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Anger Point",
+    "fx": "The first time its HP drops below 50%, it gains 30% Attack for the battle.",
+    "ab": {
+     "onHurt": {
+      "below": 0.5,
+      "atk": 0.3
+     }
+    }
    }
   },
   {
@@ -15647,8 +15981,13 @@
    "spd": 36,
    "spr": "incineroar",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Intimidate",
+    "fx": "At the start of a battle, the opposing front row loses 20% Attack.",
+    "ab": {
+     "startFoe": {
+      "atk": 0.2
+     }
+    }
    }
   },
   {
@@ -15666,7 +16005,14 @@
    "spr": "popplio",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -15683,8 +16029,12 @@
    "spd": 32,
    "spr": "brionne",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Liquid Voice",
+    "fx": "Its healing and stat-raising moves are 25% stronger.",
+    "ab": {
+     "healBoost": 1.25,
+     "buffBoost": 1.25
+    }
    }
   },
   {
@@ -15701,8 +16051,14 @@
    "spd": 36,
    "spr": "primarina",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Soul-Heart",
+    "fx": "Whenever any Pokémon faints, it gains 15% Attack for the battle; its stat-raising moves raise them 25% more.",
+    "ab": {
+     "onFaint": {
+      "atk": 0.15
+     },
+     "buffBoost": 1.25
+    }
    }
   },
   {
@@ -18055,7 +18411,14 @@
    "spr": "grookey",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -18072,8 +18435,13 @@
    "spd": 40,
    "spr": "thwackey",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Steadfast",
+    "fx": "Each time it is hit, it gains 8% Speed for the battle.",
+    "ab": {
+     "onHit": {
+      "spd": 0.08
+     }
+    }
    }
   },
   {
@@ -18090,8 +18458,11 @@
    "spd": 42,
    "spr": "rillaboom",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Grassy Surge",
+    "fx": "Every teammate (and itself) heals 4% of its max HP at the end of every round.",
+    "ab": {
+     "teamRegen": 0.04
+    }
    }
   },
   {
@@ -18109,7 +18480,14 @@
    "spr": "scorbunny",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -18126,8 +18504,13 @@
    "spd": 43,
    "spr": "raboot",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Quick Feet",
+    "fx": "Starts every battle with 20% more Speed.",
+    "ab": {
+     "startSelf": {
+      "spd": 0.2
+     }
+    }
    }
   },
   {
@@ -18144,8 +18527,12 @@
    "spd": 50,
    "spr": "cinderace",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Libero",
+    "fx": "All its moves deal 20% more damage, and it acts first in round 1.",
+    "ab": {
+     "allBoost": 1.2,
+     "firstAct": true
+    }
    }
   },
   {
@@ -18163,7 +18550,14 @@
    "spr": "sobble",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -18180,8 +18574,11 @@
    "spd": 42,
    "spr": "drizzile",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Infiltrator",
+    "fx": "Its moves go straight through shields, Protect-style guards and Reflect.",
+    "ab": {
+     "ignoreGuard": true
+    }
    }
   },
   {
@@ -18198,8 +18595,14 @@
    "spd": 50,
    "spr": "inteleon",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Sniper",
+    "fx": "Each hit has a 30% chance to deal 60% more damage.",
+    "ab": {
+     "crit": {
+      "chance": 0.3,
+      "mul": 1.6
+     }
+    }
    }
   },
   {
@@ -20138,7 +20541,14 @@
    "spr": "sprigatito",
    "ability": {
     "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "fx": "Below 33% HP, its Grass moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "grass",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -20155,8 +20565,11 @@
    "spd": 42,
    "spr": "floragato",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Quick Draw",
+    "fx": "Acts first in round 1.",
+    "ab": {
+     "firstAct": true
+    }
    }
   },
   {
@@ -20173,8 +20586,12 @@
    "spd": 51,
    "spr": "meowscarada",
    "ability": {
-    "name": "Overgrow",
-    "fx": "Below 33% HP, its Grass moves deal 50% more damage."
+    "name": "Protean",
+    "fx": "All its moves deal 20% more damage, and it acts first in round 1.",
+    "ab": {
+     "allBoost": 1.2,
+     "firstAct": true
+    }
    }
   },
   {
@@ -20192,7 +20609,14 @@
    "spr": "fuecoco",
    "ability": {
     "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "fx": "Below 33% HP, its Fire moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "fire",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -20209,8 +20633,11 @@
    "spd": 31,
    "spr": "crocalor",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Flame Body",
+    "fx": "Any enemy whose contact move hits it loses 8% of its own max HP.",
+    "ab": {
+     "contactPunish": 0.08
+    }
    }
   },
   {
@@ -20227,8 +20654,12 @@
    "spd": 37,
    "spr": "skeledirge",
    "ability": {
-    "name": "Blaze",
-    "fx": "Below 33% HP, its Fire moves deal 50% more damage."
+    "name": "Unaware",
+    "fx": "Ignores its attackers' Attack boosts, and takes 10% less damage from every hit.",
+    "ab": {
+     "unaware": true,
+     "dmgTaken": 0.9
+    }
    }
   },
   {
@@ -20246,7 +20677,14 @@
    "spr": "quaxly",
    "ability": {
     "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "fx": "Below 33% HP, its Water moves deal 50% more damage.",
+    "ab": {
+     "pinch": {
+      "type": "water",
+      "mul": 1.5,
+      "below": 0.33
+     }
+    }
    }
   },
   {
@@ -20263,8 +20701,13 @@
    "spd": 36,
    "spr": "quaxwell",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Moxie",
+    "fx": "Each time it knocks out a Pokémon, it gains 15% Attack for the battle.",
+    "ab": {
+     "onKO": {
+      "atk": 0.15
+     }
+    }
    }
   },
   {
@@ -20281,8 +20724,14 @@
    "spd": 42,
    "spr": "quaquaval",
    "ability": {
-    "name": "Torrent",
-    "fx": "Below 33% HP, its Water moves deal 50% more damage."
+    "name": "Dancer",
+    "fx": "Gains 5% Attack and 5% Speed at the end of every round.",
+    "ab": {
+     "perRound": {
+      "atk": 0.05,
+      "spd": 0.05
+     }
+    }
    }
   },
   {
@@ -38648,7 +39097,17 @@
    },
    "ability": {
     "name": "Thick Fat",
-    "fx": "Takes 50% less damage from Fire and Ice moves."
+    "fx": "Takes 50% less damage from Fire and Ice moves, and heals 6% of its max HP every round.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire",
+       "ice"
+      ],
+      "mul": 0.5
+     },
+     "regen": 0.06
+    }
    }
   },
   {
@@ -38665,7 +39124,10 @@
    },
    "ability": {
     "name": "Tough Claws",
-    "fx": "Its contact moves deal 20% more damage."
+    "fx": "Its contact moves deal 35% more damage.",
+    "ab": {
+     "contactBoost": 1.35
+    }
    }
   },
   {
@@ -38682,7 +39144,13 @@
    },
    "ability": {
     "name": "Drought",
-    "fx": "Fire moves on its side deal 20% more damage for the first 3 rounds."
+    "fx": "Its Fire moves deal 40% more damage.",
+    "ab": {
+     "typeBoost": {
+      "type": "fire",
+      "mul": 1.4
+     }
+    }
    }
   },
   {
@@ -38699,7 +39167,14 @@
    },
    "ability": {
     "name": "Mega Launcher",
-    "fx": "Its Pierce and Splash moves deal 30% more damage."
+    "fx": "Its moves that hit more than one Pokémon deal 30% more damage, and its Water moves 15% more.",
+    "ab": {
+     "areaBoost": 1.3,
+     "typeBoost": {
+      "type": "water",
+      "mul": 1.15
+     }
+    }
    }
   },
   {
@@ -38716,7 +39191,16 @@
    },
    "ability": {
     "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
+    "fx": "Its Bug and Poison moves deal 40% more damage.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "bug",
+       "poison"
+      ],
+      "mul": 1.4
+     }
+    }
    }
   },
   {
@@ -38733,7 +39217,11 @@
    },
    "ability": {
     "name": "No Guard",
-    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+    "fx": "Its moves go straight through shields, Protect-style guards and Reflect, and it acts first in round 1.",
+    "ab": {
+     "ignoreGuard": true,
+     "firstAct": true
+    }
    }
   },
   {
@@ -38750,7 +39238,16 @@
    },
    "ability": {
     "name": "Electric Surge",
-    "fx": "Electric moves on its side deal 20% more damage for the first 3 rounds."
+    "fx": "At the start of a battle the whole team gains 15% Speed; its Electric moves deal 20% more damage.",
+    "ab": {
+     "startTeam": {
+      "spd": 0.15
+     },
+     "typeBoost": {
+      "type": "electric",
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -38767,7 +39264,14 @@
    },
    "ability": {
     "name": "No Guard",
-    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+    "fx": "Its moves go straight through shields, Protect-style guards and Reflect, and its Electric moves deal 20% more damage.",
+    "ab": {
+     "ignoreGuard": true,
+     "typeBoost": {
+      "type": "electric",
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -38784,7 +39288,11 @@
    },
    "ability": {
     "name": "Magic Bounce",
-    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+    "fx": "Its stats can't be lowered, and its healing moves heal 30% more.",
+    "ab": {
+     "noDrops": true,
+     "healBoost": 1.3
+    }
    }
   },
   {
@@ -38801,7 +39309,13 @@
    },
    "ability": {
     "name": "Trace",
-    "fx": "At the start of battle, copies the ability of the enemy directly across."
+    "fx": "Starts every battle with 20% more Attack and Speed.",
+    "ab": {
+     "startSelf": {
+      "atk": 0.2,
+      "spd": 0.2
+     }
+    }
    }
   },
   {
@@ -38818,7 +39332,11 @@
    },
    "ability": {
     "name": "Innards Out",
-    "fx": "When knocked out, the enemy that did it loses HP equal to the damage of the final hit."
+    "fx": "Any enemy whose contact move hits it loses 15% of its own max HP; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "contactPunish": 0.15,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -38835,7 +39353,10 @@
    },
    "ability": {
     "name": "Shell Armor",
-    "fx": "Takes 15% less damage from Single moves."
+    "fx": "Takes 25% less damage from every hit.",
+    "ab": {
+     "dmgTaken": 0.75
+    }
    }
   },
   {
@@ -38852,7 +39373,13 @@
    },
    "ability": {
     "name": "Shadow Tag",
-    "fx": "The enemy directly across from it can't use its taught move."
+    "fx": "At the start of a battle the opposing front row loses 20% Speed; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "startFoe": {
+      "spd": 0.2
+     },
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -38869,7 +39396,11 @@
    },
    "ability": {
     "name": "Parental Bond",
-    "fx": "Its Single moves hit a second time, at 25% of the power."
+    "fx": "Its multi-hit moves always hit the most times, and all its moves deal 15% more damage.",
+    "ab": {
+     "maxHits": true,
+     "allBoost": 1.15
+    }
    }
   },
   {
@@ -38886,7 +39417,10 @@
    },
    "ability": {
     "name": "Huge Power",
-    "fx": "Has 50% more Attack."
+    "fx": "All its moves deal 30% more damage.",
+    "ab": {
+     "allBoost": 1.3
+    }
    }
   },
   {
@@ -38903,7 +39437,11 @@
    },
    "ability": {
     "name": "Aerilate",
-    "fx": "Its Normal moves become Flying moves and deal 20% more damage."
+    "fx": "Its contact moves deal 25% more damage, and it acts first in round 1.",
+    "ab": {
+     "contactBoost": 1.25,
+     "firstAct": true
+    }
    }
   },
   {
@@ -38920,7 +39458,11 @@
    },
    "ability": {
     "name": "Mold Breaker",
-    "fx": "Its moves ignore the target's ability."
+    "fx": "Its moves go straight through shields and Reflect, and are never resisted.",
+    "ab": {
+     "ignoreGuard": true,
+     "scrappy": true
+    }
    }
   },
   {
@@ -38937,7 +39479,11 @@
    },
    "ability": {
     "name": "Tough Claws",
-    "fx": "Its contact moves deal 20% more damage."
+    "fx": "Its contact moves deal 30% more damage, and it acts first in round 1.",
+    "ab": {
+     "contactBoost": 1.3,
+     "firstAct": true
+    }
    }
   },
   {
@@ -38954,7 +39500,10 @@
    },
    "ability": {
     "name": "Multiscale",
-    "fx": "At full HP, takes 50% less damage from the first hit."
+    "fx": "Takes 50% less damage while at full HP.",
+    "ab": {
+     "fullHp": 0.5
+    }
    }
   },
   {
@@ -38971,7 +39520,12 @@
    },
    "ability": {
     "name": "Steadfast",
-    "fx": "Gains 10% Speed each time it's hit (max +40%)."
+    "fx": "Each time it is hit, it gains 10% Attack for the battle.",
+    "ab": {
+     "onHit": {
+      "atk": 0.1
+     }
+    }
    }
   },
   {
@@ -38988,7 +39542,11 @@
    },
    "ability": {
     "name": "Insomnia",
-    "fx": "Can't be made to skip actions by enemy moves."
+    "fx": "Its stats can't be lowered, and all its moves deal 20% more damage.",
+    "ab": {
+     "noDrops": true,
+     "allBoost": 1.2
+    }
    }
   },
   {
@@ -39005,7 +39563,11 @@
    },
    "ability": {
     "name": "Mega Sol",
-    "fx": "Its Fire and Grass moves deal 30% more damage."
+    "fx": "Its healing moves heal 40% more, and every teammate heals 5% of its max HP every round.",
+    "ab": {
+     "healBoost": 1.4,
+     "teamRegen": 0.05
+    }
    }
   },
   {
@@ -39022,7 +39584,13 @@
    },
    "ability": {
     "name": "Dragonize",
-    "fx": "Its Normal moves become Dragon moves and deal 20% more damage."
+    "fx": "Its contact moves deal 25% more damage, and each knockout gives it 15% Attack.",
+    "ab": {
+     "contactBoost": 1.25,
+     "onKO": {
+      "atk": 0.15
+     }
+    }
    }
   },
   {
@@ -39039,7 +39607,11 @@
    },
    "ability": {
     "name": "Mold Breaker",
-    "fx": "Its moves ignore the target's ability."
+    "fx": "Its moves go straight through shields and Reflect; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "ignoreGuard": true,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -39056,7 +39628,10 @@
    },
    "ability": {
     "name": "Sand Force",
-    "fx": "Its Rock, Ground and Steel moves deal 30% more damage for the first 3 rounds."
+    "fx": "Takes 30% less damage from every hit.",
+    "ab": {
+     "dmgTaken": 0.7
+    }
    }
   },
   {
@@ -39073,7 +39648,12 @@
    },
    "ability": {
     "name": "Technician",
-    "fx": "Moves with 60% power or less deal 50% more damage."
+    "fx": "Its multi-hit moves always hit the most times and deal 30% more damage; it takes 15% less damage.",
+    "ab": {
+     "maxHits": true,
+     "multiBoost": 1.3,
+     "dmgTaken": 0.85
+    }
    }
   },
   {
@@ -39090,7 +39670,11 @@
    },
    "ability": {
     "name": "Skill Link",
-    "fx": "Moves that hit several times always hit the most times."
+    "fx": "Its multi-hit moves always hit the most times, and deal 25% more damage.",
+    "ab": {
+     "maxHits": true,
+     "multiBoost": 1.25
+    }
    }
   },
   {
@@ -39107,7 +39691,11 @@
    },
    "ability": {
     "name": "Stalwart",
-    "fx": "Its moves ignore moves that draw attacks away (like Follow Me)."
+    "fx": "Any enemy whose contact move hits it loses 12% of its own max HP, and it takes 15% less damage.",
+    "ab": {
+     "contactPunish": 0.12,
+     "dmgTaken": 0.85
+    }
    }
   },
   {
@@ -39124,7 +39712,17 @@
    },
    "ability": {
     "name": "Solar Power",
-    "fx": "Its Fire moves deal 30% more damage, but it loses 5% of its max HP at the end of each round."
+    "fx": "Its Fire and Dark moves deal 30% more damage, but it loses 4% of its max HP every round.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "fire",
+       "dark"
+      ],
+      "mul": 1.3
+     },
+     "regen": -0.04
+    }
    }
   },
   {
@@ -39141,7 +39739,13 @@
    },
    "ability": {
     "name": "Sand Stream",
-    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+    "fx": "Takes 20% less damage, and the opposing front row loses 10% Speed at the start of a battle.",
+    "ab": {
+     "dmgTaken": 0.8,
+     "startFoe": {
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -39158,7 +39762,16 @@
    },
    "ability": {
     "name": "Lightning Rod",
-    "fx": "Draws enemy Electric Single moves aimed at its row to itself and takes no damage from them."
+    "fx": "Takes no damage from Electric moves; its multi-hit moves deal 25% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "electric"
+      ],
+      "mul": 0
+     },
+     "multiBoost": 1.25
+    }
    }
   },
   {
@@ -39175,7 +39788,12 @@
    },
    "ability": {
     "name": "Speed Boost",
-    "fx": "Gains 10% Speed at the end of each round."
+    "fx": "Gains 10% Speed at the end of every round.",
+    "ab": {
+     "perRound": {
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -39192,7 +39810,16 @@
    },
    "ability": {
     "name": "Swift Swim",
-    "fx": "Gains 25% Speed for the first 2 rounds of every battle."
+    "fx": "Starts every battle with 30% more Speed, and its Water moves deal 15% more damage.",
+    "ab": {
+     "startSelf": {
+      "spd": 0.3
+     },
+     "typeBoost": {
+      "type": "water",
+      "mul": 1.15
+     }
+    }
    }
   },
   {
@@ -39209,7 +39836,17 @@
    },
    "ability": {
     "name": "Pixilate",
-    "fx": "Its Normal moves become Fairy moves and deal 20% more damage."
+    "fx": "Its Fairy and Psychic moves deal 30% more damage, and its healing moves heal 20% more.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "fairy",
+       "psychic"
+      ],
+      "mul": 1.3
+     },
+     "healBoost": 1.2
+    }
    }
   },
   {
@@ -39226,7 +39863,11 @@
    },
    "ability": {
     "name": "Magic Bounce",
-    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+    "fx": "Its stats can't be lowered, and its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "noDrops": true,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -39243,7 +39884,10 @@
    },
    "ability": {
     "name": "Huge Power",
-    "fx": "Has 50% more Attack."
+    "fx": "All its moves deal 40% more damage.",
+    "ab": {
+     "allBoost": 1.4
+    }
    }
   },
   {
@@ -39260,7 +39904,11 @@
    },
    "ability": {
     "name": "Filter",
-    "fx": "Takes 25% less damage from super-effective moves."
+    "fx": "Takes 35% less damage from super-effective moves, and 10% less from everything.",
+    "ab": {
+     "superResist": 0.65,
+     "dmgTaken": 0.9
+    }
    }
   },
   {
@@ -39277,7 +39925,10 @@
    },
    "ability": {
     "name": "Pure Power",
-    "fx": "Has 50% more Attack."
+    "fx": "All its moves deal 40% more damage.",
+    "ab": {
+     "allBoost": 1.4
+    }
    }
   },
   {
@@ -39294,7 +39945,13 @@
    },
    "ability": {
     "name": "Intimidate",
-    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
+    "fx": "At the start of a battle the opposing front row loses 20% Attack; it acts first in round 1.",
+    "ab": {
+     "startFoe": {
+      "atk": 0.2
+     },
+     "firstAct": true
+    }
    }
   },
   {
@@ -39311,7 +39968,13 @@
    },
    "ability": {
     "name": "Strong Jaw",
-    "fx": "Its Dark moves deal 30% more damage."
+    "fx": "Its contact moves deal 35% more damage, and each knockout gives it 10% Speed.",
+    "ab": {
+     "contactBoost": 1.35,
+     "onKO": {
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -39328,7 +39991,11 @@
    },
    "ability": {
     "name": "Sheer Force",
-    "fx": "Moves with extra effects deal 30% more damage, but lose their extra effects."
+    "fx": "All its moves deal 30% more damage, and its moves that hit more than one Pokémon 15% more.",
+    "ab": {
+     "allBoost": 1.3,
+     "areaBoost": 1.15
+    }
    }
   },
   {
@@ -39345,7 +40012,17 @@
    },
    "ability": {
     "name": "Pixilate",
-    "fx": "Its Normal moves become Fairy moves and deal 20% more damage."
+    "fx": "Its healing moves heal 30% more, and it takes 50% less damage from Fire and Ice.",
+    "ab": {
+     "healBoost": 1.3,
+     "resist": {
+      "types": [
+       "fire",
+       "ice"
+      ],
+      "mul": 0.5
+     }
+    }
    }
   },
   {
@@ -39362,7 +40039,11 @@
    },
    "ability": {
     "name": "Prankster",
-    "fx": "Its Support moves act before anyone else's in the round."
+    "fx": "Its support moves act first, and its stat-lowering moves lower stats 30% more.",
+    "ab": {
+     "firstSupport": true,
+     "debuffBoost": 1.3
+    }
    }
   },
   {
@@ -39379,7 +40060,16 @@
    },
    "ability": {
     "name": "Levitate",
-    "fx": "Immune to Ground moves."
+    "fx": "Takes no damage from Ground moves, and its stat-raising moves raise them 30% more.",
+    "ab": {
+     "resist": {
+      "types": [
+       "ground"
+      ],
+      "mul": 0
+     },
+     "buffBoost": 1.3
+    }
    }
   },
   {
@@ -39396,7 +40086,14 @@
    },
    "ability": {
     "name": "Magic Bounce",
-    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+    "fx": "Its stats can't be lowered, and each hit has a 25% chance to deal 50% more damage.",
+    "ab": {
+     "noDrops": true,
+     "crit": {
+      "chance": 0.25,
+      "mul": 1.5
+     }
+    }
    }
   },
   {
@@ -39413,7 +40110,11 @@
    },
    "ability": {
     "name": "Sharpness",
-    "fx": "Its Single moves deal 20% more damage."
+    "fx": "Its contact moves deal 30% more damage, and it acts first in round 1.",
+    "ab": {
+     "contactBoost": 1.3,
+     "firstAct": true
+    }
    }
   },
   {
@@ -39430,7 +40131,14 @@
    },
    "ability": {
     "name": "Refrigerate",
-    "fx": "Its Normal moves become Ice moves and deal 20% more damage."
+    "fx": "Its Ice moves deal 35% more damage, and it heals 5% of its max HP every round.",
+    "ab": {
+     "typeBoost": {
+      "type": "ice",
+      "mul": 1.35
+     },
+     "regen": 0.05
+    }
    }
   },
   {
@@ -39447,7 +40155,19 @@
    },
    "ability": {
     "name": "Aerilate",
-    "fx": "Its Normal moves become Flying moves and deal 20% more damage."
+    "fx": "Its Dragon and Flying moves deal 30% more damage, and each knockout gives it 10% Attack.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "dragon",
+       "flying"
+      ],
+      "mul": 1.3
+     },
+     "onKO": {
+      "atk": 0.1
+     }
+    }
    }
   },
   {
@@ -39464,7 +40184,11 @@
    },
    "ability": {
     "name": "Tough Claws",
-    "fx": "Its contact moves deal 20% more damage."
+    "fx": "Its contact moves deal 30% more damage, and it takes 10% less damage.",
+    "ab": {
+     "contactBoost": 1.3,
+     "dmgTaken": 0.9
+    }
    }
   },
   {
@@ -39481,7 +40205,16 @@
    },
    "ability": {
     "name": "Levitate",
-    "fx": "Immune to Ground moves."
+    "fx": "Takes no damage from Ground moves, and its multi-hit moves deal 20% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "ground"
+      ],
+      "mul": 0
+     },
+     "multiBoost": 1.2
+    }
    }
   },
   {
@@ -39498,7 +40231,22 @@
    },
    "ability": {
     "name": "Levitate",
-    "fx": "Immune to Ground moves."
+    "fx": "Takes no damage from Ground moves, and its Dragon and Psychic moves deal 20% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "ground"
+      ],
+      "mul": 0
+     },
+     "typeBoost": {
+      "type": [
+       "dragon",
+       "psychic"
+      ],
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -39515,7 +40263,19 @@
    },
    "ability": {
     "name": "Primordial Sea",
-    "fx": "Enemy Fire moves deal no damage, and Water moves on its side deal 30% more damage."
+    "fx": "Takes no damage from Fire moves, and its Water moves deal 30% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire"
+      ],
+      "mul": 0
+     },
+     "typeBoost": {
+      "type": "water",
+      "mul": 1.3
+     }
+    }
    }
   },
   {
@@ -39532,7 +40292,22 @@
    },
    "ability": {
     "name": "Desolate Land",
-    "fx": "Enemy Water moves deal no damage, and Fire moves on its side deal 30% more damage."
+    "fx": "Takes no damage from Water moves, and its Ground and Fire moves deal 30% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "water"
+      ],
+      "mul": 0
+     },
+     "typeBoost": {
+      "type": [
+       "ground",
+       "fire"
+      ],
+      "mul": 1.3
+     }
+    }
    }
   },
   {
@@ -39549,7 +40324,17 @@
    },
    "ability": {
     "name": "Delta Stream",
-    "fx": "Moves that are super effective against Flying types deal normal damage to its side."
+    "fx": "Takes 35% less damage from super-effective moves, and its Dragon and Flying moves deal 25% more damage.",
+    "ab": {
+     "superResist": 0.65,
+     "typeBoost": {
+      "type": [
+       "dragon",
+       "flying"
+      ],
+      "mul": 1.25
+     }
+    }
    }
   },
   {
@@ -39566,7 +40351,11 @@
    },
    "ability": {
     "name": "Contrary",
-    "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
+    "fx": "Moves that would lower its stats raise them instead; its contact moves deal 20% more damage.",
+    "ab": {
+     "contrary": true,
+     "contactBoost": 1.2
+    }
    }
   },
   {
@@ -39583,7 +40372,11 @@
    },
    "ability": {
     "name": "Scrappy",
-    "fx": "Its Normal and Fighting moves can hit Ghost types."
+    "fx": "Its moves are never resisted, and it acts first in round 1.",
+    "ab": {
+     "scrappy": true,
+     "firstAct": true
+    }
    }
   },
   {
@@ -39600,7 +40393,16 @@
    },
    "ability": {
     "name": "Sand Force",
-    "fx": "Its Rock, Ground and Steel moves deal 30% more damage for the first 3 rounds."
+    "fx": "Its Dragon and Ground moves deal 30% more damage.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "dragon",
+       "ground"
+      ],
+      "mul": 1.3
+     }
+    }
    }
   },
   {
@@ -39616,8 +40418,14 @@
     "spd": 1.48
    },
    "ability": {
-    "name": "Levitate",
-    "fx": "Immune to Ground moves."
+    "name": "Rough Skin",
+    "fx": "Any enemy whose contact move hits it loses 12% of its own max HP, and it gains 5% Speed every round.",
+    "ab": {
+     "contactPunish": 0.12,
+     "perRound": {
+      "spd": 0.05
+     }
+    }
    }
   },
   {
@@ -39634,7 +40442,16 @@
    },
    "ability": {
     "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
+    "fx": "Its Fighting and Steel moves deal 40% more damage.",
+    "ab": {
+     "typeBoost": {
+      "type": [
+       "fighting",
+       "steel"
+      ],
+      "mul": 1.4
+     }
+    }
    }
   },
   {
@@ -39651,7 +40468,11 @@
    },
    "ability": {
     "name": "Aura Guard",
-    "fx": "Teammates beside it take 15% less damage."
+    "fx": "Heals 20% of the damage it deals, and its stats can't be lowered.",
+    "ab": {
+     "drain": 0.2,
+     "noDrops": true
+    }
    }
   },
   {
@@ -39668,7 +40489,19 @@
    },
    "ability": {
     "name": "Snow Warning",
-    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+    "fx": "At the start of a battle the opposing front row loses 15% Speed; its Ice and Grass moves deal 20% more damage.",
+    "ab": {
+     "startFoe": {
+      "spd": 0.15
+     },
+     "typeBoost": {
+      "type": [
+       "ice",
+       "grass"
+      ],
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -39685,7 +40518,12 @@
    },
    "ability": {
     "name": "Inner Focus",
-    "fx": "Can't be made to skip actions by enemy moves."
+    "fx": "Its stats can't be lowered, its contact moves deal 25% more damage, and it acts first in round 1.",
+    "ab": {
+     "noDrops": true,
+     "contactBoost": 1.25,
+     "firstAct": true
+    }
    }
   },
   {
@@ -39702,7 +40540,13 @@
    },
    "ability": {
     "name": "Snow Warning",
-    "fx": "At the start of battle, every enemy loses 3% of its max HP at the end of each of the first 3 rounds."
+    "fx": "At the start of a battle the opposing front row loses 15% Speed; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "startFoe": {
+      "spd": 0.15
+     },
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -39716,6 +40560,19 @@
     "hp": 1.09,
     "atk": 1.34,
     "spd": 0.87
+   },
+   "ability": {
+    "name": "Flash Fire",
+    "fx": "Takes no damage from Fire moves; its moves that hit more than one Pokémon deal 25% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire"
+      ],
+      "mul": 0
+     },
+     "areaBoost": 1.25
+    }
    }
   },
   {
@@ -39729,6 +40586,17 @@
     "hp": 1.25,
     "atk": 1.24,
     "spd": 0.68
+   },
+   "ability": {
+    "name": "Bad Dreams",
+    "fx": "At the start of a battle the opposing front row loses 15% Attack and 15% Speed; its stat-lowering moves lower stats 30% more.",
+    "ab": {
+     "startFoe": {
+      "atk": 0.15,
+      "spd": 0.15
+     },
+     "debuffBoost": 1.3
+    }
    }
   },
   {
@@ -39745,7 +40613,12 @@
    },
    "ability": {
     "name": "Mold Breaker",
-    "fx": "Its moves ignore the target's ability."
+    "fx": "Its moves go straight through shields and Reflect, its contact moves deal 25% more damage, and it takes no recoil.",
+    "ab": {
+     "ignoreGuard": true,
+     "contactBoost": 1.25,
+     "recoilImmune": true
+    }
    }
   },
   {
@@ -39762,7 +40635,11 @@
    },
    "ability": {
     "name": "Piercing Drill",
-    "fx": "Its Ground moves ignore damage reduction from Reflect and shielding moves."
+    "fx": "Its moves go straight through shields and Reflect, and are never resisted.",
+    "ab": {
+     "ignoreGuard": true,
+     "scrappy": true
+    }
    }
   },
   {
@@ -39779,7 +40656,11 @@
    },
    "ability": {
     "name": "Healer",
-    "fx": "At the end of each round, 30% chance to clear damage-over-time effects from the teammates beside it."
+    "fx": "Its healing moves heal 50% more, and every teammate heals 4% of its max HP every round.",
+    "ab": {
+     "healBoost": 1.5,
+     "teamRegen": 0.04
+    }
    }
   },
   {
@@ -39796,7 +40677,11 @@
    },
    "ability": {
     "name": "Shell Armor",
-    "fx": "Takes 15% less damage from Single moves."
+    "fx": "Takes 20% less damage; any enemy whose contact move hits it loses 10% of its own max HP.",
+    "ab": {
+     "dmgTaken": 0.8,
+     "contactPunish": 0.1
+    }
    }
   },
   {
@@ -39813,7 +40698,13 @@
    },
    "ability": {
     "name": "Intimidate",
-    "fx": "At the start of each battle, the enemy directly across from it loses 15% Attack."
+    "fx": "At the start of a battle the opposing front row loses 20% Attack; it takes 15% less damage.",
+    "ab": {
+     "startFoe": {
+      "atk": 0.2
+     },
+     "dmgTaken": 0.85
+    }
    }
   },
   {
@@ -39830,7 +40721,20 @@
    },
    "ability": {
     "name": "Eelevate",
-    "fx": "Immune to Ground moves, and gains 10% Speed at the start of each round it was hit."
+    "fx": "Takes no damage from Ground moves, and acts first in round 1; its Electric moves deal 20% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "ground"
+      ],
+      "mul": 0
+     },
+     "firstAct": true,
+     "typeBoost": {
+      "type": "electric",
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -39847,7 +40751,11 @@
    },
    "ability": {
     "name": "Infiltrator",
-    "fx": "Its moves ignore damage reduction from Reflect and shielding moves."
+    "fx": "Its moves go straight through shields and Reflect; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "ignoreGuard": true,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -39864,7 +40772,11 @@
    },
    "ability": {
     "name": "Unseen Fist",
-    "fx": "Its contact moves go through Protect, Detect and shields."
+    "fx": "Its contact moves go straight through shields, Protect-style guards and Reflect, and deal 20% more damage.",
+    "ab": {
+     "ignoreGuard": true,
+     "contactBoost": 1.2
+    }
    }
   },
   {
@@ -39881,7 +40793,11 @@
    },
    "ability": {
     "name": "Bulletproof",
-    "fx": "Takes 30% less damage from Splash moves."
+    "fx": "Takes 50% less damage from moves that hit more than one Pokémon; any enemy whose contact move hits it loses 12% of its own max HP.",
+    "ab": {
+     "areaResist": 0.5,
+     "contactPunish": 0.12
+    }
    }
   },
   {
@@ -39897,8 +40813,14 @@
     "spd": 1.29
    },
    "ability": {
-    "name": "Levitate",
-    "fx": "Immune to Ground moves."
+    "name": "Magician",
+    "fx": "At the start of a battle the whole team gains 15% Attack; its stat-raising moves raise them 30% more.",
+    "ab": {
+     "startTeam": {
+      "atk": 0.15
+     },
+     "buffBoost": 1.3
+    }
    }
   },
   {
@@ -39915,7 +40837,11 @@
    },
    "ability": {
     "name": "Protean",
-    "fx": "Before each move, it changes its type to match the move."
+    "fx": "All its moves deal 25% more damage, and its multi-hit moves always hit the most times.",
+    "ab": {
+     "allBoost": 1.25,
+     "maxHits": true
+    }
    }
   },
   {
@@ -39932,7 +40858,16 @@
    },
    "ability": {
     "name": "Fire Mane",
-    "fx": "Its Fire moves deal 30% more damage, and it takes 25% less damage from Ice moves."
+    "fx": "Its Fire moves deal 30% more damage, and each knockout gives it 15% Attack.",
+    "ab": {
+     "typeBoost": {
+      "type": "fire",
+      "mul": 1.3
+     },
+     "onKO": {
+      "atk": 0.15
+     }
+    }
    }
   },
   {
@@ -39949,7 +40884,16 @@
    },
    "ability": {
     "name": "Fairy Aura",
-    "fx": "Every Fairy move in the battle deals 25% more damage, on both sides."
+    "fx": "Its Fairy moves deal 30% more damage, and at the start of a battle the whole team gains 10% Attack.",
+    "ab": {
+     "typeBoost": {
+      "type": "fairy",
+      "mul": 1.3
+     },
+     "startTeam": {
+      "atk": 0.1
+     }
+    }
    }
   },
   {
@@ -39966,7 +40910,11 @@
    },
    "ability": {
     "name": "Trace",
-    "fx": "At the start of battle, copies the ability of the enemy directly across."
+    "fx": "Its stat-raising moves raise them 30% more, and its support moves act first.",
+    "ab": {
+     "buffBoost": 1.3,
+     "firstSupport": true
+    }
    }
   },
   {
@@ -39983,7 +40931,11 @@
    },
    "ability": {
     "name": "Contrary",
-    "fx": "Enemy moves that would lower its Attack or Speed raise them instead."
+    "fx": "Moves that would lower its stats raise them instead; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "contrary": true,
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -40000,7 +40952,11 @@
    },
    "ability": {
     "name": "Tough Claws",
-    "fx": "Its contact moves deal 20% more damage."
+    "fx": "Its contact moves deal 30% more damage, and its multi-hit moves always hit the most times.",
+    "ab": {
+     "contactBoost": 1.3,
+     "maxHits": true
+    }
    }
   },
   {
@@ -40017,7 +40973,10 @@
    },
    "ability": {
     "name": "Regenerator",
-    "fx": "Heals 5% of its max HP at the end of each round."
+    "fx": "Heals 10% of its max HP at the end of every round.",
+    "ab": {
+     "regen": 0.1
+    }
    }
   },
   {
@@ -40034,7 +40993,11 @@
    },
    "ability": {
     "name": "No Guard",
-    "fx": "Its taught move is 25% more likely to be picked, and so are the taught moves of enemies attacking it."
+    "fx": "Its moves go straight through shields, Protect-style guards and Reflect; its contact moves deal 20% more damage.",
+    "ab": {
+     "ignoreGuard": true,
+     "contactBoost": 1.2
+    }
    }
   },
   {
@@ -40048,6 +41011,14 @@
     "hp": 1.41,
     "atk": 1.6,
     "spd": 1.05
+   },
+   "ability": {
+    "name": "Power Construct",
+    "fx": "Survives one hit from full HP with 1 HP left, and takes 20% less damage.",
+    "ab": {
+     "sturdy": true,
+     "dmgTaken": 0.8
+    }
    }
   },
   {
@@ -40064,7 +41035,13 @@
    },
    "ability": {
     "name": "Magic Bounce",
-    "fx": "Enemy moves that would only lower its Attack or Speed bounce back onto the enemy that used them."
+    "fx": "Its stats can't be lowered; at the start of a battle the whole team gains 15% Attack.",
+    "ab": {
+     "noDrops": true,
+     "startTeam": {
+      "atk": 0.15
+     }
+    }
    }
   },
   {
@@ -40081,7 +41058,10 @@
    },
    "ability": {
     "name": "Iron Fist",
-    "fx": "Its Fighting moves deal 20% more damage."
+    "fx": "Its contact moves deal 35% more damage.",
+    "ab": {
+     "contactBoost": 1.35
+    }
    }
   },
   {
@@ -40097,8 +41077,15 @@
     "spd": 1.0
    },
    "ability": {
-    "name": "Tough Claws",
-    "fx": "Its contact moves deal 20% more damage."
+    "name": "Emergency Exit",
+    "fx": "The first time its HP drops below 50%, it gains 40% Speed; its contact moves deal 15% more damage.",
+    "ab": {
+     "onHurt": {
+      "below": 0.5,
+      "spd": 0.4
+     },
+     "contactBoost": 1.15
+    }
    }
   },
   {
@@ -40115,7 +41102,14 @@
    },
    "ability": {
     "name": "Berserk",
-    "fx": "The first time its HP drops below half, it gains 20% Attack for the battle."
+    "fx": "The first time its HP drops below 50%, it gains 30% Attack; its stat-raising moves raise them 25% more.",
+    "ab": {
+     "onHurt": {
+      "below": 0.5,
+      "atk": 0.3
+     },
+     "buffBoost": 1.25
+    }
    }
   },
   {
@@ -40129,6 +41123,18 @@
     "hp": 1.0,
     "atk": 1.31,
     "spd": 1.46
+   },
+   "ability": {
+    "name": "Soul-Heart",
+    "fx": "Whenever any Pokémon faints, it gains 15% Attack; at the start of a battle the whole team gains 10% Speed.",
+    "ab": {
+     "onFaint": {
+      "atk": 0.15
+     },
+     "startTeam": {
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -40142,6 +41148,20 @@
     "hp": 1.0,
     "atk": 1.41,
     "spd": 1.07
+   },
+   "ability": {
+    "name": "Volt Absorb",
+    "fx": "Takes no damage from Electric moves, acts first in round 1, and its multi-hit moves always hit the most times.",
+    "ab": {
+     "resist": {
+      "types": [
+       "electric"
+      ],
+      "mul": 0
+     },
+     "firstAct": true,
+     "maxHits": true
+    }
    }
   },
   {
@@ -40158,7 +41178,13 @@
    },
    "ability": {
     "name": "Defiant",
-    "fx": "Each time an enemy lowers its Attack or Speed, its Attack rises 20%, up to 3 times."
+    "fx": "Its stats can't be lowered, and each knockout gives it 15% Attack.",
+    "ab": {
+     "noDrops": true,
+     "onKO": {
+      "atk": 0.15
+     }
+    }
    }
   },
   {
@@ -40175,7 +41201,17 @@
    },
    "ability": {
     "name": "Spicy Spray",
-    "fx": "When hit by a contact move, the attacker loses 5% of its max HP at the end of each of the next 2 rounds."
+    "fx": "Any enemy whose contact move hits it loses 10% of its own max HP; its Fire and Grass moves deal 20% more damage.",
+    "ab": {
+     "contactPunish": 0.1,
+     "typeBoost": {
+      "type": [
+       "fire",
+       "grass"
+      ],
+      "mul": 1.2
+     }
+    }
    }
   },
   {
@@ -40191,8 +41227,14 @@
     "spd": 1.17
    },
    "ability": {
-    "name": "Adaptability",
-    "fx": "Moves that match its current type deal 25% more damage."
+    "name": "Toxic Debris",
+    "fx": "Any enemy whose contact move hits it loses 10% Speed; its stat-lowering moves lower stats 50% more.",
+    "ab": {
+     "contactDrop": {
+      "spd": 0.1
+     },
+     "debuffBoost": 1.5
+    }
    }
   },
   {
@@ -40206,6 +41248,16 @@
     "hp": 1.21,
     "atk": 1.14,
     "spd": 1.12
+   },
+   "ability": {
+    "name": "Commander",
+    "fx": "At the start of a battle the whole team gains 15% Attack and 10% Speed.",
+    "ab": {
+     "startTeam": {
+      "atk": 0.15,
+      "spd": 0.1
+     }
+    }
    }
   },
   {
@@ -40222,7 +41274,16 @@
    },
    "ability": {
     "name": "Thermal Exchange",
-    "fx": "Gains 20% Attack each time it's hit by a Fire move, and can't be made to lose HP each round."
+    "fx": "Takes no damage from Fire moves; its contact moves deal 25% more damage.",
+    "ab": {
+     "resist": {
+      "types": [
+       "fire"
+      ],
+      "mul": 0
+     },
+     "contactBoost": 1.25
+    }
    }
   }
  ]

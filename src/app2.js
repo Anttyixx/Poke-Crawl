@@ -114,10 +114,46 @@ function freshBoard(){
         atk: f.atk * unit.mul * (it === 'choice-band' ? 1.5 : 1), spd: f.spd * (it === 'choice-scarf' ? 1.5 : 1), st: freshStatus() };
       u.pp = u.moves.map(k => MOVES[k].pp);                // PP left in each move this battle (full again next battle)
       u.poundPP = MOVES.pound.pp;                           // and in Pound, its fallback hit
+      setAbility(u, FORM[u.form].ability);
       board[side][Math.floor(cell / 3)][cell % 3] = u;
     }
   }
   turnOf.clear();
+}
+/* ---------- abilities ----------
+   An ability works in battle when it has an "ab" object in data.json (the starters' and the Megas'); one without it
+   is a description only. Each key is one kind of effect, read where it applies:
+   damage dealt: pinch {type, mul, below}, typeBoost {type (or a list), mul}, allBoost, contactBoost, multiBoost (multi-hit
+     moves), areaBoost, crit {chance, mul}, tinted (resisted hits count double), scrappy (nothing is resisted),
+     ignoreGuard (shields and Reflect), noContact (its moves never make contact), maxHits, drain (heals that share of
+     the damage it deals)
+   damage taken: resist {types, mul}, superResist, dmgTaken, areaResist, fullHp (while at full HP), sturdy (survives
+     one hit from full HP), unaware (ignores the attacker's Attack boosts), magicGuard (no poison, Leech Seed, recoil
+     or Life Orb damage), recoilImmune
+   when hit by contact: contactPunish (the attacker loses that share of its max HP), contactDrop {atk, spd}
+   stats: noDrops, teamNoDrops, contrary (drops become raises), competitive (gains that much Attack when a stat is
+     lowered), healBoost, buffBoost, debuffBoost (its support moves' heals, buffs and drops)
+   timing: firstAct (acts first in round 1), firstSupport (its support moves act first), startSelf / startTeam /
+     startFoe {atk, spd} (battle start; startFoe hits the opposing front row), regen / teamRegen (share of max HP each
+     round end; negative hurts), perRound {atk, spd}, onKO {atk, spd}, onHit {atk, spd}, onHurt {below, atk, spd}
+     (once), onFaint {atk, spd} (whenever any Pokémon faints) */
+function setAbility(u, a){ u.abName = a?.name || ''; u.ab = a?.ab || {}; }
+const abNote = (u, text) => log(`<div class="le-top">${who(u)} <span class="le-ab">${u.abName}</span></div><div class="le-res"><div>${who(u)} <span class="le-fx">${text}</span></div></div>`, 'le');
+const statTxt = (o, sign = '+') => [o.atk && `Atk ${sign}${pct(o.atk)}`, o.spd && `Spd ${sign}${pct(o.spd)}`].filter(Boolean).join(', ');
+function boost(u, o, why){ if (!o) return; u.st.atkMod += o.atk || 0; u.st.spdMod += o.spd || 0; floatText(elOf(u), statTxt(o), 'buff'); abNote(u, why || statTxt(o)); }
+async function abilitiesAtStart(){
+  let any = false;
+  for (const side of SIDES) for (const u of living(side)){
+    const A = u.ab;
+    if (A.startSelf){ boost(u, A.startSelf); any = true; }
+    if (A.startTeam){ living(side).forEach(t => { t.st.atkMod += A.startTeam.atk || 0; t.st.spdMod += A.startTeam.spd || 0; }); abNote(u, `whole team ${statTxt(A.startTeam)}`); any = true; }
+    if (A.startFoe){
+      const hit = board[foe(side)][0].filter(Boolean);
+      const out = hit.map(t => { const r = [A.startFoe.atk && lower(t, 'atkMod', A.startFoe.atk), A.startFoe.spd && lower(t, 'spdMod', A.startFoe.spd)]; return `${who(t)} ${r.some(x => x === true) ? statTxt(A.startFoe, '−') : 'unaffected'}`; });
+      if (out.length){ abNote(u, out.join(', ')); any = true; }
+    }
+  }
+  if (any){ render(); await wait(400); }
 }
 /* ---------- PP ----------
    Each move slot has its own PP (u.pp, from MOVES[k].pp), refilled at the start of every battle. Using a move spends
@@ -315,9 +351,19 @@ function faint(u, why = ''){
   board[u.side][p.row][p.lane] = null; turnOf.delete(u.uid); sideSt[u.side].fainted = true;
   if (tipAt && tipAt.side === u.side && tipAt.r === p.row && tipAt.l === p.lane) hideTip();
   log(`✕ ${who(u)} fainted${why}`, 'le-faint');
+  for (const side of SIDES) for (const x of living(side)) if (x.ab.onFaint){ x.st.atkMod += x.ab.onFaint.atk || 0; x.st.spdMod += x.ab.onFaint.spd || 0; abNote(x, statTxt(x.ab.onFaint)); }
 }
 function checkFaints(list){ for (const t of list) if (t.hp <= 0 && find(t)) faint(t); }
-function lower(t, stat, amt){ if (sideSt[t.side].safeguard) return 'blocked'; t.st[stat] -= amt; return true; }
+// lower a stat; abilities can block it (noDrops, a teammate's teamNoDrops), turn it around (contrary: 'raised') or answer
+// it (competitive: +Attack)
+function lower(t, stat, amt){
+  if (sideSt[t.side].safeguard || t.ab?.noDrops || living(t.side).some(x => x.ab?.teamNoDrops)) return 'blocked';
+  if (t.ab?.contrary){ t.st[stat] += amt; return 'raised'; }
+  t.st[stat] -= amt;
+  if (t.ab?.competitive){ t.st.atkMod += t.ab.competitive; abNote(t, `Atk +${pct(t.ab.competitive)}`); }
+  return true;
+}
+const dropTxt = (r, label, amt) => r === true ? `${label} −${pct(amt)}` : r === 'raised' ? `${label} +${pct(amt)}` : 'drop blocked';
 // a move that does no damage and heals nothing: buffs, shields and debuffs (Splash is Magikarp's whole act, so it's left out)
 const statOnly = k => { const m = MOVES[k]; return k !== 'splash' && (m.kind === 'sup' ? !m.heal : m.power === 0); };
 // would this move do something if used right now, from where the Pokémon stands? (moves that would fail are never picked)
@@ -374,9 +420,10 @@ function pickSupportTargets(u, pos, key, m){
   return [];
 }
 function applySupport(u, key, m, t){
-  const mul = u.item === 'choice-specs' ? 1.5 : 1;       // Choice Specs: bigger heals and buffs
+  const spec = u.item === 'choice-specs' ? 1.5 : 1;      // Choice Specs: bigger heals and buffs; abilities can add to either
+  const mul = spec * (u.ab.buffBoost || 1), hmul = spec * (u.ab.healBoost || 1);
   const res = [];
-  const heal = frac => { const a = Math.min(Math.round(t.maxHp * frac * mul), t.maxHp - t.hp); t.hp += a; res.push({ heal: a }); };
+  const heal = frac => { const a = Math.min(Math.round(t.maxHp * frac * hmul), t.maxHp - t.hp); t.hp += a; res.push({ heal: a }); };
   const bf = (atk, spd, txt) => { if (atk) t.st.atkMod += atk * mul; if (spd) t.st.spdMod += spd * mul; res.push({ txt }); };
   const P = x => pct(x * mul);
   switch (key){
@@ -479,25 +526,44 @@ function moveType(u, key, m, t){
   return m.type;
 }
 function hitDamage(u, key, m, t, h, multi){
-  const ty = moveType(u, key, m, t), e = ty === 'none' ? 1 : m.superVs === t.type ? 2 : eff(ty, t.type);
-  let dmg;
+  const ty = moveType(u, key, m, t), A = u.ab, D = t.ab;
+  let e = ty === 'none' ? 1 : m.superVs === t.type ? 2 : eff(ty, t.type);
+  if (e > 0 && e < 1 && A.scrappy) e = 1;
+  if (e > 0 && e < 1 && A.tinted) e = Math.min(1, e * 2);
+  if (e === 0 || D.resist?.types.includes(ty) && D.resist.mul === 0) return { dmg: 0, e: 0 };
+  // the attacker's Attack, minus its boosts if the target is Unaware
+  const atk = D.unaware ? Math.max(1, u.atk * Math.max(.1, 1 + Math.min(0, u.st.atkMod))) : effAtk(u);
+  let dmg, crit = false;
   if (key === 'super-fang') dmg = Math.ceil(t.hp * .5);
   else if (key === 'body-press') dmg = u.maxHp * .2 * e;
   else if (key === 'heavy-slam') dmg = u.maxHp * .35 * e;
   else if (key === 'counter') dmg = (u.st.lastHit?.dmg || 0) * 1.5;
-  else dmg = effAtk(u) * movePower(u, key, m, t, h) / 100 * e;
+  else dmg = atk * movePower(u, key, m, t, h) / 100 * e;
   if (!['super-fang','counter'].includes(key)){
     dmg *= (multi ? .75 : 1) * (.85 + Math.random() * .15);
     if (u.st.focus) dmg *= 1.5;
     if (u.item === 'life-orb') dmg *= 1.3;
+    const is = x => x && (Array.isArray(x) ? x.includes(ty) : x === ty);
+    if (A.pinch && is(A.pinch.type) && u.hp < u.maxHp * A.pinch.below) dmg *= A.pinch.mul;
+    if (A.typeBoost && is(A.typeBoost.type)) dmg *= A.typeBoost.mul;
+    if (A.allBoost) dmg *= A.allBoost;
+    if (A.contactBoost && m.contact && !A.noContact) dmg *= A.contactBoost;
+    if (A.multiBoost && m.hits) dmg *= A.multiBoost;
+    if (A.areaBoost && AREA_SHAPES.has(m.shape)) dmg *= A.areaBoost;
+    if (A.crit && Math.random() < A.crit.chance){ dmg *= A.crit.mul; crit = true; }
   }
-  return { dmg, e };
+  if (D.resist?.types.includes(ty)) dmg *= D.resist.mul;
+  if (D.superResist && e > 1) dmg *= D.superResist;
+  if (D.dmgTaken) dmg *= D.dmgTaken;
+  if (D.areaResist && AREA_SHAPES.has(m.shape)) dmg *= D.areaResist;
+  if (D.fullHp && t.hp >= t.maxHp) dmg *= D.fullHp;
+  return { dmg, e, crit };
 }
-function guard(t, key, m, dmg, area){
+function guard(t, key, m, dmg, area, pierce){
   const s = sideSt[t.side], front = find(t)?.row === 0;
   if (t.st.protect){ t.st.protect = false; return { dmg:0, note:'protected' }; }
   if (area && s.wideGuard >= round) return { dmg:0, note:'wide guard' };
-  const ignore = IGNORE_GUARD.has(key);
+  const ignore = pierce || IGNORE_GUARD.has(key);
   if (!ignore && t.st.shields.length){ const sh = t.st.shields[0]; dmg *= 1 - sh.p; if (--sh.n <= 0) t.st.shields.shift(); }
   if (!ignore && front && s.reflect > 0) dmg *= 1 - s.reflectP;
   if (t.st.vuln) dmg *= 1 + t.st.vuln;
@@ -519,7 +585,7 @@ async function resolveOffense(u, pos, key, m, el, origKey){
   targets.forEach(t => setTurn(t, 'targeted'));
   await wait(340);
   const area = AREA_SHAPES.has(m.shape), multi = targets.length > 1;
-  const hits = m.hits ? rndInt(m.hits[0], m.hits[1]) : 1;
+  const hits = m.hits ? (u.ab.maxHits ? m.hits[1] : rndInt(m.hits[0], m.hits[1])) : 1;
   const tot = targets.map(() => ({ dmg:0, e:1, notes:[] }));
   const mainEl = elOf(board[foe(u.side)][0][c]) || tEls[0];
   const ty0 = moveType(u, key, m, targets[0]), color = typeColor(ty0 === 'none' ? 'normal' : ty0);
@@ -532,10 +598,12 @@ async function resolveOffense(u, pos, key, m, el, origKey){
     await Promise.all(live.map(([t, i]) => shoot(el, tEls[i], color)));
     for (const [t, i] of live){
       if (!damaging){ burst(tEls[i], color); continue; }
-      const { dmg: raw, e } = hitDamage(u, key, m, t, h, multi);
+      const { dmg: raw, e, crit } = hitDamage(u, key, m, t, h, multi);
       if (e === 0){ tot[i].e = 0; floatText(tEls[i], 'no effect', 'info'); continue; }
-      let { dmg, note: gn } = guard(t, key, m, raw, area);
+      let { dmg, note: gn } = guard(t, key, m, raw, area, u.ab.ignoreGuard);
+      if (crit && !tot[i].notes.includes(`${u.abName}!`)) tot[i].notes.push(`${u.abName}!`);
       if (t.item === 'focus-sash' && !t.st.sashUsed && t.hp === t.maxHp && dmg >= t.hp){ dmg = t.hp - 1; t.st.sashUsed = true; gn = 'held on with Focus Sash'; }
+      else if (t.ab.sturdy && !t.st.sturdyUsed && t.hp === t.maxHp && dmg >= t.hp){ dmg = t.hp - 1; t.st.sturdyUsed = true; gn = `held on with ${t.abName}`; }
       if (gn && !tot[i].notes.includes(gn)) tot[i].notes.push(gn);
       t.hp -= dmg; tot[i].dmg += dmg; tot[i].e = e;
       if (dmg > 0){ t.st.lastHit = { dmg, move: key }; t.st.hitThisRound = true; }
@@ -551,17 +619,30 @@ async function resolveOffense(u, pos, key, m, el, origKey){
     const t = targets[i], T = tot[i], tel = tEls[i];
     if (T.e === 0 || t.hp <= 0) continue;
     const add = (txt, kind = 'debuff') => { T.notes.push(txt); floatText(tel, txt, kind); };
-    if (SPD_DROP[key]){ const r = lower(t, 'spdMod', SPD_DROP[key]); add(r === true ? `Spd −${pct(SPD_DROP[key])}` : 'drop blocked'); }
-    if (ATK_DROP[key]){ const r = lower(t, 'atkMod', ATK_DROP[key]); add(r === true ? `Atk −${pct(ATK_DROP[key])}` : 'drop blocked'); }
+    const dB = u.ab.debuffBoost || 1;
+    if (SPD_DROP[key]){ const a = SPD_DROP[key] * dB, r = lower(t, 'spdMod', a); add(dropTxt(r, 'Spd', a)); }
+    if (ATK_DROP[key]){ const a = ATK_DROP[key] * dB, r = lower(t, 'atkMod', a); add(dropTxt(r, 'Atk', a)); }
     if (DOTS[key]){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.dots.push([...DOTS[key]]); add(key === 'toxic' ? 'badly poisoned' : 'poisoned'); } }
     if (m.skipTarget){ t.st.skip = Math.max(t.st.skip, m.skipTarget); t.st.skipWhy = 'asleep'; add('falls asleep'); }
     if (key === 'leech-seed'){ if (sideSt[t.side].safeguard) add('safeguarded'); else { t.st.seed = u; add('seeded'); } }
+    // the target's abilities that answer a hit
+    const D = t.ab;
+    if (T.dmg > 0 && D.onHit){ t.st.atkMod += D.onHit.atk || 0; t.st.spdMod += D.onHit.spd || 0; add(`${t.abName}: ${statTxt(D.onHit)}`, 'buff'); }
+    if (T.dmg > 0 && D.onHurt && !t.st.hurtUsed && t.hp < t.maxHp * D.onHurt.below){ t.st.hurtUsed = true; t.st.atkMod += D.onHurt.atk || 0; t.st.spdMod += D.onHurt.spd || 0; add(`${t.abName}: ${statTxt(D.onHurt)}`, 'buff'); }
   }
   const dealt = tot.reduce((a, x) => a + x.dmg, 0), selfNotes = [];
-  const selfHurt = (frac, why, base = u.maxHp) => { const a = Math.max(1, Math.round(base * frac)); u.hp -= a; flash(el, 'hit'); floatText(el, `-${a}`, 'dmg'); selfNotes.push(`${why} <b class="d">−${a}</b>`); };
+  const selfHurt = (frac, why, base = u.maxHp) => { if (u.ab.magicGuard && why !== 'hurt by Struggle') return; const a = Math.max(1, Math.round(base * frac)); u.hp -= a; flash(el, 'hit'); floatText(el, `-${a}`, 'dmg'); selfNotes.push(`${why} <b class="d">−${a}</b>`); };
   if (DRAIN[key] && dealt){ const a = Math.min(Math.round(dealt * DRAIN[key]), u.maxHp - u.hp); u.hp += a; if (a){ floatText(el, `+${a}`, 'heal'); selfNotes.push(`drains <b class="h">+${a}</b>`); } }
-  if (RECOIL[key] && dealt) selfHurt(RECOIL[key], 'recoil', dealt);
-  if (m.contact && u.item !== 'protective-pads') targets.forEach((t, i) => { if (t.item === 'rocky-helmet' && tot[i].dmg > 0) selfHurt(.12, `${t.name}'s Rocky Helmet`); });
+  if (RECOIL[key] && dealt && !u.ab.recoilImmune) selfHurt(RECOIL[key], 'recoil', dealt);
+  if (u.ab.drain && dealt){ const a = Math.min(Math.round(dealt * u.ab.drain), u.maxHp - u.hp); if (a > 0){ u.hp += a; floatText(el, `+${a}`, 'heal'); selfNotes.push(`${u.abName} <b class="h">+${a}</b>`); } }
+  if (m.contact && !u.ab.noContact && u.item !== 'protective-pads') targets.forEach((t, i) => {
+    if (tot[i].dmg <= 0) return;
+    if (t.item === 'rocky-helmet') selfHurt(.12, `${t.name}'s Rocky Helmet`);
+    if (t.ab.contactPunish) selfHurt(t.ab.contactPunish, `${t.name}'s ${t.abName}`);
+    if (t.ab.contactDrop){ const o = t.ab.contactDrop, r = [o.atk && lower(u, 'atkMod', o.atk), o.spd && lower(u, 'spdMod', o.spd)]; if (r.some(x => x === true)) selfNotes.push(`${t.name}'s ${t.abName}: ${statTxt(o, '−')}`); }
+  });
+  const kos = targets.filter(t => t.hp <= 0).length;
+  if (kos && u.ab.onKO){ const o = u.ab.onKO; u.st.atkMod += (o.atk || 0) * kos; u.st.spdMod += (o.spd || 0) * kos; selfNotes.push(`${u.abName}: ${statTxt({ atk: (o.atk || 0) * kos, spd: (o.spd || 0) * kos })}`); }
   if (u.item === 'life-orb' && damaging) selfHurt(.1, 'Life Orb');
   if (m.selfAtk || m.selfSpd){
     const sign = x => x > 0 ? '+' : '−';
@@ -645,20 +726,27 @@ async function roundEnd(){
     for (const t of living(side)){
       const s = t.st;
       if (sideSt[side].safeguard){ s.dots = []; s.seed = null; }
-      if (s.dots.length){
+      if (s.dots.length && !t.ab.magicGuard){
         let total = 0;
         s.dots = s.dots.map(seq => { total += seq.shift(); return seq; }).filter(seq => seq.length);
         const a = Math.max(1, Math.round(t.maxHp * total / 100)); t.hp -= a; any = true;
         flash(elOf(t), 'hit'); floatText(elOf(t), `-${a}`, 'dmg');
         log(`<div class="le-top">${who(t)} <span class="le-note">poison</span></div><div class="le-res"><div>${who(t)} <b class="d">−${a}</b></div></div>`, 'le');
       }
-      if (s.seed){
+      if (s.seed && !t.ab.magicGuard){
         const a = Math.max(1, Math.round(t.maxHp * .08)); t.hp -= a; any = true;
         flash(elOf(t), 'hit'); floatText(elOf(t), `-${a}`, 'dmg');
         let extra = '';
         if (find(s.seed)){ const h = Math.min(a, s.seed.maxHp - s.seed.hp); s.seed.hp += h; if (h){ floatText(elOf(s.seed), `+${h}`, 'heal'); extra = `<div>${who(s.seed)} <b class="h">+${h}</b></div>`; } }
         log(`<div class="le-top">${who(t)} <span class="le-note">leech seed</span></div><div class="le-res"><div>${who(t)} <b class="d">−${a}</b></div>${extra}</div>`, 'le');
       }
+      const A = t.ab;
+      for (const f of [A.regen, ...living(side).filter(x => x.ab.teamRegen).map(x => x.ab.teamRegen)]){
+        if (!f || t.hp <= 0) continue;
+        if (f > 0 && t.hp < t.maxHp){ const a = Math.min(Math.max(1, Math.round(t.maxHp * f)), t.maxHp - t.hp); t.hp += a; any = true; floatText(elOf(t), `+${a}`, 'heal'); log(`<div class="le-top">${who(t)} <span class="le-note">${f === A.regen ? t.abName : 'teammate\'s ability'}</span></div><div class="le-res"><div>${who(t)} <b class="h">+${a}</b></div></div>`, 'le'); }
+        if (f < 0){ const a = Math.max(1, Math.round(t.maxHp * -f)); t.hp -= a; any = true; flash(elOf(t), 'hit'); floatText(elOf(t), `-${a}`, 'dmg'); log(`<div class="le-top">${who(t)} <span class="le-note">${t.abName}</span></div><div class="le-res"><div>${who(t)} <b class="d">−${a}</b></div></div>`, 'le'); }
+      }
+      if (A.perRound && t.hp > 0){ t.st.atkMod += A.perRound.atk || 0; t.st.spdMod += A.perRound.spd || 0; floatText(elOf(t), statTxt(A.perRound), 'buff'); abNote(t, statTxt(A.perRound)); any = true; }
       if (t.item === 'leftovers' && t.hp > 0 && t.hp < t.maxHp){
         const a = Math.min(Math.max(1, Math.round(t.maxHp * .08)), t.maxHp - t.hp); t.hp += a; any = true;
         floatText(elOf(t), `+${a}`, 'heal');
@@ -685,6 +773,8 @@ function priority(u){
   if (!k) return 0;
   if (ALWAYS_FIRST.has(k)) return 2;
   if (round === 1 && FIRST_ROUND.has(k)) return 1;
+  if (round === 1 && u.ab.firstAct) return 1;
+  if (u.ab.firstSupport && MOVES[k]?.kind === 'sup') return 1;
   return 0;
 }
 const hpFrac = side => { const us = living(side); return us.reduce((s, u) => s + u.hp / u.maxHp, 0); };
@@ -693,6 +783,7 @@ async function runBattle(){
   running = true; round = 0; syncBattleButtons();
   $('#b-log').innerHTML = ''; status('Fighting…');
   for (const side of SIDES) await megaEvolve(side);
+  await abilitiesAtStart();
   while (!over() && round < 60){
     round++;
     log(`Round ${round}`, 'rnd');
@@ -727,7 +818,7 @@ async function megaEvolve(side){
   if (!u) return;
   const { u: x, m } = u, was = x.name, b = m.boost, hp = x.maxHp;
   // it becomes the Mega: its own type and stat boosts, and its signature move is the Mega's (its taught move stays)
-  x.mega = m; x.name = m.name; x.type = m.type || x.type; x.moves[0] = m.sig; x.pp[0] = MOVES[m.sig].pp;
+  x.mega = m; x.name = m.name; x.type = m.type || x.type; x.moves[0] = m.sig; x.pp[0] = MOVES[m.sig].pp; if (m.ability) setAbility(x, m.ability);
   x.maxHp = Math.round(x.maxHp * b.hp); x.hp += x.maxHp - hp; x.atk *= b.atk; x.spd *= b.spd;
   const chg = (k, v) => v === 1 ? '' : `${k} ${v > 1 ? '+' : '−'}${pct(Math.abs(v - 1))}`;
   log(`${who({ ...x, name: was, mega: null })} ${m.name.startsWith('Primal') ? 'reverted to its primal form' : 'Mega Evolved'}: ${m.name}! <small>(${[chg('HP', b.hp), chg('Atk', b.atk), chg('Spd', b.spd)].filter(Boolean).join(', ')})</small>`);
